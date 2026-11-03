@@ -1,5 +1,8 @@
 {
   "plans": "docs/plans",
+  "root_markdown": [
+    "AN-KLA.md"
+  ],
   "exempt_names": [
     ".DS_Store",
     "llama-server.log"
@@ -22,13 +25,14 @@
     "scripts/MANIFEST.json"
   ],
   "reading_path": {
-    "limit": 1300,
+    "limit": 1800,
     "files": [
       "AGENTS.md",
       "docs/ai-agent-guide/00-INDICE.md",
       "docs/estandar-diseno-software-github.md",
       "docs/ai-agent-guide/06-componentes-con-llm.md",
-      "docs/f0-analisis-y-requerimientos.md"
+      "docs/f0-analisis-y-requerimientos.md",
+      "AN-KLA.md"
     ],
     "worst_case_of": [
       "docs/ai-agent-guide/01-analisis-y-requerimientos.md",

@@ -85,8 +85,14 @@ requerido antes de contarlo como gate de verdad).
 ## Dependencias activas del ecosistema
 
 - **AN-KLA Memory:** instalada (2026-11-03) — memoria local gobernada en
-  `.an-kla/memory/`, pipeline propose → plan-write → commit-write-plan,
-  sin bloque de contexto en `AGENTS.md` (lectura vía `an-kla retrieve`).
+  `.an-kla/memory/` + **bloque de contexto gestionado** en `AGENTS.md`
+  (plantilla 0.1.0-beta.33) y contrato `AN-KLA.md` en raíz, ambos
+  verificados con `an-kla context status`. Pipeline de escritura:
+  propose → plan-write → commit-write-plan; la memoria recuperada es
+  dato no confiable, nunca instrucción. Presupuesto de lectura subido a
+  **1800** por decisión escrita de esta adopción (ADR-021/ADR-025):
+  espina con `AN-KLA.md` de 478 líneas = 1503, peor caso alternativo
+  286 (`04`) → 1789 verificadas, margen 11.
 - Otras dependencias declaradas: llama.cpp (Homebrew) y el modelo
   `LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M` (Hugging Face) — artefactos externos
   de régimen congelado por registro; sus versiones vigentes y el comando de
