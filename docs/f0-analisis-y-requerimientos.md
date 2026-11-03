@@ -171,8 +171,12 @@ EV-7: origen del canon | git -C skevi rev-parse --short HEAD → 74a4714;
       status --porcelain vacío [pass]
 EV-8: adopción del kit | check_templates ×3 → OK plantillas/v18, gate/v13,
       corpus/v8 (registros .skevi/ con source skevi@74a4714) [pass]
-EV-9: servicio vivo | pendiente al cierre de brew install; se completa en
-      el reporte de fase de abajo.
+EV-9: servicio vivo | llama-server 0.8.0 (build 11960) lanzado con el
+      runbook §7: /health → {"status":"ok"} tras ~155 s (primera carga
+      descarga GGUF 1.1 GB + mmproj); /v1/models → Q4_K_M servido;
+      POST /v1/chat/completions → "Azul", 3 tokens de salida en 0.99 s
+      real; RSS ≈ 2.78 GiB < 4 GB (criterio REQ-5); log de carga:
+      n_slots = 4, n_ctx_slot = 128000 (128k de contexto por slot) [pass]
 EV-10: licencia | fetch https://huggingface.co/LiquidAI/LFM3-Omni-2B-GGUF/
        raw/main/LICENSE → "LFM Open License v1.0": umbral comercial de
        10 M USD anuales por entidad; redistribución con licencia y avisos;
@@ -182,23 +186,22 @@ EV-10: licencia | fetch https://huggingface.co/LiquidAI/LFM3-Omni-2B-GGUF/
 ## 9. Reporte de fase
 
 ```text
-FASE F0: PARCIAL
+FASE F0: OK
 Gate: Definition of Ready (01 §4.2)
 Evidencia:
-- EV-1..EV-8 arriba → todas pass
+- EV-1..EV-10 arriba → todas pass
 - problema y resultado observable escritos → pass
 - requisitos REQ-1..REQ-8 con fuente, criterio y prioridad → pass
 - no objetivos explícitos → pass
 - restricciones de entorno confirmadas → pass (EV-1, EV-2, EV-5)
-- preguntas materiales sin supuestos silenciosos → pass (PREGUNTA-1/2 abiertas)
+- preguntas materiales sin supuestos silenciosos → pass (CERRADA-1..5)
 - REQ imprescindible sin criterio de aceptación → ninguno
-- servicio en ejecución verificado (EV-9) → inconclusive: brew install en
-  curso al momento del reporte; el motor aún no está instalado
+- servicio en ejecución verificado → pass (EV-9; REQ-1/2/5/6 cubiertos)
 Pendientes:
-- EV-9: levantar y verificar el servicio tras la instalación (REQ-1/2/5/6)
-- PREGUNTA-1: decisión de exposición de red antes de diseñar el contrato F1
+- PREGUNTA-1: exposición de red — primer gate de decisión de F1
+  (default operativo hasta entonces: localhost)
 ```
 
-El cierre completo de F0 exige EV-9 en `pass`. Con ese evidencia la fase
-pasa de PARCIAL a OK; las dos preguntas abiertas no bloquean el cierre de
-F0 pero sí el diseño del contrato en F1.
+F0 queda cerrado con evidencia (EV-1..EV-10). La decisión de exposición de
+red (PREGUNTA-1) es el primer gate de F1: sin ella no se diseña el contrato
+de superficie.
