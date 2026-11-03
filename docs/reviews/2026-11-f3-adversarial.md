@@ -9,11 +9,11 @@
 ```text
 id = f3-ronda-adversarial
 date = 2026-11-02
-time_utc = 01:30:56Z
+time_utc = 01:33:45Z
 head_sha = a66ac5bd7a3c06f2948276b2a328c31181fba59c
 model = glm-5.3-flash (autodeclarado, nunca prueba)
 session = ses_e6116d446ffeYIXYogNw2kkKuy; ses_e610600caffemXZSlmyjLs18Sq
-STATE = PARTIAL
+STATE = OK
 GATE = 04 parrafo 4 y 5.3 con DoD de PLAN LFM3-1; dos pasadas adversariales (r1: 15 hallazgos; r2: 13 hallazgos) con disposiciones aplicadas y re-verificadas por subagentes de contexto fresco
 EVIDENCE
 - unittest tests.test_mcp_server: 37 tests (handshake, validacion, clasificacion HTTP, tools con motor, motor caido) -> pass
@@ -28,9 +28,10 @@ EVIDENCE
 - python3 scripts/check_reports.py -> pass
 - check_templates plantillas/scripts/corpus -> pass
 - git status --short vacio y git diff --check limpio -> pass
+- git tag v0.1.0 con autorizacion humana explicita registrada en sesion -> pass
 DECISION = proceed
-PENDING = etiqueta v0.1.0 requiere autorizacion humana explicita (solicitada en sesion); voz realtime completa aplazada (protocolo sin documentar en build 0.8.0, handshake verificado); riesgo aceptado y registrado: sin techo de tamano para schema/image_base64 en localhost de consumidor unico
-report_sha256 = baaca70d19092774e5ec289091f2db2eaa080fd98106979450c93c563288f10b
+PENDING = voz realtime completa aplazada (protocolo sin documentar en build 0.8.0, handshake verificado); riesgo aceptado y registrado: sin techo de tamano para schema/image_base64 en localhost de consumidor unico
+report_sha256 = 2c4307c19d78133438232d4552fb522e7130e0e5c428f01ea2aaf842d8d13219
 ```
 
 ## Capa humana — síntesis de las dos pasadas
