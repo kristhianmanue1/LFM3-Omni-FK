@@ -15,8 +15,11 @@ Comportamiento: el servicio responde en localhost:8091 con salud,
   declarada (REQ-8); disponible como superficie consumible por terceros
   del ecosistema (web, apps) según el contrato v1.
 Entradas: las del contrato v1 (messages text/image_url, tools,
-  response_format, max_tokens 1..4096). Rango válido: lo declarado; lo
-  demás se rechaza.
+  response_format, max_tokens recomendado 1..4096 — el build no valida
+  el rango). Fail-closed estructural: JSON malformado, messages ausente
+  o partes de contenido desconocidas se rechazan con 400; campos
+  top-level desconocidos se ignoran con 2xx — validar el payload es del
+  lado consumidor.
 Salidas: las del contrato v1 (content, tool_calls, usage, timings).
 Errores:
   400 entrada malformada o no soportada — estado: sin efecto lateral

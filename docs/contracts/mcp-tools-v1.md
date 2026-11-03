@@ -35,9 +35,12 @@ Entrada:
 Salida:
   initialize → {protocolVersion, capabilities:{tools}, serverInfo}
   tools/list → {tools:[health, infer_text, infer_vision + inputSchema]}
-  tools/call health → {state:"up"|"down", model:string, port:8091}
-  tools/call infer_text → {text:string, validated:boolean, usage:objeto}
-  tools/call infer_vision → {description:string, usage:objeto}
+  tools/call → sobre CallToolResult estándar de MCP: el resultado viaja
+    como string JSON dentro de content[0].text, con isError:boolean al
+    nivel del result (H4 ronda v0.1.0). El JSON interno por tool:
+    health → {state:"up"|"down", model:string, port:8091}
+    infer_text → {text:string, validated:boolean, usage:objeto}
+    infer_vision → {description:string, usage:objeto}
 Errores:
   motor no disponible → isError:true, mensaje explícito — estado: sin
     efecto lateral, reintentable
@@ -58,6 +61,12 @@ Errores:
   notificación JSON-RPC (sin id) → sin respuesta
 Invariantes:
   - Solo stdin/stdout y el motor en 127.0.0.1:8091 (ADR-002, CERRADA-6)
+  - Latencia: infer_text con max_tokens alto puede tardar minutos al
+    umbral contractual (4096 tokens a ≥15 tok/s ≈ 273 s peor caso;
+    observado ~19 s a ~55 tok/s — mediana B-T5: 55.9). Configura el
+    timeout del cliente MCP en consecuencia — el default de OpenCode
+    (30 s) mata llamadas válidas (ronda v0.1.0, H3); recomendado:
+    360000 ms
   - Validación en frontera de toda salida del motor: forma cerrada
     (choices/content string/usage objeto) y conformidad al schema
     pedido con el subconjunto declarado arriba (REQ-7)
@@ -86,4 +95,4 @@ Compatibilidad:
 Los casos de SPEC-2 (docs/specs/SPEC-2-mcp.md) y la tabla de casos
 borde de la ronda adversarial F3 (docs/reviews/2026-11-f3-adversarial.md)
 son los casos de prueba de este contrato; tests/test_mcp_server.py los
-implementa (RED-GREEN, 26 tests).
+implementa (RED-GREEN, 37 tests).

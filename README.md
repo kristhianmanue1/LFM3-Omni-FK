@@ -6,8 +6,8 @@ servido con llama.cpp en Apple Silicon. Superficie para agentes de IA y
 para proyectos consumidores del ecosistema (web, apps): contratos
 versionados, API compatible OpenAI y MCP.
 
-Estado: F2 (cascarón) — F0 y F1 cerrados con evidencia; el motor está
-verificado y los contratos publicados. Implementación MCP en F3.
+Estado: v0.1.0 — F0–F3 cerrados con evidencia y rondas adversariales;
+motor verificado, contratos v1 publicados y MCP implementado (F3-1).
 
 ## Requisitos
 
@@ -51,8 +51,13 @@ su propiedad de regresión es que el rechazo se sostenga.
   con `messages` (texto o imagen base64), `tools`, y `response_format`
   json_schema para salidas validadas en frontera.
 - Contrato completo: `docs/contracts/superficie-inferencia-v1.md` —
-  entradas, salidas, errores, invariantes y compatibilidad. Lo no
-  declarado se rechaza (fail-closed).
+  entradas, salidas, errores, invariantes y compatibilidad. Fail-closed
+  estructural: JSON malformado, `messages` ausente o partes de contenido
+  desconocidas → 400; los campos top-level no reconocidos se **ignoran
+  con 2xx** — valida tu payload del lado consumidor.
+- Paquete de onboarding para consumidores:
+  `docs/onboarding-consumidor-v1.md` — guía paso a paso con comandos
+  verificados (HTTP compatible OpenAI + registro MCP).
 - MCP para agentes: `docs/contracts/mcp-tools-v1.md` (transporte stdio).
   Implementado: `python3 src/mcp_server.py` — lee JSON-RPC por stdin;
   tools `health`, `infer_text` (con esquema validado en frontera) e
@@ -91,7 +96,7 @@ su propiedad de regresión es que el rechazo se sostenga.
 ├── skevi-gate.json         # config del gate (límites, ruta de lectura, planes)
 ├── run/                    # serve.sh / stop.sh (runbook operativo)
 ├── scripts/                # gates copiables de Skevi (versionados)
-├── src/mcp_server.py       # esqueleto MCP stdio (lógica en F3-1)
+├── src/mcp_server.py       # servidor MCP stdio (implementado, F3-1)
 ├── tests/golden/casos.json # conjunto de referencia con procedencia
 ├── tests/run_golden.py     # runner de la batería
 └── docs/                   # F0, specs, ADRs, contratos, planes, reviews

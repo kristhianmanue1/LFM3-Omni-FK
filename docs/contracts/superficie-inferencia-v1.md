@@ -14,9 +14,12 @@ CORS: el build vigente refleja cualquier Origin con credentials
   (aviso registrado del log de arranque); aceptable sólo mientras el
   vínculo sea localhost (CERRADA-6). Cualquier cambio de vínculo exige
   api-key + --cors-origins explícitos antes de arrancar.
-Límites: contexto 128000 tokens por slot × 4 slots (n_ctx_slot del log
-  de carga); max_tokens aceptado 1..4096; prompt de batería observado
-  en 28-30 tokens (no hay techo declarado de prompt menor al contexto).
+Operación (nota no contractual): timeout de lectura/escritura del
+  servidor 3600 s (default del build); concurrencia efectiva 4 slots
+  (n_slots); caché de prompt activa (prefijos compartidos aceleran el
+  prompt eval, observado 200 tok/s con LCP similarity).
+  max_tokens: rango recomendado 1..4096 (el build no lo valida; ver
+  Entrada).
 
 Entrada:
   GET /health
@@ -28,20 +31,35 @@ Entrada:
       content como string o partes:
       {type:"text", text} | {type:"image_url", image_url:{url:"data:image/png;base64,..." | data:image/jpeg;base64,...}}
       (JPEG declarado, no ejercitado por batería: B-T7 midió PNG)
+      Nota de superficie (ronda v0.1.0): el build TAMBIÉN acepta urls
+      http(s) en image_url.url e intenta descargarlas server-side
+      (fetch saliente; 500 si falla). PROHIBIDO para el consumidor:
+      rechaza toda url no-data antes de enviar — es superficie SSRF
+      contenida solo por CERRADA-6
     tools: array [opcional] — {type:"function", function:{name,
       description, parameters: JSON Schema}}
     tool_choice: "auto" [opcional]
     response_format: {type:"json_schema", json_schema:{name, schema}}
       [opcional] — fuerza salida JSON conforme al esquema (B-T3)
-    max_tokens: entero [opcional] (1..4096; no ejercitado por batería,
-      comportamiento estándar del build)
+    max_tokens: entero [opcional] — techo pedido de generación. El build
+      NO valida el rango: 0, -1 y 4097 se aceptan con 2xx (ignorado o
+      truncado sin error); el rango recomendado del contrato es 1..4096
+      y su verificación es del lado consumidor
+    stream: boolean [opcional] — SSE con chunks en formato OpenAI
+      (object: "chat.completion.chunk", delta por token); verificado
+      2026-11-03 (mejora aditiva compatible)
 Salida:
   choices[0].message.content: string — texto de respuesta
-  choices[0].message.tool_calls: array — {function:{name, arguments:
-    string JSON}} cuando el modelo decide llamar una tool (B-T6)
+  choices[0].finish_reason: "stop" | "length" (truncado por max_tokens)
+    — el consumidor DEBE verificarlo para detectar cortes (H6 ronda v0.1.0)
+  choices[0].message.tool_calls: array — {id: string, function:{name,
+    arguments: string JSON}} cuando el modelo decide llamar una tool (B-T6)
   usage: {prompt_tokens, completion_tokens, total_tokens}
   timings: {prompt_per_second, predicted_per_second} — medición del
     servidor, base del umbral contractual
+  (con stream:true: líneas "data: {chunk}" SSE terminadas en
+    data: [DONE]; usage por chunk solo con stream_options — fuera de
+    esta versión)
 Errores:
   400 {error:{code,message,type}} — entrada malformada o campo no
     soportado (p. ej. audio en chat en este build, B-T8); estado: sin
@@ -50,6 +68,11 @@ Errores:
   503 — motor cargando; estado: reintentable (no ejercitado por
     batería; comportamiento estándar del build; máquina de estados en
     SPEC-1)
+  500 — fetch server-side fallido (image_url http inalcanzable);
+    estado: sin efecto lateral; el consumidor no debería llegar aquí
+    si rechaza urls no-data antes de enviar (ronda v0.1.0)
+  404 — ruta o método equivocado (p. ej. GET en chat/completions);
+    estado: sin efecto lateral
 Invariantes:
   - Escucha únicamente en 127.0.0.1:8091 — fuente: CERRADA-6 + runbook
     de ADR-001; verificación binaria B-T12
@@ -62,8 +85,12 @@ Invariantes:
     o validador del consumidor (REQ-7) (B-T3)
   - Rendimiento contractual: mediana de n=3 corridas de 64 tokens
     >= 15 tok/s en predicted_per_second; observado 55.9 (B-T5)
-  - Fail-closed: lo no declarado en este contrato se rechaza con 400
-    estructurado; jamás 2xx ambiguo (B-T9)
+  - Fail-closed ESTRUCTURAL (B-T9): JSON malformado, messages ausente o
+    content[] con tipo no soportado → 400 estructurado; jamás 2xx
+    ambiguo ahí. NO es fail-closed de campos: el build IGNORA campos
+    top-level no reconocidos con 2xx (temperature, seed, typos) — el
+    consumidor valida su payload antes de enviar; el greedy sobrevive a
+    esos overrides (verificado, ronda v0.1.0)
   - La voz NO forma parte de esta frontera v1: audio de entrada por
     chat se rechaza con 400 (B-T8); el endpoint /v1/realtime existe en
     el build pero no está verificado ni declarado aquí — de incorporarse,
