@@ -129,6 +129,9 @@ operativa: el consumo interno del ecosistema y el ofrecimiento a proyectos
 consumidores quedan dentro de la licencia; cualquier esquema que cobre por
 el servicio a terceros se documenta y se mantiene bajo el umbral, y el
 contrato F1 cita esta restricción (cierra REQ-8).
+CERRADA-6: Exposición de red → solo localhost (127.0.0.1), sin api-key
+mientras el servicio no salga de la máquina [humano, 2026-11-02; resuelve
+PREGUNTA-1]. LAN o público exigen nueva decisión registrada con api-key.
 ```
 
 ## 7. Restricciones de entorno y runbook
@@ -197,11 +200,8 @@ Evidencia:
 - preguntas materiales sin supuestos silenciosos → pass (CERRADA-1..5)
 - REQ imprescindible sin criterio de aceptación → ninguno
 - servicio en ejecución verificado → pass (EV-9; REQ-1/2/5/6 cubiertos)
-Pendientes:
-- PREGUNTA-1: exposición de red — primer gate de decisión de F1
-  (default operativo hasta entonces: localhost)
+Pendientes: ninguno — PREGUNTA-1 resuelta en CERRADA-6
 ```
 
-F0 queda cerrado con evidencia (EV-1..EV-10). La decisión de exposición de
-red (PREGUNTA-1) es el primer gate de F1: sin ella no se diseña el contrato
-de superficie.
+F0 permanece cerrado en OK; F1 puede iniciarse (CERRADA-6 habilita el
+diseño del contrato de superficie).

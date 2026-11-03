@@ -37,6 +37,8 @@ No asumas el contenido de un archivo que no leíste.
   registrada, no una actualización silenciosa.
 - El modelo es **no-reasoning**: el servidor arranca con `--reasoning off`
   y muestreo greedy (`--temp 0`) según la ficha oficial del modelo.
+- **Exposición: solo localhost** (humano, 2026-11-02); LAN o público exigen
+  nueva decisión registrada, con api-key.
 
 ## Reglas no negociables
 
