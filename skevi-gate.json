@@ -1,4 +1,5 @@
 {
+  "plans": "docs/plans",
   "exempt_names": [
     ".DS_Store"
   ],
