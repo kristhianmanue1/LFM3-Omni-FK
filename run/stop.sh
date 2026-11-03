@@ -7,16 +7,24 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 PIDFILE="$DIR/llama-server.pid"
 
 if [ -f "$PIDFILE" ]; then
-  kill "$(cat "$PIDFILE")" 2>/dev/null || true
+  PID="$(cat "$PIDFILE")"
+  # Propiedad antes de disparo: jamás matar un pid reciclado ajeno
+  # (mismo binario en otro puerto cuenta como ajeno).
+  if ps -p "$PID" -o command= 2>/dev/null | grep -q "llama-server.*--port $PORT"; then
+    kill "$PID" 2>/dev/null || true
+  fi
   rm -f "$PIDFILE"
 fi
 
 pkill -f "llama-server.*--port $PORT" 2>/dev/null || true
-sleep 1
 
-if lsof -nP -iTCP:$PORT -sTCP:LISTEN 2>/dev/null | grep -q LISTEN; then
-  echo "BLOQ: el puerto $PORT sigue en escucha" >&2
-  exit 1
-fi
+for _ in 1 2 3; do
+  if ! lsof -nP -iTCP:$PORT -sTCP:LISTEN 2>/dev/null | grep -q LISTEN; then
+    echo "detenido: sin escucha en $PORT"
+    exit 0
+  fi
+  sleep 1
+done
 
-echo "detenido: sin escucha en $PORT"
+echo "BLOQ: el puerto $PORT sigue en escucha" >&2
+exit 1

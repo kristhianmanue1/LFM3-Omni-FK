@@ -15,8 +15,8 @@ ofrece:
   - contratos versionados para consumidores externos (F1: base URL, auth,
     CORS, límites y muestreo declarados)
   - servidor MCP propio (transporte stdio, ADR-002) que envuelve el
-    motor como herramienta para agentes; diseño cerrado en F1,
-    implementación F3-1
+    motor como herramienta para agentes; implementado y verificado
+    (F3-1: 37 tests, dos rondas adversariales)
   - validación en frontera de la salida del modelo contra esquema cerrado
     (guía 06 §5)
   - método de trabajo Skevi adoptado (plantillas/v18, gate/v13, corpus/v8)

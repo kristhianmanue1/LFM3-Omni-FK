@@ -1,7 +1,8 @@
 {
   "plans": "docs/plans",
   "exempt_names": [
-    ".DS_Store"
+    ".DS_Store",
+    "llama-server.log"
   ],
   "required": [
     "AGENTS.md",
@@ -34,6 +35,12 @@
       "docs/ai-agent-guide/02-specs-adr-contratos.md",
       "docs/ai-agent-guide/03-cascaron-proyecto.md",
       "docs/ai-agent-guide/04-ejecucion-y-verificacion.md"
+    ]
+  },
+  "reports": {
+    "dir": "docs/reviews",
+    "exempt": [
+      "docs/reviews/2026-11-f1-adversarial.md"
     ]
   }
 }

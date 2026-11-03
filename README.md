@@ -53,8 +53,11 @@ su propiedad de regresión es que el rechazo se sostenga.
 - Contrato completo: `docs/contracts/superficie-inferencia-v1.md` —
   entradas, salidas, errores, invariantes y compatibilidad. Lo no
   declarado se rechaza (fail-closed).
-- MCP para agentes: `docs/contracts/mcp-tools-v1.md` (transporte stdio;
-  implementación en F3-1).
+- MCP para agentes: `docs/contracts/mcp-tools-v1.md` (transporte stdio).
+  Implementado: `python3 src/mcp_server.py` — lee JSON-RPC por stdin;
+  tools `health`, `infer_text` (con esquema validado en frontera) e
+  `infer_vision`. La voz va por `/v1/realtime` del motor, fuera del
+  contrato v1.
 - Especificaciones: `docs/specs/` · Decisiones: `docs/adr/00-INDICE.md`
   · Plan vigente: `docs/plans/PLAN-1-superficie-inferencia.md`.
 
