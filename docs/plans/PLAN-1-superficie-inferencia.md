@@ -39,13 +39,16 @@ TAREA F1-1
     termina 0
 TAREA F1-2
   Consumes: crea CONTRATO lfm3-omni/superficie-inferencia v1 (REQ-1, REQ-2,
-    REQ-3, REQ-6, REQ-7)
-  Produce:  docs/contracts/superficie-inferencia-v1.md
+    REQ-3, REQ-5, REQ-6, REQ-7, REQ-8) y CONTRATO lfm3-omni/mcp-tools v1
+    (REQ-4) — disposición de la ronda adversarial F1 (hallazgo 2)
+  Produce:  docs/contracts/superficie-inferencia-v1.md y
+    docs/contracts/mcp-tools-v1.md
   Steps:
   - [ ] declarar Entrada/Salida/Errores/Invariantes/Compatibilidad por
     formato 02 §4.2: endpoints /health, /v1/models, /v1/chat/completions
     (texto, visión por image_url, tools, response_format json_schema),
-    voz remitida a realtime; errores 4xx estructurados — verificación: las
+    CORS y límites declarados (hallazgo 5), voz fuera de la frontera v1
+    (hallazgo 6), errores 4xx estructurados — verificación: las
     cinco claves del formato presentes
   - [ ] invariantes del contrato tomados de B-T1..B-T9: greedy y
     determinismo 3/3 observado sin prometerlo entre reinicios, umbral
@@ -98,7 +101,8 @@ TAREA F2-1
   - [ ] esqueleto del servidor MCP sin lógica de negocio — verificación:
     python3 -m py_compile src/mcp_server.py termina 0
 TAREA F2-2
-  Consumes: docs/verificaciones-motor.md §3 (ocho casos con procedencia)
+  Consumes: docs/verificaciones-motor.md §3 (los casos vigentes, con
+    procedencia; once tras la ronda adversarial F1)
   Produce:  tests/golden/casos.json y tests/run_golden.py (stdlib puro)
   Steps:
   - [ ] versionar los ocho casos con entrada, propiedad y procedencia;

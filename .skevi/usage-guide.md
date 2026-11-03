@@ -45,7 +45,8 @@ nada — se activarán en F1 al crear planes y rondas.
 
 ## Dónde están los ADRs y specs de F1
 
-`docs/adr/` — pendiente: F1 no se ha ejecutado todavía.
+`docs/adr/` (índice en `docs/adr/00-INDICE.md`), `docs/specs/`,
+`docs/contracts/` y el registro de rondas en `docs/reviews/`.
 
 ## Drift contra el canon
 

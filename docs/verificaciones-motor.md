@@ -23,6 +23,9 @@
 | B-T7 | Comprensión de imagen | PNG 8×8 completamente rojo (sintético, procedencia §3) → la respuesta identifica el color rojo |
 | B-T8 | ASR por audio en chat OAI | WAV 16 kHz mono de `say "azul"` + system `Perform ASR in Spanish.` → la transcripción contiene «azul» |
 | B-T9 | Frontera fail-closed | JSON malformado o `messages` ausente → HTTP 400 con cuerpo de error estructurado; jamás 2xx |
+| B-T10 | Recursos (REQ-5) | Modelo cargado y bajo generación real: RSS residente del proceso < 4 GB |
+| B-T11 | Cláusula de licencia (REQ-8) | El contrato v1 publicado cita REQ-8 y EV-10 |
+| B-T12 | Binding exclusivo (REQ-2) | Los sockets en escucha del puerto muestran solo 127.0.0.1:8091 |
 
 ## 2. Resultados
 
@@ -37,8 +40,12 @@
 | B-T7 | **pass** | respuesta: «rojo» |
 | B-T8 | **fail** | HTTP 400 `unsupported content[].type` — el endpoint OpenAI de este build no acepta `audio_url`; la voz entra por `/v1/realtime` (WebSocket) según la ficha del modelo |
 | B-T9 | **pass** | 400 `parse_error…` y 400 `'messages' is required`, cuerpos estructurados |
+| B-T10 | **pass** | salud 200 y completación real; RSS residente 23 MiB bajo carga — los pesos van por mmap al file cache y no cuentan como RSS anónimo; huella máxima observada 2.78 GiB en warmup (EV-9). Propiedad `< 4 GB` por cualquier conteo |
+| B-T11 | **pass** | el contrato cita REQ-8 y EV-10 (2 apariciones cada uno) |
+| B-T12 | **pass** | `lsof` muestra solo `TCP 127.0.0.1:8091 (LISTEN)` del proceso del motor |
 
-Balance: **8 pass / 1 fail**. El fail de B-T8 es una capacidad del
+Balance: **12 pass / 1 fail** (11 pass + B-T10/B-T11/B-T12 añadidos por la
+ronda adversarial; ver §7). El fail de B-T8 es una capacidad del
 endpoint, no del motor: la ficha oficial ubica la voz en tiempo real en
 `/v1/realtime` (WebSocket) — su verificación queda pendiente para F1/F3
 con un cliente WS mínimo.
@@ -89,8 +96,27 @@ Cada caso registra entrada, propiedad esperada y procedencia (06 §3):
 ## 5. Qué gradúa al contrato F1
 
 - Endpoints declarados: `/v1/chat/completions` (texto + visión + tools +
-  `response_format` json_schema), `/v1/models`, `/health`; voz por
-  `/v1/realtime` (pendiente de verificación WS propia).
+  `response_format` json_schema), `/v1/models`, `/health`; la voz NO
+  forma parte de la frontera v1 (B-T8; `/v1/realtime` sin verificar,
+  sonda aparte en F3-3).
+
+## 7. Adiciones por ronda adversarial (2026-11-02)
+
+La ronda adversarial de F1 (docs/reviews/2026-11-f1-adversarial.md,
+contexto fresco real vía subagente independiente) produjo 13 hallazgos
+(2 BLOQ, 5 MAYOR, 6 MENOR), todos declarativos o de trazabilidad. Esta
+batería ganó tres casos como disposición directa:
+
+- **B-T10** (de hallazgo 3): REQ-5 estaba trazado a B-T5 (throughput),
+  que no prueba su criterio. Se creó el caso binario propio. Matiz de
+  medición registrado: en macOS con carga mmap, el RSS anónimo del
+  proceso no refleja la huella completa; se registran ambos valores
+  (23 MiB residente bajo carga; 2.78 GiB máximo observado en warmup).
+- **B-T11** (de hallazgo 1): REQ-8 sin SPEC — la cláusula de licencia
+  del contrato es verificable como propiedad binaria por búsqueda.
+- **B-T12** (de hallazgo 4): el invariante de binding citaba B-T1, que
+  solo prueba respuesta en localhost, no exclusividad. Se creó el caso
+  con `lsof`, que confirma un único socket en 127.0.0.1:8091.
 - Muestreo de contrato: greedy (`--temp 0`), determinismo 3/3 observado;
   el contrato no promete determinismo byte a byte entre reinicios.
 - Umbral de rendimiento de contrato: ≥ 15 tok/s mediana n=3 (observado
