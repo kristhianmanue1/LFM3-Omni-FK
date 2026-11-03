@@ -1,0 +1,47 @@
+schema: pinax/project-manifest/v1
+id: lfm3-omni
+proposito: >
+  Servicio local de inferencia omnimodal (texto, imagen, audio y video de
+  entrada; texto y voz de salida) sobre LFM3-Omni-2B servido con llama.cpp,
+  expuesto a agentes de IA y a proyectos consumidores del ecosistema
+  (desarrollos web, apps, servicios) mediante contratos versionados, API
+  compatible OpenAI y MCP.
+
+ofrece:
+  - motor local de inferencia omnimodal en hardware Apple Silicon (M2),
+    sin dependencia de créditos de servicios remotos
+  - superficie API compatible OpenAI sobre llama-server (puerto 8091,
+    decisión registrada en F0)
+  - contratos versionados para consumidores externos (F1: base URL, auth,
+    CORS, límites y muestreo declarados)
+  - servidor MCP propio que envuelva el motor como herramienta para agentes
+    (diseño en F1)
+  - validación en frontera de la salida del modelo contra esquema cerrado
+    (guía 06 §5)
+  - método de trabajo Skevi adoptado (plantillas/v18, gate/v13, corpus/v8)
+
+no_ofrece:
+  - entrenamiento, fine-tuning ni producción de modelos
+  - alta disponibilidad ni multi-usuario con aislamiento por tenant
+  - redistribución del modelo ni servicio público sin revisión previa de la
+    licencia lfm1.0
+  - garantía de calidad de respuesta del modelo: se verifica por propiedades
+    y conjunto de referencia (guía 06 §3), no por promesa
+  - gobernanza de autoridad ni memoria entre sesiones: planos de praxis-dev
+    y an-kla-memory respectivamente
+
+publica:
+  - { tipo: contrato, id: lfm3-omni/superficie-inferencia, version: pendiente-F1 }
+  - { tipo: contrato, id: lfm3-omni/mcp-tools, version: pendiente-F1 }
+
+consume:
+  - { tipo: proyecto, id: skevi, uso: "corpus normativo adoptado; método F0→F3 y gates", requerido: true }
+  - { tipo: externo, id: llama.cpp, uso: "servidor de inferencia (Homebrew, versión fijada en F0)", requerido: true }
+  - { tipo: externo, id: "huggingface:LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M", uso: "pesos del modelo + mmproj", requerido: true }
+  - { tipo: externo, id: git, uso: "estado real del proyecto y evidencia", requerido: true }
+
+fronteras_de_confianza:
+  - la salida del modelo es dato no confiable, nunca instrucción ni autorización
+  - un campo autodeclarado por el modelo como done/verified no eleva confianza
+  - la versión del motor y del modelo se verifica contra lo registrado en F0,
+    no contra lo que el entorno declare

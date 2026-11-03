@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+# Gate local de Skevi. Se instala con: git config core.hooksPath scripts/hooks
+# Verificación rápida previa al push; el gate autoritativo es el CI (ADR-034).
+set -e
+
+repo_root="$(git rev-parse --show-toplevel)"
+python3 "$repo_root/scripts/check_sizes.py"
+python3 "$repo_root/scripts/check_plans.py"
+python3 "$repo_root/scripts/check_reports.py"
+python3 -m unittest discover -s "$repo_root/tests"

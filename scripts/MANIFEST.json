@@ -1,0 +1,109 @@
+{
+  "schema": "skevi/script-manifest/v1",
+  "version": "gate/v13",
+  "generated_at": "2026-10-29T15:35:14Z",
+  "files": {
+    "check_sizes.py": "sha256:ad0cdfc8d618f97c14e45cb94e9f2111b6567db9f74edda75bb9ccb50c12d054",
+    "check_plans.py": "sha256:37f9203df1e37b8765d49f5715465348871f89c27ee1a367d3b034accf720395",
+    "check_reports.py": "sha256:5663866d6575765be22353f9587c743005f3e612153efd492279b68bf0a0f21c",
+    "check_templates.py": "sha256:12ffbcdac0c27c3b9cd7e9f2f4cb14b9390667790ff85db2d6f9687167b480e7"
+  },
+  "history": [
+    {
+      "from": "gate/v2",
+      "to": "gate/v3",
+      "breaking": false,
+      "changes": {
+        "check_templates.py": "validación de campos obligatorios y tipos; namespace en inglés",
+        "check_sizes.py": "validación de campos obligatorios y archivos ocultos, identidad gate/v3 y namespace en inglés",
+        "check_reports.py": "nombres internos ingleses con compatibilidad de imports y argumentos previos"
+      }
+    },
+    {
+      "from": "gate/v3",
+      "to": "gate/v4",
+      "breaking": false,
+      "changes": {
+        "check_sizes.py": "clave exempt_names: exención por nombre de archivo; el gate mide el disco por diseño (ADR-030)"
+      }
+    },
+    {
+      "from": "gate/v4",
+      "to": "gate/v5",
+      "breaking": false,
+      "changes": {
+        "check_templates.py": "source con formato cerrado <origen>@<revisión> (ADR-031)"
+      }
+    },
+    {
+      "from": "gate/v5",
+      "to": "gate/v6",
+      "breaking": false,
+      "changes": {
+        "check_sizes.py": "mensajes de fallo con clave sugerida (#41.2); validación del manifiesto de corpus (ADR-032)",
+        "check_templates.py": "tercera familia corpus (ADR-032)"
+      }
+    },
+    {
+      "from": "gate/v6",
+      "to": "gate/v7",
+      "breaking": true,
+      "changes": {
+        "check_sizes.py": "REQUIRED apunta a templates/skevi/ (ADR-036). MIGRACIÓN ANTES DE RE-COPIAR: mueve templates/plan-de-implementacion.md y templates/registro-contexto.md a templates/skevi/, o declara tus propias rutas en la clave required de skevi-gate.json. Sin ese paso, el gate copiado falla con «falta archivo requerido»."
+      }
+    },
+    {
+      "from": "gate/v7",
+      "to": "gate/v8",
+      "breaking": false,
+      "changes": {
+        "check_sizes.py": "el listado exacto del manifiesto ignora la basura del SO por una constante cerrada del script, no por `exempt_names` (issue #59): la config del adoptante sigue sin poder retirar un archivo real del versionado, y un nombre declarado en el manifiesto se coteja igual",
+        "check_templates.py": "los avisos de re-copia se acotan a lo declarado en installed.json y lo que cambia y no figura en el registro del consumidor se anuncia aparte, sin llamarlo nuevo; la rama breaking imprime el texto de migración del manifiesto, saneado como dato no confiable —una línea, sin controles, acotado— (issue #57); y un salto breaking cuyos archivos afectados están todos declarados customized deja de anunciarse como «sin saltos breaking»: se nombra, con su migración, sin cambiar el código de salida; todo lo que venga del manifiesto ajeno y se imprima —texto y nombres— se sanea a una línea sin controles y acotada a 600, que es más que el texto de migración más largo del propio proyecto"
+      }
+    },
+    {
+      "from": "gate/v8",
+      "to": "gate/v9",
+      "breaking": true,
+      "changes": {
+        "check_sizes.py": "partición del gate (ADR-039, issue #61): la validación estructural de manifiestos y su cotejo contra el disco se mudan a check_templates.py, su dueño por materia; este script queda con tamaños, canónicos, ruta de lectura e identidad, y delega por import. MIGRACIÓN ANTES DE RE-COPIAR: copia check_sizes.py y check_templates.py JUNTOS — check_sizes importa ahora a check_templates y una re-copia parcial falla con ImportError al arrancar (fail-closed, no validación a medias). Sin cambio de comportamiento observable: mismos mensajes y códigos de salida; GATE_GENERATED_AT regenerada",
+        "check_templates.py": "asume su dominio completo (ADR-039): llega la validación estructural de manifiestos fuente con listado exacto y digests contra disco, modelo de fallo en lista agregable, idénticos mensajes; _load_manifest (CLI) sigue fallando al primer defecto. Re-cópialo junto con check_sizes.py"
+      }
+    },
+    {
+      "from": "gate/v9",
+      "to": "gate/v10",
+      "breaking": true,
+      "changes": {
+        "check_sizes.py": "coherencia root_markdown ↔ reading_path (issue #63, tarea HG-3): un Markdown operativo de raíz declarado en «root_markdown» y ausente de «reading_path.files» con presupuesto activo es ahora BLOQ con remedio en el mensaje — antes el gate quedaba en verde midiendo una ruta incompleta (falsa comodidad de #42/#63, dos adoptantes reales). MIGRACIÓN ANTES DE RE-COPIAR: declara tus Markdown de raíz extra en reading_path.files con el presupuesto que corresponda (la plantilla usage-guide documenta el caso, límite 1400 como ejemplo) o, si no son de lectura obligatoria, muévelos fuera de la raíz del proyecto"
+      }
+    },
+    {
+      "from": "gate/v10",
+      "to": "gate/v11",
+      "breaking": true,
+      "changes": {
+        "check_sizes.py": "ADR-041: con reading_path activo, AGENTS.md y CLAUDE.md (sólo si existen en la raíz) deben figurar en reading_path.files — la entrada del ejecutor es lectura obligatoria y un presupuesto que la omite mide una ruta incompleta; README queda fuera (cara humana). MIGRACIÓN ANTES DE RE-COPIAR: añade tu archivo de entrada a reading_path.files con el presupuesto que corresponda. Además: cableado de la cuarta familia de manifiesto (ADR-040) sobre docs/adr/MANIFEST.json",
+        "check_templates.py": "ADR-040: cuarta familia skevi/adr-manifest/v1 (namespace adr/vN) con listado exacto del directorio plano; sin esquema de instalación — existe para verificar descargas, no como flujo de adopción"
+      }
+    },
+    {
+      "from": "gate/v11",
+      "to": "gate/v12",
+      "breaking": true,
+      "changes": {
+        "check_plans.py": "ADR-045: regla E6 — una TAREA cuyo campo Permitido: (con continuación) nombra push o merge declara, al mismo nivel, Lote: con un folio (identificador con al menos un dígito; rechaza TBD, relleno y <...>); verifica forma, no aceptación. Primera regla que falla por vocabulario, acotada al campo (excepción a REQ-2 de ADR-014). MIGRACIÓN ANTES DE RE-COPIAR: añade Lote: <folio> a cada TAREA cuyo Permitido: nombre push o merge",
+        "check_sizes.py": "identidad gate/v12 (2026-10-29)"
+      }
+    },
+    {
+      "from": "gate/v12",
+      "to": "gate/v13",
+      "breaking": false,
+      "changes": {
+        "check_plans.py": "ADR-046: frontera final en OPERACION_RE — «pushes», «merged» y «mergeable» ya no activan E6; «Force-Push», la negación y la palabra exacta siguen activando. No breaking: ningún plan válido pasa a fallar. Tests de flexión en test_check_plans.py",
+        "check_sizes.py": "GATE_VERSION y GATE_GENERATED_AT a gate/v13 (2026-10-29)"
+      }
+    }
+  ]
+}
