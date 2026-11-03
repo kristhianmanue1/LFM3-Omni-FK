@@ -84,7 +84,9 @@ requerido antes de contarlo como gate de verdad).
 
 ## Dependencias activas del ecosistema
 
-- **AN-KLA Memory:** no instalada.
+- **AN-KLA Memory:** instalada (2026-11-03) — memoria local gobernada en
+  `.an-kla/memory/`, pipeline propose → plan-write → commit-write-plan,
+  sin bloque de contexto en `AGENTS.md` (lectura vía `an-kla retrieve`).
 - Otras dependencias declaradas: llama.cpp (Homebrew) y el modelo
   `LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M` (Hugging Face) — artefactos externos
   de régimen congelado por registro; sus versiones vigentes y el comando de
