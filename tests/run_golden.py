@@ -1,0 +1,248 @@
+#!/usr/bin/env python3
+"""Runner del conjunto de referencia (golden set) de LFM3-Omni.
+
+Ejecuta los casos de tests/golden/casos.json contra el motor vivo en
+127.0.0.1:8091 y reporta pass / fail / known-fail por caso. Reglas de
+06-componentes-con-llm.md: propiedades binarias, umbrales declarados
+en el registro, la salida del modelo es dato no confiable.
+
+Salida esperada con el motor vigente: 12 pass, 0 fail. B-T8 documenta
+una limitación vigente del build (audio de entrada rechazado por chat);
+si esa propiedad deja de cumplirse, el runner la marca FAIL como alarma
+de cambio contractual (v2).
+
+Uso: python3 tests/run_golden.py [--rapido]
+  --rapido omite B-T5 (throughput, ~90 s) y lo reporta omitido.
+"""
+
+import base64
+import json
+import statistics
+import struct
+import subprocess
+import sys
+import time
+import urllib.error
+import urllib.request
+import zlib
+from pathlib import Path
+
+RAIZ = Path(__file__).resolve().parent.parent
+CASOS = RAIZ / "tests" / "golden" / "casos.json"
+CONTRATO = RAIZ / "docs" / "contracts" / "superficie-inferencia-v1.md"
+BASE = "http://127.0.0.1:8091"
+MODELO = "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M"
+PROMPT_SERIE = "Completa exactamente: 1, 2, 3, 4, 5, 6, 7, 8, 9, ..."
+
+
+def chat(payload, timeout=120):
+    req = urllib.request.Request(
+        BASE + "/v1/chat/completions",
+        data=json.dumps(payload).encode(),
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return resp.status, json.loads(resp.read())
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read())
+
+
+def png_rojo():
+    ancho = alto = 8
+    bruto = b"".join(b"\x00" + b"\xff\x00\x00" * ancho for _ in range(alto))
+
+    def trozo(tipo, datos):
+        cuerpo = tipo + datos
+        return struct.pack(">I", len(datos)) + cuerpo + struct.pack(">I", zlib.crc32(cuerpo))
+
+    png = (
+        b"\x89PNG\r\n\x1a\n"
+        + trozo(b"IHDR", struct.pack(">IIBBBBB", ancho, alto, 8, 2, 0, 0, 0))
+        + trozo(b"IDAT", zlib.compress(bruto))
+        + trozo(b"IEND", b"")
+    )
+    return base64.b64encode(png).decode()
+
+
+def bt1_salud():
+    req = urllib.request.Request(BASE + "/health")
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        cuerpo = json.loads(resp.read())
+    return resp.status == 200 and cuerpo.get("status") == "ok"
+
+
+def bt2_modelo():
+    with urllib.request.urlopen(BASE + "/v1/models", timeout=5) as resp:
+        ids = [m["id"] for m in json.loads(resp.read())["data"]]
+    return ids == [MODELO]
+
+
+def bt3_esquema():
+    estado, cuerpo = chat({
+        "messages": [{"role": "user", "content": "Registra a Ana de 34 años según el esquema."}],
+        "max_tokens": 48,
+        "response_format": {"type": "json_schema", "json_schema": {
+            "name": "registro",
+            "schema": {"type": "object", "properties": {
+                "nombre": {"type": "string"}, "edad": {"type": "integer"}},
+                "required": ["nombre", "edad"]}},
+    }})
+    if estado != 200:
+        return False
+    try:
+        datos = json.loads(cuerpo["choices"][0]["message"]["content"])
+    except (json.JSONDecodeError, KeyError):
+        return False
+    return isinstance(datos.get("nombre"), str) and isinstance(datos.get("edad"), int)
+
+
+def _serie():
+    estado, cuerpo = chat({
+        "messages": [{"role": "user", "content": PROMPT_SERIE}],
+        "max_tokens": 24,
+    })
+    return estado, cuerpo["choices"][0]["message"]["content"]
+
+
+def bt4_determinismo():
+    salidas = [_serie()[1] for _ in range(3)]
+    return salidas[0] == salidas[1] == salidas[2]
+
+
+def bt5_throughput():
+    picos = []
+    for _ in range(3):
+        _, cuerpo = chat({
+            "messages": [{"role": "user",
+                          "content": "Escribe los números del 1 al 40, uno por línea, sin comentarios."}],
+            "max_tokens": 64,
+        })
+        picos.append(cuerpo["timings"]["predicted_per_second"])
+        time.sleep(20)
+    mediana = statistics.median(picos)
+    print(f"    (throughput medido: {picos} -> mediana {mediana:.1f} tok/s)")
+    return mediana >= 15
+
+
+def bt6_tools():
+    estado, cuerpo = chat({
+        "messages": [{"role": "user", "content": "¿Qué tiempo hace en CDMX? Usa la herramienta get_weather."}],
+        "tools": [{"type": "function", "function": {
+            "name": "get_weather",
+            "description": "Obtiene el clima actual de una ciudad",
+            "parameters": {"type": "object",
+                           "properties": {"city": {"type": "string"}},
+                           "required": ["city"]}}}],
+        "tool_choice": "auto",
+        "max_tokens": 96,
+    })
+    llamada = cuerpo["choices"][0]["message"].get("tool_calls")
+    if estado != 200 or not llamada:
+        return False
+    funcion = llamada[0]["function"]
+    argumentos = json.loads(funcion["arguments"])
+    return funcion["name"] == "get_weather" and isinstance(argumentos.get("city"), str)
+
+
+def bt7_vision():
+    estado, cuerpo = chat({
+        "messages": [{"role": "user", "content": [
+            {"type": "image_url", "image_url": {"url": "data:image/png;base64," + png_rojo()}},
+            {"type": "text", "text": "¿De qué color es esta imagen? Responde con una sola palabra."}]}],
+        "max_tokens": 32,
+    })
+    texto = cuerpo["choices"][0]["message"]["content"].lower()
+    return estado == 200 and ("rojo" in texto or "red" in texto)
+
+
+def bt8_audio_conocido():
+    # known-fail: el build 0.8.0 rechaza audio en chat; la propiedad
+    # esperada ES el rechazo 400. Si responde 200, el contrato cambió.
+    falso_wav = base64.b64encode(b"RIFF....WAVEfmt ").decode()
+    estado, _ = chat({
+        "messages": [{"role": "user", "content": [
+            {"type": "audio_url", "audio_url": {"url": "data:audio/wav;base64," + falso_wav}},
+            {"type": "text", "text": "Transcribe."}]}],
+        "max_tokens": 16,
+    })
+    return estado == 400
+
+
+def bt9_fail_closed():
+    req = urllib.request.Request(
+        BASE + "/v1/chat/completions", data=b"{invalid",
+        headers={"Content-Type": "application/json"})
+    try:
+        urllib.request.urlopen(req, timeout=5)
+        return False
+    except urllib.error.HTTPError as exc:
+        if exc.code != 400:
+            return False
+        cuerpo = json.loads(exc.read())
+        if not isinstance(cuerpo.get("error"), dict):
+            return False
+    estado, cuerpo = chat({})
+    return estado == 400 and isinstance(cuerpo.get("error"), dict)
+
+
+def bt10_recursos():
+    chat({"messages": [{"role": "user",
+                        "content": "Escribe los números del 1 al 40, uno por línea."}],
+          "max_tokens": 64})
+    pid = subprocess.run(["pgrep", "-f", "llama-server.*--port 8091"],
+                         capture_output=True, text=True).stdout.split()
+    for p in pid:
+        rss = int(subprocess.run(["ps", "-o", "rss=", "-p", p],
+                                 capture_output=True, text=True).stdout.strip() or 0)
+        if rss > 4 * 1024 * 1024:
+            print(f"    (pid {p} RSS {rss // 1024} MiB)")
+            return False
+    return True
+
+
+def bt11_licencia():
+    texto = CONTRATO.read_text(encoding="utf-8")
+    return "REQ-8" in texto and "EV-10" in texto
+
+
+def bt12_binding():
+    salida = subprocess.run(["lsof", "-nP", "-iTCP:8091", "-sTCP:LISTEN"],
+                            capture_output=True, text=True).stdout
+    lineas = [l for l in salida.splitlines() if "(LISTEN)" in l]
+    return bool(lineas) and all("127.0.0.1:8091" in l for l in lineas)
+
+
+CHECKS = {
+    "B-T1": bt1_salud, "B-T2": bt2_modelo, "B-T3": bt3_esquema,
+    "B-T4": bt4_determinismo, "B-T5": bt5_throughput, "B-T6": bt6_tools,
+    "B-T7": bt7_vision, "B-T8": bt8_audio_conocido, "B-T9": bt9_fail_closed,
+    "B-T10": bt10_recursos, "B-T11": bt11_licencia, "B-T12": bt12_binding,
+}
+
+
+def main():
+    rapido = "--rapido" in sys.argv
+    declarados = json.loads(CASOS.read_text(encoding="utf-8"))["casos"]
+    pasan = conocidos = fallan = 0
+    for caso in declarados:
+        cid = caso["id"]
+        if rapido and cid == "B-T5":
+            print(f"{cid} omitido — (--rapido)")
+            continue
+        resultado = CHECKS[cid]()
+        if resultado:
+            pasan += 1
+            print(f"{cid} pass — {caso['titulo']}")
+        elif caso.get("documenta_limitacion"):
+            fallan += 1
+            print(f"{cid} FAIL — {caso['titulo']}: la limitación ya no se sostiene; cambio contractual (v2)")
+        else:
+            fallan += 1
+            print(f"{cid} FAIL — {caso['titulo']}")
+    print(f"resumen: {pasan} pass, {fallan} fail")
+    return 1 if fallan else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

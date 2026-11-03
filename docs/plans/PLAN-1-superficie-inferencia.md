@@ -93,7 +93,8 @@ TAREA F1-5
 TAREA F2-1
   Consumes: CONTRATO v1, SPEC-1, ADR-001, ADR-002
   Produce:  README.md, src/mcp_server.py (esqueleto), tests/golden/,
-    examples/, run/
+    run/ (sin carpeta examples/ en F2: cero directorios vacíos, 03 §1.3;
+    examples/cliente_minimo.py llega con F3-2)
   Steps:
   - [ ] crear árbol y README (< 300 líneas, propósito, arranque, contrato) —
     verificación: wc -l README.md <= 300 y python3 scripts/check_sizes.py
@@ -108,9 +109,10 @@ TAREA F2-2
   - [ ] versionar los ocho casos con entrada, propiedad y procedencia;
     audio marcado known-fail con su registro — verificación: cada caso
     lleva las tres claves
-  - [ ] runner que ejecuta contra localhost:8091 y reporta pass/fail/
-    known-fail — verificación: python3 tests/run_golden.py imprime
-    8 pass y 1 known-fail
+  - [ ] runner que ejecuta contra localhost:8091 y reporta pass/fail por
+    propiedad — verificación: python3 tests/run_golden.py imprime
+    12 pass y 0 fail (B-T8 documenta la limitación vigente; si dejara de
+    cumplirse, el runner lo marca como cambio contractual)
 TAREA F2-3
   Consumes: ADR-001 (runbook)
   Produce:  run/serve.sh y run/stop.sh

@@ -38,7 +38,7 @@
 | B-T5 | **pass** (con anomalía registrada, §4) | corridas: 55.9 / 54.8 / 56.6 tok/s → mediana **55.9 ≥ 15** |
 | B-T6 | **pass** | `tool_calls[0].function = get_weather`, `arguments = {"city":"CDMX"}` |
 | B-T7 | **pass** | respuesta: «rojo» |
-| B-T8 | **fail** | HTTP 400 `unsupported content[].type` — el endpoint OpenAI de este build no acepta `audio_url`; la voz entra por `/v1/realtime` (WebSocket) según la ficha del modelo |
+| B-T8 | **fail como capacidad, pass como regresión** | HTTP 400 `unsupported content[].type` — el endpoint OpenAI de este build no acepta `audio_url`; la voz NO forma parte del contrato v1 (verificaciones-motor §7 y contrato v1). El golden set ejecuta la segunda lectura: la limitación se sostiene → pass; si se dejara de sostener → alarma de cambio contractual |
 | B-T9 | **pass** | 400 `parse_error…` y 400 `'messages' is required`, cuerpos estructurados |
 | B-T10 | **pass** | salud 200 y completación real; RSS residente 23 MiB bajo carga — los pesos van por mmap al file cache y no cuentan como RSS anónimo; huella máxima observada 2.78 GiB en warmup (EV-9). Propiedad `< 4 GB` por cualquier conteo |
 | B-T11 | **pass** | el contrato cita REQ-8 y EV-10 (2 apariciones cada uno) |

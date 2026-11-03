@@ -1,4 +1,5 @@
 .DS_Store
 *.log
+*.pid
 __pycache__/
 .venv/
