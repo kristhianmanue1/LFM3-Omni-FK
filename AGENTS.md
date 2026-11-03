@@ -39,6 +39,9 @@ No asumas el contenido de un archivo que no leíste.
   y muestreo greedy (`--temp 0`) según la ficha oficial del modelo.
 - **Exposición: solo localhost** (humano, 2026-11-02); LAN o público exigen
   nueva decisión registrada, con api-key.
+- **Ruta de UI del ecosistema**: encargo con interfaz gráfica →
+  frontExpert como base (contrato v2) + skevi como método;
+  ver `docs/ruteo-ui-frontexpert.md`.
 
 ## Reglas no negociables
 

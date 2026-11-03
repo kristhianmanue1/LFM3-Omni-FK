@@ -40,6 +40,7 @@ consume:
   - { tipo: externo, id: llama.cpp, uso: "servidor de inferencia (Homebrew, versión fijada en F0)", requerido: true }
   - { tipo: externo, id: "huggingface:LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M", uso: "pesos del modelo + mmproj", requerido: true }
   - { tipo: externo, id: git, uso: "estado real del proyecto y evidencia", requerido: true }
+  - { tipo: proyecto, id: frontExpert, uso: "base obligada para encargos con interfaz gráfica (regla de ruteo del ecosistema, 2026-11-02; adopción por contrato v2 en proyecto nuevo si la demanda incluye UI)", requerido: false }
 
 fronteras_de_confianza:
   - la salida del modelo es dato no confiable, nunca instrucción ni autorización
