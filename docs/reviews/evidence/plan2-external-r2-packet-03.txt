@@ -1,0 +1,80 @@
+0064 riesgo, coste/hardware requerido y estado. No marcar verified porque lo
+0065 publique el proveedor. Ejemplo: candidato mejora visión según su ficha;
+0066 la medición local aún no existe.
+0067 Persistencia de estos registros será código de I2-V con contrato cerrado,
+0068 retención/paths fijados en SPEC; este archivo no escribe memoria AN-KLA.
+0069 
+0070 ## Máquina de estados de candidato
+0071 
+0072 Estados: detected -> triaged -> evaluation_authorized -> evaluated ->
+0073 rejected | promotion_proposed -> accepted -> canary -> active -> retired.
+0074 blocked es una anotación, no un estado alternativo: conserva prior_state,
+0075 blocked_reason, blocked_at y owner. Entra al faltar dependencia, sale al
+0076 registrar resolución verificada y continúa desde prior_state, sin saltar
+0077 gates ni aceptar autoridad nueva. rollback devuelve baseline previo.
+0078 Transición temprana explícita: triaged -> rejected por licencia,
+0079 incompatibilidad o coste no aceptable. Evidencia mínima: fuente/revisión,
+0080 razón, responsable, fecha y hashes/config del baseline intactos; no exige
+0081 descarga, autorización de evaluación, benchmark ni canario.
+0082 
+0083 - detected/triaged: sólo metadatos; no descargar o ejecutar código del autor.
+0084 - evaluation_authorized: permiso de descarga, destino, coste, datos,
+0085   duración y acciones exactas registrado; entorno aislado del baseline.
+0086 - evaluated: mediciones reproducibles y límite de incertidumbre.
+0087 - promotion_proposed: dossier contrato/migración/licencia/rollback/revisión.
+0088 - accepted: autorización del Operador, no autodeclaración del modelo.
+0089 - canary: exposición acotada autorizada; no datos reales por defecto.
+0090 - active: criterios canario cumplidos y activación exacta aceptada.
+0091 - retired: fecha de fin, consumidores avisados por canal autorizado,
+0092   versión anterior recuperable según retención acordada.
+0093 
+0094 Cada transición conserva autor, autoridad, artefactos exactos y evidencia.
+0095 Promoción modifica baseline sólo mediante operación registrada. Vigilar y
+0096 clasificar son autoridades diferentes de descargar, probar y activar.
+0097 
+0098 ## Evaluación de mejora
+0099 
+0100 Antes de cada experimento fijar hipótesis, corpus, umbrales, presupuesto,
+0101 comparador y criterio de rechazo. Mantener corpus estable; casos nuevos se
+0102 versionan por separado y se evalúan en ambos candidatos. Comparar:
+0103 
+0104 - Conformidad de contratos, rechazo de entradas y estabilidad.
+0105 - Calidad por tarea/idioma y modalidad; no sólo benchmarks del proveedor.
+0106 - Éxito de schema, propuesta de tools válida y resistencia a instrucciones
+0107   maliciosas en texto/imagen; no se pretende prueba universal de seguridad.
+0108 - Latencia p50/p95, TTFT, throughput bajo carga, memoria/presión/swap,
+0109   energía si se mide, cancelación y recuperación.
+0110 - Coste de operación y disponibilidad del hardware real.
+0111 - Licencia y términos aplicables a entidad y forma de ofrecer el servicio.
+0112 
+0113 Regla candidata: 100% de propiedades contractuales críticas; cero
+0114 HIGH/BLOCKER abiertos; calidad no inferior al margen fijado por tarea;
+0115 latencia/memoria dentro de SLO aceptados. No compensar ruptura de seguridad
+0116 con promedio de calidad. Si mejora una tarea y empeora otra, proponer perfil
+0117 nuevo o rechazar; nunca cambiar alias servido en silencio.
+0118 
+0119 La ficha/modelo nuevo no implica motor compatible: evaluar pareja completa.
+0120 Si se requiere motor distinto, probarlo como cambio separado antes del
+0121 modelo, manteniendo posibilidad de atribuir la regresión.
+0122 
+0123 ## Canario y rollback
+0124 
+0125 Antes: baseline y configuración recuperables, corpus/cliente de control,
+0126 consumidores y ventana de prueba identificados. Canario candidato: sólo
+0127 proyectos de prueba autorizados, hasta 1 h o 100 llamadas, lo primero que
+0128 ocurra; parar ante error crítico, fuga, presión de memoria o incumplir SLO.
+0129 Si el presupuesto no permite carga suficiente, resultado inconcluso.
+0130 
+0131 Rollback: retirar ruta/candidato, restaurar artefactos/config exactos,
+0132 comprobar modelo servido y batería crítica; registrar intervalo afectado y
+0133 resultados desconocidos. No borrar evidencia para dejar verde el informe.
+0134 Motor congelado no significa ignorar vulnerabilidades: ante afectación,
+0135 contener/revocar exposición y elevar decisión; no actualizar sin permiso.
+0136 
+0137 ## Pruebas de la vigilancia
+0138 
+0139 Usar fixtures locales: revisión idéntica, nueva revisión, etiqueta movida,
+0140 fuente caída, timeout, respuesta enorme, redirección host no permitido,
+0141 licencia cambiada y metadato que contiene instrucciones. Todos deben dejar
+0142 baseline intacto. Job ausente no se reporta sano: estado not_configured.
+0143 Una simulación verifica procedimiento; no acredita vigilancia en producción.

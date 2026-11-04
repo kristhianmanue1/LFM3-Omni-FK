@@ -1,0 +1,10 @@
+{
+  "autoupdate": false,
+  "snapshot": false,
+  "permission": "deny",
+  "agent": {
+    "plan": {
+      "permission": "deny"
+    }
+  }
+}

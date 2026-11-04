@@ -1,13 +1,20 @@
 # LFM3-Omni
 
-Servicio local de inferencia omnimodal — texto, imagen, audio y video de
-entrada; texto y voz de salida — sobre `LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M`
-servido con llama.cpp en Apple Silicon. Superficie para agentes de IA y
-para proyectos consumidores del ecosistema (web, apps): contratos
-versionados, API compatible OpenAI y MCP.
+Servicio local de inferencia sobre el modelo omnimodal
+`LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M`, servido con llama.cpp en Apple
+Silicon. El contrato v1 ofrece texto e imagen de entrada y texto de
+salida para agentes de IA y proyectos consumidores del ecosistema
+(web, apps): contratos versionados, API compatible OpenAI y MCP.
+Audio, video y voz de salida no están ofrecidos por el contrato v1;
+la voz realtime completa sigue aplazada.
 
 Estado: v0.1.0 — F0–F3 cerrados con evidencia y rondas adversariales;
 motor verificado, contratos v1 publicados y MCP implementado (F3-1).
+
+Evolución propuesta a servicio compartido: ver
+[PLAN LFM3-2](docs/plans/PLAN-2-servicio-compartido.md), con entregas
+incrementales, contratos de consumo y ciclo de vida del modelo. Es un plan
+para revisión y adopción; no acredita funcionalidades remotas activas.
 
 ## Requisitos
 
@@ -75,14 +82,13 @@ su propiedad de regresión es que el rechazo se sostenga.
 - **Runtime:** python3 (stdlib, probado con el python3 del sistema) y
   bash; motor fijado por ADR-001.
 - **Linter/formateador:** ninguno por ahora (03 §3: sólo si el proyecto
-  dura más de una sesión; se decidirá en F3 con el primer código de
-  producción).
+  dura más de una sesión); decisión pendiente, sin herramienta adoptada.
 - **CI:** ninguno — no hay remoto declarado (decisión del humano: no
   quemar créditos); un pipeline sin nada que comprobaría sería peor.
   Las decisiones de exposición de red viven en F0 (CERRADA-6).
 - **Límites de tamaño:** heredados del estándar (800 líneas por archivo,
   200 para instrucciones de agentes, 300 para README); presupuesto de
-  ruta de lectura en `skevi-gate.json` (1300).
+  ruta de lectura en `skevi-gate.json` (1800, adopción de AN-KLA).
 - **LICENSE:** pendiente — el repositorio no se publica hoy; el modelo
   que sirve está bajo LFM Open License v1.0 (umbral comercial de
   10 M USD; ver REQ-8/EV-10 en el contrato). Al decidir publicación,

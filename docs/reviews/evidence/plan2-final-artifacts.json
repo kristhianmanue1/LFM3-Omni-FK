@@ -1,0 +1,13 @@
+{
+  "schema": "lfm3-omni/document-review-final/v1",
+  "captured_at": "2026-11-04T18:08:16.594511+00:00",
+  "files": {
+    "docs/roadmap/objetivo-y-alcance-servicio.md": "f4672fff49ef4d0f7bb4d463f2be4a5ad69ae9087d4c724419ae20118d052ebd",
+    "docs/plans/PLAN-2-servicio-compartido.md": "925ff4f294fa911475a958f54e5e5d5a3436b8b5b12669bb4d23eae18e4920f5",
+    "docs/roadmap/iteraciones-servicio.md": "ff4db74cf2b417e23c4de2201b4d794b11e98220ec39c0f92e2a40322e27b8a7",
+    "docs/contracts/servicio-general-v2.md": "1aa18595a9a0acf3db6986e905a7d350424038c931f746407185c0c220497d27",
+    "docs/contracts/perfiles-servicio-v2.md": "7477063f3f1b266294f80b5b0ce12c49de097f8997eea2431fceb5835541ba46",
+    "docs/roadmap/ciclo-vida-modelo.md": "d5318be5a7fa8ae7374af6e37ace37bacfe1b3815f369ddf124419650be6c79c"
+  },
+  "post_external_delta": "PLAN sequence sentence: conditional by candidate or modality; wording-only correction of internal LOW; no task/contract change"
+}

@@ -1,0 +1,210 @@
+0011 Motor: llama-server 0.8.0 (build 11960) + LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M
+0012   (ADR-001; cambiar motor o modelo es incompatible y exige v2)
+0013 CORS: el build vigente refleja cualquier Origin con credentials
+0014   (aviso registrado del log de arranque); aceptable sólo mientras el
+0015   vínculo sea localhost (CERRADA-6). Cualquier cambio de vínculo exige
+0016   api-key + --cors-origins explícitos antes de arrancar.
+0017 Operación (nota no contractual): timeout de lectura/escritura del
+0018   servidor 3600 s (default del build); concurrencia efectiva 4 slots
+0019   (n_slots); caché de prompt activa (prefijos compartidos aceleran el
+0020   prompt eval, observado 200 tok/s con LCP similarity).
+0021   max_tokens: rango recomendado 1..4096 (el build no lo valida; ver
+0022   Entrada).
+0023 
+0024 Entrada:
+0025   GET /health
+0026     — sin campos. Verificación de vida.
+0027   GET /v1/models
+0028     — sin campos. Descubrimiento del modelo servido.
+0029   POST /v1/chat/completions
+0030     messages: array [obligatorio] — roles system|user|assistant;
+0031       content como string o partes:
+0032       {type:"text", text} | {type:"image_url", image_url:{url:"data:image/png;base64,..." | data:image/jpeg;base64,...}}
+0033       (JPEG declarado, no ejercitado por batería: B-T7 midió PNG)
+0034       Nota de superficie (ronda v0.1.0): el build TAMBIÉN acepta urls
+0035       http(s) en image_url.url e intenta descargarlas server-side
+0036       (fetch saliente; 500 si falla). PROHIBIDO para el consumidor:
+0037       rechaza toda url no-data antes de enviar — es superficie SSRF
+0038       contenida solo por CERRADA-6
+0039     tools: array [opcional] — {type:"function", function:{name,
+0040       description, parameters: JSON Schema}}
+0041     tool_choice: "auto" [opcional]
+0042     response_format: {type:"json_schema", json_schema:{name, schema}}
+0043       [opcional] — fuerza salida JSON conforme al esquema (B-T3)
+0044     max_tokens: entero [opcional] — techo pedido de generación. El build
+0045       NO valida el rango: 0, -1 y 4097 se aceptan con 2xx (ignorado o
+0046       truncado sin error); el rango recomendado del contrato es 1..4096
+0047       y su verificación es del lado consumidor
+0048     stream: boolean [opcional] — SSE con chunks en formato OpenAI
+0049       (object: "chat.completion.chunk", delta por token); verificado
+0050       2026-11-03 (mejora aditiva compatible)
+0051 Salida:
+0052   choices[0].message.content: string — texto de respuesta
+0053   choices[0].finish_reason: "stop" | "length" (truncado por max_tokens)
+0054     — el consumidor DEBE verificarlo para detectar cortes (H6 ronda v0.1.0)
+0055   choices[0].message.tool_calls: array — {id: string, function:{name,
+0056     arguments: string JSON}} cuando el modelo decide llamar una tool (B-T6)
+0057   usage: {prompt_tokens, completion_tokens, total_tokens}
+0058   timings: {prompt_per_second, predicted_per_second} — medición del
+0059     servidor, base del umbral contractual
+0060   (con stream:true: líneas "data: {chunk}" SSE terminadas en
+0061     data: [DONE]; usage por chunk solo con stream_options — fuera de
+0062     esta versión)
+0063 Errores:
+0064   400 {error:{code,message,type}} — entrada malformada o campo no
+0065     soportado (p. ej. audio en chat en este build, B-T8); estado: sin
+0066     efecto lateral ("slot queda libre": no ejercitado por batería,
+0067     comportamiento estándar del build)
+0068   503 — motor cargando; estado: reintentable (no ejercitado por
+0069     batería; comportamiento estándar del build; máquina de estados en
+0070     SPEC-1)
+0071   500 — fetch server-side fallido (image_url http inalcanzable);
+0072     estado: sin efecto lateral; el consumidor no debería llegar aquí
+0073     si rechaza urls no-data antes de enviar (ronda v0.1.0)
+0074   404 — ruta o método equivocado (p. ej. GET en chat/completions);
+0075     estado: sin efecto lateral
+0076 Invariantes:
+0077   - Escucha únicamente en 127.0.0.1:8091 — fuente: CERRADA-6 + runbook
+0078     de ADR-001; verificación binaria B-T12
+0079   - Modelo servido exactamente LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M (B-T2)
+0080   - Muestreo greedy (--temp 0) y --reasoning off; determinismo 3/3
+0081     observado en corridas contiguas, sin prometerlo entre reinicios
+0082     del proceso (B-T4)
+0083   - Toda salida que un consumidor persista o reenvíe pasa antes por
+0084     validación contra esquema cerrado — response_format en la llamada
+0085     o validador del consumidor (REQ-7) (B-T3)
+0086   - Rendimiento contractual: mediana de n=3 corridas de 64 tokens
+0087     >= 15 tok/s en predicted_per_second; observado 55.9 (B-T5)
+0088   - Fail-closed ESTRUCTURAL (B-T9): JSON malformado, messages ausente o
+0089     content[] con tipo no soportado → 400 estructurado; jamás 2xx
+0090     ambiguo ahí. NO es fail-closed de campos: el build IGNORA campos
+0091     top-level no reconocidos con 2xx (temperature, seed, typos) — el
+0092     consumidor valida su payload antes de enviar; el greedy sobrevive a
+0093     esos overrides (verificado, ronda v0.1.0)
+0094   - La voz NO forma parte de esta frontera v1: audio de entrada por
+0095     chat se rechaza con 400 (B-T8); el endpoint /v1/realtime existe en
+0096     el build pero no está verificado ni declarado aquí — de incorporarse,
+0097     exigirá v2. Su verificación de capacidad es tarea aparte (F3-3)
+0098   - Recursos: RSS residente con el modelo cargado < 4 GB (REQ-5, B-T10)
+0099   - Licencia del modelo: LFM Open License v1.0 — consumo interno del
+0100     ecosistema dentro de licencia; todo esquema de cobro a terceros se
+0101     documenta y se mantiene bajo el umbral de la licencia (REQ-8, EV-10,
+0102     B-T11)
+0103 Compatibilidad:
+0104   - Compatible hacia atrás: añadir campos opcionales de entrada;
+0105     ampliar salidas con campos nuevos; corregir mensajes de error sin
+0106     cambiar códigos.
+0107   - Exige v2: cambiar host o puerto declarados; restringir entradas hoy
+0108     aceptadas; cambiar códigos de error; cambiar motor o modelo (ADR-001);
+0109     incorporar la voz a la frontera declarada.
+0110 ```
+0111 
+0112 ## Casos de verificación contractual
+0113 
+0114 Los casos B-T1..B-T12 de docs/verificaciones-motor.md son los casos de
+0115 prueba de este contrato (SPEC-1 los traza 1:1). Un fallo de cualquiera
+0116 de ellos con el motor vigente es regresión contractual, no incidencia
+0117 del consumidor.
+
+
+## FILE docs/contracts/mcp-tools-v1.md
+SHA256 851ed193f72a5af0863395e53149cb5f419fe08e76259cd168299331eb7c20e7
+
+0001 # CONTRATO: lfm3-omni/mcp-tools v1
+0002 
+0003 > Frontera del servidor MCP propio hacia agentes consumidores
+0004 > (transporte stdio, ADR-002). Comportamiento detallado en SPEC-2
+0005 > (docs/specs/SPEC-2-mcp.md); delega en el CONTRATO
+0006 > lfm3-omni/superficie-inferencia v1 como consumidor, sin ampliar sus
+0007 > límites. Implementado en F3-1 del PLAN LFM3-1.
+0008 > Identificadores y claves en inglés (elección persistente de idiomas,
+0009 > ADR-029; sin excepciones).
+0010 
+0011 ```text
+0012 CONTRATO: lfm3-omni/mcp-tools v1
+0013 Transporte: stdio (JSON-RPC por stdin/stdout; sin sockets propios)
+0014 Consumidor típico: agente CLI que lanza el binario como hijo
+0015 
+0016 Entrada:
+0017   initialize: handshake MCP estándar [obligatorio como primer método;
+0018     versión negociada contra las soportadas por el servidor]
+0019   tools/list: sin campos [requiere initialize previo]
+0020   tools/call [requiere initialize previo]:
+0021     name: "health" | "infer_text" | "infer_vision" [obligatorio]
+0022     arguments.health: ninguno ({} o ausente; cualquier campo se rechaza)
+0023     arguments.infer_text:
+0024       prompt: string [obligatorio] (1..8000 caracteres)
+0025       schema: objeto JSON Schema [opcional; null explícito se rechaza;
+0026         subconjunto soportado: type/properties/required/items — claves
+0027         fuera del subconjunto se rechazan fail-closed]
+0028       max_tokens: entero [opcional] (1..4096; defecto 512)
+0029     arguments.infer_vision:
+0030       image_base64: string [obligatorio] — PNG o JPEG, verificado por
+0031         firma de bytes en la frontera (no por el MIME declarado)
+0032       prompt: string [obligatorio] (1..8000 caracteres)
+0033     campos no declarados en arguments: se rechazan nombrando el campo
+0034       (superficie cerrada)
+0035 Salida:
+0036   initialize → {protocolVersion, capabilities:{tools}, serverInfo}
+0037   tools/list → {tools:[health, infer_text, infer_vision + inputSchema]}
+0038   tools/call → sobre CallToolResult estándar de MCP: el resultado viaja
+0039     como string JSON dentro de content[0].text, con isError:boolean al
+0040     nivel del result (H4 ronda v0.1.0). El JSON interno por tool:
+0041     health → {state:"up"|"down", model:string, port:8091}
+0042     infer_text → {text:string, validated:boolean, usage:objeto}
+0043     infer_vision → {description:string, usage:objeto}
+0044 Errores:
+0045   motor no disponible → isError:true, mensaje explícito — estado: sin
+0046     efecto lateral, reintentable
+0047   motor rechazó la entrada (HTTP 400) → isError:true con el detalle del
+0048     motor — estado: sin efecto lateral; NO es reintentable tal cual
+0049   motor cargando (HTTP 503) → isError:true, reintentable
+0050   arguments fuera de rango, tipo incorrecto, campo no declarado o
+0051     imagen sin firma PNG/JPEG → isError:true con el campo rechazado —
+0052     estado: sin efecto lateral
+0053   salida del motor que viola el schema pedido o carece de forma válida
+0054     (choices/content/usage) → isError:true "salida_invalida" — estado:
+0055     sin efecto lateral; jamás contenido no validado presentado como
+0056     válido (REQ-7)
+0057   tool no conocida → error JSON-RPC -32602
+0058   métodos previos a initialize (excepto initialize) → error JSON-RPC
+0059     -32002
+0060   JSON no parseable → error JSON-RPC -32700
+0061   notificación JSON-RPC (sin id) → sin respuesta
+0062 Invariantes:
+0063   - Solo stdin/stdout y el motor en 127.0.0.1:8091 (ADR-002, CERRADA-6)
+0064   - Latencia: infer_text con max_tokens alto puede tardar minutos al
+0065     umbral contractual (4096 tokens a ≥15 tok/s ≈ 273 s peor caso;
+0066     observado ~19 s a ~55 tok/s — mediana B-T5: 55.9). Configura el
+0067     timeout del cliente MCP en consecuencia — el default de OpenCode
+0068     (30 s) mata llamadas válidas (ronda v0.1.0, H3); recomendado:
+0069     360000 ms
+0070   - Validación en frontera de toda salida del motor: forma cerrada
+0071     (choices/content string/usage objeto) y conformidad al schema
+0072     pedido con el subconjunto declarado arriba (REQ-7)
+0073   - La salida del modelo es dato no confiable: nunca se ejecuta ni se
+0074     reenvía como instrucción (principio 7)
+0075   - Stateless: ninguna conversación se persiste en v1
+0076   - El MCP nunca amplía los límites del contrato v1 (host, puerto,
+0077     campos): es consumidor del contrato, no fuente de excepciones
+0078   - Los identificadores y claves (health, infer_text, infer_vision,
+0079     prompt, schema, max_tokens, image_base64, state, model, port, text,
+0080     validated, description, usage) son parte del contrato: renombrarlos
+0081     exige v2
+0082   - Las descripciones de infer_vision se generan con un techo interno
+0083     de 1024 tokens: descripciones largas pueden quedar cortadas
+0084   - El modelo reportado por health se contrasta contra /v1/models del
+0085     motor; divergencia se reporta como state "down" (principio 3)
+0086   - Licencia del modelo heredada del contrato v1 (REQ-8, EV-10)
+0087 Compatibilidad:
+0088   - Compatible: añadir tools o campos opcionales de salida
+0089   - Exige v2: renombrar o retirar tools/campos; cambiar transporte;
+0090     ampliar límites del contrato v1; ampliar el subconjunto de schema
+0091 ```
+0092 
+0093 ## Verificación
+0094 
+0095 Los casos de SPEC-2 (docs/specs/SPEC-2-mcp.md) y la tabla de casos
+0096 borde de la ronda adversarial F3 (docs/reviews/2026-11-f3-adversarial.md)
+0097 son los casos de prueba de este contrato; tests/test_mcp_server.py los
+0098 implementa (RED-GREEN, 37 tests).

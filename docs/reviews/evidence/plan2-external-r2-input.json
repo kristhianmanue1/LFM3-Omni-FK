@@ -1,0 +1,30 @@
+{
+  "schema": "lfm3-omni/document-review-input/v1",
+  "review": "external-r2",
+  "configured_model": "zai-coding-plan/glm-5.3-flash",
+  "files": {
+    "docs/roadmap/objetivo-y-alcance-servicio.md": "f4672fff49ef4d0f7bb4d463f2be4a5ad69ae9087d4c724419ae20118d052ebd",
+    "docs/plans/PLAN-2-servicio-compartido.md": "3b1540b6f53d93995075b67364eb89a46f462abe8bf6b2b7cc2c09717896fe74",
+    "docs/roadmap/iteraciones-servicio.md": "ff4db74cf2b417e23c4de2201b4d794b11e98220ec39c0f92e2a40322e27b8a7",
+    "docs/contracts/servicio-general-v2.md": "1aa18595a9a0acf3db6986e905a7d350424038c931f746407185c0c220497d27",
+    "docs/contracts/perfiles-servicio-v2.md": "7477063f3f1b266294f80b5b0ce12c49de097f8997eea2431fceb5835541ba46",
+    "docs/roadmap/ciclo-vida-modelo.md": "d5318be5a7fa8ae7374af6e37ace37bacfe1b3815f369ddf124419650be6c79c"
+  },
+  "packet_sha256": "48b49aa176089ed0c3ad624574b78a47a64cb21ad778eb8f84b050b3ac4a0bc3",
+  "packet_parts": [
+    "plan2-external-r2-packet-01.txt",
+    "plan2-external-r2-packet-02.txt",
+    "plan2-external-r2-packet-03.txt"
+  ],
+  "status": "completed",
+  "context": "new session with previous external findings, author disposition and full corrected six documents; not a fresh-blind review",
+  "session_id": "ses_e5844c297ffeOUV5nwy13rytP6",
+  "command_exit_code": 0,
+  "result": "proceed",
+  "raw_events_sha256": "15dde4bfcf80b6ebb5384deef292ee2bcf5199bece0d4fe85b84201debb25d24",
+  "observed_event_types": [
+    "step_finish",
+    "step_start",
+    "text"
+  ]
+}

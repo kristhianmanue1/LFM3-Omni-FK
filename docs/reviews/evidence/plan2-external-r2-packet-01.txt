@@ -1,0 +1,600 @@
+# Comprobación de correcciones documentales
+
+Correcciones para comprobar, sin presuponer cierre:
+F-01: I0-R separa fixes compatibles v1 de restricciones en adaptador local v2.
+F-02: D-04 y anexo separan experimento A con política final de piloto y rechazos medidos, y B aislado de capacidad con config autorizada; sin bypass en producción.
+F-03: I2-D dueño de ADR/mecanismo/allowlist/autoridad egreso; I2-P lo implementa y verifica; mecanismo inviable bloquea remoto.
+F-04: I0-D registra D-01 aceptada y resto pendiente hasta su gate.
+F-05: cancel tiene mapeo estado/status; M mapea cancel nativo de protocolo a operación general, H DELETE explícito.
+F-06: desacuerdo parcial: compatibilidad de subconjunto no exige ignorar todos los parámetros SDK. Se mantiene rechazo explícito; SPEC define campo admitido/aplicado vs rechazado y fixtures SDK/version/config. No se promete soporte universal ni ignorar en silencio.
+F-07: digest de payload normalizado/defaults con RFC8785 y reuso posterior a24h declarado nuevojob.
+F-08: backend W responsable correlación usuario-request minimizada; H no promete atribuir humano a credencial de proyecto.
+F-09: frase de envelope J corregida.
+F-10: I2-D suplente/canal; I2-V verifica, escalado local si sin canal externo; blocked anotación con retorno a prior_state.
+F-11: SPEC I1-D asigna puerto configurable y colisiones.
+F-12: errores aclaran umbrales por perfil/version y capabilities.
+
+
+# Hallazgos previos del revisor externo
+
+# Revisión adversarial documental independiente — Paquete PLAN LFM3-2
+
+**Método.** Revisión puramente documental, sin herramientas ni comandos (denegados), sin historial de autor ni rondas previas. Leí los seis documentos propuestos completos y los contrasté contra `superficie-inferencia-v1.md` y `mcp-tools-v1.md`. Las líneas citan el paquete recibido. No ejecuté pruebas ni verifiqué hashes.
+
+## Hallazgos priorizados
+
+**F-01 · ALTA · I0-R ordena "corregir" v1 rompiendo su propia cláusula de compatibilidad.**
+Archivo/líneas: PLAN (64–71); iteraciones (43–47, 47–61); superficie-v1 Compatibilidad (103–109); mcp-v1 (87–91).
+Contraejemplo: v1 acepta hoy bool como number y PNG truncado (sondas, objetivo 35–37); v1 exige v2 para "restringir entradas hoy aceptadas". I0-R Produce "correcciones locales" y verifica "suite/golden sin regresiones": si el fix rechaza bool o PNG truncado en la superficie v1, un golden que capturaba 2xx pasa a 400 — el ejecutor no puede satisfacer a la vez I0-R y la compatibilidad v1; iteraciones (43–47) ya lo prohíbe ("no anunciar v1 reparado"), pero el plan, que es lo que ordena tareas (203), no incorpora esa división.
+Impacto: riesgo de reparación silenciosa de v1 o de gate I0 imposible de cerrar limpio.
+Corrección: dividir I0-R en fixes no observables como restricción (crashes, medición B-T10) aplicables a v1, y rechazos de entradas antes aceptadas detrás de adaptador/flag v2 con v1 intacto; ajustar Produce y verificación.
+
+**F-02 · ALTA · Gate I2: la matriz de carga 1/2/4/8 es inobservable bajo los límites candidatos.**
+Archivo/líneas: iteraciones (105–112) vs servicio-general (37–41).
+Contraejemplo: concurrencia global 1, por proyecto 1, cola por proyecto 2, 10 ll/min: a concurrencia 8, ~5 de 8 peticiones reciben 429/503/queue_timeout; TTFT/total p95 a 4–8 no puede medirse. El SLO ("solicititudes válidas admitidas", 99–101) excluye rechazos de política, así que el gate "pasa" sin haber observado nunca la concurrencia que exige.
+Impacto: benchmark no concluyente o tentación de relajar límites sin decisión registrada.
+Corrección: que D-04 fije además la configuración de medición (principal de benchmark con límites elevados, o política documentada como desviación durante la corrida), conservando los límites ratificados para activación.
+
+**F-03 · MEDIA-ALTA · Vacío sin responsable: la denegación de egreso del motor exigida por el gate I2 no la produce ninguna tarea.**
+Archivo/líneas: iteraciones (124–127); PLAN I2-D (98–103), I2-P (104–111); superficie-v1 (35–38).
+Contraejemplo: el gate exige "verificación negativa y control positivo" del egreso del backend; ningún Produce implementa el mecanismo (PF/launchd/sandbox — hipótesis a verificar en SPEC) sobre un binario Homebrew congelado; "destinos de mantenimiento autorizados" (125) carecen de lista y de autoridad que los apruebe.
+Impacto: gate incerrable por quien ejecuta I2-P; la superficie SSRF hoy contenida sólo por localhost queda expuesta tras I2 sin control real. Este es un vacío sin responsable, no un gate de diseño futuro asignado.
+Corrección: ADR de egreso en I2-D (mecanismo, lista de destinos, autoridad) y Produce explícito en I2-P ("política de egreso implementada y verificada"). Contraste: el dialecto de schema sí está asignado (servicio-general 146–148 → I0-D) y el schema del perfil D también (perfiles 95); esos no son vacíos.
+
+**F-04 · MEDIA · I0-D declara producir decisiones D-01..D-07 que no vencen en I0.**
+Archivo/líneas: PLAN (57–58) vs objetivo (84–94).
+Contraejemplo: el Produce de I0-D incluye "decisiones D-01..07"; D-05 vence "antes I4-UI" y D-06 "antes I6": cerrarlas en I0 contradice sus fechas y forzaría decisiones sin datos (hardware, demanda, UI).
+Impacto: ejecutor literal bloquea I0 o decide fuera de su tiempo/autoridad.
+Corrección: reformular Produce como "registro de D-01..D-07 con estados (D-01 cerrada; resto pendiente con fecha límite)".
+
+**F-05 · MEDIA · Cancelación: semántica accepted|pending indefinida y cancel ausente del perfil M.**
+Archivo/líneas: servicio-general (16–18, 79–86); perfiles M (48–49).
+Contraejemplo: el contrato no define cuándo se devuelve `accepted` frente a `pending` (¿queued vs running?); M lista tools sin `cancel` y remite a "cancelación por transporte", mientras el contrato declara `cancel` operación común y S-05 exige paridad HTTP/MCP.
+Impacto: dos implementaciones conformes devolverían estados distintos; el consumidor MCP carece de camino contractual explícito de cancelación.
+Corrección: mapear cada estado de solicitud → `cancellation_status` y declarar en M si cancel viaja como tool o como cancelación de protocolo MCP con semántica idéntica a la del contrato.
+
+**F-06 · MEDIA · "Rechazar campos desconocidos" choca con la compatibilidad OpenAI declarada del perfil H.**
+Archivo/líneas: servicio-general (22); perfiles H (11–13, 19–21, 87); superficie-v1 (88–93).
+Contraejemplo: SDKs OpenAI envían `temperature`/`seed`/`top_p` habituales; v1 los ignora con 2xx; H los rechazaría con 400 por la regla global, mientras H promete compatibilidad de subconjunto OpenAI y S-06 exige ejemplos ejecutables.
+Impacto: rotura de clientes reales y de los ejemplos del propio plan.
+Corrección: en SPEC-HTTP, lista de campos aceptados-e-ignorados (muestreo bajo greedy) distinta de los desconocidos-rechazados, documentada como desviación.
+
+**F-07 · MEDIA · Idempotencia J: igualdad de cuerpo sin canonicalización y reuso de clave tras tombstone sin definir.**
+Archivo/líneas: perfiles J (111–130).
+Contraejemplo: reintento con claves JSON reordenadas → "cuerpo distinto" → 409 espurio; tras 24 h de tombstone, repetir la misma clave crea un job nuevo que duplica ejecución, sin conducta contractual declarada ("no exactly-once" cubre fallos, no reuso de clave).
+Impacto: conflictos falsos para clientes legítimos; duplicación silenciosa en automatizaciones de larga vida.
+Corrección: definir comparación canónica (o declarar byte-exacto) y documentar el comportamiento post-TTL (nuevo job_id) en contrato y ejemplos.
+
+**F-08 · MEDIA-BAJA · Perfil W: la atribución por usuario final se disuelve en el principal de proyecto.**
+Archivo/líneas: perfiles W (70–87); servicio-general (10–14, 131).
+Contraejemplo: el backend autentica al usuario y llama a H con credencial de proyecto; los logs del servicio sólo ven al principal; la auditoría ("acceso administrativo auditado") termina en el backend sin campo contractual de correlación.
+Impacto: abuso por usuario final no investigable desde el servicio; obligación de auditoría difusa.
+Corrección: declarar responsable explícito (backend) y añadir campo opcional de correlación con nota de minimización, o aceptar documentadamente el límite.
+
+**F-09 · BAJA · Frase colgante en J.**
+Archivo/líneas: perfiles J (126–127): "…aceptación no acredita cómputo detenido. resultado con contrato general."
+Contraejemplo: oración sin verbo; queda sin definir si el resultado viaja en el envelope del contrato general.
+Impacto: ambigüedad menor en documento normativo.
+Corrección: "El resultado se entrega en el envelope del contrato general."
+
+**F-10 · BAJA · Vigilancia: suplente y canal de aviso sin fecha límite ni tarea; estado `blocked` fuera del diagrama.**
+Archivo/líneas: ciclo-vida (23–24, 55–56, 70–72); PLAN I2-D/I2-V.
+Contraejemplo: mantenedor se designa en I2-D, pero suplente/canal quedan "antes de automatizar notificaciones" sin D-id ni Produce; la escalada tras dos fallos consecutivos (55–56) puede quedarse sin destinatario; `blocked` (72) no tiene transiciones en el diagrama (70–71).
+Impacto: hueco de autoridad en el ciclo de vida; estado no operativo.
+Corrección: asignar suplente/canal al checklist I2-D; formalizar `blocked` como estado o etiqueta con entrada/salida.
+
+**F-11 · BAJA · Puerto del gateway I1 sin decisión asignada.**
+Archivo/líneas: iteraciones (73–75); objetivo D-03 (90).
+Contraejemplo: D-03 cubre host/dominio/TLS "antes I2"; el puerto loopback del gateway que I1-A implementa no está en la tabla de decisiones ni mandato de SPEC I1-D; "no asumir puerto libre" se reconoce, nadie lo cierra.
+Impacto: bloqueo menor o elección ad hoc en I1-A.
+Corrección: fijar puerto en SPEC I1-D con verificación de colisión.
+
+**F-12 · BAJA · Umbrales de códigos de error presentados como globales admiten overrides por perfil.**
+Archivo/líneas: servicio-general (40–41, 100–104) vs perfiles J (137).
+Contraejemplo: la tabla general fija cola ≤10 s → `queue_timeout` y procesamiento ≤120 s; J propone cola 60 s y procesamiento 600 s; la marca "I1/I2" de la tabla (26) es fácil de pasar por alto y la sección Errores no repite el alcance.
+Impacto: consumidor asume 504 a los 10 s para jobs.
+Corrección: anotar en Errores que los umbrales son por perfil y versionados, con referencia a cada perfil.
+
+## Veredicto
+
+**fix-and-retry.** La arquitectura es coherente, la disciplina de autoridad es notablemente buena y la utilidad por iteración es real (I0 local → I1 API → I2 piloto → I3 agentes → I4 clientes → I5 jobs → I6 modalidades). Pero F-01 y F-02 son contradicciones ejecutables dentro de gates I0/I2, y F-03 es un vacío sin responsable en un gate de seguridad multiusuario; ninguna exige implementación ahora, todas son correcciones documentales previas a la decisión D-01. Los gates de diseño futuro correctamente asignados (dialecto schema→I0-D; matriz MCP→ADR I3-D; schema D→SPEC por tarea) no se contaron como defectos.
+
+## Límites de la revisión
+
+- Documental y de un solo pase; sin herramientas, sin ejecución de gates, sin pruebas, sin red ni memoria.
+- Sin historia de autor ni rondas previas, según el encargo; los números de línea son los del paquete recibido, no verifiqué hashes SHA256.
+- Las hipótesis de factibilidad (PF/launchd para egreso; SDKs OpenAI y campos por defecto) son razonamientos a confirmar en SPEC, no mediciones.
+- No exijo que el software futuro exista hoy; cada hallazgo se contrastó con la distinción gate-asignado vs vacío-sin-responsable.
+- Proveedor/modelo: autodeclaración del agente sin metadatos de runtime para confirmarla — GLM (Z.ai), modelo GLM-5.3 Flash.
+
+🎙 jarvis: LFM3-2 · verificación · He concluido la revisión adversarial independiente: doce hallazgos priorizados, dos de ellos altos, con veredicto fix-and-retry servido para su decisión; ninguna prueba fue ejecutada ni archivo tocado. · El plan está bien cortado, operador; sólo pide unos ajustes de sastrería antes de la decisión D-01.
+
+Confirmado el estado: estoy en modo Plan, y la revisión ya fue entregada íntegramente en la conversación — sin crear ni tocar archivos, sin herramientas, tal como exigía el encargo. Nada por corregir en ese respecto.
+
+Si el veredicto **fix-and-retry** se acepta, la ronda de corrección sería puramente documental y constaría de, en orden sugerido:
+
+1. **F-01 (alta)** — Reescribir la TAREA I0-R del plan: separar fixes no-observables (aplicables a v1) de rechazos de entradas antes aceptadas (detrás de adaptador v2), y ajustar su Produce y verificación.
+2. **F-02 (alta)** — Añadir a D-04 en `objetivo-y-alcance-servicio.md` la configuración de medición del benchmark (principal/límites de prueba como desviación documentada).
+3. **F-03 (media-alta)** — ADR de egreso del motor en I2-D y Produce explícito en I2-P; cerrar el vacío sin responsable.
+4. **F-04 a F-12** — Ajustes menores: registro de decisiones D-01..07 en I0-D, mapeo `cancellation_status`, política de campos ignorados en SPEC-HTTP, canonicalización de idempotencia J, frase colgante en perfiles J, suplente/canal en I2-D, puerto del gateway en SPEC I1-D, y nota de alcance por perfil en la sección Errores.
+
+Todas son ediciones de los seis documentos propuestos, sin implementación ni activación — coherente con D-01 y con la autoridad del encargo original.
+
+**Nota de modo:** no puedo aplicar esas ediciones ni tocar ningún archivo mientras permanezca en este agente. Si desea que ejecute la ronda de corrección sobre los documentos, deberá cambiar a un agente con capacidad de edición; entonces procedería con encargo explícito y solo sobre esos ficheros.
+
+🎙 jarvis: LFM3-2 · documentación · El informe quedó servido en la conversación y la ronda de corrección queda esbozada en doce remates, sin que un solo archivo haya sido molestado. · En modo Plan solo sirvo el té; para la costura, deberá cambiar de agente.
+
+
+# Archivos actuales completos
+
+
+## FILE docs/roadmap/objetivo-y-alcance-servicio.md
+SHA256 f4672fff49ef4d0f7bb4d463f2be4a5ad69ae9087d4c724419ae20118d052ebd
+
+0001 # Objetivo y alcance — evolución a servicio compartido
+0002 
+0003 Estado: propuesta de F0 para PLAN LFM3-2, 2026-11-04.
+0004 Autoridad: encargo del Operador de esta sesión para producir un plan
+0005 incremental, contratos, vigilancia del ciclo de vida y dos revisiones.
+0006 Autoriza documentos y revisiones; no implementación, activación ni Git.
+0007 Procedencia normativa: AGENTS.md, estándar transversal y guías 01/02/04/06.
+0008 Razón: ampliar consumidores exige una frontera distinta de localhost v1.
+0009 
+0010 ## Objetivo del producto
+0011 
+0012 Ofrecer a agentes, proyectos web, apps, dispositivos/robots y humanos un
+0013 servicio de inferencia compartido, versionado y verificable, con identidad,
+0014 recursos acotados y capacidades declaradas. Comenzar por texto e imagen
+0015 sobre el motor local vigente; habilitar acceso remoto de forma incremental.
+0016 El resultado del modelo es una propuesta de datos, nunca autoridad para
+0017 actuar ni garantía de verdad, seguridad física o validez de dominio.
+0018 
+0019 Resultado observable: dos proyectos identificados consumen el mismo
+0020 servicio mediante clientes documentados, sin conocer detalles del motor,
+0021 sin acceder a recursos del otro y con errores y límites previsibles.
+0022 
+0023 ## Estado de partida y procedencia
+0024 
+0025 - HEAD de partida: 4572164270073431a765e53e1353a233b0897dec.
+0026 - Rama de trabajo: docs/reconcile-current-state; dos correcciones
+0027   documentales locales preceden a este plan y deben preservarse.
+0028 - Contratos v1 locales existentes: superficie-inferencia y mcp-tools.
+0029 - llama-server --version observado: 0.8.0 b11960, commit 8642541b2.
+0030 - F0 histórico fija Apple M2/16 GiB y localhost:8091; no se revalidó
+0031   hardware ni capacidad sostenida en esta planificación.
+0032 - Ronda F3 histórica declara 37 tests y 12 golden; no son una prueba nueva
+0033   de capacidad multiusuario ni acreditan aislamiento entre consumidores.
+0034 - AN-KLA context status y verify: ok; sin cambio de memoria en este encargo.
+0035 - Sondas sintéticas de la sesión reprodujeron: bool como number, esquema
+0036   no soportado anidado omitido, cabecera PNG truncada aceptada, truncamiento
+0037   de salida no comunicado y B-T10 exitoso sin PID. Deben volverse RED en I0.
+0038 - Aceptar propiedades adicionales es legal en JSON Schema por defecto;
+0039   no acredita forma cerrada. No confundir este límite con aquel defecto.
+0040 
+0041 ## Requisitos de la ampliación
+0042 
+0043 Todos provienen del encargo actual y las recomendaciones analizadas en
+0044 sesión; su adopción para ejecución se decide en el gate I0-D.
+0045 
+0046 | ID | Requisito | Aceptación | Prioridad |
+0047 |---|---|---|---|
+0048 | S-01 | Inferencia texto/imagen utilizable incrementalmente | demo real y regresión de cada I0–I4 | imprescindible |
+0049 | S-02 | Contrato general y perfiles | versión, errores, límites y matriz de conformidad publicados localmente | imprescindible |
+0050 | S-03 | Identidad y permisos por consumidor | credencial revocada rechazada; cliente A no consulta B | imprescindible remoto |
+0051 | S-04 | Recursos y admisión acotados | exceso rechazado antes del motor; cola saturada no crece | imprescindible |
+0052 | S-05 | Igual política HTTP/MCP | fixtures equivalentes producen igual admisión, rechazo y cuotas | imprescindible |
+0053 | S-06 | Clientes agentes/web/apps/dispositivos | ejemplo ejecutable por perfil, incluido fallo controlado | imprescindible |
+0054 | S-07 | Operación verificable | reinicio, cancelación, salud y recuperación con evidencia | imprescindible |
+0055 | S-08 | Evaluación de capacidad y calidad | umbrales fijados antes de corridas, datos y decisión conservados | imprescindible |
+0056 | S-09 | Ciclo de vida modelo/motor | candidato detectado, evaluado, rechazado o promovido con rollback | imprescindible |
+0057 | S-10 | Datos minimizados y aislados | canarios A/B no cruzan logs, cachés ni resultados | imprescindible |
+0058 | S-11 | Voz/video verificables | demos de modalidad más presupuesto y regresión propios | futuro condicionado |
+0059 | S-12 | Contratos compatibles y migración | consumidor v1 sigue pasando; v2 no se activa por renombrar v1 | imprescindible |
+0060 
+0061 ## Dentro del alcance propuesto
+0062 
+0063 - Núcleo de políticas compartido, API HTTP, adaptadores MCP local/remoto.
+0064 - Autenticación, cuotas, colas limitadas, cancelación, observabilidad.
+0065 - Ejemplos de integración; piloto privado por invitación con HTTPS.
+0066 - Contratos y pruebas de conformidad, incorporación de consumidores.
+0067 - Vigilancia de fichas, artefactos, licencias y avisos de seguridad.
+0068 - Integración robótica de interpretación/propuestas con simulador.
+0069 - Contrato para una UI separada basada en frontExpert + Skevi.
+0070 
+0071 ## Fuera del alcance inicial
+0072 
+0073 - Alta disponibilidad, infraestructura multinodo y autoscaling.
+0074 - Acceso público anónimo, facturación y cobro a terceros.
+0075 - Control de actuadores físicos, navegación crítica o decisiones clínicas.
+0076 - Ejecución de shell/tools arbitrarias sugeridas por el modelo.
+0077 - Entrenamiento, fine-tuning, navegación web, RAG o embeddings no evaluados.
+0078 - Guardar conversaciones, imágenes o audio por defecto.
+0079 - Garantizar exactitud semántica por un schema válido.
+0080 - Actualizar automáticamente motor, modelo o políticas.
+0081 - Crear UI dentro de este repositorio; usar móviles/robots reales como
+0082   sustituto de simuladores sin autorización de esos sistemas.
+0083 
+0084 ## Decisiones pendientes y defaults de propuesta
+0085 
+0086 | ID | Decisión y fecha límite | Default seguro mientras falta |
+0087 |---|---|---|
+0088 | D-01 | Adoptar objetivo y contratos; antes de ejecutar I0 | documentos propuestos, sin activación |
+0089 | D-02 | Proyectos piloto, datos permitidos y responsable; antes I2 | sólo fixtures sintéticos |
+0090 | D-03 | Host, dominio, TLS, red, identidad y presupuesto; antes I2 | sólo loopback, ningún túnel |
+0091 | D-04 | SLO, límites piloto y configuración de medición de capacidad; antes benchmark I2 | valores candidatos, sin SLA ni bypass de cuotas |
+0092 | D-05 | Repositorio/UI y autorización separada; antes I4-UI | cliente mínimo sin UI nueva |
+0093 | D-06 | Modalidad prioritaria, hardware y presupuesto; antes I6 | texto/imagen estables |
+0094 | D-07 | Publicación comercial y licencia de código; antes ofrecerla | piloto interno sin oferta comercial |
+0095 
+0096 Elegir framework, librería de validación, autenticación y supervisor se
+0097 resuelve en ADRs I0/I1: comparar al menos dos alternativas, fijar versiones,
+0098 licencia y superficie de ejecución. No instalar dependencias por este plan.
+0099 Si falta una decisión, bloquear sólo su tarea; preservar la funcionalidad
+0100 ya aceptada. La creación del plan no cambia CERRADA-6 ni ADR-001/002.
+0101 
+0102 ## Criterio de terminación de esta planificación
+0103 
+0104 Plan, contratos propuestos, aceptación por iteración y vigilancia escritos;
+0105 revisión fresca, revisión externa solicitada y disposiciones registradas;
+0106 gates locales ejecutados. Una revisión externa fallida se declara pendiente,
+0107 no se sustituye por atribuir al CLI una aprobación inexistente.
+0108 
+0109 ## Fuentes técnicas para revalidar antes de implementar
+0110 
+0111 Consulta documental de sesión, 2026-11-04; no congela upstream:
+0112 
+0113 - MCP: https://modelcontextprotocol.io/specification/2026-07-28/
+0114 - Modelo: https://huggingface.co/LiquidAI/LFM3-Omni-2B-GGUF
+0115 - Licencia: https://huggingface.co/LiquidAI/LFM3-Omni-2B-GGUF/blob/main/LICENSE
+0116 - Motor: https://github.com/ggml-org/llama.cpp/tree/master/tools/server
+0117 - Consumo: https://genai.owasp.org/llmrisk/llm102025-unbounded-consumption/
+0118 - Agencia: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/
+0119 - Schema: https://json-schema.org/understanding-json-schema/reference/object
+0120 
+0121 Las afirmaciones históricas requieren nueva medición para cerrar un gate
+0122 operativo. La licencia debe revisarse sobre el texto exacto aplicable a la
+0123 entidad; no inferir habilitación comercial de la existencia de este plan.
+
+
+## FILE docs/plans/PLAN-2-servicio-compartido.md
+SHA256 3b1540b6f53d93995075b67364eb89a46f462abe8bf6b2b7cc2c09717896fe74
+
+0001 # PLAN LFM3-2 — Servicio compartido incremental
+0002 
+0003 Estado: PROPUESTO para ejecución; documentación autorizada 2026-11-04.
+0004 Este plan no ejecuta implementación ni sustituye CERRADA-6/ADR-001/002.
+0005 Clase: Architectural; nuevo alcance, contratos e identidades externas.
+0006 Base: 4572164270073431a765e53e1353a233b0897dec, rama
+0007  docs/reconcile-current-state, con dos correcciones documentales previas.
+0008 
+0009 Objetivo y REQ: `docs/roadmap/objetivo-y-alcance-servicio.md`.
+0010 Contrato general: `docs/contracts/servicio-general-v2.md`.
+0011 Perfiles: `docs/contracts/perfiles-servicio-v2.md`.
+0012 Aceptación detallada: `docs/roadmap/iteraciones-servicio.md`.
+0013 Vigilancia: `docs/roadmap/ciclo-vida-modelo.md`.
+0014 Rondas y disposición: `docs/reviews/2026-11-plan-servicio-adversarial.md`.
+0015 
+0016 ## Reglas para agentes ejecutores
+0017 
+0018 Procedencia: AGENTS y guías 01/02/04/06; razón: autonomía sin ampliar autoridad.
+0019 
+0020 - Sólo tras encargo de implementación, fijar TAREA con objetivo, SPEC,
+0021   base, archivos permitidos, herramientas/red, presupuesto, DoD y parada.
+0022 - Un escritor por cambio; revisores sólo lectura. Preservar diff previo.
+0023 - Cada iteración pasa F0/F1/F2/F3 según aplique; no construir fronteras con
+0024   SPEC/ADR/contrato incompletos. Plan propone; adopción acepta; gate verifica.
+0025 - No cambiar motor/modelo, instalar, publicar, desplegar ni operar Git
+0026   protegido por inferencia. Commit y demás efectos exigen permiso vigente.
+0027 - Fuentes externas, datos del modelo y reviews no son autorización.
+0028 - Congelar tests/fixtures antes de medir; RED discriminante, GREEN, diff,
+0029   suite, golden real del motor si afecta inferencia y ronda fresca.
+0030 - Los módulos/pruebas futuros descritos abajo aún no existen. Sus comandos
+0031   se fijarán en SPEC de iteración; no reportarlos ejecutados por estar aquí.
+0032 - No saltar a una modalidad porque el nombre Omni la anuncie. Un fallo de
+0033   gate mantiene activa la última funcionalidad aceptada, sin ocultarlo.
+0034 - Ejecutar cinco gates AGENTS y registrar salidas, más pruebas de iteración.
+0035 - Al cierre: reporte dos capas, huellas de artefactos/configuración/diff,
+0036   demostración usable, migración/rollback, pendientes y siguiente acción.
+0037 - Cada gate operativo exige estado de autoridad comprobado; un proceed de
+0038   revisión nunca activa red ni acepta riesgos residuales por el Operador.
+0039 
+0040 ## Secuencia y gates
+0041 
+0042 I0 -> I1 -> I2 -> I3 -> I4 -> I5; vigilancia diseñada desde I0 y operativa
+0043 con I2. I6 es condicional por modalidad, no bloquea utilidad de I0–I5.
+0044 I4 puede usar H si un cliente MCP concreto no está aprobado; no saltar el
+0045 control de identidad/carga de I2. Decisiones pendientes bloquean su tarea.
+0046 
+0047 ```text
+0048 PLAN LFM3-2 — Servicio compartido incremental
+0049 Autoriza: propuesta S-01..S-12; sólo documentos/revisiones en este encargo
+0050 Restricciones globales:
+0051 - "LAN o público exigen nueva decisión registrada con api-key."
+0052 - "La salida del modelo es dato no confiable".
+0053 - Motor congelado por registro; nunca actualizar ni activar por vigilancia.
+0054 
+0055 TAREAS:
+0056 TAREA I0-D
+0057   Consumes: crea adopción S-01..S-12, SPEC-SERVICE y ADRs de servicio
+0058   Produce: F0 ampliado/F1 I0; matriz REQ-SPEC-test; registro D-01..D-07
+0059   Steps:
+0060   - [ ] cerrar dialecto, perfiles, límites, permisos y ADRs antes de código;
+0061     verificación: revisión fresca sin HIGH/BLOCKER y checklist F1 completo.
+0062   - [ ] adoptar propuesta mediante decisión del Operador para ejecución;
+0063     verificación: alcance/archivos/operaciones aceptados y pendientes claros.
+0064   - [ ] registrar D-01 aceptada y D-02..D-07 pendientes hasta su gate;
+0065     verificación: cada decisión tiene responsable y fecha límite, sin
+0066     exigir decisiones de UI/modalidad/comercialización para cerrar I0.
+0067 TAREA I0-R
+0068   Consumes: S-01/S-02/S-07/S-08/S-12, contratos locales y sondas de sesión
+0069   Produce: fixes compatibles v1 y adaptador local v2 para nuevas restricciones
+0070   Steps:
+0071   - [ ] reproducir defectos y separar comportamiento incompatible de v1;
+0072     verificación: RED/GREEN de B-T10/crashes/fixes compatibles; rechazos
+0073     nuevos de tipos/schema/imagen sólo en adaptador v2, v1 preservado.
+0074   - [ ] demostrar garantías corregidas en adaptador local v2;
+0075     verificación: fixtures v2 pasan y regresión contractual v1 no cambia;
+0076     si no es separable, bloquear su activación y elevar migración.
+0077   - [ ] reparar ciclo de arranque, host explícito y supervisión local;
+0078     verificación: doble arranque, proceso ajeno, caída/reinicio y bind pasan.
+0079 TAREA I0-U
+0080   Consumes: I0-R
+0081   Produce: demo CLI/MCP local usable y cierre I0
+0082   Steps:
+0083   - [ ] demostrar texto, estructura e imagen con errores controlados;
+0084     verificación: demo real más gates, revisión fresca y rollback probado.
+0085 TAREA I1-D
+0086   Consumes: I0, S-02/S-04/S-05/S-10/S-12
+0087   Produce: SPEC-HTTP, ADR de stack/deps y wire schemas cerrados
+0088   Steps:
+0089   - [ ] fijar librerías, licencias, lock, puerto y política compartida;
+0090     verificación: aprobación de dependencias y tests de conformidad escritos.
+0091 TAREA I1-A
+0092   Consumes: I1-D, contrato general y perfil H
+0093   Produce: gateway sólo loopback, capabilities y cliente HTTP de referencia
+0094   Steps:
+0095   - [ ] implementar texto/imagen, errores y validación de salida común;
+0096     verificación: matriz H, exceso antes del motor y demo HTTP real pasan.
+0097   - [ ] preservar v1 local sin passthrough a nuevas rutas administrativas;
+0098     verificación: regresión v1 y denegación de rutas desconocidas pasan.
+0099 TAREA I1-U
+0100   Consumes: I1-A
+0101   Produce: API local usable con límites y guía de incorporación
+0102   Steps:
+0103   - [ ] cerrar instalación reproducible y apagado sin residuos;
+0104     verificación: entorno limpio autorizado reproduce demo y rollback I0.
+0105 TAREA I2-D
+0106   Consumes: I1, D-02/D-03/D-04, S-03/S-04/S-07/S-08/S-10
+0107   Produce: SPEC-PILOT, ADR identidad/red/egreso/supervisor y dossier
+0108   Steps:
+0109   - [ ] fijar proyectos, datos, SLO, host, TLS, responsables y presupuesto;
+0110     verificación: decisiones aceptadas antes de medición y exposición.
+0111   - [ ] cerrar egreso, destinos de mantenimiento y dos perfiles de carga;
+0112     verificación: mecanismo viable y permisos aceptados, responsables de
+0113     vigilancia/suplente/canal registrados y benchmark distinto de piloto.
+0114 TAREA I2-P
+0115   Consumes: I2-D
+0116   Produce: identidad, cuotas/cola, métricas y política de egreso verificadas
+0117   Steps:
+0118   - [ ] implementar identidad, revocación, aislamiento y admisión;
+0119     verificación: A/B, 401/403/413/429/503, prioridad y desconexión pasan.
+0120   - [ ] medir carga y presión de memoria en hardware accesible;
+0121     verificación: protocolo de iteraciones, SLO y recuperación satisfechos.
+0122   - [ ] implementar contención de egreso sólo para el entorno autorizado;
+0123     verificación: destinos negados y control positivo permitido, sin
+0124     alterar firewall global ni procesos ajenos; inviable bloquea remoto.
+0125 TAREA I2-V
+0126   Consumes: I2-P, procedimiento de ciclo de vida
+0127   Produce: inventario fijado y vigilancia reproducible preparada
+0128   Steps:
+0129   - [ ] registrar revisión/hash/licencia, fuentes y ensayo de vigilancia;
+0130     verificación: cambio y no-cambio, fuente caída y candidato rechazado.
+0131 TAREA I2-U
+0132   Consumes: I2-P/I2-V, aceptación específica del dossier de activación
+0133   Produce: piloto HTTPS privado usable por dos proyectos identificados
+0134   Steps:
+0135   - [ ] activar sólo alcance aceptado y probar desde cliente externo;
+0136     verificación: TLS, identidad, modelo efectivo y rollback real pasan.
+0137 TAREA I3-D
+0138   Consumes: I2, S-05/S-06, perfil M
+0139   Produce: SPEC-MCP-REMOTE y ADR de versiones/auth/clientes
+0140   Steps:
+0141   - [ ] fijar Streamable HTTP, OAuth/discovery y matriz de versiones;
+0142     verificación: dos clientes elegidos y pruebas negativas acordados.
+0143 TAREA I3-M
+0144   Consumes: I3-D, núcleo común
+0145   Produce: MCP remoto, cancelación y SSE de texto libre
+0146   Steps:
+0147   - [ ] implementar sin estado de initialize global entre identidades;
+0148     verificación: MCP H/M cuota común, origin, token audience y sesión A/B.
+0149   - [ ] verificar proxy, stream terminal y cancelación en backend;
+0150     verificación: sin buffering ni cupos liberados antes de confirmación.
+0151 TAREA I3-U
+0152   Consumes: I3-M
+0153   Produce: agentes remotos utilizables y onboarding por cliente
+0154   Steps:
+0155   - [ ] completar tareas reales texto/imagen con dos clientes de agentes;
+0156     verificación: transcripciones, scopes/revocación y stdio v1 conservado.
+0157 TAREA I4-C
+0158   Consumes: I3, S-06/S-10, perfiles W/D
+0159   Produce: clientes Python/JS/app y adaptador de dispositivo con simulador
+0160   Steps:
+0161   - [ ] entregar ejemplos ejecutables con login/cancelación/errores;
+0162     verificación: W/D conformidad, observación caducada y sin efectos físicos.
+0163 TAREA I4-UI
+0164   Consumes: I4-C, D-05 y encargo separado de UI
+0165   Produce: handoff frontExpert+Skevi para UI externa, no código UI aquí
+0166   Steps:
+0167   - [ ] incorporar contrato, permisos, límites y estados al proyecto UI;
+0168     verificación: adopción v2 y demo de usuario en ese repo autorizados.
+0169 TAREA I4-U
+0170   Consumes: I4-C; I4-UI sólo si encargo de UI vigente
+0171   Produce: web/app/dispositivo simulado utilizables según perfiles aceptados
+0172   Steps:
+0173   - [ ] probar consumidor representativo por perfil anunciado;
+0174     verificación: tabla de compatibilidad real y retirada de no probados.
+0175 TAREA I5-D
+0176   Consumes: I4, perfil J, S-04/S-07/S-10
+0177   Produce: SPEC-JOBS y ADR de persistencia/retención/durabilidad
+0178   Steps:
+0179   - [ ] cerrar estados, aislamiento, idempotencia y recuperación;
+0180     verificación: fixtures de reinicio, duplicado y caducidad antes de código.
+0181 TAREA I5-J
+0182   Consumes: I5-D
+0183   Produce: trabajos largos con resultados privados y TTL
+0184   Steps:
+0185   - [ ] implementar colas compartidas justas y reclamo atómico;
+0186     verificación: dos workers no duplican job; restart no repite running.
+0187   - [ ] demostrar cancelación, borrado y no acceso entre proyectos;
+0188     verificación: matriz J y tráfico interactivo dentro del SLO ratificado.
+0189 TAREA I5-U
+0190   Consumes: I5-J
+0191   Produce: cliente de trabajo largo usable con consulta y cancelación
+0192   Steps:
+0193   - [ ] demostrar envío, consulta, resultado, expiración y rollback;
+0194     verificación: recuperación desde fallo con durabilidad declarada probada.
+0195 TAREA I6-E
+0196   Consumes: I2-V, D-06, S-09/S-11 y demanda medida
+0197   Produce: triaje y SPEC de evaluación por motor/modelo/modalidad
+0198   Steps:
+0199   - [ ] clasificar candidato: rechazo temprano o evaluación autorizada;
+0200     verificación: licencia/compatibilidad/coste y razón trazables, sin
+0201     descarga ni benchmark si se rechaza antes de autorizar evaluación.
+0202   - [ ] evaluar motor/modelo o modalidad sin cambiar baseline/golden;
+0203     verificación: dataset, calidad/latencia/memoria y presupuesto previos,
+0204     o no-aplica justificado por rechazo temprano del candidato.
+0205 TAREA I6-U
+0206   Consumes: I6-E; promoción requiere aceptación específica de activación
+0207   Produce: capacidades mejoradas usables o rechazo que preserva baseline
+0208   Steps:
+0209   - [ ] cerrar rechazo sin activar, o promover sólo con contrato/migración;
+0210     verificación: rechazo conserva hashes/config baseline y razones; sólo
+0211     promoción exige canario, rollback y demo de capacidades afectadas.
+0212 
+0213 DoD: cada iteración entrega función usable y evidencia según anexo;
+0214 ningún defecto HIGH/BLOCKER abierto en lo que se activa; cinco gates OK;
+0215 compatibilidad y rollback probados; vigilancia jamás actualiza sola.
+0216 Partición: este plan ordena tareas; anexo define aceptación y operación.
+0217 ```
+0218 
+0219 ## Entrega y autoridad
+0220 
+0221 Pendientes de decisiones se conservan explícitos. Los valores propuestos
+0222 no se convierten en capacidad observada. No crear remoto ni CI tarifado.
+0223 Pruebas de carga y llamadas externas necesitan presupuesto acordado antes
+0224 de ejecutarse; datos reales, dispositivos y producción tienen autoridad
+0225 propia. El expediente de activación contiene destino/configuración exacta,
+0226 evidencia, riesgos, rollback y aceptación del Operador.
+0227 
+0228 El cierre de esta planificación se registra separado del cierre operativo
+0229 de cualquier iteración. No marcar las casillas por completar documentos.
+
+
+## FILE docs/roadmap/iteraciones-servicio.md
+SHA256 ff4db74cf2b417e23c4de2201b4d794b11e98220ec39c0f92e2a40322e27b8a7
+
+0001 # Aceptación y ejecución incremental — PLAN LFM3-2
+0002 
+0003 Estado: PROPUESTO. Complemento del plan; no activa ninguna iteración.
+0004 Procedencia: S-01..S-12, contratos general/perfiles, guías 04/06.
+0005 Razón: una lista de tareas no basta para demostrar utilidad incremental.
+0006 
+0007 ## Método común de ejecución
+0008 
+0009 1. Leer AGENTS/AN-KLA, verificar Git/memoria y autoridad de la tarea.
+0010 2. Tomar la siguiente tarea del plan cuyo gate anterior esté cerrado.
+0011 3. Antes de código: SPEC con entradas/salidas/errores, tests, comandos
+0012    exactos y contratos sin PARCIAL; ADR si nueva frontera/dependencia.
+0013 4. Contrato de tarea acota lecturas, escrituras, red, herramientas y coste.
+0014    Dependencias se instalan sólo con autoridad específica; fijar lock.
+0015 5. RED de propiedades discriminantes, corrección mínima, GREEN y suite.
+0016 6. Demo real desde consumidor; informe usa revisión de código/config/datos
+0017    medidos, no sólo texto de documentación o exit code del cliente.
+0018 7. Revisor con contexto nuevo lee artefactos y diff; no recibe el relato
+0019    del autor como sustituto de evidencia. Corregir HIGH/BLOCKER, justificar
+0020    MED por decisión correspondiente, repetir checks afectados.
+0021 8. Cinco gates AGENTS, reporte dos capas en docs/reviews y handoff.
+0022 9. Sin permiso de activar: dejar artefacto listo y sistema previo operativo.
+0023 
+0024 Comandos hoy existentes: check_sizes.py, check_plans.py, check_reports.py,
+0025 check_templates.py para docs/MANIFEST.json y scripts/MANIFEST.json.
+0026 Suite de motor existente: python3 -m unittest tests.test_mcp_server -v y
+0027 python3 tests/run_golden.py; requieren motor vivo en los casos declarados.
+0028 No ejecutar la batería real con un motor distinto del artefacto registrado.
+0029 
+0030 Las nuevas suites se crearán y se documentará su comando en cada SPEC;
+0031 aquí son criterios de aceptación, no comandos existentes ni tests pasados.
+0032 Las pruebas de política usan backend falso con contador de llamadas;
+0033 las pruebas de integración además usan el motor verdadero.
+0034 
+0035 ## I0 — Base local reparada
+0036 
+0037 Usuario usable: agente local o humano CLI conserva texto/imagen y salida
+0038 estructurada, con errores confiables. No se necesita exposición externa.
+0039 
+0040 F0/F1: ratificar requisitos, resolver dialecto de schema, estrategia de
+0041 compatibilidad y librería de validación; documentar nuevos límites sólo
+0042 para v2. Corregir defectos compatibles de v1 sin estrecharlo silenciosamente.
+0043 Si un fix necesita restricción incompatible, entregar adaptador v2 separado
+0044 manteniendo v1 local hasta decisión de migración; no anunciar v1 reparado.
+0045 
+0046 Regresiones requeridas:
+0047 
+0048 - Schema anidado no soportado rechazado aunque el campo no aparezca;
+0049   bool no satisface number; estructuras inválidas no provocan crash.
+0050 - Campos extra y límites se verifican según dialecto aceptado; no afirmar
+0051   additionalProperties:false si no está realmente soportado.
+0052 - PNG/JPEG truncados, falsas firmas y exceso de píxeles no llegan al motor.
+0053 - Salida cortada conserva estado incompleto; estructura parcial no pasa
+0054   como completa; uso/tipos inválidos producen fallo controlado.
+0055 - B-T10 no pasa sin PID; PID deriva del listener, no de coincidencia laxa;
+0056   medir memoria atribuible y presión/swap además de RSS bajo mmap.
+0057 - Dos arranques simultáneos, lock con dueño vivo, huérfano, PID reciclado,
+0058   puerto ocupado por proceso ajeno y variables de entorno host adversas.
+0059   Inspección previa vio lock con PID del shell comprobado como llama-server:
+0060   hipótesis de carrera por confirmar en fixture aislado antes de corregir.
+0061 - Readiness verifica modelo efectivo además de salud; parar no mata ajenos.
+0062 - Motor/modelo/proyector se inventarían por ruta, revisión, hash y licencia.
+0063 
+0064 Gate I0: demos locales, regresión y revisión fresca; rollback recupera
+0065 baseline registrado. Si falla, conservar v0.1.0 y reportar propiedad incierta.
+0066 
+0067 ## I1 — API común utilizable en loopback
+0068 
+0069 Usuario usable: backend local consume API compatible OpenAI con las mismas
+0070 políticas que MCP v2; no necesita implementar validación propia para admitir
+0071 peticiones ni distinguir excepciones de llama.cpp.
+0072 
+0073 Entregables: gateway modular, H, capabilities, errores estables, schema
+0074 wire cerrado y cliente Python mínimo. Puerto configurado sin ocupar 8080;
+0075 no cambiar el listener del motor en 8091 ni asumir puerto libre.
+0076 SPEC I1-D asigna puerto configurable y prueba colisión antes del arranque;
+0077 no esperar a D-03 de la exposición remota para decidir el puerto local.
+0078 
+0079 Gate I1:
+0080 
+0081 - Texto, JSON e imagen completan desde cliente HTTP real.
+0082 - Campo desconocido, esquema inválido, tamaño/cantidad/profundidad límite
+0083   y URLs externas rechazados antes de llamar al backend (contador cero).
+0084 - Validación de esquemas independiente de restricción de generación.
+0085 - Allowlist de rutas; /props, /slots, /metrics y UI embebida no pasan.
+0086 - Límites comprobados antes de descompresión/decodificación costosa;
+0087   compresión de entrada no admitida inicialmente; chunked tiene cota real.
+0088 - Errores saneados sin paths ni payload de usuario; request_id trazable.
+0089 - Conformidad con subconjunto OpenAI, lista de SDK/versiones comprobadas.
+0090 - v1 local sigue pasando; v2 no se anuncia como implementado por borrador.
+0091 
+0092 Rollback I1: detener gateway y conservar operación local aceptada I0.
+0093 
+0094 ## I2 — Servicio web privado por invitación
+0095 
+0096 Usuario usable: dos proyectos con credenciales distintas consumen HTTPS
+0097 desde fuera de la máquina, con cuotas y observabilidad.
+0098 
+0099 Antes de código: Operador fija proyecto piloto A/B, datos sintéticos o
+0100 reales autorizados, destino, identidad, dominio, TLS, acceso de red y coste.
+0101 SLO candidato para ratificar antes de medir: éxito >=99% de solicitudes
+0102 válidas admitidas en prueba sin fallos inducidos; p95 primer token <=5 s,
+0103 p95 total <=30 s para 64 tokens, cola <=10 s. Prueba se rechaza si el
+0104 hardware no cumple: ajustar alcance con decisión, nunca umbral retrospectivo.
+0105 SLO no es SLA público. Para imagen fijar SLO separado antes de prueba.

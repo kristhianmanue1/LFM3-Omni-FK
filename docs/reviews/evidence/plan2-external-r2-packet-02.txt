@@ -1,0 +1,600 @@
+0106 
+0107 Dos experimentos separados, fijados por D-04: (A) admisión end-to-end con
+0108 configuración final de piloto y carga ofrecida 1/2/4/8, midiendo también
+0109 rechazo/timeout y cantidad efectivamente admitida; (B) capacidad aislada del
+0110 backend con concurrencia ejecutada/configuración de ensayo explícitamente
+0111 autorizadas. No crear principal con bypass habilitable en producción.
+0112 Si la configuración sólo ejecuta 1, no afirmar capacidad medida a 4/8 por
+0113 ofrecer esa carga. Configuración B nunca se activa por pasar un benchmark;
+0114 la A debe cumplir su SLO y publicar tasa de admisión/rechazo además de
+0115 latencia de admitidas, para no esconder saturación detrás del denominador.
+0116 Carga reproducible: prompts cortos/largos, mezcla texto/imagen y 30 min
+0117 en condición térmica registrada. No afirmar capacidad por tok/s secuencial.
+0118 Registrar versiones, timestamps, red, cache warm/cold,
+0119 cantidad de casos, errores, tiempo de cola, TTFT, total p50/p95, memoria,
+0120 presión/swap y carga del host. Límite de ejecución inicial del experimento:
+0121 45 min, 500 inferencias y sólo fixtures; parar ante presión crítica,
+0122 crecimiento sostenido de swap o afectar uso del Operador.
+0123 Reducir matriz antes de correr si no cabe; no declarar matriz completa.
+0124 
+0125 Gate I2:
+0126 
+0127 - Sin identidad 401; sin scope 403; revocado rechazado sin reinicio global.
+0128 - A no accede a B ni falsificando project_id ni por logs/cache/errores.
+0129 - Límites aplican por identidad a través de todos los clientes; cuotas no
+0130   se duplican al reiniciar worker ni abrir conexiones nuevas.
+0131 - Cola acotada y justa; sin cupos fantasma tras timeout/desconexión.
+0132 - Servicio reinicia sin bucle; health/readiness distinguen proceso/modelo;
+0133   logs rotan; secretos fuera de repo y resultado del modelo.
+0134 - Fallo DNS/TLS/motor produce error explícito; no fallback remoto oculto.
+0135 - Egreso denegado al motor salvo destinos de mantenimiento autorizados;
+0136   ninguna imagen puede disparar fetch server-side.
+0137 - ADR I2-D asigna responsable y mecanismo viable de egreso por proceso/
+0138   entorno aislado, lista exacta de destinos y permisos de mantenimiento;
+0139   I2-P implementa y prueba esa política. No modificar firewall global o
+0140   red ajena por este plan. Si no hay mecanismo verificable, bloquear remoto.
+0141 - I2-D registra mantenedor, suplente, canal autorizado y escalado local
+0142   de vigilancia; sin canal externo aceptado, producir informe local para
+0143   intervención, sin enviar mensajes a terceros.
+0144 - Backend sin acceso externo directo: verificación negativa y control
+0145   positivo del acceso permitido desde gateway, no sólo un firewall supuesto.
+0146 - Métricas identifican modelo/config, colas, rechazos y carga sin contenido.
+0147 - Dossier aceptado antes de activación; demo desde A/B y retirada probada.
+0148 
+0149 Vigilancia: ensayo manual genera informe sin cambio del baseline. Programar
+0150 job periódico necesita autorización de instalación/activación, aunque esté
+0151 incluido en la arquitectura. Sin ella queda procedimiento manual usable.
+0152 Rollback I2: revocar accesos y cerrar entrada externa; conservar I1 local.
+0153 
+0154 ## I3 — Agentes remotos y streaming de texto
+0155 
+0156 Usuario usable: dos clientes MCP concretos ejecutan inferencia remota;
+0157 clientes H reciben texto progresivo con cancelación verificable.
+0158 
+0159 Gate I3:
+0160 
+0161 - Fijar protocolo y auth; contratos MCP 2025/2026 no se mezclan sin pruebas.
+0162 - Versiones no admitidas, audience/token/origin erróneos rechazados;
+0163   autenticación y cuotas compartidas H/M; stdio v1 conservado.
+0164 - Completitud y error representados en tool result/outputSchema acordado.
+0165 - SSE entrega incrementos bajo proxy, error terminal sin falso DONE y
+0166   desconexión termina trabajo o mantiene cupo bloqueado hasta confirmación.
+0167 - Prompt malicioso propone tool fuera de scope: nunca se ejecuta acción.
+0168 - Cancelación no soportada por backend impide anunciar capacidad; evaluar
+0169   alternativa de worker aislado y su impacto, sin matar trabajos ajenos.
+0170 
+0171 Rollback I3: deshabilitar perfil M/SSE sin romper H aceptado.
+0172 
+0173 ## I4 — Clientes web/apps y dispositivo simulado
+0174 
+0175 Usuario usable: cliente JS/backend, cliente app representativo y simulador
+0176 de dispositivo consumen los mismos contratos. UI real sólo con encargo y
+0177 repo propios frontExpert+Skevi; no crearla como efecto implícito del plan.
+0178 
+0179 Gate I4:
+0180 
+0181 - No clave compartida en bundle/URL/log; login/logout/revocación y scope
+0182   usuario/proyecto; contenido escapado y CSRF si cookies.
+0183 - capabilities evita mostrar voz/video no activos; error/saturación/
+0184   truncamiento visibles; cancelar no continúa consumiendo sin control.
+0185 - Dispositivo tiene identidad revocable; observación vencida, reloj fuera
+0186   de margen, reordenamiento y repetición descartan propuesta sin actuar.
+0187 - Simulador prueba pérdida de red y deduplicación; no actuadores reales.
+0188 - Tabla cliente/versión/perfil probado, ejemplo mínimo reproducible y
+0189   política de retirada/deprecación entregados a cada consumidor.
+0190 
+0191 Gate UI externo pendiente no impide cerrar sólo los clientes entregados:
+0192 reportar I4-C y I4-UI por separado, nunca declarar UI construida por handoff.
+0193 Rollback I4: retirar cliente/perfil defectuoso manteniendo API/MCP aceptados.
+0194 
+0195 ## I5 — Trabajos largos sin bloquear interacción
+0196 
+0197 Usuario usable: envía job, consulta progreso, obtiene resultado privado,
+0198 cancela o recibe expiración explícita.
+0199 
+0200 Gate I5:
+0201 
+0202 - Jobs no amplían cuotas ni scopes; justicia entre interactivos y batch.
+0203 - Dos workers con misma idempotency key no duplican registro/ejecución;
+0204   diferente cuerpo 409; A/B no comparten namespace ni resultados.
+0205 - Caída en cada transición: queued recuperable, running desconocido no
+0206   repetido; encolado y publicación con durabilidad declarada y comprobada.
+0207 - TTL borra contenido y conserva tombstone acotado; cifrado/acceso
+0208   operativos; sin datos reales hasta decisión de retención aceptada.
+0209 - Cancelación/deadline no libera cupo antes de liberar motor; resultados
+0210   tardíos descartados; sin webhook arbitrario ni acceso por URL predecible.
+0211 - POST admitido con 202 perdido se recupera por idempotencia sin cancelar
+0212   ni duplicar; GET desconectado no cambia estado. DELETE separa aceptación
+0213   de cancelación y detención confirmada del objetivo.
+0214 - Tráfico interactivo conserva su SLO; si no, no activar batch simultáneo.
+0215 
+0216 Rollback I5: detener nueva admisión, drenar/cancelar y conservar datos sólo
+0217 según retención aceptada; no borrar ni migrar por instrucción del modelo.
+0218 
+0219 ## I6 — Modalidades o versiones nuevas
+0220 
+0221 Usuario usable: motor/modelo mejorado conservando modalidades existentes,
+0222 una modalidad nueva con cliente real y contrato propio, o baseline
+0223 preservado con candidato rechazado y razones reproducibles.
+0224 
+0225 Rutas excluyentes de cierre: rechazo temprano (sin descarga/benchmark),
+0226 rechazo tras evaluación autorizada, o promoción aceptada. Las dos primeras
+0227 no exigen canario ni demo nueva; acreditan baseline intacto y motivo. Una
+0228 actualización de motor por seguridad o modelo sólo de texto prueba las
+0229 capacidades afectadas y regresión existente; no inventa modalidad nueva.
+0230 
+0231 Audio: muestra/duración/codec/idioma, ASR y métrica de error sobre corpus
+0232 consentido antes de correr. Voz: inteligibilidad, latencia, cancelación y
+0233 límites de salida; sin clonar identidad ni voces por defecto. Video:
+0234 duración/FPS/resolución/cantidad de frames y preguntas temporales evaluadas.
+0235 No inferir video válido por procesar una sola imagen ni ASR por handshake.
+0236 
+0237 Gate I6: presupuesto y umbrales fijados antes, evaluación aislada y no
+0238 regresión del baseline; licencia/hardware/contrato revisados, aceptación
+0239 específica, canario y rollback. Promover modelo o motor exige su operación
+0240 registrada y nueva versión cuando contrato vigente lo exige.
+0241 Este gate operativo aplica a promoción; rechazo cierra con las evidencias
+0242 de su ruta, sin declarar mejora implementada ni activación.
+0243 
+0244 ## Registro de avance para ejecutores
+0245 
+0246 Antes de iniciar una iteración, crear su registro con estado not_started,
+0247 owner, reviewer, bloqueos/decisiones y referencias a SPEC/contrato/tests.
+0248 Transiciones: not_started -> designing -> implementing -> verifying ->
+0249 ready_for_activation -> active, o blocked con causa. Trabajo local sin
+0250 activación remota puede cerrar accepted_local. Rechazo I6 usa rejected.
+0251 Cada actualización conserva fecha, HEAD/diff, gate, evidencia y próximo
+0252 paso; no marcar casillas por intención. El Operador decide aceptación y
+0253 activación; el agente propone el estado con evidencia y declara autoridad.
+0254 Actualmente todas las iteraciones están not_started: sólo plan persistido.
+0255 
+0256 ## Handoff por iteración
+0257 
+0258 Registrar id, fecha UTC, autor/revisor y contexto recibido, HEAD/diff,
+0259 hashes de motor/modelo/proyector/config, tests/fixtures y salidas completas
+0260 saneadas; función que ya puede usar cada consumidor; límites y riesgos;
+0261 rollback probado y siguiente tarea. En docs/reviews va registro de hallazgos
+0262 con impacto, disposición y estado. Checkpoints AN-KLA sólo con autoridad
+0263 vigente y contratos, no necesarios para que estos archivos sean utilizables.
+
+
+## FILE docs/contracts/servicio-general-v2.md
+SHA256 1aa18595a9a0acf3db6986e905a7d350424038c931f746407185c0c220497d27
+
+0001 # CONTRATO: lfm3-omni/service v2 — general de consumo
+0002 
+0003 Estado: PROPUESTO, no implementado ni activado. PLAN LFM3-2.
+0004 Procedencia: S-01..S-12 de docs/roadmap/objetivo-y-alcance-servicio.md.
+0005 Razón: todos los transportes deben compartir admisión, datos y autoridad.
+0006 Los contratos v1 conservan su alcance local; este documento no los altera.
+0007 
+0008 ## Entrada
+0009 
+0010 Identidad obtenida de autenticación, nunca de un campo libre del cliente:
+0011 project_id, principal_id y scopes; device_id si es dispositivo registrado.
+0012 Cada llamada tiene request_id generado por servidor. Los clientes pueden
+0013 aportar client_request_id ASCII de 1..64 caracteres para correlación,
+0014 jamás como credencial ni como identidad de tenant.
+0015 
+0016 Operaciones comunes: capabilities, infer_text, infer_vision, cancel.
+0017 I5 añade create_job/get_job/cancel_job; I6 añade sólo modalidades aprobadas.
+0018 El catálogo de capabilities sólo anuncia operaciones ya aceptadas.
+0019 
+0020 Perfiles de transporte: docs/contracts/perfiles-servicio-v2.md.
+0021 La representación wire concreta la fija cada perfil antes de implementarse.
+0022 En todos: rechazar campos desconocidos; no recibir payload opaco de motor.
+0023 
+0024 Límites candidatos, ratificados y publicados antes de cada activación:
+0025 
+0026 | Recurso | Perfil inicial propuesto I1/I2 |
+0027 |---|---|
+0028 | HTTP body completo | 4 MiB, incluso si llega por chunks |
+0029 | prompt | 1..8000 caracteres y máximo 8192 tokens de entrada total |
+0030 | messages | 1..32; roles y partes permitidos por perfil |
+0031 | salida síncrona | max_tokens entero 1..1024, default 256; bool inválido |
+0032 | imágenes | una por llamada; PNG/JPEG decodificado <=2 MiB |
+0033 | dimensiones | lados <=2048; píxeles <=4 194 304; una imagen estática |
+0034 | schema | <=64 KiB UTF-8, profundidad <=16, <=256 nodos |
+0035 | objetos schema | <=64 propiedades por objeto, enum <=32 elementos |
+0036 | tools propuestas | <=16, nombre ASCII 1..64, argumentos <=16 KiB |
+0037 | concurrencia | global 1 y por proyecto 1 hasta benchmark |
+0038 | cola | global 8 pendientes; por proyecto 2 |
+0039 | admisión por proyecto | 10 llamadas/minuto, burst máximo 2 |
+0040 | espera en cola | <=10 s; después queue_timeout |
+0041 | procesamiento | <=120 s desde despacho; total <=130 s |
+0042 | metadatos error | mensaje <=512 caracteres; <=8 detalles |
+0043 
+0044 Límites de caracteres, tokens, bytes y tiempo son simultáneos; exceder uno
+0045 rechaza, nunca trunca silenciosamente. El presupuesto de tokens incluye
+0046 plantilla, mensajes, tools y representación de imagen. Si el adaptador no
+0047 puede contabilizar esa modalidad de manera fiable, no anuncia su admisión.
+0048 La precisión del conteo debe demostrarse contra el motor fijado.
+0049 Rate limit también aplica a solicitudes rechazadas y descubrimiento.
+0050 Estos valores son propuesta de arranque, no capacidad observada ni SLA.
+0051 
+0052 ## Salida
+0053 
+0054 Envelope lógico no OpenAI: request_id:string, contract_version:"2",
+0055 operation:string, state:"succeeded"|"failed"|"cancelled", model_revision:
+0056 string, result:objeto por operación, error:objeto o null, usage:objeto.
+0057 En éxito error es null; en fallo result es null. usage contiene sólo
+0058 contadores medidos (input_tokens/output_tokens), o null si no disponibles.
+0059 model_revision es referencia al manifiesto verificado, no texto del modelo.
+0060 
+0061 infer_text: text:string|null, structured:JSON|null, schema_validated:boolean,
+0062 finish_reason:"stop"|"length"|"tool_calls", complete:boolean,
+0063 tool_calls:lista acotada de {id,name,arguments} o lista vacía.
+0064 Sólo finish_reason tool_calls permite text null; arguments es objeto
+0065 validado contra el esquema registrado de esa tool. No implica ejecución.
+0066 infer_vision: description:string y los mismos indicadores de completitud;
+0067 no declarar validación semántica por comprobar la forma de description.
+0068 Schema solicitado: validar el esquema entero antes de llamar al motor y el
+0069 resultado después. Sin schema, schema_validated es false.
+0070 finish_reason length implica complete:false; salida estructurada truncada
+0071 no se entrega como resultado exitoso apto para automatización.
+0072 
+0073 capabilities: contract_versions, transport_profiles, operations,
+0074 model_revision, limits, modalities, schema_dialect, streaming,
+0075 cancellation, enabled_profiles; todo proviene de configuración verificada.
+0076 No publicar rutas, secretos, prompts, slots ni detalles administrativos.
+0077 La forma wire y cotas de cada colección se cierran en SPEC-SERVICE I0-D.
+0078 
+0079 cancel devuelve result:{target_request_id, cancellation_status,
+0080 target_state}. cancellation_status:"accepted"|"pending"|"already_terminal";
+0081 target_state usa los estados de solicitud definidos abajo. El envelope
+0082 state succeeded sólo acredita que la operación de solicitar/consultar
+0083 cancelación respondió; no que el trabajo objetivo esté detenido.
+0084 Aceptar cancelación no prueba que el backend haya detenido su cómputo:
+0085 el objetivo conserva cancellation_pending hasta confirmación o vencimiento.
+0086 Objetivo inexistente o ajeno: not_found, sin revelar su existencia.
+0087 Mapeo: objetivo received/queued retirado sin envío -> accepted y target
+0088 cancelled; objetivo running -> pending y target cancellation_pending;
+0089 objetivo ya cancellation_pending -> pending sin duplicar la señal;
+0090 objetivo previamente terminal -> already_terminal y estado conservado.
+0091 
+0092 ## Errores
+0093 
+0094 Forma lógica: code, message, retryable, details (lista de field/reason).
+0095 Códigos acotados; detalles no copian cuerpos ni excepciones del backend.
+0096 
+0097 | Código | HTTP | Estado y efecto |
+0098 |---|---|---|
+0099 | invalid_request | 400 | no enviado al motor |
+0100 | unauthenticated | 401 | no revela recursos ni existencia de jobs |
+0101 | forbidden | 403 | no ejecutado; scope insuficiente |
+0102 | not_found | 404 | recurso inexistente o de otro proyecto |
+0103 | payload_too_large | 413 | lectura detenida y motor no llamado |
+0104 | rate_limited | 429 | no admitido; Retry-After acotado |
+0105 | overloaded | 503 | cola llena; no admitido |
+0106 | queue_timeout | 504 | retirado de cola, no enviado |
+0107 | backend_unavailable | 503 | no éxito; reintento acotado |
+0108 | deadline_exceeded | 504 | detener trabajo; resultado tardío descartado |
+0109 | invalid_output | 502 | no entregar resultado como válido |
+0110 | incomplete_output | 502 | estructura truncada; complete false |
+0111 | cancelled | perfil | trabajo cancelado; nunca convertirlo en éxito |
+0112 | internal_error | 500 | detalle saneado; request_id para investigación |
+0113 
+0114 HTTP/MCP mapean estos códigos sin perder retryable ni request_id.
+0115 Los tiempos que disparan queue_timeout/deadline_exceeded son los del
+0116 perfil/version configurados: H/M inicial 10/120 s; J propone 60/600 s.
+0117 El código no fija un plazo universal; capabilities publica el del perfil.
+0118 Después de iniciar SSE no cambiar el HTTP inicial: emitir evento terminal
+0119 de error según perfil y cerrar. Nunca enviar un DONE exitoso tras error.
+0120 Reintento no implica idempotencia; nunca reintentar una acción física.
+0121 
+0122 ## Invariantes
+0123 
+0124 - Identidad y permiso se comprueban antes de contabilizar inferencia o
+0125   admitir un trabajo; se aplican límites de entrada antes de parseo caro.
+0126 - Rechazar URLs http/https/file para imágenes; ninguna descarga arbitraria
+0127   ni acceso a filesystem solicitado por cliente. Egreso del motor acotado.
+0128 - Las credenciales externas terminan en el servicio; el backend usa
+0129   identidad interna distinta. No pasar tokens del usuario al motor.
+0130 - Ninguna inferencia ejecuta tools, shell, movimientos ni acciones externas.
+0131   tool_calls son propuestas; ejecutor independiente valida y autoriza.
+0132 - Validar forma no acredita verdad, suficiencia, confianza ni autorización.
+0133 - Estado stateless de aplicación no acredita aislamiento de KV/cache.
+0134   Probar aislamiento A/B; desactivar reutilización entre proyectos si no
+0135   puede demostrarse. No ofrecer aislamiento fuerte sin entorno adecuado.
+0136 - Sin conversaciones ni media persistidas por defecto. Logs sólo identidad
+0137   seudonimizada, request_id, versión, estado, duración y contadores medidos.
+0138   Retención candidata: 7 días de logs; acceso administrativo auditado.
+0139 - No respuestas/cache compartidos entre proyectos. Cuotas y recursos
+0140   abarcan todos los transportes de una misma identidad.
+0141 - El motor sigue interno; sólo rutas declaradas pasan el gateway. TLS,
+0142   identidad y reglas de origen son obligaciones del servicio remoto.
+0143 - Bloquear origin inválido cuando exista; ausencia de Origin no autentica
+0144   ni bloquea automáticamente clientes máquina legítimos.
+0145 - Los errores y logs nunca revelan claves, datos de otros o rutas locales.
+0146 - El perfil de dispositivo usa observación, fecha y caducidad; nunca es un
+0147   canal de control físico seguro ni garantiza plazos de tiempo real.
+0148 - Política y límites se versionan; ningún parámetro del cliente aumenta
+0149   privilegios, concurrencia o techo administrativo.
+0150 
+0151 ## Esquemas y streaming
+0152 
+0153 Propuesta de dialecto: JSON Schema 2020-12, subconjunto explícito cerrado
+0154 con type/properties/required/additionalProperties/items/enum/const y
+0155 cotas de longitud, número y cardinalidad que I0-D debe enumerar exactamente.
+0156 Rechazar $ref remoto y recursión; validar metadatos y todas las ramas.
+0157 Usar validador mantenido fijado, no extender a mano el actual sin evaluación.
+0158 Gramática de generación y validación posterior son responsabilidades
+0159 separadas; si no se pueden satisfacer ambas, rechazar la petición.
+0160 
+0161 Para estructura, acumular y validar antes de publicar resultado. Streaming
+0162 libre entrega texto no validado semánticamente, marcado provisional; sólo
+0163 el terminal establece completitud. Datos parciales no habilitan acciones.
+0164 El perfil no puede prometer a la vez entrega inmediata y validación del
+0165 objeto completo antes de cada byte; declarar cuál ofrece.
+0166 
+0167 ## Estados y compatibilidad
+0168 
+0169 Solicitud: received -> rejected | cancelled | queued -> running ->
+0170 succeeded | failed |
+0171 cancellation_pending -> cancelled | failed. Deadline desde running provoca
+0172 cancellation_pending; un terminal no vuelve a running ni cambia a éxito.
+0173 Cancelar en queued retira sin envío. Desconectar cliente interactivo H/M
+0174 desencadena cancelación; verificar liberación o aislar worker y alertar si
+0175 no confirma. Jobs J admitidos duraderamente son independientes de la
+0176 conexión: perder POST/202/GET no los cancela. Cancelación de J es explícita.
+0177 Retener capacidad ocupada hasta confirmación; no liberar cupo sólo porque
+0178 el gateway dejó de esperar. Restart marca in-flight como resultado desconocido
+0179 para auditoría y failed para consumo; no repite automáticamente.
+0180 
+0181 Cambios aditivos opcionales compatibles sólo si no cambian semántica ni
+0182 límites aceptados. Restringir campos, límites, códigos, modelo garantizado,
+0183 transportes o dialecto requiere nueva versión/perfil con migración.
+0184 La ruta OpenAI /v1 no representa la versión de este contrato general.
+0185 Versiones activas se anuncian; preservar v1 local durante migración.
+0186 Un borrador no se anuncia como capacidad activa. Adopción y activación son
+0187 decisiones distintas. Emergencia: revocar acceso, no romper contrato en
+0188 silencio; notificar estado de retirada y alternativa al consumidor.
+
+
+## FILE docs/contracts/perfiles-servicio-v2.md
+SHA256 7477063f3f1b266294f80b5b0ce12c49de097f8997eea2431fceb5835541ba46
+
+0001 # Perfiles de consumo — lfm3-omni/service v2
+0002 
+0003 Estado: PROPUESTOS. Complementan el contrato general; no lo sustituyen.
+0004 Procedencia: S-02/S-05/S-06/S-12; razón: diferentes transportes necesitan
+0005 formas wire sin bifurcar identidad, cuotas ni validación.
+0006 Las rutas son propuestas; SPEC por iteración las cierra antes del código.
+0007 
+0008 ## H — HTTP compatible OpenAI, I1/I2
+0009 
+0010 Entrada: POST /v1/chat/completions, GET /v1/models y GET /capabilities.
+0011 Sin passthrough libre al motor: allowlist de campos y subcampos cerrada.
+0012 messages/roles/partes/tools/response_format y valores permitidos se
+0013 especifican en SPEC-HTTP; modelo aceptado debe coincidir con catálogo.
+0014 Compatibilidad significa sólo ese subconjunto, no cualquier payload SDK.
+0015 SPEC-HTTP enumera por campo: admitido y aplicado, o rechazado con motivo;
+0016 no aceptar-e-ignorar parámetros en silencio. temperature sólo si puede
+0017 garantizarse greedy; valores distintos de cero se rechazan en v2. seed y
+0018 otros campos no implementados se rechazan explícitamente. Fixtures por
+0019 SDK/version/config prueban el payload enviado; no prometer defaults sin
+0020 haberlos observado. v1 local mantiene su comportamiento documentado.
+0021 Autenticación: Authorization Bearer; nunca clave en URL o cuerpo.
+0022 I1 usa credencial de prueba y principal fijo, sólo loopback, no apto para
+0023 usuarios externos. I2 sustituye ese modo por identidad revocable y cuotas
+0024 por proyecto; el modo de prueba no puede quedar habilitado con red remota.
+0025 
+0026 Salida: conservar estructura OpenAI para el subconjunto probado;
+0027 X-Request-ID y X-Service-Contract:2 en cabeceras. /capabilities usa forma
+0028 del contrato general. Documentar SDK/versiones probadas y campos ausentes.
+0029 No anunciar Responses API, embeddings u otras APIs no implementadas.
+0030 Herramientas externas: sólo propuestas tool_calls, sin ejecutarlas.
+0031 
+0032 Errores: HTTP de contrato general, body error:{code,message,type,param},
+0033 con request_id, retryable y detalles acotados documentados como extensión.
+0034 No inventar usage si el backend no lo informa.
+0035 
+0036 SSE: chunks OpenAI; finish_reason terminal y DONE sólo en éxito completo
+0037 según semántica de completitud del perfil. Error terminal: data JSON con
+0038 error y request_id; cierre sin DONE. Desconexión sin terminal es resultado
+0039 incompleto. No reintentar generación parcial automáticamente.
+0040 Desactivar buffering del proxy para streams y probar desconexiones reales.
+0041 Structured output: primer perfil sólo stream:false; rechazar combinación
+0042 stream:true+schema antes del motor. Texto libre admite SSE en I3.
+0043 
+0044 Invariantes: health público, si existe, mínimo y sin identificadores;
+0045 readiness completo y metrics requieren identidad de operación. Origin
+0046 allowlist explícita; no CORS abierto con credentials. TLS antes de remoto.
+0047 Compatibilidad: mantener clientes locales v1; v2 externo no reinterpreta
+0048 los campos ni los límites del v1 histórico. Puertos/domino se fijan en I2.
+0049 
+0050 ## M — MCP remoto y local, I3
+0051 
+0052 Entrada: endpoint /mcp mediante Streamable HTTP, versiones y clientes
+0053 fijados por ADR-MCP; mantener MCP stdio v1 aparte. No convertir stdin
+0054 compartido en sesión global multiusuario ni reutilizar INICIALIZADO global.
+0055 Tools candidatas health/infer_text/infer_vision/capabilities; cancelación
+0056 por transporte según versión negociada. Esquemas iguales al núcleo.
+0057 La operación lógica cancel se mapea al mecanismo nativo de la versión:
+0058 notificación por id JSON-RPC en stdio legado o cierre del stream HTTP en
+0059 el perfil que lo defina; adaptador relaciona id con request_id e identidad.
+0060 No requiere una tool adicional; se conserva el mapeo de estados general.
+0061 H dispone además de DELETE /requests/{request_id} para solicitudes propias
+0062 identificadas, con el resultado de cancel del contrato general. Requests
+0063 ajenos/inexistentes devuelven 404; el registro operativo no guarda prompts.
+0064 
+0065 Salida: CallToolResult con content y, si versión lo permite,
+0066 structuredContent conforme a outputSchema. Conservar request_id, error
+0067 estable, completitud y modelo efectivo en representación acordada.
+0068 Errores de protocolo separados de fallos de tool; isError no se pierde.
+0069 
+0070 Autorización: seguir especificación MCP fijada para transporte HTTP,
+0071 incluyendo discovery del recurso, validación de audience y permisos.
+0072 No afirmar compatibilidad OAuth por añadir sólo bearer estático.
+0073 Usar implementación mantenida evaluada, sin servidor OAuth casero.
+0074 Revocar token/proyecto impide nuevas llamadas en todas las tools.
+0075 
+0076 Invariantes: mismas cuotas HTTP/MCP; identidad fuera de argumentos.
+0077 Verificar cliente legado y moderno, negociación, cabeceras, origin,
+0078 stream cancelado y recuperación. La revisión 2026-07-28 consultada cambia
+0079 sesiones/handshake frente a 2025: ADR decide matriz, no asumir equivalencia.
+0080 Compatibilidad: nuevo perfil remoto separado de mcp-tools v1; no retirar
+0081 stdio ni renombrar sus campos publicados sin migración.
+0082 
+0083 ## W — Humanos, web y apps, I4
+0084 
+0085 Entrada: backend de aplicación autentica usuario y llama perfil H.
+0086 Browser/móvil nunca reciben clave administrativa o compartida del motor.
+0087 Salida: texto escapado/Markdown saneado, fuentes sólo si realmente existen,
+0088 truncamiento, error y estado explícitos. Historial opt-in con contrato
+0089 propio y retención; no almacenar sólo por habilitar una UI.
+0090 
+0091 Errores: sesión expirada no se reintenta con otra identidad; mostrar
+0092 saturación sin bucles; cancelación e incompletitud visibles.
+0093 Invariantes: permisos por usuario y proyecto, protección CSRF si cookies,
+0094 ningún dato generado insertado como HTML ejecutable. Login/logout y
+0095 revocación probados. App nativa: flujo de cliente público adecuado,
+0096 no secreto embebido. No se afirma integración móvil hasta probarla.
+0097 Si H recibe sólo credencial de proyecto, la atribución al humano corresponde
+0098 al backend W: conservar asociación minimizada user_ref-client_request_id-
+0099 request_id con acceso/retención propios. H no eleva client_request_id a
+0100 identidad ni promete auditar al usuario final. Delegación de usuario exige
+0101 token verificable y contrato de identidad adicional antes de anunciarla.
+0102 
+0103 La UI será proyecto separado, frontExpert contrato v2 + Skevi por regla
+0104 adoptada. Este repo entrega contrato y cliente de referencia; crear repo o
+0105 publicar UI necesita destino y encargo autorizados propios.
+0106 Compatibilidad: UI consume capabilities; no deduce modalidad del nombre Omni.
+0107 
+0108 ## D — Dispositivos y robots, I4
+0109 
+0110 Entrada propuesta de adaptador sobre H: device_id derivado de credencial,
+0111 observation_id:string (1..64), observed_at:UTC, expires_at:UTC,
+0112 image o prompt y lista acotada de tipos de propuesta permitidos.
+0113 Salida: observation_id, request_id, model_revision, complete,
+0114 proposal:{kind,payload} y expires_at. Esquema por tarea autorizado.
+0115 No generar confidence como garantía si no existe calibración independiente.
+0116 
+0117 Errores: observación caducada, dispositivo revocado, reloj fuera de margen,
+0118 propuesta no permitida o salida incompleta: descartar sin actuar.
+0119 Margen temporal candidato 2 s; no habilitar si sincronización no se prueba.
+0120 
+0121 Invariantes: integración inicial sólo simulador, sin actuadores.
+0122 Controlador independiente valida estado físico, vigencia y permisos antes
+0123 de cualquier acción. La parada local y control de seguridad no dependen
+0124 de red/modelo. Una solicitud repetida no debe duplicar acción física;
+0125 correlación y deduplicación pertenecen al controlador, no a la inferencia.
+0126 El robot puede leer la escena después de enviar: nunca aplicar propuesta
+0127 caducada por el simple orden de llegada de respuestas.
+0128 Compatibilidad: cambios en acciones o payload exigen perfil versionado.
+0129 
+0130 ## J — Trabajos largos, I5
+0131 
+0132 Entrada: POST /jobs con operación admitida y límites I5; Idempotency-Key
+0133 ASCII 1..64. GET /jobs/{id}; DELETE /jobs/{id} solicita cancelación.
+0134 Scope jobs:create/read/cancel más scope de operación; id aleatorio opaco.
+0135 La identidad y clave forman namespace; mismo cuerpo devuelve mismo job,
+0136 cuerpo distinto con misma clave produce 409. No promete exactly-once
+0137 entre fallos; nunca usar este contrato para ejecutar efectos externos.
+0138 Comparar digest de operación+payload normalizado con defaults, sin campos
+0139 de correlación/credenciales, canonicalizado por RFC 8785
+0140 (https://www.rfc-editor.org/rfc/rfc8785). Rechazar claves
+0141 JSON duplicadas y números no finitos. SPEC-JOBS fija librería/version y
+0142 fixtures de orden de claves, tipos y defaults; no hash de bytes crudos.
+0143 
+0144 Salida: 202 con job_id/state/status_url; GET sólo para su proyecto;
+0145 admisión sólo tras persistir job e idempotencia atómicamente. Si se pierde
+0146 202 o conexión después de ese punto, el job continúa; repetir POST con
+0147 misma clave/cuerpo recupera el mismo id. Antes del commit durable no existe
+0148 admisión: el reintento puede crear un único job. GET desconectado no cancela.
+0149 DELETE responde estado de la operación y del job objetivo por separado,
+0150 según cancel del contrato general; aceptación no acredita cómputo detenido.
+0151 El resultado se entrega en el envelope del contrato general.
+0152 Retención propuesta resultado 1 h tras
+0153 terminal y tombstone idempotencia 24 h; caducado 410 para dueño, ajeno 404.
+0154 Persistencia cifra resultados y controla accesos; registrar borrado.
+0155 No crear jobs persistentes si falta almacenamiento/retención aceptados.
+0156 Tras vencer tombstone, reutilizar una clave crea un nuevo job_id y puede
+0157 repetir inferencia; el cliente debe tratarla como nueva solicitud. No se
+0158 ofrece deduplicación más allá de 24 h; ejemplos deben mostrar esa ventana.
+0159 
+0160 Estados: queued -> running -> succeeded/failed/cancellation_pending;
+0161 cancellation_pending -> cancelled/failed. Estado expirado después de TTL.
+0162 Reinicio: queued recuperable una vez; running pasa failed con outcome
+0163 unknown y no se repite automáticamente. Reclamo atómico impide dos workers.
+0164 Especificar durabilidad real y recuperación antes de activarlo.
+0165 Límites candidatos: 60 s de cola, 600 s procesamiento, salida <=4096 tokens,
+0166 cola global 8, un job pendiente por proyecto, máximo global 1 ejecutando.
+0167 Presupuesto de cola/inferencia compartido con H/M; definir prioridad justa
+0168 para no dejar sin servicio las llamadas interactivas.
+0169 
+0170 ## Matriz obligatoria de conformidad
+0171 
+0172 Cada perfil tiene tests de credencial revocada, identidad suplantada,
+0173 entrada inválida, límites, cuota, cancelación, backend caído, resultado
+0174 truncado y datos A/B. Pruebas cruzadas H/M verifican cuota única.
+0175 W/D/J añaden sus casos específicos. Ningún perfil puede anunciarse activo
+0176 antes de tener prueba real con un consumidor representativo y rollback.
+
+
+## FILE docs/roadmap/ciclo-vida-modelo.md
+SHA256 d5318be5a7fa8ae7374af6e37ace37bacfe1b3815f369ddf124419650be6c79c
+
+0001 # Vigilancia y ciclo de vida de motor/modelo
+0002 
+0003 Estado: PROPUESTO; procedimiento diseñado, ninguna vigilancia activada.
+0004 Procedencia: S-09 y mandato del Operador 2026-11-04.
+0005 Razón: detectar mejora sin convertir upstream en actualización autorizada.
+0006 Se incorpora desde I0; I2 entrega inventario y ensayo; I6 evalúa candidatos.
+0007 
+0008 ## Objetos distintos que deben identificarse
+0009 
+0010 - Servicio: versión, contrato, configuración y dependencias fijadas.
+0011 - Motor: paquete, build/commit, binario/hash y plataforma.
+0012 - Modelo: repositorio, revisión inmutable, archivo GGUF/hash/cuantización.
+0013 - Proyector y auxiliares: revisión/hash, plantilla/tokenizador/config.
+0014 - Evaluación: corpus/versiones/hashes, condiciones y resultados brutos.
+0015 
+0016 El baseline inicial se inventaría sin descargar ni actualizar artefactos.
+0017 Si no puede acreditarse origen/revisión exactos, registrar unknown y bloquear
+0018 promoción; un hash local no prueba autenticidad o autorización del origen.
+0019 El nombre de una familia no convierte modelos diferentes en compatibles.
+0020 
+0021 ## Fuentes y cadencia propuesta
+0022 
+0023 Responsable: mantenedor del servicio designado por Operador en I2-D.
+0024 Suplente y canal de aviso se fijan antes de automatizar notificaciones.
+0025 I2-D los registra junto al mantenedor; I2-V verifica su presencia. Sin canal
+0026 externo aceptado, la intervención se solicita mediante informe local.
+0027 
+0028 | Fuente oficial | Qué se vigila | Frecuencia propuesta |
+0029 |---|---|---|
+0030 | HF LiquidAI/LFM3-Omni-2B-GGUF y ficha original | commits/revisiones, archivos, capacidades, licencias | semanal |
+0031 | LiquidAI oficial | sucesores de familia y notas de versión | mensual |
+0032 | ggml-org/llama.cpp releases/avisos de seguridad | cambios del motor y vulnerabilidades | semanal |
+0033 | canal de seguridad del proveedor/dependencias fijadas | afectación del baseline | diaria si job autorizado |
+0034 | especificación MCP y SDK elegido | versiones, auth y deprecaciones | mensual |
+0035 | registro local de carga/calidad/incidentes | regresión o capacidad insuficiente | semanal y tras incidente |
+0036 
+0037 Fuentes: https://huggingface.co/LiquidAI/LFM3-Omni-2B-GGUF,
+0038 https://huggingface.co/LiquidAI/LFM3-Omni-2B,
+0039 https://github.com/ggml-org/llama.cpp/releases,
+0040 https://github.com/ggml-org/llama.cpp/security/advisories,
+0041 https://modelcontextprotocol.io/specification/.
+0042 No fiarse de agregadores, un alias latest o recomendaciones de un LLM.
+0043 Fijar en configuración la allowlist exacta; impedir redirecciones a destinos
+0044 no permitidos. Metadatos de proveedor siguen siendo datos no confiables.
+0045 
+0046 Cadencias son objetivos operativos pendientes de activación, no promesas de
+0047 monitoreo actual. Ejecución manual es válida mientras no exista job aceptado.
+0048 Presupuesto candidato por corrida: <=12 peticiones, <=5 MiB transferidos,
+0049 <=120 s; sin descargar pesos ni invocar inferencia tarifada.
+0050 Cachear ETag/revisión; no actualizar paquetes, modelos ni reglas de consumo.
+0051 
+0052 ## Salida de vigilancia
+0053 
+0054 Registro por corrida: run_id, checked_at UTC, baseline_ref, fuente/URL,
+0055 observed_revision, status, evidence_ref y next_due_at. Una fuente fallida
+0056 produce status unavailable, conserva last_success_at y marca obsolescencia;
+0057 no se interpreta como no_change. Tras dos fallos consecutivos o vencimiento
+0058 2x de cadencia, solicitar intervención al mantenedor.
+0059 Deduplicar por fuente+revisión; sin novedades, no generar alertas repetidas.
+0060 No enviar email/Slack u otro mensaje sin canal y autorización explícitos.
+0061 
+0062 Registro candidato: candidate_id, origen/revisión/fecha, relación con
+0063 baseline, cambios declarados atribuidos, licencia exacta/hash, artefactos,

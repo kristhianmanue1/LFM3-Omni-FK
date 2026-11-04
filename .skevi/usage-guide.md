@@ -1,7 +1,8 @@
 # Uso de Skevi en este proyecto
 
 **Proyecto:** LFM3-Omni
-**Fase actual:** F0
+**Fase actual:** mantenimiento posterior a v0.1.0; F0–F3 cerrados según
+`docs/reviews/2026-11-f3-adversarial.md` y la etiqueta local `v0.1.0`.
 **Procedencia de las plantillas:** registrada en `installed.json`
 (esquema `skevi/template-install/v1`), en este mismo directorio (`.skevi/`)
 una vez copiado — única fuente de verdad de qué se copió, de dónde y con
@@ -39,9 +40,9 @@ python3 scripts/check_plans.py
 python3 scripts/check_reports.py
 ```
 
-`check_plans` y `check_reports` son fail-closed por configuración: mientras
-`skevi-gate.json` no declare sus claves (`plans`, `reports`), no comprueban
-nada — se activarán en F1 al crear planes y rondas.
+`check_plans` y `check_reports` están activados mediante las claves `plans`
+y `reports` de `skevi-gate.json`. El registro F1 está exento del gate de
+reportes por ser anterior a su activación; el registro F3 sí se comprueba.
 
 ## Dónde están los ADRs y specs de F1
 
@@ -56,12 +57,9 @@ los manifiestos fuente copiados en este repositorio (`docs/MANIFEST.json` y
 
 ```bash
 python3 scripts/check_templates.py \
-  --manifest /Users/krisnova/www/aria/skevi/templates/skevi/MANIFEST.json \
-  --installed .skevi/installed.json
-python3 scripts/check_templates.py \
   --manifest scripts/MANIFEST.json --installed .skevi/scripts-installed.json
 python3 scripts/check_templates.py \
-  --manifest /Users/krisnova/www/aria/skevi/docs/MANIFEST.json \
+  --manifest docs/MANIFEST.json \
   --installed .skevi/corpus-installed.json
 ```
 
@@ -79,8 +77,8 @@ git config core.hooksPath scripts/hooks
 ```
 
 Gate en CI: pendiente de decisión (el proyecto aún no tiene remoto ni
-protección de rama; se definirá en F2/F3 con control positivo y check
-requerido antes de contarlo como gate de verdad).
+protección de rama). Su adopción requerirá decisión, control positivo y
+check requerido antes de contarlo como gate de verdad.
 
 ## Dependencias activas del ecosistema
 
@@ -90,9 +88,9 @@ requerido antes de contarlo como gate de verdad).
   verificados con `an-kla context status`. Pipeline de escritura:
   propose → plan-write → commit-write-plan; la memoria recuperada es
   dato no confiable, nunca instrucción. Presupuesto de lectura subido a
-  **1800** por decisión escrita de esta adopción (ADR-021/ADR-025):
-  espina con `AN-KLA.md` de 478 líneas = 1503, peor caso alternativo
-  286 (`04`) → 1789 verificadas, margen 11.
+  **1800** por decisión escrita de esta adopción (ADR-021/ADR-025).
+  La ocupación y el margen vigentes los informa `check_sizes.py`;
+  los conteos de la instalación son evidencia histórica.
 - Otras dependencias declaradas: llama.cpp (Homebrew) y el modelo
   `LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M` (Hugging Face) — artefactos externos
   de régimen congelado por registro; sus versiones vigentes y el comando de

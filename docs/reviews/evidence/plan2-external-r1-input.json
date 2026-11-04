@@ -1,0 +1,29 @@
+{
+  "schema": "lfm3-omni/document-review-input/v1",
+  "review": "external-r1",
+  "packet_sha256": "602323e487eda25644e279eded1a2d7dc21eb2dbfee4736a15254d929fdd8e2c",
+  "files": {
+    "AGENTS.md": "6e1c21f2bd8f3864144d77e55d3180231574bcfd475d6d4da5305c3f9a15f5ef",
+    "docs/roadmap/objetivo-y-alcance-servicio.md": "307184e205d5af9b04e0e0b19c91b2bc14952f583e8995954395125c4af19704",
+    "docs/plans/PLAN-2-servicio-compartido.md": "09ec97cb88f353374b001fc10aabc8f5b8882699f22d9bbb3fdea3eb9f26cb12",
+    "docs/roadmap/iteraciones-servicio.md": "80c49bf9f17b3153c6d1aed6fa5f517010085a3f07b471c6a410396170046656",
+    "docs/contracts/servicio-general-v2.md": "c8f145bb739ecae087264cfc0164f6f7422edf9f474e7dad0de319da96fec79f",
+    "docs/contracts/perfiles-servicio-v2.md": "439c9de5d26f4bd01f3199bf930f790809f84f7af3579f02237dfdaee4fd1a8e",
+    "docs/roadmap/ciclo-vida-modelo.md": "2db319036be1af12dd87bb97373c358f7642e2086b127096ce37188e198101db",
+    "docs/contracts/superficie-inferencia-v1.md": "f0e1b33e4bf00c2a56c96fab8ec8441e4ad63cf95b69514561725a5b1d94bb47",
+    "docs/contracts/mcp-tools-v1.md": "851ed193f72a5af0863395e53149cb5f419fe08e76259cd168299331eb7c20e7"
+  },
+  "configured_model": "zai-coding-plan/glm-5.3-flash",
+  "configured_plan_model_override": null,
+  "mode": "fresh_session_attached_packet_no_tools",
+  "status": "completed",
+  "session_id": "ses_e584e24baffelyzy2YfTE4pHIF",
+  "packet_parts": [
+    "plan2-external-r1-packet-01.txt",
+    "plan2-external-r1-packet-02.txt",
+    "plan2-external-r1-packet-03.txt"
+  ],
+  "command_exit_code": 0,
+  "result": "fix-and-retry",
+  "raw_events_sha256": "77e8123900a80f81d71d86fa4128a6e0673c79c1f27202d8ec4696e14f407be3"
+}

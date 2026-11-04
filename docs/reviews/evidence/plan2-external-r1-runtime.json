@@ -1,0 +1,24 @@
+[
+  {
+    "type": "step_finish",
+    "timestamp": 1793815145409,
+    "sessionID": "ses_e584e24baffelyzy2YfTE4pHIF",
+    "part": {
+      "id": "prt_1a7b6ebc10011HoD88PWq51fHu",
+      "sessionID": "ses_e584e24baffelyzy2YfTE4pHIF",
+      "messageID": "msg_1a7b2124e0012vkbBa94iZKkxw",
+      "type": "step-finish",
+      "reason": "stop",
+      "cost": 0,
+      "tokens": {
+        "input": 26369,
+        "output": 2970,
+        "reasoning": 16777,
+        "cache": {
+          "read": 0,
+          "write": 0
+        }
+      }
+    }
+  }
+]
