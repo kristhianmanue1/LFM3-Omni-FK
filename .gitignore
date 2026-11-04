@@ -1,5 +1,10 @@
-.DS_Store
-*.log
-*.pid
+# Memoria local AN-KLA: estado volátil y material de atestación —
+# no se versiona (ADR-003, 2026-11-04).
+.an-kla/
+
+# Logs y pids runtime del motor (exentos del gate de tamaños; nunca publicar).
+run/*.log
+run/*.pid
+
+# Artefactos de Python.
 __pycache__/
-.venv/

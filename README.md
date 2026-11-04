@@ -83,16 +83,20 @@ su propiedad de regresión es que el rechazo se sostenga.
   bash; motor fijado por ADR-001.
 - **Linter/formateador:** ninguno por ahora (03 §3: sólo si el proyecto
   dura más de una sesión); decisión pendiente, sin herramienta adoptada.
-- **CI:** ninguno — no hay remoto declarado (decisión del humano: no
-  quemar créditos); un pipeline sin nada que comprobaría sería peor.
-  Las decisiones de exposición de red viven en F0 (CERRADA-6).
+- **CI:** ninguno — el remoto de publicación está declarado (ADR-003),
+  pero sin CI ni workflows (decisión del humano: no quemar créditos);
+  un pipeline sin nada que comprobaría sería peor. Las decisiones de
+  exposición de red viven en F0 (CERRADA-6).
 - **Límites de tamaño:** heredados del estándar (800 líneas por archivo,
   200 para instrucciones de agentes, 300 para README); presupuesto de
   ruta de lectura en `skevi-gate.json` (1800, adopción de AN-KLA).
-- **LICENSE:** pendiente — el repositorio no se publica hoy; el modelo
-  que sirve está bajo LFM Open License v1.0 (umbral comercial de
-  10 M USD; ver REQ-8/EV-10 en el contrato). Al decidir publicación,
-  elegir LICENSE y registrar la decisión.
+- **LICENSE:** Apache-2.0 para el contenido del repositorio (código,
+  docs, contratos; copyright kristhianmanue1). Los pesos del modelo NO
+  se relicencian ni se redistribuyen: siguen bajo LFM Open License v1.0
+  (umbral comercial de 10 M USD; REQ-8/EV-10) y se descargan de
+  Hugging Face en el primer arranque. Remoto de publicación declarado:
+  `github.com/kristhianmanue1/LFM3-Omni-FK` (ADR-003). La memoria
+  local `.an-kla/` no se versiona (ADR-003).
 
 ## Estructura
 

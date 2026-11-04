@@ -1,1 +1,0 @@
-{"entries":[{"argv":["git","rev-parse","HEAD"]},{"argv_prefix":["git","diff"],"deny_flags":["--ext-diff","--textconv","--output","-o"]},{"argv_prefix":["python","-m","unittest","discover"],"deny_flags":[]},{"argv_prefix":["python3","-m","unittest","discover"],"deny_flags":[]},{"argv_prefix":["sha256sum"],"deny_flags":[]}],"schema":"an-kla/attest-whitelist-v1"}
