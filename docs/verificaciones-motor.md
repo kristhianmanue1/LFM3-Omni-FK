@@ -125,3 +125,22 @@ batería ganó tres casos como disposición directa:
   (`response_format`) antes de persistir o reenviar (REQ-7).
 - Herramientas: el modelo emite tool calls válidos — habilita el diseño
   MCP de REQ-4.
+
+## 8. Adenda 2026-11-04 — corrección de B-T8 (sin reescribir §1–§7)
+
+Sondas de sesión del ajuste multimodal (registro completo en
+docs/reviews/2026-11-plan2-ajuste-multimodal.md) contra el mismo motor,
+modelo y mmproj:
+
+- `/props` declara modalities vision/video/audio = true.
+- B-T8 enviaba `audio_url` (tipo inexistente en el formato OpenAI) con
+  un WAV falso: su 400 no prueba ausencia de audio. Con `input_audio`
+  y WAV real 16 kHz mono, el ASR en español es exacto.
+- `video_url`/`input_video` se aceptan (ffmpeg del sistema). Pregunta
+  temporal sintética: falló con clip de 2.5 s y prompt propio (P-7);
+  acertó en orden con 4 s a 8 fps y el prompt de la ficha (P-7b,
+  tests/sondas_multimodal.py). Una sola pregunta no acredita video.
+- Salida de voz: `/v1/realtime` no usable en español (#31689);
+  `llama-tts --tts-lang es` sí (ADR-007).
+
+B-T8 se reclasifica como falso negativo; su reescritura es TAREA I1-V0.

@@ -133,7 +133,12 @@ class Transporte(GatewayBase):
         try:
             con.sendall(peticion)
             con.settimeout(3)
-            respuesta = con.recv(65536).decode("latin-1")
+            # HTTP/1.0: leer hasta el cierre; un único recv() podía traer
+            # sólo las cabeceras (intermitente, ajuste PLAN LFM3-2).
+            trozos = []
+            while chunk := con.recv(65536):
+                trozos.append(chunk)
+            respuesta = b"".join(trozos).decode("latin-1")
         finally:
             con.close()
         self.assertIn("400", respuesta.splitlines()[0])

@@ -91,6 +91,36 @@ Gate I1:
 
 Rollback I1: detener gateway y conservar operación local aceptada I0.
 
+## I1-V — Modalidades locales del artefacto vigente
+
+Usuario usable: agente o humano local transcribe audio español, recibe
+voz española y conversa por turnos; después, video corto. Mismo motor y
+modelo (ADR-001); loopback; ADR-006 enmienda ADR-005; ADR-007 fija voz.
+I0/I1 conservan accepted_local. Evidencia de partida y límites de las
+sondas: docs/reviews/2026-11-plan2-ajuste-multimodal.md.
+
+Gate común: fixtures y umbrales fijados en SPEC antes de medir; medios
+sólo data URI/base64 (URL -> 400, contador cero); capability anunciada
+sólo tras su gate; voz o cámara reales sólo con D-09 aceptada.
+
+- I1-V0: inventario ffmpeg/ffprobe/llama-tts con hash, PATH fijo en
+  serve.sh, B-T8 corregido y aviso v1 «PROHIBIDO audio/video en 8091».
+- I1-VA: sólo input_audio en chat (JSON); multipart /v1/audio/
+  transcriptions y tools MCP v2 son cortes posteriores con su SPEC.
+  CER sobre corpus sintético; «comprensión de audio» queda evaluable
+  aparte (la sonda P-3 devolvió transcripción, no respuesta).
+- I1-VS: llama-tts con texto por archivo 0600 o stdin (verificado en
+  SPEC), esquema cerrado, una síntesis a la vez, 503 sin cola, salida
+  única borrada; pico de memoria y swap medidos (REQ-5/B-T10 ampliado).
+- I1-VR: SSE local, voz por frase, fin de turno por señal real; la
+  desconexión cancela la tarea del motor (log o /slots) antes de liberar
+  cupo; p95, N y marca de tiempo fijados antes de medir.
+- I1-VV: límites de duración/FPS/frames/bytes; preguntas temporales
+  sintéticas; readiness compara hash de ffmpeg con el inventario. Si no
+  pasa, video no se anuncia.
+
+Rollback I1-V: retirar ruta del allowlist y la capability; v1 y I1 intactos.
+
 ## I2 — Servicio web privado por invitación
 
 Usuario usable: dos proyectos con credenciales distintas consumen HTTPS
@@ -228,6 +258,8 @@ no exigen canario ni demo nueva; acreditan baseline intacto y motivo. Una
 actualización de motor por seguridad o modelo sólo de texto prueba las
 capacidades afectadas y regresión existente; no inventa modalidad nueva.
 
+Las modalidades ya presentes en el artefacto baseline (voz, transcripción,
+video) se habilitan en I1-V, no aquí; lo siguiente rige para candidatos.
 Audio: muestra/duración/codec/idioma, ASR y métrica de error sobre corpus
 consentido antes de correr. Voz: inteligibilidad, latencia, cancelación y
 límites de salida; sin clonar identidad ni voces por defecto. Video:
@@ -251,7 +283,7 @@ activación remota puede cerrar accepted_local. Rechazo I6 usa rejected.
 Cada actualización conserva fecha, HEAD/diff, gate, evidencia y próximo
 paso; no marcar casillas por intención. El Operador decide aceptación y
 activación; el agente propone el estado con evidencia y declara autoridad.
-Actualmente todas las iteraciones están not_started: sólo plan persistido.
+Estado vigente de cada iteración: docs/roadmap/registro-avance.md.
 
 ## Handoff por iteración
 

@@ -1,0 +1,49 @@
+# Sonda mínima de /v1/realtime (stdlib). Solo loopback; uso exploratorio.
+import base64, json, os, socket, struct, sys, time, wave
+def conectar(path="/v1/realtime"):
+    s = socket.create_connection(("127.0.0.1", 8091), timeout=120)
+    k = base64.b64encode(os.urandom(16)).decode()
+    s.sendall((f"GET {path} HTTP/1.1\r\nHost: 127.0.0.1:8091\r\nUpgrade: websocket\r\n"
+               f"Connection: Upgrade\r\nSec-WebSocket-Key: {k}\r\nSec-WebSocket-Version: 13\r\n\r\n").encode())
+    h = b""
+    while b"\r\n\r\n" not in h: h += s.recv(1)
+    print("handshake:", h.split(b"\r\n")[0].decode())
+    return s
+def enviar(s, obj):
+    p = json.dumps(obj).encode(); m = os.urandom(4); n = len(p)
+    hdr = bytes([0x81]) + (bytes([0x80|n]) if n < 126 else bytes([0x80|126]) + struct.pack(">H", n) if n < 65536 else bytes([0x80|127]) + struct.pack(">Q", n))
+    s.sendall(hdr + m + bytes(b ^ m[i % 4] for i, b in enumerate(p)))
+def leer_exacto(s, n):
+    b = b""
+    while len(b) < n:
+        c = s.recv(n - len(b))
+        if not c: raise EOFError
+        b += c
+    return b
+def recibir(s):
+    b0, b1 = leer_exacto(s, 2); n = b1 & 0x7f
+    if n == 126: n = struct.unpack(">H", leer_exacto(s, 2))[0]
+    elif n == 127: n = struct.unpack(">Q", leer_exacto(s, 8))[0]
+    d = leer_exacto(s, n)
+    return b0 & 0x0f, d
+s = conectar()
+enviar(s, {"type": "session.update", "session": {"type": "realtime", "output_modalities": ["audio"], "instructions": "Responde en español, breve."}})
+enviar(s, {"type": "conversation.item.create", "item": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": "Saluda y di la hora: son las tres de la tarde."}]}})
+enviar(s, {"type": "response.create"})
+pcm = b""; t0 = time.time(); primero = None; tipos = {}
+while True:
+    op, d = recibir(s)
+    if op == 8: print("close", d[:120]); break
+    if op != 1: continue
+    ev = json.loads(d); t = ev.get("type"); tipos[t] = tipos.get(t, 0) + 1
+    if t == "response.output_audio.delta":
+        primero = primero or time.time() - t0; pcm += base64.b64decode(ev["delta"])
+    elif t in ("error",) or (t and "transcript.done" in t) or t in ("session.created","session.updated"):
+        print(t, json.dumps(ev, ensure_ascii=False)[:300])
+    if t in ("response.done", "error"): break
+print("tipos:", tipos); print("primer audio:", primero and round(primero, 2), "s; total:", round(time.time() - t0, 2), "s; bytes pcm:", len(pcm))
+if pcm:
+    sr = int(sys.argv[1]) if len(sys.argv) > 1 else 24000
+    with wave.open(os.path.join(os.path.dirname(__file__), "tts.wav"), "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr); w.writeframes(pcm)
+    print("duración audio @%d Hz: %.2f s" % (sr, len(pcm) / 2 / sr))

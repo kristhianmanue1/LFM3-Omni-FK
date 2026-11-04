@@ -1,0 +1,32 @@
+import json,base64,time,wave,subprocess
+exec(open("ws_probe.py").read().split("s = conectar()")[0])
+def turno(nombre, modos, texto=None, audio_in=None):
+    s=conectar(); recibir(s)
+    ses={"type":"realtime","instructions":"Responde en español, breve."}
+    if modos is not None: ses["output_modalities"]=modos
+    enviar(s,{"type":"session.update","session":ses})
+    if audio_in:
+        raw=wave.open(audio_in).readframes(10**9)
+        for i in range(0,len(raw),32000): enviar(s,{"type":"input_audio_buffer.append","audio":base64.b64encode(raw[i:i+32000]).decode()})
+        enviar(s,{"type":"input_audio_buffer.commit"})
+    else:
+        enviar(s,{"type":"conversation.item.create","item":{"type":"message","role":"user","content":[{"type":"input_text","text":texto}]}})
+    enviar(s,{"type":"response.create"})
+    pcm=b"";t0=time.time();prim=None;txt="";tipos={}
+    while True:
+        op,d=recibir(s)
+        if op!=1: continue
+        ev=json.loads(d);t=ev["type"];tipos[t]=tipos.get(t,0)+1
+        if t=="response.output_audio.delta": prim=prim or time.time()-t0; pcm+=base64.b64decode(ev["delta"])
+        elif t.endswith(".delta") and "delta" in ev and isinstance(ev["delta"],str): txt+=ev["delta"]
+        elif t=="error": print(nombre,"ERROR",ev); return
+        if t=="response.done": break
+    w=wave.open(nombre+".wav","wb"); w.setnchannels(1); w.setsampwidth(2); w.setframerate(24000); w.writeframes(pcm); w.close()
+    asr="(sin audio)"
+    if pcm:
+        subprocess.run(["afconvert","-f","WAVE","-d","LEI16@16000","-c","1",nombre+".wav",nombre+"16.wav"],check=True)
+        asr=json.loads(subprocess.run(["curl","-s","http://127.0.0.1:8091/v1/audio/transcriptions","-F","file=@"+nombre+"16.wav","-F","model=x"],capture_output=True,text=True).stdout)["text"]
+    print(f"{nombre}: 1er audio {prim and round(prim,2)} s, voz {len(pcm)/48000:.1f} s | texto: {txt[:120]!r} | ASR de su voz: {asr!r}")
+turno("mixed",["text","audio"],"¿A qué hora empieza la reunión de mañana? Es a las nueve.")
+turno("auto",None,"¿A qué hora empieza la reunión de mañana? Es a las nueve.")
+turno("mixed_voz",["text","audio"],audio_in="frase.wav")

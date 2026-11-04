@@ -39,7 +39,8 @@ error y request_id; cierre sin DONE. Desconexión sin terminal es resultado
 incompleto. No reintentar generación parcial automáticamente.
 Desactivar buffering del proxy para streams y probar desconexiones reales.
 Structured output: primer perfil sólo stream:false; rechazar combinación
-stream:true+schema antes del motor. Texto libre admite SSE en I3.
+stream:true+schema antes del motor. Texto libre admite SSE en I1-VR
+(local, ADR-006) e I3 (remoto).
 
 Invariantes: health público, si existe, mínimo y sin identificadores;
 readiness completo y metrics requieren identidad de operación. Origin

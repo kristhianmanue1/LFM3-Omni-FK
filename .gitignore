@@ -8,3 +8,9 @@ run/*.pid
 
 # Artefactos de Python.
 __pycache__/
+
+# Evidencia personal del Operador (voz, imagen): local, nunca publicar (repo
+# público; D-09 pendiente). El gate de tamaños lo salta (skip_dirs).
+docs/reviews/evidence/privado/
+# Cualquier grabación del micrófono del Operador (sufijo _tu), esté donde esté.
+*_tu.wav

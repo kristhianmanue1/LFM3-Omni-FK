@@ -1,0 +1,15 @@
+{
+ "origen": "say -v Paulina (es_MX), macOS 27.2, corrida M2 2026-11-04; PCM16 mono 16 kHz",
+ "sha256": {
+  "asr_es_00.wav": "046532de8edcddcf5af1de2cc34366e0883da3402f4769363d478216f20a4146",
+  "asr_es_01.wav": "47e19ff21c12b9c6f6167c3b628be14473725496a3c947bc18877485c77ecbbf",
+  "asr_es_02.wav": "47f3d772676882c8d062e4613822a6dfb552a0e07fe611794c0e77e4b058d1ee",
+  "asr_es_03.wav": "8bf26b5bbb7ac6655ae5b1f80520d0fe2ce729c764d657ee7ada9955552db9f5",
+  "asr_es_04.wav": "b35ae016857139c95c9ee2640828bf3ddc5a846c13a0ef1381af078e6ff72f2e",
+  "asr_es_05.wav": "844cceb7fab9fc3681b59f81e7abbb93b08e12808f0060f55ad967a10515f1b7",
+  "asr_es_06.wav": "e175a3e9b9b653dd345147053eb24ba2cbef19d742cdb89c92d7b80114dff3b4",
+  "asr_es_07.wav": "af851c197453aa5b0e757356d0a09e12a5f44eac89caf836c1de56e7d0a1a80f",
+  "asr_es_08.wav": "e2ed5438ab31ef5aa2aef1995939324e5609420dcf1713c33eabad0f51cd1ac5",
+  "asr_es_09.wav": "829383dab2d21af7002783a73daee57dc79c168a93260f407bcda8256205d2b3"
+ }
+}

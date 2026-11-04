@@ -55,7 +55,7 @@ sesión; su adopción para ejecución se decide en el gate I0-D.
 | S-08 | Evaluación de capacidad y calidad | umbrales fijados antes de corridas, datos y decisión conservados | imprescindible |
 | S-09 | Ciclo de vida modelo/motor | candidato detectado, evaluado, rechazado o promovido con rollback | imprescindible |
 | S-10 | Datos minimizados y aislados | canarios A/B no cruzan logs, cachés ni resultados | imprescindible |
-| S-11 | Voz/video verificables | demos de modalidad más presupuesto y regresión propios | futuro condicionado |
+| S-11 | Voz/video verificables | demos de modalidad más presupuesto y regresión propios | imprescindible local (I1-V, ADR-006/007); video condicionado a su gate |
 | S-12 | Contratos compatibles y migración | consumidor v1 sigue pasando; v2 no se activa por renombrar v1 | imprescindible |
 
 ## Dentro del alcance propuesto
@@ -90,7 +90,10 @@ sesión; su adopción para ejecución se decide en el gate I0-D.
 | D-03 | Host, dominio, TLS, red, identidad y presupuesto; antes I2 | sólo loopback, ningún túnel |
 | D-04 | SLO, límites piloto y configuración de medición de capacidad; antes benchmark I2 | valores candidatos, sin SLA ni bypass de cuotas |
 | D-05 | Repositorio/UI y autorización separada; antes I4-UI | cliente mínimo sin UI nueva |
-| D-06 | Modalidad prioritaria, hardware y presupuesto; antes I6 | texto/imagen estables |
+| D-06a | Prioridad de modalidad; antes de I1-V | ACEPTADA 2026-11-04: voz → conversación → visión/video → combinada |
+| D-06b | Hardware y presupuesto de candidatos; antes I6 | texto/imagen estables |
+| D-08 | Estrategia de voz; antes de I1-VS | ADR-007 propuesto: llama-tts, sin realtime nativo |
+| D-09 | Datos de audio/imagen; antes de usar voz o cámara reales en gates | sólo fixtures sintéticos, sin persistencia, logs sin contenido |
 | D-07 | Publicación comercial y licencia de código; antes ofrecerla | piloto interno sin oferta comercial |
 
 Elegir framework, librería de validación, autenticación y supervisor se

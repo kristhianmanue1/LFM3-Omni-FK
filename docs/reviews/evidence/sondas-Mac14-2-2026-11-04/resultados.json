@@ -1,0 +1,193 @@
+{
+ "schema": "lfm3-omni/sondas-multimodal/v1",
+ "entorno": {
+  "fecha_utc": "2026-11-04T22:48:59+00:00",
+  "hardware": {
+   "sistema": "Darwin",
+   "modelo": "Mac14,2",
+   "cpu": "Apple M2",
+   "nucleos": "8",
+   "ram_bytes": 17179869184,
+   "gpu": null
+  },
+  "so": {
+   "plataforma": "macOS-27.2",
+   "python": "3.12.12"
+  },
+  "versiones": {
+   "llama-server": "version: 0.8.0 (build 11960, commit 8642541b2)",
+   "ffmpeg": "ffmpeg version 8.1.1 Copyright (c) 2000-2026 the FFmpeg developers"
+  },
+  "binarios": {
+   "llama-server": {
+    "ruta": "/opt/homebrew/Cellar/llama.cpp/0.8.0/bin/llama-server",
+    "sha256": "35dd042c7759e6e313b073273277615d7f910410298b0f29d1897773db6f5d8f"
+   },
+   "llama-tts": {
+    "ruta": "/opt/homebrew/Cellar/llama.cpp/0.8.0/bin/llama-tts",
+    "sha256": "b983acbd59f89df0da0cce9665c75366b94f5736331470fc73d2b8bb5c84c377"
+   },
+   "ffmpeg": {
+    "ruta": "/opt/homebrew/Cellar/ffmpeg/8.1.1/bin/ffmpeg",
+    "sha256": "00d01197255300c02122c783dd0126a9e7f47d6c6a19faafae2e6610efd071d3"
+   },
+   "ffprobe": {
+    "ruta": "/opt/homebrew/Cellar/ffmpeg/8.1.1/bin/ffprobe",
+    "sha256": "daba6e06838d10260602536a676069cef6d756345e1c6d66268ceb7f2d5e7c39"
+   }
+  },
+  "artefacto": {
+   "modelo_sha256": "9f8d30e9d4fd7a9349d586e077988229b3ca0a0e4ad730897563d1eccc9893e2",
+   "mmproj_sha256": "c7341273f1757b33ccd9e6f8b17007eb81307d26c90d8c36c22efb45fd3d82eb",
+   "mmproj": "mmproj-LFM3-Omni-2B-Q4_0.gguf"
+  },
+  "motor": {
+   "build_info": "b11960-8642541b2",
+   "modalities": {
+    "vision": true,
+    "video": true,
+    "audio": true
+   },
+   "total_slots": 4
+  },
+  "fixtures": {
+   "asr_es_00.wav": "046532de8edcddcf5af1de2cc34366e0883da3402f4769363d478216f20a4146",
+   "asr_es_01.wav": "47e19ff21c12b9c6f6167c3b628be14473725496a3c947bc18877485c77ecbbf",
+   "asr_es_02.wav": "47f3d772676882c8d062e4613822a6dfb552a0e07fe611794c0e77e4b058d1ee",
+   "asr_es_03.wav": "8bf26b5bbb7ac6655ae5b1f80520d0fe2ce729c764d657ee7ada9955552db9f5",
+   "asr_es_04.wav": "b35ae016857139c95c9ee2640828bf3ddc5a846c13a0ef1381af078e6ff72f2e",
+   "asr_es_05.wav": "844cceb7fab9fc3681b59f81e7abbb93b08e12808f0060f55ad967a10515f1b7",
+   "asr_es_06.wav": "e175a3e9b9b653dd345147053eb24ba2cbef19d742cdb89c92d7b80114dff3b4",
+   "asr_es_07.wav": "af851c197453aa5b0e757356d0a09e12a5f44eac89caf836c1de56e7d0a1a80f",
+   "asr_es_08.wav": "e2ed5438ab31ef5aa2aef1995939324e5609420dcf1713c33eabad0f51cd1ac5",
+   "asr_es_09.wav": "829383dab2d21af7002783a73daee57dc79c168a93260f407bcda8256205d2b3"
+  }
+ },
+ "errores": {},
+ "asr": {
+  "filas": [
+   {
+    "ref": "El paquete llega el martes por la tarde.",
+    "hip": "El paquete llega el martes por la tarde.",
+    "status": 200,
+    "s": 0.53,
+    "cer": 0.0
+   },
+   {
+    "ref": "La reunión empieza mañana a las nueve.",
+    "hip": "La reunión empieza mañana a las nueve.",
+    "status": 200,
+    "s": 0.41,
+    "cer": 0.0
+   },
+   {
+    "ref": "Necesito una mesa para cuatro personas.",
+    "hip": "Necesito una mesa para cuatro personas.",
+    "status": 200,
+    "s": 0.38,
+    "cer": 0.0
+   },
+   {
+    "ref": "El tren sale de la estación central.",
+    "hip": "El tren sale de la estación central.",
+    "status": 200,
+    "s": 0.3,
+    "cer": 0.0
+   },
+   {
+    "ref": "Por favor apaga la luz de la cocina.",
+    "hip": "Por favor apaga la luz de la cocina.",
+    "status": 200,
+    "s": 0.33,
+    "cer": 0.0
+   },
+   {
+    "ref": "Hoy hace mucho calor en la ciudad.",
+    "hip": "Hoy hace mucho calor en la ciudad.",
+    "status": 200,
+    "s": 0.31,
+    "cer": 0.0
+   },
+   {
+    "ref": "Mi hermana estudia medicina en Puebla.",
+    "hip": "Mi hermana estudia medicina en Puebla.",
+    "status": 200,
+    "s": 0.34,
+    "cer": 0.0
+   },
+   {
+    "ref": "El perro duerme debajo de la silla.",
+    "hip": "El perro duerme debajo de la silla.",
+    "status": 200,
+    "s": 0.36,
+    "cer": 0.0
+   },
+   {
+    "ref": "Compramos pan y leche en la tienda.",
+    "hip": "Compramos pan y leche en la tienda.",
+    "status": 200,
+    "s": 0.34,
+    "cer": 0.0
+   },
+   {
+    "ref": "La biblioteca cierra los domingos.",
+    "hip": "La biblioteca cierra los domingos.",
+    "status": 200,
+    "s": 0.33,
+    "cer": 0.0
+   }
+  ],
+  "cer_medio": 0.0,
+  "s_mediana": 0.34
+ },
+ "bt8_y_multipart": {
+  "audio_url_status": 400,
+  "input_audio_status": 200,
+  "bt8_forma_correcta": true,
+  "multipart_status": 200,
+  "multipart_s": 0.38,
+  "multipart_texto": "El paquete llega el martes por la tarde.",
+  "input_audio_texto": "El paquete llega el martes por la tarde."
+ },
+ "video": {
+  "status": 200,
+  "s": 0.94,
+  "respuesta": "The video starts with a solid **red** screen, and it ends with a solid **blue** screen.",
+  "prompt_tokens": 153,
+  "temporal_correcta": true
+ },
+ "realtime": {
+  "texto": "La reunión empieza mañana a las nueve.",
+  "voz_s": 4.4,
+  "primer_audio_s": 0.3,
+  "re_asr": "Lo reúnen en Pisa mañana a las nueve.",
+  "cer_voz": 0.1892,
+  "nota": "sin lang/voice en server-realtime (ggml-org/llama.cpp#31689)"
+ },
+ "tts": {
+  "filas": [
+   {
+    "texto": "El paquete llega el martes por la tarde.",
+    "s": 2.97,
+    "rss_max_bytes": 3144663040,
+    "re_asr": "El paquete llega el martes por la tarde.",
+    "cer": 0.0
+   },
+   {
+    "texto": "La reunión empieza mañana a las nueve.",
+    "s": 1.96,
+    "rss_max_bytes": 3091595264,
+    "re_asr": "La reunión empieza mañana a las nueve.",
+    "cer": 0.0
+   },
+   {
+    "texto": "Necesito una mesa para cuatro personas.",
+    "s": 2.21,
+    "rss_max_bytes": 3092348928,
+    "re_asr": "Necesito una mesa para cuatro personas.",
+    "cer": 0.0
+   }
+  ],
+  "rss_max_bytes": 3144663040
+ }
+}

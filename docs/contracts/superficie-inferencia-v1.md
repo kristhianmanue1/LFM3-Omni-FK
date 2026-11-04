@@ -36,6 +36,11 @@ Entrada:
       (fetch saliente; 500 si falla). PROHIBIDO para el consumidor:
       rechaza toda url no-data antes de enviar — es superficie SSRF
       contenida solo por CERRADA-6
+      Errata 2026-11-04 (aviso de seguridad): el build TAMBIÉN acepta
+      partes input_audio, video_url e input_video y pasa esos bytes a
+      ffmpeg/ffprobe del sistema (libmtmd, PATH). PROHIBIDO para el
+      consumidor de v1: no forman parte de esta frontera ni tienen
+      límites declarados. Su habilitación es I1-V en el gateway (ADR-006)
     tools: array [opcional] — {type:"function", function:{name,
       description, parameters: JSON Schema}}
     tool_choice: "auto" [opcional]
@@ -62,7 +67,8 @@ Salida:
     esta versión)
 Errores:
   400 {error:{code,message,type}} — entrada malformada o campo no
-    soportado (p. ej. audio en chat en este build, B-T8); estado: sin
+    soportado (p. ej. parte audio_url, B-T8; errata 2026-11-04:
+    input_audio sí lo acepta el build, ver nota de superficie); estado: sin
     efecto lateral ("slot queda libre": no ejercitado por batería,
     comportamiento estándar del build)
   503 — motor cargando; estado: reintentable (no ejercitado por
@@ -91,8 +97,8 @@ Invariantes:
     top-level no reconocidos con 2xx (temperature, seed, typos) — el
     consumidor valida su payload antes de enviar; el greedy sobrevive a
     esos overrides (verificado, ronda v0.1.0)
-  - La voz NO forma parte de esta frontera v1: audio de entrada por
-    chat se rechaza con 400 (B-T8); el endpoint /v1/realtime existe en
+  - La voz NO forma parte de esta frontera v1 (errata 2026-11-04: el
+    build acepta input_audio; B-T8 sólo probaba audio_url inexistente); el endpoint /v1/realtime existe en
     el build pero no está verificado ni declarado aquí — de incorporarse,
     exigirá v2. Su verificación de capacidad es tarea aparte (F3-3)
   - Recursos: RSS residente con el modelo cargado < 4 GB (REQ-5, B-T10)

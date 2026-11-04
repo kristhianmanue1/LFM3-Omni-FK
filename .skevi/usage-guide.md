@@ -16,8 +16,14 @@ qué versión; no la dupliques aquí.
 
 ## Desviaciones de este proyecto respecto al estándar por defecto
 
-Ninguna declarada todavía: rigen los límites por defecto (800 líneas por
-archivo, 200 para instrucciones de agentes, 300 para README y plantillas).
+Rigen los límites por defecto (800 líneas por archivo, 200 para
+instrucciones de agentes, 300 para README y plantillas). Desviación
+declarada (2026-11-04, ajuste multimodal del PLAN LFM3-2): `skip_dirs`
+añade `medios-binarios` (WAV/MP4 de evidencia, no texto) y `privado`
+(voz/imagen del Operador, además excluido de git por `.gitignore`).
+Razón: el gate exige UTF-8 y la evidencia de audio/video es binaria.
+`skip_dirs` filtra por nombre en todo el árbol: ningún directorio con
+texto versionable puede llamarse `privado` ni `medios-binarios`.
 El presupuesto de la ruta de lectura está en `skevi-gate.json` de la raíz.
 
 ## Idiomas elegidos

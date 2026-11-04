@@ -40,7 +40,9 @@ Procedencia: AGENTS y guías 01/02/04/06; razón: autonomía sin ampliar autorid
 ## Secuencia y gates
 
 I0 -> I1 -> I2 -> I3 -> I4 -> I5; vigilancia diseñada desde I0 y operativa
-con I2. I6 es condicional por candidato o modalidad; no bloquea I0–I5.
+con I2. Ampliación local I1-V (ADR-006/007): I1-V0 -> VA -> VS -> VR -> VV
+habilita modalidades del artefacto congelado en loopback; no depende de I2
+ni lo bloquea, y sus rutas quedan fuera de exposición remota salvo I2-D. I6 es condicional por candidato o modalidad; no bloquea I0–I5.
 I4 puede usar H si un cliente MCP concreto no está aprobado; no saltar el
 control de identidad/carga de I2. Decisiones pendientes bloquean su tarea.
 
@@ -102,6 +104,44 @@ TAREA I1-U
   Steps:
   - [ ] cerrar instalación reproducible y apagado sin residuos;
     verificación: entorno limpio autorizado reproduce demo y rollback I0.
+TAREA I1-V0
+  Consumes: I1, ADR-006, P-1..P-11 de la revisión de ajuste
+  Produce: inventario de ffmpeg/ffprobe/llama-tts, PATH fijo y B-T8 corregido
+  Steps:
+  - [ ] registrar versión y hash de ffmpeg/ffprobe/llama-tts y fijar PATH;
+    verificación: inventario reproduce hashes; serve.sh no usa PATH ajeno.
+  - [ ] reescribir B-T8 a input_audio aceptado y audio_url rechazado;
+    verificación: golden pasa con registro de corrección, v1 sin cambio.
+TAREA I1-VA
+  Consumes: I1-V0, D-06a, perfil H
+  Produce: transcripción español vía input_audio en chat del gateway
+  Steps:
+  - [ ] validar WAV, bytes y duración y rechazar URL antes del motor;
+    verificación: WAV corrupto, enorme o URL rechazados con contador cero.
+  - [ ] fijar corpus sintético y umbral CER antes de medir;
+    verificación: CER bajo umbral; capabilities anuncia transcripcion.
+TAREA I1-VS
+  Consumes: I1-VA, D-08 (ADR-007), D-09 si se usa voz real
+  Produce: síntesis de voz español vía llama-tts en el gateway
+  Steps:
+  - [ ] entregar texto por archivo 0600 o stdin, esquema cerrado, sin cola;
+    verificación: ida-vuelta TTS->ASR contiene el texto; ocupado da 503.
+  - [ ] medir pico de memoria y swap del subproceso;
+    verificación: REQ-5/B-T10 ampliado pasa; escucha del Operador registrada.
+TAREA I1-VR
+  Consumes: I1-VA, I1-VS, ADR-006
+  Produce: conversación local por turnos con SSE de texto y voz por frase
+  Steps:
+  - [ ] fijar en SPEC p95, N y marca de fin de turno antes de medir;
+    verificación: p95 de primera voz dentro del umbral fijado.
+  - [ ] cancelar turno y desconexión hasta la tarea del motor;
+    verificación: slot liberado confirmado; dos sesiones no se cruzan.
+TAREA I1-VV
+  Consumes: I1-V0, ADR-006
+  Produce: video corto con límites de duración, FPS, frames y bytes
+  Steps:
+  - [ ] fijar preguntas temporales sintéticas antes de medir;
+    verificación: pasan, o video no se anuncia; hash ffmpeg verificado.
 TAREA I2-D
   Consumes: I1, D-02/D-03/D-04, S-03/S-04/S-07/S-08/S-10
   Produce: SPEC-PILOT, ADR identidad/red/egreso/supervisor y dossier
@@ -142,7 +182,7 @@ TAREA I3-D
     verificación: dos clientes elegidos y pruebas negativas acordados.
 TAREA I3-M
   Consumes: I3-D, núcleo común
-  Produce: MCP remoto, cancelación y SSE de texto libre
+  Produce: MCP remoto, cancelación y SSE de texto libre bajo proxy remoto
   Steps:
   - [ ] implementar sin estado de initialize global entre identidades;
     verificación: MCP H/M cuota común, origin, token audience y sesión A/B.

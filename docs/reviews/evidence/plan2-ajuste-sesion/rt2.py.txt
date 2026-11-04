@@ -1,0 +1,28 @@
+import sys,json,base64,time,wave,os,subprocess
+exec(open("ws_probe.py").read().split("s = conectar()")[0])
+def turno(nombre, instr, contenido, audio_in=None):
+    s=conectar(); recibir(s)
+    enviar(s,{"type":"session.update","session":{"type":"realtime","output_modalities":["audio"],"instructions":instr}})
+    if audio_in:
+        raw=wave.open(audio_in).readframes(10**9)
+        for i in range(0,len(raw),32000): enviar(s,{"type":"input_audio_buffer.append","audio":base64.b64encode(raw[i:i+32000]).decode()})
+        enviar(s,{"type":"input_audio_buffer.commit"})
+    else:
+        enviar(s,{"type":"conversation.item.create","item":{"type":"message","role":"user","content":[{"type":"input_text","text":contenido}]}})
+    enviar(s,{"type":"response.create"})
+    pcm=b"";t0=time.time();prim=None;txt=[]
+    while True:
+        op,d=recibir(s)
+        if op!=1: continue
+        ev=json.loads(d);t=ev["type"]
+        if t=="response.output_audio.delta": prim=prim or time.time()-t0; pcm+=base64.b64decode(ev["delta"])
+        elif "transcri" in t and t.endswith("completed"): txt.append(("in",ev.get("transcript")))
+        elif t=="error": print(nombre,"ERROR",ev); return
+        if t=="response.done": break
+    w=wave.open(nombre+".wav","wb"); w.setnchannels(1); w.setsampwidth(2); w.setframerate(24000); w.writeframes(pcm); w.close()
+    subprocess.run(["afconvert","-f","WAVE","-d","LEI16@16000","-c","1",nombre+".wav",nombre+"16.wav"],check=True)
+    out=subprocess.run(["curl","-s","http://127.0.0.1:8091/v1/audio/transcriptions","-F","file=@"+nombre+"16.wav","-F","model=x"],capture_output=True,text=True).stdout
+    print(f"{nombre}: primer audio {prim and round(prim,2)} s, voz {len(pcm)/48000:.1f} s, eventos-in {txt} -> ASR: {json.loads(out)['text']!r}")
+turno("en","Answer briefly in English.","Say exactly: The meeting starts at nine o'clock tomorrow.")
+turno("es","Responde en español, breve.","Repite exactamente: La reunión empieza mañana a las nueve.")
+turno("voz","Responde en español, breve.",None,"frase.wav")

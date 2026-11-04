@@ -1,0 +1,81 @@
+# Conversación por turnos con LFM3-Omni (opción B, exploratoria).
+# Micrófono -> ASR (8091) -> respuesta texto (8091, greedy) -> llama-tts -> bocinas.
+# Solo loopback; el audio queda en este directorio de scratchpad.
+import json, os, subprocess, sys, time, urllib.request
+
+DIR = os.path.dirname(os.path.abspath(__file__))
+BASE = "http://127.0.0.1:8091"
+SNAP = ("/Users/krisnova/.cache/huggingface/hub/models--LiquidAI--"
+        "LFM3-Omni-2B-GGUF/snapshots/d508b88f08a5b4286f2d2805a6a8d69a0ff44c72")
+MODELO = SNAP + "/LFM3-Omni-2B-Q4_K_M.gguf"
+MMPROJ = SNAP + "/mmproj-LFM3-Omni-2B-Q4_0.gguf"
+MIC = sys.argv[1] if len(sys.argv) > 1 else ":0"
+TURNOS, SEG = 5, 6
+SISTEMA = ("Eres un asistente que conversa por voz en español con el "
+           "Operador del proyecto LFM3-Omni. Responde en una o dos frases "
+           "cortas, naturales, sin listas ni símbolos.")
+
+
+def log(*a):
+    print(time.strftime("%H:%M:%S"), *a, flush=True)
+
+
+def hablar(texto, nombre):
+    t = time.time()
+    salida = os.path.join(DIR, nombre)
+    subprocess.run(["llama-tts", "-m", MODELO, "-mm", MMPROJ, "--tts-lang",
+                    "es", "-p", texto, "-o", salida],
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                   check=True)
+    log(f"   (voz generada en {time.time() - t:.1f} s)")
+    subprocess.run(["afplay", salida], check=True)
+
+
+def transcribir(wav):
+    lim = "----lfm3"
+    datos = open(wav, "rb").read()
+    cuerpo = (f"--{lim}\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\nx\r\n"
+              f"--{lim}\r\nContent-Disposition: form-data; name=\"language\"\r\n\r\nes\r\n"
+              f"--{lim}\r\nContent-Disposition: form-data; name=\"file\"; filename=\"t.wav\"\r\n"
+              f"Content-Type: audio/wav\r\n\r\n").encode() + datos + f"\r\n--{lim}--\r\n".encode()
+    req = urllib.request.Request(BASE + "/v1/audio/transcriptions", data=cuerpo,
+                                 headers={"Content-Type": f"multipart/form-data; boundary={lim}"})
+    return json.load(urllib.request.urlopen(req, timeout=60))["text"].strip()
+
+
+def responder(historial):
+    req = urllib.request.Request(
+        BASE + "/v1/chat/completions",
+        data=json.dumps({"messages": historial, "max_tokens": 80}).encode(),
+        headers={"Content-Type": "application/json"})
+    d = json.load(urllib.request.urlopen(req, timeout=120))
+    return d["choices"][0]["message"]["content"].strip()
+
+
+historial = [{"role": "system", "content": SISTEMA}]
+saludo = "Hola, soy LFM3 Omni. Después de cada pitido tienes seis segundos para hablar."
+log("LFM3:", saludo)
+hablar(saludo, "conv_00.wav")
+for n in range(1, TURNOS + 1):
+    wav = os.path.join(DIR, f"conv_{n:02d}_tu.wav")
+    subprocess.run(["afplay", "/System/Library/Sounds/Ping.aiff"])
+    log(f"[turno {n}] escuchando {SEG} s…")
+    subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+                    "-f", "avfoundation", "-i", MIC, "-t", str(SEG),
+                    "-ar", "16000", "-ac", "1", wav], check=True)
+    subprocess.run(["afplay", "/System/Library/Sounds/Pop.aiff"])
+    t = time.time()
+    texto = transcribir(wav)
+    log(f"Tú ({time.time() - t:.1f} s ASR):", texto or "(nada)")
+    if not texto:
+        hablar("No te escuché. Intenta de nuevo.", f"conv_{n:02d}.wav")
+        continue
+    historial.append({"role": "user", "content": texto})
+    t = time.time()
+    resp = responder(historial)
+    historial.append({"role": "assistant", "content": resp})
+    log(f"LFM3 ({time.time() - t:.1f} s texto):", resp)
+    hablar(resp, f"conv_{n:02d}.wav")
+    if "adiós" in texto.lower() or "adios" in texto.lower():
+        break
+log("fin de la conversación")

@@ -72,7 +72,8 @@ su propiedad de regresión es que el rechazo se sostenga.
   `infer_vision`. La voz va por `/v1/realtime` del motor, fuera del
   contrato v1.
 - Especificaciones: `docs/specs/` · Decisiones: `docs/adr/00-INDICE.md`
-  · Plan vigente: `docs/plans/PLAN-1-superficie-inferencia.md`.
+  · Plan vigente: `docs/plans/PLAN-2-servicio-compartido.md` (PLAN-1
+  cerrado en v0.1.0).
 
 ## Decisiones de cascarón (03 §3)
 

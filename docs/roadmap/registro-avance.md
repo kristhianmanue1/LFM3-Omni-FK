@@ -61,6 +61,25 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-04 | `verifying` | e0e7d8f | GREEN (40 tests, golden 11/11, cliente 7/7); ronda adversarial 1: fix-and-retry (2 MED + 7 LOW) |
 | 2026-11-04 | `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados; ronda adversarial 2: proceed con mutation testing; 5 gates OK; sin activación remota |
 
+### I1-V — Modalidades locales del artefacto vigente
+
+- Estado actual: `not_started` (plan ajustado; ningún gate I1-V corrido).
+  I0 e I1 conservan `accepted_local`.
+- Owner: agente ejecutor (Claude Opus 5.5, Claude Code). Reviewer:
+  subagente con contexto fresco (ronda del ajuste: fix-and-retry ->
+  proceed por relectura; docs/reviews/2026-11-plan2-ajuste-multimodal.md).
+- Encargo: Operador, 2026-11-04 — integración multimodal en el PLAN
+  LFM3-2 existente; «corre ronda adversarial del ajuste al plan para
+  afinar y procede».
+- Bloqueos: D-08 (ADR-007) antes de I1-VS; D-09 antes de voz o cámara
+  reales en gates; realtime nativo fuera por ggml-org/llama.cpp#31689.
+- Evidencia de partida: docs/reviews/evidence/plan2-ajuste-sesion/ y
+  sondas-Mac14-2-2026-11-04/ (tests/sondas_multimodal.py).
+
+| Fecha (UTC) | Estado | HEAD | Evidencia / razón |
+|---|---|---|---|
+| 2026-11-04 | `not_started` | 310e7ff (base del ajuste) | tareas I1-V0..VV en plan; ADR-006/007 propuestos |
+
 ## Salida prevista
 
 Cierre propuesto como `accepted_local` sólo con: conformidad de la
