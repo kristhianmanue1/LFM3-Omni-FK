@@ -1,0 +1,168 @@
+test_g4_rutas_administrativas_no_pasan (tests.test_gateway_i1.Allowlist.test_g4_rutas_administrativas_no_pasan) ... ok
+test_g1_capaabilities_sin_lo_no_activo (tests.test_gateway_i1.Capabilities.test_g1_capaabilities_sin_lo_no_activo) ... ok
+test_g5_puerto_ocupado_falla_cerrado (tests.test_gateway_i1.Colision.test_g5_puerto_ocupado_falla_cerrado) ... ok
+test_g6_core_sin_transporte (tests.test_gateway_i1.FronteraInterna.test_g6_core_sin_transporte) ... ok
+test_g2_chunked_sin_content_length (tests.test_gateway_i1.Transporte.test_g2_chunked_sin_content_length) ... ok
+test_g3_compresion_rechazada_antes_de_leer (tests.test_gateway_i1.Transporte.test_g3_compresion_rechazada_antes_de_leer) ... ok
+test_r10_salida_parcial (tests.test_adapter_v2.PoliticaAdapter.test_r10_salida_parcial) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49522)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49523)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r10b_backend_ilegible (tests.test_adapter_v2.PoliticaAdapter.test_r10b_backend_ilegible) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49526)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49527)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r11_passthrough_valido (tests.test_adapter_v2.PoliticaAdapter.test_r11_passthrough_valido) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49530)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49531)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r12_salida_estructurada_valida (tests.test_adapter_v2.PoliticaAdapter.test_r12_salida_estructurada_valida) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49536)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49537)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r1_campo_desconocido (tests.test_adapter_v2.PoliticaAdapter.test_r1_campo_desconocido) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49540)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49541)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r21_entrada_nan_rechazada_sin_backend (tests.test_adapter_v2.PoliticaAdapter.test_r21_entrada_nan_rechazada_sin_backend) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49543)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49544)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r2_schema_anidado (tests.test_adapter_v2.PoliticaAdapter.test_r2_schema_anidado) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49546)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49547)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r3_tipo_no_string_y_bool_como_number (tests.test_adapter_v2.PoliticaAdapter.test_r3_tipo_no_string_y_bool_como_number) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49550)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49551)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r3c_salida_nan_no_es_valida (tests.test_adapter_v2.PoliticaAdapter.test_r3c_salida_nan_no_es_valida) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49555)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49556)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r4_additional_properties (tests.test_adapter_v2.PoliticaAdapter.test_r4_additional_properties) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49559)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49560)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r5_url_externa (tests.test_adapter_v2.PoliticaAdapter.test_r5_url_externa) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49562)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49563)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r5b_image_url_con_clave_extra (tests.test_adapter_v2.PoliticaAdapter.test_r5b_image_url_con_clave_extra) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49567)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49568)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r6_imagenes_truncadas (tests.test_adapter_v2.PoliticaAdapter.test_r6_imagenes_truncadas) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49572)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49573)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r6c_png_con_basura_tras_iend (tests.test_adapter_v2.PoliticaAdapter.test_r6c_png_con_basura_tras_iend) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49576)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49577)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r7_firma_falsa (tests.test_adapter_v2.PoliticaAdapter.test_r7_firma_falsa) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49579)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49580)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r8_exceso_de_pixeles (tests.test_adapter_v2.PoliticaAdapter.test_r8_exceso_de_pixeles) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49584)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49585)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r9_json_malformado_y_sin_messages (tests.test_adapter_v2.PoliticaAdapter.test_r9_json_malformado_y_sin_messages) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49587)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49588)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r9b_cl_no_ascii (tests.test_adapter_v2.PoliticaAdapter.test_r9b_cl_no_ascii) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49591)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49592)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_rutas_y_stream (tests.test_adapter_v2.PoliticaAdapter.test_rutas_y_stream) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:84: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 49596)>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:84: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 49597)>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r19_condicion_sana_pasa_y_reporta (tests.test_recursos_bt10.Bt10.test_r19_condicion_sana_pasa_y_reporta) ... ok
+test_r19_dos_listeners_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_dos_listeners_no_hay_pass) ... ok
+test_r19_pid_reciclado_o_ajeno_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_pid_reciclado_o_ajeno_no_hay_pass) ... ok
+test_r19_rss_sobre_umbral_falla (tests.test_recursos_bt10.Bt10.test_r19_rss_sobre_umbral_falla) ... ok
+test_r19_rss_vacio_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_rss_vacio_no_hay_pass) ... ok
+test_r19_sin_pid_de_listener_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_sin_pid_de_listener_no_hay_pass) ... ok
+test_r19_swap_se_reporta_sin_atribuir_ni_umbral (tests.test_recursos_bt10.Bt10.test_r19_swap_se_reporta_sin_atribuir_ni_umbral)
+El swap es global del host: se reporta, no revierte el pass ... ok
+test_red_comportamiento_actual_con_pgrep_vacio (tests.test_recursos_bt10.Bt10.test_red_comportamiento_actual_con_pgrep_vacio)
+Regresión del defecto original (RED de I0): el runner viejo ... ok
+test_r14_huerfano_y_pid_reciclado_se_recuperan (tests.test_ciclo_arranque.Cerrojo.test_r14_huerfano_y_pid_reciclado_se_recuperan) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque.test_r13_segundo_arranque_bloquea_con_un_solo_motor) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso.test_r16_env_neutralizado_y_host_explicito) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada.test_r18_stop_no_mata_ajenos) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno.test_r15_puerto_ocupado_por_ajeno_bloquea_limpio) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness.test_r17_readiness_exige_modelo_efectivo) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r17b_atajo_idempotente_exige_modelo (tests.test_ciclo_arranque.Readiness.test_r17b_atajo_idempotente_exige_modelo) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+
+----------------------------------------------------------------------
+Ran 40 tests in 21.211s
+
+OK (skipped=7)
+    (pid 4242: RSS 1024 MiB bajo mmap; artefactos ~1144 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: listeners en 8091: ['4242', '4242']; sin pid atribuible no hay pass)
+    (B-T10: pid 4242 no es del motor: '/bin/sh -c sleep 60 # llama-server --port 8091')
+    (pid 4242: RSS 5120 MiB bajo mmap; artefactos ~2613 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: sin RSS atribuible al pid 4242; el proceso desapareció entre lsof y ps)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)

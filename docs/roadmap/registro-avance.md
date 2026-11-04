@@ -35,9 +35,35 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-04 | `verifying` | 59390ab | GREEN completo (34 tests, golden 11/11, demo 7/7); ronda adversarial fresca: veredicto fix-and-retry (1 BLOCKER + 1 HIGH + 6 MED con repro) |
 | 2026-11-04 | `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados y re-corridos (una regresión propia detectada y corregida por la re-corrida); 34 tests OK, golden 11/11, demo 7/7, 5 gates OK; rollback probado (stop/serve); sin activación remota |
 
-### Salida prevista
+### I1 — API común utilizable en loopback
 
-Cierre propuesto como `accepted_local` (trabajo local sin activación
-remota) sólo con: regresiones en verde, demo real, revisión fresca sin
-HIGH/BLOCKER, cinco gates OK y rollback probado. Si algo falla: estado
-`verifying` con pendientes explícitos y v0.1.0 conservado.
+- Estado actual: `accepted_local` (propuesto al Operador; ver
+  transiciones).
+- Owner: agente ejecutor (GLM 5.3 Flash, OpenCode). Reviewer: subagente
+  independiente con contexto fresco.
+- Encargo: Operador, 2026-11-04 — «adelante con pendientes» (tras
+  cerrar I0 y su push autorizado para la sesión). Alcance: I1 local
+  (loopback), sin exposición remota (D-02/D-03 siguen pendientes y no
+  bloquean I1).
+- Alcance de archivos: `src/gateway_core.py`, `src/gateway_http.py`,
+  `src/adapter_v2.py` (fachada), `tests/test_gateway_i1.py`,
+  `tests/test_adapter_v2.py` (sólo si el reorg lo exige),
+  `examples/cliente_i1.py`, `docs/specs/SPEC-i1-*`, `docs/adr/ADR-005*`,
+  `docs/roadmap/`, `docs/reviews/`.
+
+### Transiciones
+
+| Fecha (UTC) | Estado | HEAD | Evidencia / razón |
+|---|---|---|---|
+| 2026-11-04 | `not_started` | e0e7d8f | I0 cerrada; I1 sin encargo |
+| 2026-11-04 | `designing` | e0e7d8f | encargo de pendientes; SPEC/ADR en curso |
+| 2026-11-04 | `implementing` | e0e7d8f | RED de propiedades nuevas (i1-red.txt) |
+| 2026-11-04 | `verifying` | e0e7d8f | GREEN (40 tests, golden 11/11, cliente 7/7); ronda adversarial 1: fix-and-retry (2 MED + 7 LOW) |
+| 2026-11-04 | `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados; ronda adversarial 2: proceed con mutation testing; 5 gates OK; sin activación remota |
+
+## Salida prevista
+
+Cierre propuesto como `accepted_local` sólo con: conformidad de la
+matriz H en verde, demo desde cliente HTTP real, revisión fresca sin
+HIGH/BLOCKER, cinco gates OK, v1 y I0 pasando. Si algo falla:
+`verifying` con pendientes explícitos.
