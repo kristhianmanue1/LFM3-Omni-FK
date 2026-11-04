@@ -24,9 +24,10 @@ para revisión y adopción; no acredita funcionalidades remotas activas.
   exige la ficha del modelo).
 - Los pesos se descargan solos en el primer arranque (GGUF Q4_K_M ~1.1 GB
   + proyector multimodal) a la caché de Hugging Face.
-- Python 3 con stdlib para verificaciones y tests (sin dependencias
-  externas; decisión de cascarón: sin gestor de paquetes porque el
-  proyecto no tiene dependencias — ver abajo).
+- Python 3.12 o superior con stdlib para verificaciones y tests
+  (decisión del Operador, 2026-11-04: runtime 3.12+; en esta máquina,
+  python3.12 3.12.12 de Homebrew; sin dependencias externas — ver
+  decisiones de cascarón abajo).
 
 ## Cómo correr
 
@@ -79,8 +80,9 @@ su propiedad de regresión es que el rechazo se sostenga.
   externas; todo el código es Python stdlib y bash. Sin manifiesto de
   paquetes ni lockfile porque no hay qué fijar; si algún día entra una
   dependencia, esta decisión se revierte con registro.
-- **Runtime:** python3 (stdlib, probado con el python3 del sistema) y
-  bash; motor fijado por ADR-001.
+- **Runtime:** python 3.12+ (stdlib; decisión del Operador,
+  2026-11-04: actualizar el piso desde el python3 del sistema 3.9;
+  sin gestor de paquetes); motor fijado por ADR-001.
 - **Linter/formateador:** ninguno por ahora (03 §3: sólo si el proyecto
   dura más de una sesión); decisión pendiente, sin herramienta adoptada.
 - **CI:** ninguno — el remoto de publicación está declarado (ADR-003),

@@ -1,0 +1,11 @@
+test_r14_huerfano_y_pid_reciclado_se_recuperan (tests.test_ciclo_arranque.Cerrojo.test_r14_huerfano_y_pid_reciclado_se_recuperan) ... ok
+test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque.test_r13_segundo_arranque_bloquea_con_un_solo_motor) ... ok
+test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso.test_r16_env_neutralizado_y_host_explicito) ... ok
+test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada.test_r18_stop_no_mata_ajenos) ... ok
+test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno.test_r15_puerto_ocupado_por_ajeno_bloquea_limpio) ... ok
+test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness.test_r17_readiness_exige_modelo_efectivo) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 34.476s
+
+OK

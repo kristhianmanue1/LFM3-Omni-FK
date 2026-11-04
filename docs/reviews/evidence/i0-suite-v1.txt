@@ -1,0 +1,42 @@
+test_200_no_parseable_es_salida_invalida (tests.test_mcp_server.ClasificacionHTTP.test_200_no_parseable_es_salida_invalida) ... ok
+test_400_con_detalle_estructurado (tests.test_mcp_server.ClasificacionHTTP.test_400_con_detalle_estructurado) ... ok
+test_400_con_error_no_dict_y_no_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_no_dict_y_no_string) ... ok
+test_400_con_error_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_string) ... ok
+test_500_generico (tests.test_mcp_server.ClasificacionHTTP.test_500_generico) ... ok
+test_503_es_reintentable (tests.test_mcp_server.ClasificacionHTTP.test_503_es_reintentable) ... ok
+test_main_sobrevive_surrogate_e2e (tests.test_mcp_server.ClasificacionHTTP.test_main_sobrevive_surrogate_e2e) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_mensaje_no_objeto_32600) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server.ClasificacionHTTP.test_parse_error_32700) ... ok
+test_schema_profundo_no_mata (tests.test_mcp_server.ClasificacionHTTP.test_schema_profundo_no_mata) ... ok
+test_initialize (tests.test_mcp_server.Handshake.test_initialize) ... ok
+test_metodo_desconocido (tests.test_mcp_server.Handshake.test_metodo_desconocido) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server.Handshake.test_notificacion_sin_respuesta) ... ok
+test_tools_antes_de_initialize (tests.test_mcp_server.Handshake.test_tools_antes_de_initialize) ... ok
+test_tools_list_tres (tests.test_mcp_server.Handshake.test_tools_list_tres) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server.Handshake.test_version_no_soportada_negocia_default) ... ok
+test_health_reporta_down (tests.test_mcp_server.MotorCaido.test_health_reporta_down) ... ok
+test_infer_text_motor_caido (tests.test_mcp_server.MotorCaido.test_infer_text_motor_caido) ... ok
+test_health_up (tests.test_mcp_server.ToolsConMotor.test_health_up) ... ok
+test_infer_text_con_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_con_schema) ... ok
+test_infer_text_sin_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_sin_schema) ... ok
+test_infer_vision_png_rojo (tests.test_mcp_server.ToolsConMotor.test_infer_vision_png_rojo) ... ok
+test_campo_no_declarado_rechazado_por_nombre (tests.test_mcp_server.Validacion.test_campo_no_declarado_rechazado_por_nombre) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server.Validacion.test_choices_vacio_es_salida_invalida) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server.Validacion.test_health_con_arguments_rechazado) ... ok
+test_imagen_basura_rechazada_en_frontera (tests.test_mcp_server.Validacion.test_imagen_basura_rechazada_en_frontera) ... ok
+test_imagen_no_base64_rechazada (tests.test_mcp_server.Validacion.test_imagen_no_base64_rechazada) ... ok
+test_max_tokens_booleano_cero_y_4097 (tests.test_mcp_server.Validacion.test_max_tokens_booleano_cero_y_4097) ... ok
+test_prompt_8000_aceptado (tests.test_mcp_server.Validacion.test_prompt_8000_aceptado) ... ok
+test_prompt_8001_rechazado (tests.test_mcp_server.Validacion.test_prompt_8001_rechazado) ... ok
+test_salida_json_valido_pero_no_conforme (tests.test_mcp_server.Validacion.test_salida_json_valido_pero_no_conforme) ... ok
+test_schema_con_claves_no_soportadas_rechazado (tests.test_mcp_server.Validacion.test_schema_con_claves_no_soportadas_rechazado) ... ok
+test_schema_null_rechazado (tests.test_mcp_server.Validacion.test_schema_null_rechazado) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server.Validacion.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_es_error_de_protocolo (tests.test_mcp_server.Validacion.test_tool_desconocida_es_error_de_protocolo) ... ok
+test_usage_ausente_o_nulo_es_salida_invalida (tests.test_mcp_server.Validacion.test_usage_ausente_o_nulo_es_salida_invalida) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.796s
+
+OK

@@ -6,7 +6,8 @@
     "check_sizes.py": "sha256:ad0cdfc8d618f97c14e45cb94e9f2111b6567db9f74edda75bb9ccb50c12d054",
     "check_plans.py": "sha256:37f9203df1e37b8765d49f5715465348871f89c27ee1a367d3b034accf720395",
     "check_reports.py": "sha256:5663866d6575765be22353f9587c743005f3e612153efd492279b68bf0a0f21c",
-    "check_templates.py": "sha256:12ffbcdac0c27c3b9cd7e9f2f4cb14b9390667790ff85db2d6f9687167b480e7"
+    "check_templates.py": "sha256:12ffbcdac0c27c3b9cd7e9f2f4cb14b9390667790ff85db2d6f9687167b480e7",
+    "inventario_motor.py": "sha256:df909ea8dfde98fc84a647f72fdfc4a474c11e8624f639e74f2912e967396f09"
   },
   "history": [
     {

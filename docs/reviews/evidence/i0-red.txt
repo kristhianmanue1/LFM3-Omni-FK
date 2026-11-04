@@ -1,0 +1,93 @@
+test_adapter_v2 (unittest.loader._FailedTest) ... ERROR
+test_r14_huerfano_y_pid_reciclado_se_recuperan (tests.test_ciclo_arranque.Cerrojo) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r19_condicion_sana_pasa_y_reporta (tests.test_recursos_bt10.Bt10) ... ERROR
+test_r19_dos_listeners_no_hay_pass (tests.test_recursos_bt10.Bt10) ... FAIL
+test_r19_pid_reciclado_o_ajeno_no_hay_pass (tests.test_recursos_bt10.Bt10) ... FAIL
+test_r19_rss_sobre_umbral_falla (tests.test_recursos_bt10.Bt10) ... FAIL
+test_r19_sin_pid_de_listener_no_hay_pass (tests.test_recursos_bt10.Bt10) ... FAIL
+test_r19_swap_sostenida_falla (tests.test_recursos_bt10.Bt10) ... FAIL
+test_red_comportamiento_actual_con_pgrep_vacio (tests.test_recursos_bt10.Bt10)
+RED: con pgrep sin resultados, el B-T10 vigente devuelve True ... FAIL
+
+======================================================================
+ERROR: test_adapter_v2 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_adapter_v2
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/loader.py", line 154, in loadTestsFromName
+    module = __import__(module_name)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_adapter_v2.py", line 21, in <module>
+    import adapter_v2  # noqa: E402  (RED: el módulo aún no existe)
+ModuleNotFoundError: No module named 'adapter_v2'
+
+
+======================================================================
+ERROR: test_r19_condicion_sana_pasa_y_reporta (tests.test_recursos_bt10.Bt10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_recursos_bt10.py", line 78, in test_r19_condicion_sana_pasa_y_reporta
+    with self._con_fixtures(), \
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1405, in __enter__
+    original, local = self.get_original()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1378, in get_original
+    raise AttributeError(
+AttributeError: <module 'tests.run_golden' from '/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/run_golden.py'> does not have the attribute '_artefactos_bytes'
+
+======================================================================
+FAIL: test_r19_dos_listeners_no_hay_pass (tests.test_recursos_bt10.Bt10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_recursos_bt10.py", line 59, in test_r19_dos_listeners_no_hay_pass
+    self.assertFalse(rg.bt10_recursos())
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_r19_pid_reciclado_o_ajeno_no_hay_pass (tests.test_recursos_bt10.Bt10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_recursos_bt10.py", line 64, in test_r19_pid_reciclado_o_ajeno_no_hay_pass
+    self.assertFalse(rg.bt10_recursos(),
+AssertionError: True is not false : B-T10 midió un pid que no es del motor
+
+======================================================================
+FAIL: test_r19_rss_sobre_umbral_falla (tests.test_recursos_bt10.Bt10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_recursos_bt10.py", line 70, in test_r19_rss_sobre_umbral_falla
+    self.assertFalse(rg.bt10_recursos())
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_r19_sin_pid_de_listener_no_hay_pass (tests.test_recursos_bt10.Bt10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_recursos_bt10.py", line 53, in test_r19_sin_pid_de_listener_no_hay_pass
+    self.assertFalse(rg.bt10_recursos(),
+AssertionError: True is not false : B-T10 pasó sin pid de listener
+
+======================================================================
+FAIL: test_r19_swap_sostenida_falla (tests.test_recursos_bt10.Bt10)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_recursos_bt10.py", line 75, in test_r19_swap_sostenida_falla
+    self.assertFalse(rg.bt10_recursos())
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_red_comportamiento_actual_con_pgrep_vacio (tests.test_recursos_bt10.Bt10)
+RED: con pgrep sin resultados, el B-T10 vigente devuelve True
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_recursos_bt10.py", line 91, in test_red_comportamiento_actual_con_pgrep_vacio
+    self.assertFalse(rg.bt10_recursos(),
+AssertionError: True is not false : el runner vigente pasa sin pid: defecto confirmado
+
+----------------------------------------------------------------------
+Ran 14 tests in 30.910s
+
+FAILED (failures=6, errors=2, skipped=6)

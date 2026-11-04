@@ -1,0 +1,10 @@
+== check_sizes
+OK — 98 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1789/1800; gate/v13 (2026-10-29)
+== check_plans
+OK — 2 plan(es) verificados (estructura E1-E6)
+== check_reports
+OK — 2 reporte(s) con capa técnica verificada; 1 exento(s)
+== check_templates corpus
+OK — al día: versión vigente corpus/v8
+== check_templates scripts
+OK — al día: versión vigente gate/v13

@@ -1,0 +1,1 @@
+arriba: /health y modelo efectivo OK (pid 8170); log: /Users/krisnova/www/AGTexperts/externos/LFM3-Omni/run/llama-server.log

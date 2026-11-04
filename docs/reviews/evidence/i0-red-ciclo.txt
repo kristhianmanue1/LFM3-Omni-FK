@@ -1,0 +1,56 @@
+test_r14_huerfano_y_pid_reciclado_se_recuperan (tests.test_ciclo_arranque.Cerrojo) ... ok
+test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque) ... FAIL
+test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso) ... FAIL
+test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada) ... ok
+test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno) ... FAIL
+test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness) ... FAIL
+
+======================================================================
+FAIL: test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_ciclo_arranque.py", line 173, in test_r13_segundo_arranque_bloquea_con_un_solo_motor
+    self.assertEqual(rc1, 0)
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_ciclo_arranque.py", line 229, in test_r16_env_neutralizado_y_host_explicito
+    self.assertEqual(inv[0]["env"], [],
+AssertionError: Lists differ: ['LLAMA_ARG_HOST', 'LLAMA_ARG_PORT'] != []
+
+First list contains 2 additional elements.
+First extra element 0:
+'LLAMA_ARG_HOST'
+
+- ['LLAMA_ARG_HOST', 'LLAMA_ARG_PORT']
++ [] : LLAMA_ARG_* llegó al motor: ['LLAMA_ARG_HOST', 'LLAMA_ARG_PORT']
+
+======================================================================
+FAIL: test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_ciclo_arranque.py", line 214, in test_r15_puerto_ocupado_por_ajeno_bloquea_limpio
+    self.assertEqual(len(self.invocaciones_stub()), 0,
+AssertionError: 1 != 0 : se lanzó el motor pese a haber un ocupante ajeno
+
+======================================================================
+FAIL: test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_ciclo_arranque.py", line 244, in test_r17_readiness_exige_modelo_efectivo
+    self.assertNotEqual(rc, 0, "declaró arriba sin el modelo efectivo")
+AssertionError: 0 == 0 : declaró arriba sin el modelo efectivo
+
+----------------------------------------------------------------------
+Ran 6 tests in 34.354s
+
+FAILED (failures=4)
+test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.183s
+
+OK

@@ -17,6 +17,8 @@ Uso: python3 tests/run_golden.py [--rapido]
 
 import base64
 import json
+import os
+import shutil
 import statistics
 import struct
 import subprocess
@@ -186,19 +188,89 @@ def bt9_fail_closed():
     return estado == 400 and isinstance(cuerpo.get("error"), dict)
 
 
+def _sh(comando):
+    """Subproceso de lectura con salida de texto (punto único para tests)."""
+    return subprocess.run(comando, capture_output=True, text=True).stdout
+
+
+def _listener_pids(puerto=8091):
+    """PIDs del LISTENER en el puerto, derivados de lsof — no de pgrep
+    laxo (SPEC I0 r19)."""
+    pids = []
+    for linea in _sh(["lsof", "-nP", "-iTCP:%d" % puerto,
+                      "-sTCP:LISTEN"]).splitlines():
+        if "(LISTEN)" not in linea:
+            continue
+        partes = linea.split()
+        if len(partes) > 1:
+            pids.append(partes[1])
+    return pids
+
+
+def _comando_pid(pid):
+    return _sh(["ps", "-p", str(pid), "-o", "command="]).strip()
+
+
+def _swap_mib_usado():
+    partes = _sh(["sysctl", "-n", "vm.swapusage"]).split()
+    for i, token in enumerate(partes):
+        if token == "used" and i + 2 < len(partes):
+            valor = partes[i + 2]
+            numero = "".join(c for c in valor if c.isdigit() or c == ".")
+            if numero:
+                return float(numero) * (1024 if valor.endswith("GiB") else 1)
+    return float("inf")  # sin dato: falla cerrado (no hay pass a ciegas)
+
+
+def _artefactos_bytes():
+    """Piso de memoria mmapeada: binario + pesos + proyector."""
+    total = 0
+    binario = shutil.which("llama-server")
+    if binario:
+        total += os.path.getsize(os.path.realpath(binario))
+    hub = Path.home() / ".cache" / "huggingface" / "hub"
+    for ruta in hub.glob(
+            "models--LiquidAI--LFM3-Omni-2B-GGUF/snapshots/*/*.gguf"):
+        total += ruta.stat().st_size
+    return total
+
+
 def bt10_recursos():
     chat({"messages": [{"role": "user",
                         "content": "Escribe los números del 1 al 40, uno por línea."}],
           "max_tokens": 64})
-    pid = subprocess.run(["pgrep", "-f", "llama-server.*--port 8091"],
-                         capture_output=True, text=True).stdout.split()
-    for p in pid:
-        rss = int(subprocess.run(["ps", "-o", "rss=", "-p", p],
-                                 capture_output=True, text=True).stdout.strip() or 0)
-        if rss > 4 * 1024 * 1024:
-            print(f"    (pid {p} RSS {rss // 1024} MiB)")
-            return False
-    return True
+    return _bt10_medir()
+
+
+def _bt10_medir():
+    """Medición pura (tests unitarios la ejercitan sin motor).
+    Gate sólo en lo atribuible al proceso (SPEC I0 §8, enmienda): el
+    swap de `sysctl` es global del host (footprint per-pid exige root)
+    y se REPORTA sin atribuir ni usar como umbral."""
+    pids = _listener_pids()
+    if len(pids) != 1:
+        print(f"    (B-T10: listeners en 8091: {pids or 'ninguno'}; sin pid "
+              f"atribuible no hay pass)")
+        return False
+    pid = pids[0]
+    comando = _comando_pid(pid)
+    binario = comando.split(" ", 1)[0]
+    if os.path.basename(binario) != "llama-server" \
+            or "--port 8091" not in comando:
+        print(f"    (B-T10: pid {pid} no es del motor: {comando[:60]!r})")
+        return False
+    rss_salida = _sh(["ps", "-p", str(pid), "-o", "rss="]).strip()
+    if not rss_salida or not rss_salida.isdigit():
+        print(f"    (B-T10: sin RSS atribuible al pid {pid}; el proceso "
+              f"desapareció entre lsof y ps)")
+        return False
+    rss_kib = int(rss_salida)
+    swap_mib = _swap_mib_usado()
+    artefactos_mib = _artefactos_bytes() // (1024 * 1024)
+    print(f"    (pid {pid}: RSS {rss_kib // 1024} MiB bajo mmap; artefactos "
+          f"~{artefactos_mib} MiB; swap del HOST {swap_mib:.0f} MiB — global, "
+          f"no atribuible al motor)")
+    return rss_kib < 4 * 1024 * 1024
 
 
 def bt11_licencia():

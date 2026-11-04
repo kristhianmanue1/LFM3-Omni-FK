@@ -1,0 +1,14 @@
+B-T1 pass — Salud del servicio
+B-T2 pass — Modelo fijado servido
+B-T3 pass — Salida bajo esquema cerrado
+B-T4 pass — Determinismo greedy
+B-T5 omitido — (--rapido)
+B-T6 pass — Tool calling
+B-T7 pass — Comprensión de imagen
+B-T8 pass — Audio rechazado en chat (documenta limitación)
+B-T9 pass — Frontera fail-closed
+    (pid 8170: RSS 3034 MiB bajo mmap; artefactos ~2613 MiB; swap del HOST 6104 MiB — global, no atribuible al motor)
+B-T10 pass — Recursos acotados (REQ-5)
+B-T11 pass — Cláusula de licencia (REQ-8)
+B-T12 pass — Binding exclusivo (REQ-2)
+resumen: 11 pass, 0 fail

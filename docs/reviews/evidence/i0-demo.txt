@@ -1,0 +1,8 @@
+DEMO OK  texto_passthrough — estado=200
+DEMO OK  estructura_valida — estado=200 datos={'nombre': 'Ana', 'edad': 34}
+DEMO OK  imagen_valida — estado=200
+DEMO OK  error_campo_desconocido — estado=400
+DEMO OK  error_imagen_truncada — estado=400
+DEMO OK  error_schema_anidado — estado=400
+DEMO OK  healthz
+DEMO resumen: 7 OK, 0 FAIL
