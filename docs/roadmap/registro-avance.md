@@ -63,22 +63,30 @@ el agente con evidencia; la aceptación la decide el Operador.
 
 ### I1-V — Modalidades locales del artefacto vigente
 
-- Estado actual: `not_started` (plan ajustado; ningún gate I1-V corrido).
-  I0 e I1 conservan `accepted_local`.
-- Owner: agente ejecutor (Claude Opus 5.5, Claude Code). Reviewer:
-  subagente con contexto fresco (ronda del ajuste: fix-and-retry ->
-  proceed por relectura; docs/reviews/2026-11-plan2-ajuste-multimodal.md).
+- Estado actual: `accepted_local` (propuesto al Operador) **sólo para
+  I1-V0**; I1-VA..VV siguen `not_started`. I0 e I1 conservan
+  `accepted_local`.
+- Owner: agente ejecutor (GLM 5.3, OpenCode; ajuste del plan: Claude
+  Opus 5.5, Claude Code). Reviewer: subagente con contexto fresco
+  (ronda del ajuste: fix-and-retry -> proceed por relectura,
+  docs/reviews/2026-11-plan2-ajuste-multimodal.md; rondas I1-V0 en
+  docs/reviews/2026-11-i1-v0-inventario-bt8.md).
 - Encargo: Operador, 2026-11-04 — integración multimodal en el PLAN
   LFM3-2 existente; «corre ronda adversarial del ajuste al plan para
-  afinar y procede».
+  afinar y procede». Ejecución de I1-V0: Operador, 2026-11-05 —
+  «Encargar I1-V0» (sesión OpenCode).
 - Bloqueos: D-08 (ADR-007) antes de I1-VS; D-09 antes de voz o cámara
   reales en gates; realtime nativo fuera por ggml-org/llama.cpp#31689.
 - Evidencia de partida: docs/reviews/evidence/plan2-ajuste-sesion/ y
-  sondas-Mac14-2-2026-11-04/ (tests/sondas_multimodal.py).
+  sondas-Mac14-2-2026-11-04/ (tests/sondas_multimodal.py); de esta
+  TAREA: docs/reviews/evidence/i1-v0-sesion/.
 
 | Fecha (UTC) | Estado | HEAD | Evidencia / razón |
 |---|---|---|---|
 | 2026-11-04 | `not_started` | 310e7ff (base del ajuste) | tareas I1-V0..VV en plan; ADR-006/007 propuestos |
+| 2026-11-05 | `implementing` | 9c0035b | encargo de I1-V0; RED de las tres propiedades (evidence/i1-v0-sesion/red.txt) |
+| 2026-11-05 | `verifying` | 9c0035b + trabajo | GREEN: golden 12/12 con B-T8 corregido; unittest 78 OK; 5 gates OK; inventario reproduce hashes; ciclo vivo stop/serve con PATH fijado; ronda adversarial 1: fix-and-retry (H-1..H-4) |
+| 2026-11-05 | `accepted_local` (propuesto) | commit de esta TAREA | fixes de la ronda 1 aplicados y re-verificados (golden 12/12); ronda adversarial 2 sobre los fixes: proceed; v1 sin cambio |
 
 ## Salida prevista
 

@@ -56,9 +56,9 @@ python3 scripts/check_reports.py # gate de reportes
 ```
 
 La batería declara 12 casos con su procedencia en `tests/golden/casos.json`;
-B-T8 documenta una limitación vigente del build (audio de entrada
-rechazado por chat — la voz va por `/v1/realtime`, fuera del contrato v1):
-su propiedad de regresión es que el rechazo se sostenga.
+B-T8 (corregido en I1-V0) exige que el build acepte audio en chat por la
+parte `input_audio` y rechace `audio_url` con 400 — la voz de salida
+sigue fuera del contrato v1 (va por `/v1/realtime`, no ofrecido).
 
 ## Cómo consumir
 

@@ -108,9 +108,9 @@ TAREA I1-V0
   Consumes: I1, ADR-006, P-1..P-11 de la revisión de ajuste
   Produce: inventario de ffmpeg/ffprobe/llama-tts, PATH fijo y B-T8 corregido
   Steps:
-  - [ ] registrar versión y hash de ffmpeg/ffprobe/llama-tts y fijar PATH;
+  - [x] registrar versión y hash de ffmpeg/ffprobe/llama-tts y fijar PATH;
     verificación: inventario reproduce hashes; serve.sh no usa PATH ajeno.
-  - [ ] reescribir B-T8 a input_audio aceptado y audio_url rechazado;
+  - [x] reescribir B-T8 a input_audio aceptado y audio_url rechazado;
     verificación: golden pasa con registro de corrección, v1 sin cambio.
 TAREA I1-VA
   Consumes: I1-V0, D-06a, perfil H

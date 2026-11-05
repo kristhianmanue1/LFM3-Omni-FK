@@ -1,6 +1,6 @@
 {
   "schema": "lfm3-omni/golden-set/v1",
-  "actualizado": "2026-11-02",
+  "actualizado": "2026-11-05",
   "motor": "llama-server 0.8.0 (b11960) + LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M",
   "casos": [
     {"id": "B-T1", "titulo": "Salud del servicio", "entrada": "GET /health", "propiedad": "HTTP 200 y {\"status\":\"ok\"}", "procedencia": "runbook F0 §7; verificaciones-motor §3 caso 1"},
@@ -10,7 +10,7 @@
     {"id": "B-T5", "titulo": "Umbral de throughput", "entrada": "3 corridas de 64 tokens con 20 s de separación", "propiedad": "mediana predicted_per_second >= 15", "procedencia": "protocolo declarado en verificaciones-motor §1; observado 55.9"},
     {"id": "B-T6", "titulo": "Tool calling", "entrada": "tools get_weather(city:string), tool_choice auto", "propiedad": "tool_calls[0].function.name == get_weather y arguments parsea JSON", "procedencia": "caso sintético B-T6; verificaciones-motor §3 caso 6"},
     {"id": "B-T7", "titulo": "Comprensión de imagen", "entrada": "image_url data URI PNG 8x8 uniforme #FF0000 (generador zlib+struct)", "propiedad": "respuesta contiene 'rojo' o 'red'", "procedencia": "generador registrado en verificaciones-motor §3 caso 7"},
-    {"id": "B-T8", "titulo": "Audio rechazado en chat (documenta limitación)", "entrada": "parte audio_url con base64 corto", "propiedad": "HTTP 400 'unsupported content[].type'", "procedencia": "verificaciones-motor §3 caso 8; límite del build 0.8.0; si deja de cumplirse (audio aceptado), es cambio contractual hacia v2", "documenta_limitacion": true},
+    {"id": "B-T8", "titulo": "Audio en chat: input_audio aceptado y audio_url rechazado", "entrada": "parte input_audio con WAV sintético 16 kHz (seno 0.6 s) + parte audio_url con el mismo WAV", "propiedad": "input_audio -> 200 con choices bien formadas; audio_url -> 400 'unsupported content[].type'", "procedencia": "corrección I1-V0 (2026-11-05): sondas P-2/P-4 del ajuste multimodal demostraron que el build 0.8.0 acepta input_audio y que audio_url no existe en el formato OpenAI; el caso original solo probaba audio_url y documentaba una limitación inexistente (falso negativo; registro en docs/reviews/2026-11-i1-v0-inventario-bt8.md). Propiedad estructural: el CER de transcripcion se mide en I1-VA con corpus y umbral fijados en SPEC"},
     {"id": "B-T9", "titulo": "Frontera fail-closed", "entrada": "JSON malformado; request sin messages", "propiedad": "HTTP 400 con {error:{code,message,type}} en ambos", "procedencia": "verificaciones-motor §3 caso 9"},
     {"id": "B-T10", "titulo": "Recursos acotados (REQ-5)", "entrada": "generación real de 64 tokens y medición de RSS del proceso", "propiedad": "RSS < 4 GB (matiz mmap documentado en verificaciones-motor §2)", "procedencia": "adición adversarial F1 (hallazgo 3); EV-9"},
     {"id": "B-T11", "titulo": "Cláusula de licencia (REQ-8)", "entrada": "lectura de docs/contracts/superficie-inferencia-v1.md", "propiedad": "cita REQ-8 y EV-10", "procedencia": "adición adversarial F1 (hallazgo 1); EV-10"},

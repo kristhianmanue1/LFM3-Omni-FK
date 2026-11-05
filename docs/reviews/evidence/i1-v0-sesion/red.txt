@@ -1,0 +1,6 @@
+RED I1-V0 — 2026-11-05 host Mac14,2 M2
+motor: http://127.0.0.1:8091
+RED-1 input_audio ->  200 | contenido: 'The audio consists of a single,' | propiedad 'audio rechazado en chat' VIOLADA
+RED-1b audio_url   ->  400 unsupported content[].type
+RED-2 serve.sh fija PATH -> NO (ausente)
+RED-3 inventario roles -> ['motor', 'pesos', 'pesos', 'mmproj', 'mmproj'] | ffmpeg/ffprobe/llama-tts AUSENTES

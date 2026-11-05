@@ -62,7 +62,21 @@ for V in $(env | sed -n 's/^\(LLAMA_ARG_[A-Za-z0-9_]*\)=.*/\1/p'); do
   unset "$V"
 done
 
-nohup llama-server \
+# PATH fijado (I1-V0, ADR-006 §4): el motor lanza ffmpeg/ffprobe desde
+# PATH (libmtmd) para audio/video de contenedor; el PATH heredado del
+# entorno no decide qué binario corre. Se ancla al directorio del propio
+# motor (resuelto antes de descartar el PATH heredado) + directorios del
+# sistema. El inventario del artefacto (scripts/inventario_motor.py)
+# resuelve con el mismo criterio.
+MOTOR_BIN="$(command -v llama-server)" || {
+  echo "BLOQ: llama-server no está en PATH" >&2
+  exit 1
+}
+MOTOR_BIN_DIR="$(cd "$(dirname "$MOTOR_BIN")" && pwd)"
+MOTOR_BIN="$MOTOR_BIN_DIR/$(basename "$MOTOR_BIN")"
+export PATH="$MOTOR_BIN_DIR:/usr/bin:/bin:/usr/sbin:/sbin"
+
+nohup "$MOTOR_BIN" \
   -hf LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M \
   --reasoning off --temp 0 --host "$HOST" --port "$PORT" \
   >>"$LOG" 2>&1 &

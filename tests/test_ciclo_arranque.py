@@ -31,7 +31,8 @@ marca = os.environ["STUB_DIR"] + "/{MARCADOR}"
 with open(marca, "a") as f:
     f.write(json.dumps({{"pid": os.getpid(), "argv": sys.argv,
                           "env": sorted(k for k in os.environ
-                                        if k.startswith("LLAMA_ARG_"))}}) + "\\n")
+                                        if k.startswith("LLAMA_ARG_")),
+                          "path": os.environ.get("PATH", "")}}) + "\\n")
 time.sleep(float(os.environ.get("STUB_LOAD_SECS", "0.5")))
 servidor = socket.socket()
 servidor.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -234,6 +235,33 @@ class EntornoAdverso(CicloArranqueBase):
         self.assertIn("--host", argv)
         self.assertEqual(argv[argv.index("--host") + 1], "127.0.0.1",
                          "el host explícito falta o no es loopback")
+
+    def test_r16b_path_fijado_al_lanzar_el_motor(self):
+        # I1-V0 (ADR-006 §4): el PATH heredado no decide qué ffmpeg/ffprobe
+        # corre junto al motor (libmtmd los lanza desde PATH). El arranque
+        # fija PATH a dir del motor + directorios del sistema; un directorio
+        # envenenado al frente del PATH heredado no debe llegar al motor.
+        veneno = self.tmp / "veneno"
+        veneno.mkdir()
+        (veneno / "ffmpeg").write_text("#!/bin/sh\nexit 7\n")
+        (veneno / "ffmpeg").chmod(0o755)
+        path_adversario = (str(veneno) + os.pathsep + str(self.bin_dir)
+                           + os.pathsep + os.environ["PATH"])
+        p = self.lanzar_serve(STUB_LOAD_SECS="0.5", PATH=path_adversario)
+        self.assertEqual(p.wait(timeout=180), 0)
+        inv = self.invocaciones_stub()
+        self.assertEqual(len(inv), 1)
+        path_motor = inv[0]["path"].split(os.pathsep)
+        # La lista de directorios de sistema se duplica a propósito: si
+        # serve.sh cambia el PATH fijado, este test DEBE romper (alarma),
+        # no adaptarse en silencio (I1-V0, ADR-006 §4).
+        self.assertEqual(path_motor[0], str(self.bin_dir),
+                         f"el PATH del motor no arranca en el dir del motor: {path_motor}")
+        self.assertEqual(path_motor[1:],
+                         ["/usr/bin", "/bin", "/usr/sbin", "/sbin"],
+                         f"el PATH del motor no es el fijado: {path_motor}")
+        self.assertNotIn(str(veneno), path_motor,
+                         "el directorio envenenado llegó al motor")
 
 
 class Readiness(CicloArranqueBase):

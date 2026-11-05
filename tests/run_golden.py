@@ -6,9 +6,10 @@ Ejecuta los casos de tests/golden/casos.json contra el motor vivo en
 06-componentes-con-llm.md: propiedades binarias, umbrales declarados
 en el registro, la salida del modelo es dato no confiable.
 
-Salida esperada con el motor vigente: 12 pass, 0 fail. B-T8 documenta
-una limitación vigente del build (audio de entrada rechazado por chat);
-si esa propiedad deja de cumplirse, el runner la marca FAIL como alarma
+Salida esperada con el motor vigente: 12 pass, 0 fail. B-T8 (corregido
+I1-V0, 2026-11-05): input_audio es aceptado por el build y audio_url
+rechazado (audio_url no existe en el formato OpenAI); si alguna de las
+dos propiedades deja de cumplirse, el runner la marca FAIL como alarma
 de cambio contractual (v2).
 
 Uso: python3 tests/run_golden.py [--rapido]
@@ -17,6 +18,7 @@ Uso: python3 tests/run_golden.py [--rapido]
 
 import base64
 import json
+import math
 import os
 import shutil
 import statistics
@@ -65,6 +67,20 @@ def png_rojo():
         + trozo(b"IEND", b"")
     )
     return base64.b64encode(png).decode()
+
+
+def wav_seno():
+    # WAV válido y autónomo: 16 kHz, mono, 16-bit, 0.6 s de seno suave.
+    # La propiedad de B-T8 es de aceptación estructural, no de calidad:
+    # el CER se mide en I1-VA con corpus y umbral fijados en SPEC.
+    sr, dur = 16000, 0.6
+    muestras = b"".join(
+        struct.pack("<h", int(3000 * math.sin(2 * math.pi * 440 * t / sr)))
+        for t in range(int(sr * dur))
+    )
+    return (b"RIFF" + struct.pack("<I", 36 + len(muestras)) + b"WAVEfmt "
+            + struct.pack("<IHHIIHH", 16, 1, 1, sr, sr * 2, 2, 16)
+            + b"data" + struct.pack("<I", len(muestras)) + muestras)
 
 
 def bt1_salud():
@@ -158,17 +174,34 @@ def bt7_vision():
     return estado == 200 and ("rojo" in texto or "red" in texto)
 
 
-def bt8_audio_conocido():
-    # known-fail: el build 0.8.0 rechaza audio en chat; la propiedad
-    # esperada ES el rechazo 400. Si responde 200, el contrato cambió.
-    falso_wav = base64.b64encode(b"RIFF....WAVEfmt ").decode()
-    estado, _ = chat({
+def bt8_audio_entrada():
+    # Corregido (I1-V0, 2026-11-05): el build acepta audio en chat por la
+    # parte input_audio (formato OpenAI); audio_url no existe en el
+    # formato y se rechaza con 400 (sondas P-2/P-4 del ajuste multimodal).
+    # El caso original probaba sólo audio_url y documentaba una limitación
+    # inexistente. Propiedad estructural; sin medir calidad de ASR.
+    b64 = base64.b64encode(wav_seno()).decode()
+    estado, cuerpo = chat({
         "messages": [{"role": "user", "content": [
-            {"type": "audio_url", "audio_url": {"url": "data:audio/wav;base64," + falso_wav}},
+            {"type": "input_audio", "input_audio": {"data": b64, "format": "wav"}},
             {"type": "text", "text": "Transcribe."}]}],
         "max_tokens": 16,
     })
-    return estado == 400
+    if estado != 200:
+        return False
+    contenido = cuerpo["choices"][0]["message"]["content"]
+    if not isinstance(contenido, str):
+        return False
+    estado2, cuerpo2 = chat({
+        "messages": [{"role": "user", "content": [
+            {"type": "audio_url", "audio_url": {"url": "data:audio/wav;base64," + b64}},
+            {"type": "text", "text": "Transcribe."}]}],
+        "max_tokens": 16,
+    })
+    if estado2 != 400:
+        return False
+    mensaje = (cuerpo2.get("error") or {}).get("message", "")
+    return "unsupported content[].type" in mensaje
 
 
 def bt9_fail_closed():
@@ -288,7 +321,7 @@ def bt12_binding():
 CHECKS = {
     "B-T1": bt1_salud, "B-T2": bt2_modelo, "B-T3": bt3_esquema,
     "B-T4": bt4_determinismo, "B-T5": bt5_throughput, "B-T6": bt6_tools,
-    "B-T7": bt7_vision, "B-T8": bt8_audio_conocido, "B-T9": bt9_fail_closed,
+    "B-T7": bt7_vision, "B-T8": bt8_audio_entrada, "B-T9": bt9_fail_closed,
     "B-T10": bt10_recursos, "B-T11": bt11_licencia, "B-T12": bt12_binding,
 }
 
