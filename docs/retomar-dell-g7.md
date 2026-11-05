@@ -4,6 +4,14 @@ La sesión personal terminó con goodbye. No hay capturas activas; el motor
 8091 queda bajo control de su terminal original. Informe:
 [cierre Dell G7](reviews/2026-11-dell-g7-7700.md).
 
+## Publicación
+
+Rama `chore/wsl-dell-g7-evidence` publicada en GitHub (commits 0807d6e y
+c4ea850) con PR abierto hacia main:
+https://github.com/kristhianmanue1/LFM3-Omni-FK/pull/1. Evidencia del
+push y enlaces: `reviews/evidence/sondas-WSL-RTX2060-2026-11-04/
+publication-push.txt`. Al fusionar el PR, retomar desde main.
+
 ## Estado verificado
 
 - Dell G7 7700, i7-10750H, RTX 2060 de 6144 MiB, 16 GB host;
