@@ -1,0 +1,26 @@
+19:29:08 entorno: {'sistema': 'Linux', 'modelo': 'Linux-Intel-R-Core-TM-i7-10750H-CPU-2-60GHz', 'cpu': 'Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz', 'nucleos': '12', 'ram_bytes': 10429960192, 'gpu': 'NVIDIA GeForce RTX 2060, 6144 MiB, 621.14', 'virtualizado': 'WSL2'} b11960-8642541b2
+19:29:09 ASR 0: cer=0.0 1.12s 'El paquete llega el martes por la tarde.'
+19:29:09 ASR 1: cer=0.0 0.22s 'La reunión empieza mañana a las nueve.'
+19:29:16 ASR 2: cer=0.0 6.94s 'Necesito una mesa para cuatro personas.'
+19:29:16 ASR 3: cer=0.0 0.19s 'El tren sale de la estación central.'
+19:29:16 ASR 4: cer=0.0 0.18s 'Por favor apaga la luz de la cocina.'
+19:29:17 ASR 5: cer=0.0 0.17s 'Hoy hace mucho calor en la ciudad.'
+19:29:17 ASR 6: cer=0.0 0.19s 'Mi hermana estudia medicina en Puebla.'
+19:29:17 ASR 7: cer=0.0 0.20s 'El perro duerme debajo de la silla.'
+19:29:17 ASR 8: cer=0.0 0.18s 'Compramos pan y leche en la tienda.'
+19:29:17 ASR 9: cer=0.0 0.18s 'La biblioteca cierra los domingos.'
+19:29:43 TTS 0: 7.6s cer=0.0 rss=1470451712
+19:29:49 TTS 1: 4.8s cer=0.0 rss=1470365696
+19:29:53 TTS 2: 3.7s cer=0.0 rss=1470222336
+# Sondas multimodales — Linux-Intel-R-Core-TM-i7-10750H-CPU-2-60GHz (Intel(R) Core(TM) i7-10750H CPU @ 2.60GHz, 9 GB, GPU NVIDIA GeForce RTX 2060, 6144 MiB, 621.14) — 2026-11-05T01:29:03+00:00
+
+Exploratorio, no gate (ver docstring de tests/sondas_multimodal.py).
+
+- motor: b11960-8642541b2; modalities {'vision': True, 'video': True, 'audio': True}
+- ASR input_audio: CER medio 0.0 sobre 10 frases; mediana 0.19 s
+- B-T8 forma correcta (audio_url 400, input_audio 200): True
+- /v1/audio/transcriptions: 200 en 0.19 s
+- video temporal rojo→azul correcto: True ('The video starts with a solid **red** screen, and it ends with a solid **blue** screen.'; prompt_tokens=153)
+- realtime mixto: CER de voz 0.027; primer audio 13.29 s (sin lang/voice en server-realtime (ggml-org/llama.cpp#31689))
+- llama-tts es: CER re-ASR [0.0, 0.0, 0.0]; tiempos [7.58, 4.78, 3.71] s; RSS máx 1.37 GiB
+salida: docs/reviews/evidence/sondas-WSL-RTX2060-2026-11-04

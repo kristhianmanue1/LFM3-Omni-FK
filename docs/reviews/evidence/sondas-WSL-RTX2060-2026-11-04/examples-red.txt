@@ -1,0 +1,247 @@
+test_goodbye_detection_uses_local_asr_without_files (tests.test_wsl_examples.WslExamples.test_goodbye_detection_uses_local_asr_without_files) ... ERROR
+test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) ...
+  test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='live_voice') ... ERROR
+  test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='live_video') ... ERROR
+  test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='realtime_english') ... ERROR
+  test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='continuous_english') ... ERROR
+  test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='continuous_unlimited') ... ERROR
+test_interruption_closes_microphone (tests.test_wsl_examples.WslExamples.test_interruption_closes_microphone) ... ERROR
+test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) ...
+  test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='live_voice') ... ERROR
+  test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='live_video') ... ERROR
+  test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='realtime_english') ... ERROR
+  test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='continuous_english') ... ERROR
+  test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='continuous_unlimited') ... ERROR
+test_oversized_ws_frame_rejected_before_payload_read (tests.test_wsl_examples.WslExamples.test_oversized_ws_frame_rejected_before_payload_read) ... ERROR
+test_ping_pong_preserves_payload_and_next_event (tests.test_wsl_examples.WslExamples.test_ping_pong_preserves_payload_and_next_event) ... ERROR
+test_reader_handles_heartbeat_and_stops_on_close (tests.test_wsl_examples.WslExamples.test_reader_handles_heartbeat_and_stops_on_close) ... ERROR
+test_voice_end_and_duration_cap_close_microphone (tests.test_wsl_examples.WslExamples.test_voice_end_and_duration_cap_close_microphone) ... ERROR
+
+======================================================================
+ERROR: test_goodbye_detection_uses_local_asr_without_files (tests.test_wsl_examples.WslExamples.test_goodbye_detection_uses_local_asr_without_files)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 109, in test_goodbye_detection_uses_local_asr_without_files
+    module = load('continuous_english')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/continuous_english.py'
+
+======================================================================
+ERROR: test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='live_voice')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 33, in test_imports_resolve_without_tmp_or_user_home
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/live_voice.py'
+
+======================================================================
+ERROR: test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='live_video')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 33, in test_imports_resolve_without_tmp_or_user_home
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/live_video.py'
+
+======================================================================
+ERROR: test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='realtime_english')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 33, in test_imports_resolve_without_tmp_or_user_home
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/realtime_english.py'
+
+======================================================================
+ERROR: test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='continuous_english')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 33, in test_imports_resolve_without_tmp_or_user_home
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/continuous_english.py'
+
+======================================================================
+ERROR: test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) (name='continuous_unlimited')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 33, in test_imports_resolve_without_tmp_or_user_home
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/continuous_unlimited.py'
+
+======================================================================
+ERROR: test_interruption_closes_microphone (tests.test_wsl_examples.WslExamples.test_interruption_closes_microphone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 99, in test_interruption_closes_microphone
+    module = load('continuous_unlimited')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/continuous_unlimited.py'
+
+======================================================================
+ERROR: test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='live_voice')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 41, in test_missing_consent_never_opens_devices
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/live_voice.py'
+
+======================================================================
+ERROR: test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='live_video')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 41, in test_missing_consent_never_opens_devices
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/live_video.py'
+
+======================================================================
+ERROR: test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='realtime_english')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 41, in test_missing_consent_never_opens_devices
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/realtime_english.py'
+
+======================================================================
+ERROR: test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='continuous_english')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 41, in test_missing_consent_never_opens_devices
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/continuous_english.py'
+
+======================================================================
+ERROR: test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) (name='continuous_unlimited')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 41, in test_missing_consent_never_opens_devices
+    module = load(name)
+             ^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/continuous_unlimited.py'
+
+======================================================================
+ERROR: test_oversized_ws_frame_rejected_before_payload_read (tests.test_wsl_examples.WslExamples.test_oversized_ws_frame_rejected_before_payload_read)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 74, in test_oversized_ws_frame_rejected_before_payload_read
+    module = load('realtime_english')
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/realtime_english.py'
+
+======================================================================
+ERROR: test_ping_pong_preserves_payload_and_next_event (tests.test_wsl_examples.WslExamples.test_ping_pong_preserves_payload_and_next_event)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 50, in test_ping_pong_preserves_payload_and_next_event
+    module = load('realtime_english')
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/realtime_english.py'
+
+======================================================================
+ERROR: test_reader_handles_heartbeat_and_stops_on_close (tests.test_wsl_examples.WslExamples.test_reader_handles_heartbeat_and_stops_on_close)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 118, in test_reader_handles_heartbeat_and_stops_on_close
+    module = load('continuous_unlimited')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/continuous_unlimited.py'
+
+======================================================================
+ERROR: test_voice_end_and_duration_cap_close_microphone (tests.test_wsl_examples.WslExamples.test_voice_end_and_duration_cap_close_microphone)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 82, in test_voice_end_and_duration_cap_close_microphone
+    module = load('continuous_unlimited')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_wsl_examples.py", line 25, in load
+    spec.loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '<WORKSPACE>/examples/wsl/continuous_unlimited.py'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.005s
+
+FAILED (errors=16)

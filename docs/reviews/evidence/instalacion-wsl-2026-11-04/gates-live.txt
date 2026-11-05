@@ -1,0 +1,15 @@
+python3 scripts/check_sizes.py
+OK — 162 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1789/1800; gate/v13 (2026-10-29)
+exit=0
+python3 scripts/check_plans.py
+OK — 2 plan(es) verificados (estructura E1-E6)
+exit=0
+python3 scripts/check_reports.py
+OK — 6 reporte(s) con capa técnica verificada; 1 exento(s)
+exit=0
+python3 scripts/check_templates.py --manifest docs/MANIFEST.json --installed .skevi/corpus-installed.json
+OK — al día: versión vigente corpus/v8
+exit=0
+python3 scripts/check_templates.py --manifest scripts/MANIFEST.json --installed .skevi/scripts-installed.json
+OK — al día: versión vigente gate/v13
+exit=0

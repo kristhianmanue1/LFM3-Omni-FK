@@ -1,0 +1,48 @@
+{
+  "scope": "New WSL evidence for this publication; original tracked M2 evidence not rewritten",
+  "normalization": {
+    "workspace_prefix": "<WORKSPACE>",
+    "reason": "Remove local account path from newly published textual evidence; preserve numeric observations and artifact digests",
+    "trailing_whitespace": "Removed from textual logs; command outcomes and numbers preserved"
+  },
+  "personal_media": "none retained or included",
+  "transcripts": "none retained; future private text persistence is D10, not yet implemented",
+  "synthetic_media_files": {
+    "tts_00.wav": {
+      "bytes": 107564,
+      "sha256": "a319a0b43f83a22c4b3f3e15a5e23c6171d7790ecf4e05c021ba848b5893d2f2"
+    },
+    "tts_01_16k.wav": {
+      "bytes": 81998,
+      "sha256": "123f6ce9eaad968ec9550771ef2d9becda81b9c27e606fb117f18a56707b1af4"
+    },
+    "tts_01.wav": {
+      "bytes": 122924,
+      "sha256": "93b80336996c93e607b3db87c41539ee081919daf4f80d2b3a3e4f86f26544f5"
+    },
+    "realtime_mixed.wav": {
+      "bytes": 184364,
+      "sha256": "d6510597222bdf6d7758043b2023bd76e49a818773d100192d4784bbfb019f67"
+    },
+    "tts_00_16k.wav": {
+      "bytes": 71758,
+      "sha256": "8ed205c972638d8e797ce2c20f6e02a6a8453d39ebd02a40f5d5585a9c5ba67d"
+    },
+    "tts_02.wav": {
+      "bytes": 138284,
+      "sha256": "c6fb516a34d0031271b0468f0933754766cb39543bf115cad2000d90e576c34b"
+    },
+    "video_rojo_azul.mp4": {
+      "bytes": 2576,
+      "sha256": "263a31f95e52ce307798fad0ecc7192211633ed2ac5f7ede600353a97d49a308"
+    },
+    "realtime_mixed_16k.wav": {
+      "bytes": 122958,
+      "sha256": "9611fb9d797180bbaa5a81b48e920626a5d9fee17f0ca042ab587a6c8bc9a76a"
+    },
+    "tts_02_16k.wav": {
+      "bytes": 92238,
+      "sha256": "1632a4cb09e0e80bc5305cdda1f95d874351a43c279a662994dc073bf568c675"
+    }
+  }
+}

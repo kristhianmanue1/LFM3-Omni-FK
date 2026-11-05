@@ -1,0 +1,3 @@
+BLOQ: DNS github.com: [Errno -3] Temporary failure in name resolution; DNS huggingface.co: [Errno -3] Temporary failure in name resolution; sockets loopback: [Errno 1] Operation not permitted; GPU: nvidia-smi no puede acceder a la GPU
+Failed to initialize NVML: GPU access blocked by the operating system
+Failed to properly shut down NVML: GPU access blocked by the operating system

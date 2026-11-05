@@ -1,0 +1,11 @@
+Revisión independiente final: review_wsl_install.
+Decisión: proceed para rama y PR; no merge a main.
+64 archivos staged revisados antes de añadir este registro.
+14 pruebas focales pasan; cinco gates AGENTS pasan.
+git diff --cached --check pasa; no diferencias working/staged.
+Nueve binarios sintéticos coinciden con publication.json.
+Sin pesos, runtime, memoria privada ni transcripciones personales.
+MED de rutas privadas cerrado: normalización documentada.
+Mediciones, confirmaciones humanas y resúmenes distinguidos.
+D-10 permanece pendiente de implementación antes de próximas pruebas.
+No hubo capturas nuevas ni mutaciones remotas por el revisor.

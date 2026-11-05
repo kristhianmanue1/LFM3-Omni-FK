@@ -14,3 +14,6 @@ __pycache__/
 docs/reviews/evidence/privado/
 # Cualquier grabación del micrófono del Operador (sufijo _tu), esté donde esté.
 *_tu.wav
+
+# Descargas y binarios locales de WSL (SPEC-wsl-install); regenerables.
+run/build/

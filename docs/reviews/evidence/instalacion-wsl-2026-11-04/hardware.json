@@ -1,0 +1,8 @@
+{
+  "system": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "machine": "x86_64",
+  "gpu_access": "blocked in execution session; device model unverified",
+  "git_metadata": "read-only reserved directory; snapshot only",
+  "an_kla": "not installed; no memory store"
+}

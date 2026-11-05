@@ -38,11 +38,15 @@ GPU vía `nvidia-smi` si existe), SO, versiones y hashes; mide:
 Para velocidad de texto usar además `python3.12 tests/run_golden.py`
 (B-T5: tok/s, mediana de 3).
 
-## Máquina 2: PC Windows + Linux, RTX 6 GB
+## Máquina 2: Dell G7 7700, WSL2 Ubuntu y RTX 2060
 
-Datos del Operador: CPU «7700» (por confirmar: AMD Ryzen 7 7700 u otro),
-GPU RTX de 6 GB (modelo exacto lo registra `nvidia-smi`). El artefacto
-(~1.1 GB + mmproj) cabe completo en 6 GB de VRAM.
+Confirmación 2026-11-04: Windows CIM informa Dell Inc., G7 7700 y
+16929980416 bytes de RAM física (16 GB nominales). Linux confirma
+Intel Core i7-10750H @ 2.60 GHz; «7700» identifica el modelo Dell,
+no la CPU. GPU: GeForce RTX 2060, 6144 MiB, driver Windows 621.14.
+WSL2 dispone de ~9.7 GiB de RAM. Evidencia y resultados:
+`../reviews/evidence/sondas-WSL-RTX2060-2026-11-04/`.
+La ruta ejecutada fue WSL2/CUDA; Windows nativo no fue probado.
 
 Rutas de ejecución, en este orden:
 
@@ -73,8 +77,10 @@ Portabilidad ya resuelta en la batería: fixtures versionados (no requiere
 así que la comparación de memoria de la PC sólo vale por la ruta WSL2.
 Los fixtures se verifican contra `tests/golden/fixtures-audio-sha256.json`
 y la batería falla cerrado si difieren.
-Por confirmar en la máquina: que el paquete de release incluya llama-tts y
-que `-hf` deje el GGUF en una ruta conocida (pasarla con `--modelo`).
+Confirmado en WSL2: el paquete b11960 incluye llama-tts; el instalador
+descarga revisión/hash explícitos a `run/build/wsl/cache/` y no usa `-hf`.
+El driver 556.12 falló con PTX unsupported toolchain; 621.14 permitió
+ejecutar las pruebas. Ver `../instalacion-wsl.md` y la retoma al final.
 Antes de clonar en Windows: `git config core.autocrlf false` para que los
 fixtures y los hashes no cambien.
 
@@ -83,3 +89,12 @@ fixtures y los hashes no cambien.
 | Fecha | Máquina | Ruta | Evidencia | Nota |
 |---|---|---|---|---|
 | 2026-11-04 | MacBook Air M2 (Mac14,2), 16 GB, macOS 27.2 | Metal (Homebrew 0.8.0) | sondas-Mac14-2-2026-11-04/ | línea base |
+| 2026-11-04 | Dell G7 7700, i7-10750H, RTX 2060 6 GB, 16 GB host / ~9.7 GiB WSL | WSL2 Ubuntu 24.04.5, CUDA 12.8 b11960 | sondas-WSL-RTX2060-2026-11-04/ | ASR/video/TTS y pruebas personales; observación exploratoria |
+
+## Cierre y retoma del Dell
+
+Informe: `../reviews/2026-11-dell-g7-7700.md`.
+Guía reproducible y próximos pasos: `../retomar-dell-g7.md`.
+Las pruebas personales no conservaron transcripciones ni medios; el
+veredicto humano es evidencia de sesión, no un corpus auditable.
+D-10 exige preparar transcripciones privadas antes de la próxima sesión.
