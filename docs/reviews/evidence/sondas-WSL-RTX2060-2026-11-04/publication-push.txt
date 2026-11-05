@@ -1,0 +1,29 @@
+WSL-PUB-20261104-01 — evidencia de publicación
+Fecha local: 2026-11-04T21:10:05-06:00
+
+Commits publicados:
+c4ea850 Prueba g2 chunked: leer hasta el cierre como g3; un solo recv traia solo cabeceras de forma intermitente (ajuste PLAN LFM3-2); g2 10/10 aislada y suite 91 OK
+0807d6e WSL-PUB-20261104-01: evidencia y retoma Dell G7 7700 (WSL2/CUDA, RTX 2060 6 GB); instalador install_wsl con check/serve, ejemplos wsl con consentimiento D-09 y pruebas sin dispositivos, resultados y medios sinteticos en reviews/evidence, D-09 aceptada para pruebas exploratorias y D-10 de transcripciones privadas pendiente, guia de retoma y revision sin HIGH/BLOCKER
+9c0035b Ajuste multimodal del PLAN LFM3-2: ampliacion local I1-V (voz, transcripcion, conversacion, video) sobre el artefacto congelado
+
+Push:
+## chore/wsl-dell-g7-evidence...origin/chore/wsl-dell-g7-evidence
+up to date con origin (push 0807d6e..c4ea850 registrado por git push -u)
+
+PR:
+{"base":"main","head":"chore/wsl-dell-g7-evidence","state":"OPEN","url":"https://github.com/kristhianmanue1/LFM3-Omni-FK/pull/1"}
+
+Contenido remoto verificable:
+# Retomar pruebas en Dell G7 7700
+
+La sesión personal terminó con goodbye. No hay capturas activas; el motor
+...
+
+Gates previos al push (0807d6e..c4ea850):
+OK — 185 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1789/1800; gate/v13 (2026-10-29)
+OK — 2 plan(es) verificados (estructura E1-E6)
+OK — 7 reporte(s) con capa técnica verificada; 1 exento(s)
+
+Suite completa (hook pre-push):
+
+OK (skipped=7)
