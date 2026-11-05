@@ -1,0 +1,85 @@
+{
+  "schema": "lfm3-omni/interactive-session-summary/v1",
+  "local_date": "2026-11-04",
+  "provenance": "Summary reconstructed from tool outputs and explicit user confirmations in this conversation; no raw interactive console log or transcript was saved.",
+  "real_media_retained": false,
+  "transcripts_retained": false,
+  "voice_spanish": {
+    "turns": 1,
+    "native_realtime": false,
+    "pipeline": "10s mic -> local ASR -> chat -> llama-tts es -> playback",
+    "user_confirmed_correct_response": true
+  },
+  "video_spanish": {
+    "capture_seconds": 4,
+    "audio_input": false,
+    "pipeline": "webcam MP4 -> local vision/video -> llama-tts es -> playback",
+    "user_confirmed_object_and_motion": true
+  },
+  "realtime_english_single_turn": {
+    "native_realtime": true,
+    "input_mode": "10s capture then one PCM append; output streamed",
+    "first_audio_seconds": 0.51,
+    "output_audio_seconds": 3.12,
+    "user_confirmed_comprehensible_and_relevant": true
+  },
+  "continuous_bounded": {
+    "completed_user_turns": 4,
+    "attempted_next_turn": 5,
+    "end_reason": "180s watchdog while fifth turn was processing",
+    "user_confirmed_good_conversation_and_no_context_loss": true,
+    "first_audio_seconds_completed_turns": [
+      0.51,
+      0.48,
+      0.5,
+      0.5
+    ]
+  },
+  "continuous_no_total_limit": {
+    "completed_user_turns": 6,
+    "configured_total_time_limit": null,
+    "configured_turn_limit": null,
+    "end_reason": "goodbye detected by auxiliary local ASR; final response then closure",
+    "first_audio_seconds_completed_turns": [
+      0.52,
+      0.49,
+      0.53,
+      0.52,
+      0.52,
+      0.47
+    ],
+    "response_audio_seconds": [
+      6.0,
+      8.24,
+      7.36,
+      7.12,
+      8.0,
+      7.84
+    ],
+    "new_quality_verdict_after_this_run": null
+  },
+  "latency_definition": "First received PCM after response.create, following capture/upload and optional goodbye ASR; excludes silence detection, input capture, upload and final playback latency. Observations, not p95 or formal SLO.",
+  "interaction_limits": "Half-duplex automatic turns; mic closed during playback; local VAD one-second silence, threshold400 and at most20s PCM per utterance. No barge-in validated.",
+  "incidents": [
+    {
+      "issue": "Small WS appends timed out during capture",
+      "fix": "Capture bounded PCM in RAM, stop mic, then send one append",
+      "status": "resolved in subsequent single-turn native test"
+    },
+    {
+      "issue": "Unrecognized opcode9 ended first continuous trial",
+      "fix": "PING/PONG support with masked client frames; 31s idle probe",
+      "status": "resolved"
+    },
+    {
+      "issue": "180s cap ended bounded session",
+      "fix": "Explicit operator authorization removed global duration/turn limits; dedicated reader serves heartbeat while idle",
+      "status": "six-turn session ended with goodbye"
+    }
+  ],
+  "future_transcripts": {
+    "authorized_by_user": true,
+    "implementation": "pending before next real-user verification session",
+    "default_scope": "private local text for verification; review/sanitize before any public upload; no raw audio/video retention authorized by this instruction"
+  }
+}

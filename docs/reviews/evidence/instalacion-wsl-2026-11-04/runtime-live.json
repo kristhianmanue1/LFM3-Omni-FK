@@ -1,0 +1,109 @@
+{
+  "checked_at": "2026-11-05T01:26:44.781370+00:00",
+  "health": {
+    "status": "ok"
+  },
+  "models": {
+    "models": [
+      {
+        "name": "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M",
+        "model": "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M",
+        "modified_at": "",
+        "size": "",
+        "digest": "",
+        "type": "model",
+        "description": "",
+        "tags": [
+          ""
+        ],
+        "capabilities": [
+          "completion",
+          "multimodal"
+        ],
+        "parameters": "",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "",
+          "families": [
+            ""
+          ],
+          "parameter_size": "",
+          "quantization_level": ""
+        }
+      }
+    ],
+    "object": "list",
+    "data": [
+      {
+        "id": "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M",
+        "aliases": [
+          "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M"
+        ],
+        "tags": [],
+        "object": "model",
+        "architecture": {
+          "input_modalities": [
+            "text",
+            "image",
+            "audio",
+            "video"
+          ],
+          "output_modalities": [
+            "text",
+            "audio"
+          ]
+        },
+        "created": 1793842004,
+        "owned_by": "llamacpp",
+        "meta": {
+          "vocab_type": 2,
+          "n_vocab": 128000,
+          "n_ctx": 128000,
+          "n_ctx_train": 128000,
+          "n_embd": 2048,
+          "n_params": 1728801600,
+          "size": 1091380480,
+          "ftype": "Q4_K - Medium"
+        }
+      }
+    ]
+  },
+  "text_response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Motor funcionando"
+        }
+      }
+    ],
+    "created": 1793842004,
+    "model": "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M",
+    "system_fingerprint": "b11960-8642541b2",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 4,
+      "prompt_tokens": 19,
+      "total_tokens": 23,
+      "prompt_tokens_details": {
+        "cached_tokens": 1
+      }
+    },
+    "id": "chatcmpl-7KYaAGJYsuRiqAoUQn3j86XMdWSX70lU",
+    "timings": {
+      "cache_n": 1,
+      "prompt_n": 18,
+      "prompt_ms": 158.111,
+      "prompt_per_token_ms": 8.783944444444444,
+      "prompt_per_second": 113.844071569973,
+      "predicted_n": 4,
+      "predicted_ms": 140.043,
+      "predicted_per_token_ms": 46.681000000000004,
+      "predicted_per_second": 21.421991816799125
+    }
+  },
+  "gpu": "name, driver_version, memory.used [MiB], memory.total [MiB]\nNVIDIA GeForce RTX 2060, 621.14, 3993 MiB, 6144 MiB\n"
+}

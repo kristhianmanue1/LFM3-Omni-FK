@@ -2,7 +2,8 @@
 
 Servicio local de inferencia sobre el modelo omnimodal
 `LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M`, servido con llama.cpp en Apple
-Silicon. El contrato v1 ofrece texto e imagen de entrada y texto de
+Silicon y WSL2/CUDA (Dell G7 7700/RTX 2060 verificado). El contrato v1
+ofrece texto e imagen de entrada y texto de
 salida para agentes de IA y proyectos consumidores del ecosistema
 (web, apps): contratos versionados, API compatible OpenAI y MCP.
 Audio, video y voz de salida no están ofrecidos por el contrato v1;
@@ -18,7 +19,8 @@ para revisión y adopción; no acredita funcionalidades remotas activas.
 
 ## Requisitos
 
-- macOS arm64 (Apple Silicon), 16 GB RAM recomendado.
+- macOS arm64 (Apple Silicon), 16 GB RAM recomendado; ruta alternativa
+  WSL2/CUDA verificada: [retomar Dell G7](docs/retomar-dell-g7.md).
 - llama.cpp 0.8.0 (build 11960) vía Homebrew: `brew install llama.cpp`
   (motor congelado por registro — ADR-001; la versión bottled es la que
   exige la ficha del modelo).
@@ -30,6 +32,11 @@ para revisión y adopción; no acredita funcionalidades remotas activas.
   decisiones de cascarón abajo).
 
 ## Cómo correr
+
+Para la PC con Windows/WSL2 y CUDA, ver
+[instalación local WSL](docs/instalacion-wsl.md). El instalador fija el
+build y los hashes del plan de hardware. El cierre y los resultados
+posteriores están en [retomar Dell G7](docs/retomar-dell-g7.md).
 
 ```bash
 bash run/serve.sh    # arranca en 127.0.0.1:8091 (solo localhost) y espera salud

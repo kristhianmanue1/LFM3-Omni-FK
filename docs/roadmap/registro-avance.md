@@ -86,3 +86,17 @@ Cierre propuesto como `accepted_local` sólo con: conformidad de la
 matriz H en verde, demo desde cliente HTTP real, revisión fresca sin
 HIGH/BLOCKER, cinco gates OK, v1 y I0 pasando. Si algo falla:
 `verifying` con pendientes explícitos.
+
+
+## Evidencia de hardware Dell G7 7700 (2026-11-04)
+
+Se ejecutó la instalación WSL2/CUDA y la batería sobre el artefacto
+congelado. Informe: `../reviews/2026-11-dell-g7-7700.md`; retoma:
+`../retomar-dell-g7.md`. Hubo pruebas personales autorizadas de voz,
+video y conversación realtime inglesa, confirmadas por el Operador.
+La sesión sin límite global terminó al detectar goodbye, con seis turnos.
+
+Estas observaciones no cambian estados I1-V ni aceptan ADR-006/007.
+No se publican medios personales ni transcripciones inexistentes.
+D-10 registra conservación privada de transcripciones para la próxima
+verificación; implementar y probar esa retención antes de retomarla.

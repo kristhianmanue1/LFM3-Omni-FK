@@ -1,0 +1,11 @@
+test_cached_corrupt_not_reused (tests.test_install_wsl.InstallationIntegrity.test_cached_corrupt_not_reused) ... ok
+test_download_corrupt_never_published (tests.test_install_wsl.InstallationIntegrity.test_download_corrupt_never_published) ... ok
+test_installation_lock_rejects_second_writer (tests.test_install_wsl.InstallationIntegrity.test_installation_lock_rejects_second_writer) ... ok
+test_runtime_tampering_and_added_files_rejected (tests.test_install_wsl.InstallationIntegrity.test_runtime_tampering_and_added_files_rejected) ... ok
+test_tar_traversal_and_symlink_escape_rejected (tests.test_install_wsl.InstallationIntegrity.test_tar_traversal_and_symlink_escape_rejected) ... ok
+test_valid_download_then_offline_reuse (tests.test_install_wsl.InstallationIntegrity.test_valid_download_then_offline_reuse) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.009s
+
+OK

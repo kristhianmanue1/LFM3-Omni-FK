@@ -1,0 +1,62 @@
+test_initialize (tests.test_mcp_server.Handshake.test_initialize) ... ok
+test_metodo_desconocido (tests.test_mcp_server.Handshake.test_metodo_desconocido) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server.Handshake.test_notificacion_sin_respuesta) ... ok
+test_tools_antes_de_initialize (tests.test_mcp_server.Handshake.test_tools_antes_de_initialize) ... ok
+test_tools_list_tres (tests.test_mcp_server.Handshake.test_tools_list_tres) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server.Handshake.test_version_no_soportada_negocia_default) ... ok
+test_campo_no_declarado_rechazado_por_nombre (tests.test_mcp_server.Validacion.test_campo_no_declarado_rechazado_por_nombre) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server.Validacion.test_choices_vacio_es_salida_invalida) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server.Validacion.test_health_con_arguments_rechazado) ... ok
+test_imagen_basura_rechazada_en_frontera (tests.test_mcp_server.Validacion.test_imagen_basura_rechazada_en_frontera) ... ok
+test_imagen_no_base64_rechazada (tests.test_mcp_server.Validacion.test_imagen_no_base64_rechazada) ... ok
+test_max_tokens_booleano_cero_y_4097 (tests.test_mcp_server.Validacion.test_max_tokens_booleano_cero_y_4097) ... ok
+test_prompt_8000_aceptado (tests.test_mcp_server.Validacion.test_prompt_8000_aceptado) ... ok
+test_prompt_8001_rechazado (tests.test_mcp_server.Validacion.test_prompt_8001_rechazado) ... ok
+test_salida_json_valido_pero_no_conforme (tests.test_mcp_server.Validacion.test_salida_json_valido_pero_no_conforme) ... ok
+test_schema_con_claves_no_soportadas_rechazado (tests.test_mcp_server.Validacion.test_schema_con_claves_no_soportadas_rechazado) ... ok
+test_schema_null_rechazado (tests.test_mcp_server.Validacion.test_schema_null_rechazado) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server.Validacion.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_es_error_de_protocolo (tests.test_mcp_server.Validacion.test_tool_desconocida_es_error_de_protocolo) ... ok
+test_usage_ausente_o_nulo_es_salida_invalida (tests.test_mcp_server.Validacion.test_usage_ausente_o_nulo_es_salida_invalida) ... ok
+test_200_no_parseable_es_salida_invalida (tests.test_mcp_server.ClasificacionHTTP.test_200_no_parseable_es_salida_invalida) ... ok
+test_400_con_detalle_estructurado (tests.test_mcp_server.ClasificacionHTTP.test_400_con_detalle_estructurado) ... ok
+test_400_con_error_no_dict_y_no_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_no_dict_y_no_string) ... ok
+test_400_con_error_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_string) ... ok
+test_500_generico (tests.test_mcp_server.ClasificacionHTTP.test_500_generico) ... ok
+test_503_es_reintentable (tests.test_mcp_server.ClasificacionHTTP.test_503_es_reintentable) ... ok
+test_main_sobrevive_surrogate_e2e (tests.test_mcp_server.ClasificacionHTTP.test_main_sobrevive_surrogate_e2e) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_mensaje_no_objeto_32600) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server.ClasificacionHTTP.test_parse_error_32700) ... ok
+test_schema_profundo_no_mata (tests.test_mcp_server.ClasificacionHTTP.test_schema_profundo_no_mata) ... ok
+test_health_reporta_down (tests.test_mcp_server.MotorCaido.test_health_reporta_down) ... ok
+test_infer_text_motor_caido (tests.test_mcp_server.MotorCaido.test_infer_text_motor_caido) ... ok
+test_r19_condicion_sana_pasa_y_reporta (tests.test_recursos_bt10.Bt10.test_r19_condicion_sana_pasa_y_reporta) ... ok
+test_r19_dos_listeners_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_dos_listeners_no_hay_pass) ... ok
+test_r19_pid_reciclado_o_ajeno_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_pid_reciclado_o_ajeno_no_hay_pass) ... ok
+test_r19_rss_sobre_umbral_falla (tests.test_recursos_bt10.Bt10.test_r19_rss_sobre_umbral_falla) ... ok
+test_r19_rss_vacio_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_rss_vacio_no_hay_pass) ... ok
+test_r19_sin_pid_de_listener_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_sin_pid_de_listener_no_hay_pass) ... ok
+test_r19_swap_se_reporta_sin_atribuir_ni_umbral (tests.test_recursos_bt10.Bt10.test_r19_swap_se_reporta_sin_atribuir_ni_umbral)
+El swap es global del host: se reporta, no revierte el pass ... ok
+test_red_comportamiento_actual_con_pgrep_vacio (tests.test_recursos_bt10.Bt10.test_red_comportamiento_actual_con_pgrep_vacio)
+Regresión del defecto original (RED de I0): el runner viejo ... ok
+test_g6_core_sin_transporte (tests.test_gateway_i1.FronteraInterna.test_g6_core_sin_transporte) ... ok
+test_cached_corrupt_not_reused (tests.test_install_wsl.InstallationIntegrity.test_cached_corrupt_not_reused) ... ok
+test_download_corrupt_never_published (tests.test_install_wsl.InstallationIntegrity.test_download_corrupt_never_published) ... ok
+test_installation_lock_rejects_second_writer (tests.test_install_wsl.InstallationIntegrity.test_installation_lock_rejects_second_writer) ... ok
+test_runtime_tampering_and_added_files_rejected (tests.test_install_wsl.InstallationIntegrity.test_runtime_tampering_and_added_files_rejected) ... ok
+test_tar_traversal_and_symlink_escape_rejected (tests.test_install_wsl.InstallationIntegrity.test_tar_traversal_and_symlink_escape_rejected) ... ok
+test_valid_download_then_offline_reuse (tests.test_install_wsl.InstallationIntegrity.test_valid_download_then_offline_reuse) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 0.132s
+
+OK
+    (pid 4242: RSS 1024 MiB bajo mmap; artefactos ~1144 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: listeners en 8091: ['4242', '4242']; sin pid atribuible no hay pass)
+    (B-T10: pid 4242 no es del motor: '/bin/sh -c sleep 60 # llama-server --port 8091')
+    (pid 4242: RSS 5120 MiB bajo mmap; artefactos ~0 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: sin RSS atribuible al pid 4242; el proceso desapareció entre lsof y ps)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)

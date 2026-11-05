@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-11-05T00:50:28.168900+00:00",
+  "artifacts_and_inventory": "pass",
+  "build": 11960,
+  "commit": "8642541b2",
+  "device_probe_returncode": 0,
+  "device_probe_stdout": "Available devices:\n  (none)\n",
+  "device_probe_stderr": "0.00.087.537 E ggml_cuda_init: failed to initialize CUDA: CUDA driver version is insufficient for CUDA runtime version\n",
+  "gpu_inference": "inconclusive: agent session has no GPU access",
+  "http_tests": "inconclusive: agent session denies sockets"
+}

@@ -1,0 +1,572 @@
+test_r10_salida_parcial (tests.test_adapter_v2.PoliticaAdapter.test_r10_salida_parcial) ... ERROR
+test_r10b_backend_ilegible (tests.test_adapter_v2.PoliticaAdapter.test_r10b_backend_ilegible) ... ERROR
+test_r11_passthrough_valido (tests.test_adapter_v2.PoliticaAdapter.test_r11_passthrough_valido) ... ERROR
+test_r12_salida_estructurada_valida (tests.test_adapter_v2.PoliticaAdapter.test_r12_salida_estructurada_valida) ... ERROR
+test_r1_campo_desconocido (tests.test_adapter_v2.PoliticaAdapter.test_r1_campo_desconocido) ... ERROR
+test_r21_entrada_nan_rechazada_sin_backend (tests.test_adapter_v2.PoliticaAdapter.test_r21_entrada_nan_rechazada_sin_backend) ... ERROR
+test_r2_schema_anidado (tests.test_adapter_v2.PoliticaAdapter.test_r2_schema_anidado) ... ERROR
+test_r3_tipo_no_string_y_bool_como_number (tests.test_adapter_v2.PoliticaAdapter.test_r3_tipo_no_string_y_bool_como_number) ... ERROR
+test_r3c_salida_nan_no_es_valida (tests.test_adapter_v2.PoliticaAdapter.test_r3c_salida_nan_no_es_valida) ... ERROR
+test_r4_additional_properties (tests.test_adapter_v2.PoliticaAdapter.test_r4_additional_properties) ... ERROR
+test_r5_url_externa (tests.test_adapter_v2.PoliticaAdapter.test_r5_url_externa) ... ERROR
+test_r5b_image_url_con_clave_extra (tests.test_adapter_v2.PoliticaAdapter.test_r5b_image_url_con_clave_extra) ... ERROR
+test_r6_imagenes_truncadas (tests.test_adapter_v2.PoliticaAdapter.test_r6_imagenes_truncadas) ... ERROR
+test_r6c_png_con_basura_tras_iend (tests.test_adapter_v2.PoliticaAdapter.test_r6c_png_con_basura_tras_iend) ... ERROR
+test_r7_firma_falsa (tests.test_adapter_v2.PoliticaAdapter.test_r7_firma_falsa) ... ERROR
+test_r8_exceso_de_pixeles (tests.test_adapter_v2.PoliticaAdapter.test_r8_exceso_de_pixeles) ... ERROR
+test_r9_json_malformado_y_sin_messages (tests.test_adapter_v2.PoliticaAdapter.test_r9_json_malformado_y_sin_messages) ... ERROR
+test_r9b_cl_no_ascii (tests.test_adapter_v2.PoliticaAdapter.test_r9b_cl_no_ascii) ... ERROR
+test_rutas_y_stream (tests.test_adapter_v2.PoliticaAdapter.test_rutas_y_stream) ... ERROR
+test_r14_huerfano_y_pid_reciclado_se_recuperan (tests.test_ciclo_arranque.Cerrojo.test_r14_huerfano_y_pid_reciclado_se_recuperan) ... ERROR
+test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque.test_r13_segundo_arranque_bloquea_con_un_solo_motor) ... ERROR
+test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso.test_r16_env_neutralizado_y_host_explicito) ... ERROR
+test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada.test_r18_stop_no_mata_ajenos) ... ERROR
+test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno.test_r15_puerto_ocupado_por_ajeno_bloquea_limpio) ... ERROR
+test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness.test_r17_readiness_exige_modelo_efectivo) ... ERROR
+test_r17b_atajo_idempotente_exige_modelo (tests.test_ciclo_arranque.Readiness.test_r17b_atajo_idempotente_exige_modelo) ... ERROR
+test_g4_rutas_administrativas_no_pasan (tests.test_gateway_i1.Allowlist.test_g4_rutas_administrativas_no_pasan) ... ERROR
+test_g1_capaabilities_sin_lo_no_activo (tests.test_gateway_i1.Capabilities.test_g1_capaabilities_sin_lo_no_activo) ... ERROR
+test_g5_puerto_ocupado_falla_cerrado (tests.test_gateway_i1.Colision.test_g5_puerto_ocupado_falla_cerrado) ... ERROR
+test_g6_core_sin_transporte (tests.test_gateway_i1.FronteraInterna.test_g6_core_sin_transporte) ... ok
+test_g2_chunked_sin_content_length (tests.test_gateway_i1.Transporte.test_g2_chunked_sin_content_length) ... ERROR
+test_g3_compresion_rechazada_antes_de_leer (tests.test_gateway_i1.Transporte.test_g3_compresion_rechazada_antes_de_leer) ... ERROR
+test_200_no_parseable_es_salida_invalida (tests.test_mcp_server.ClasificacionHTTP.test_200_no_parseable_es_salida_invalida) ... ok
+test_400_con_detalle_estructurado (tests.test_mcp_server.ClasificacionHTTP.test_400_con_detalle_estructurado) ... ok
+test_400_con_error_no_dict_y_no_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_no_dict_y_no_string) ... ok
+test_400_con_error_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_string) ... ok
+test_500_generico (tests.test_mcp_server.ClasificacionHTTP.test_500_generico) ... ok
+test_503_es_reintentable (tests.test_mcp_server.ClasificacionHTTP.test_503_es_reintentable) ... ok
+test_main_sobrevive_surrogate_e2e (tests.test_mcp_server.ClasificacionHTTP.test_main_sobrevive_surrogate_e2e) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_mensaje_no_objeto_32600) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server.ClasificacionHTTP.test_parse_error_32700) ... ok
+test_schema_profundo_no_mata (tests.test_mcp_server.ClasificacionHTTP.test_schema_profundo_no_mata) ... ok
+test_initialize (tests.test_mcp_server.Handshake.test_initialize) ... ok
+test_metodo_desconocido (tests.test_mcp_server.Handshake.test_metodo_desconocido) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server.Handshake.test_notificacion_sin_respuesta) ... ok
+test_tools_antes_de_initialize (tests.test_mcp_server.Handshake.test_tools_antes_de_initialize) ... ok
+test_tools_list_tres (tests.test_mcp_server.Handshake.test_tools_list_tres) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server.Handshake.test_version_no_soportada_negocia_default) ... ok
+test_health_reporta_down (tests.test_mcp_server.MotorCaido.test_health_reporta_down) ... ok
+test_infer_text_motor_caido (tests.test_mcp_server.MotorCaido.test_infer_text_motor_caido) ... ok
+test_health_up (tests.test_mcp_server.ToolsConMotor.test_health_up) ... FAIL
+test_infer_text_con_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_con_schema) ... FAIL
+test_infer_text_sin_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_sin_schema) ... FAIL
+test_infer_vision_png_rojo (tests.test_mcp_server.ToolsConMotor.test_infer_vision_png_rojo) ... FAIL
+test_campo_no_declarado_rechazado_por_nombre (tests.test_mcp_server.Validacion.test_campo_no_declarado_rechazado_por_nombre) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server.Validacion.test_choices_vacio_es_salida_invalida) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server.Validacion.test_health_con_arguments_rechazado) ... ok
+test_imagen_basura_rechazada_en_frontera (tests.test_mcp_server.Validacion.test_imagen_basura_rechazada_en_frontera) ... ok
+test_imagen_no_base64_rechazada (tests.test_mcp_server.Validacion.test_imagen_no_base64_rechazada) ... ok
+test_max_tokens_booleano_cero_y_4097 (tests.test_mcp_server.Validacion.test_max_tokens_booleano_cero_y_4097) ... ok
+test_prompt_8000_aceptado (tests.test_mcp_server.Validacion.test_prompt_8000_aceptado) ... ok
+test_prompt_8001_rechazado (tests.test_mcp_server.Validacion.test_prompt_8001_rechazado) ... ok
+test_salida_json_valido_pero_no_conforme (tests.test_mcp_server.Validacion.test_salida_json_valido_pero_no_conforme) ... ok
+test_schema_con_claves_no_soportadas_rechazado (tests.test_mcp_server.Validacion.test_schema_con_claves_no_soportadas_rechazado) ... ok
+test_schema_null_rechazado (tests.test_mcp_server.Validacion.test_schema_null_rechazado) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server.Validacion.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_es_error_de_protocolo (tests.test_mcp_server.Validacion.test_tool_desconocida_es_error_de_protocolo) ... ok
+test_usage_ausente_o_nulo_es_salida_invalida (tests.test_mcp_server.Validacion.test_usage_ausente_o_nulo_es_salida_invalida) ... ok
+test_r19_condicion_sana_pasa_y_reporta (tests.test_recursos_bt10.Bt10.test_r19_condicion_sana_pasa_y_reporta) ... ok
+test_r19_dos_listeners_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_dos_listeners_no_hay_pass) ... ok
+test_r19_pid_reciclado_o_ajeno_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_pid_reciclado_o_ajeno_no_hay_pass) ... ok
+test_r19_rss_sobre_umbral_falla (tests.test_recursos_bt10.Bt10.test_r19_rss_sobre_umbral_falla) ... ok
+test_r19_rss_vacio_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_rss_vacio_no_hay_pass) ... ok
+test_r19_sin_pid_de_listener_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_sin_pid_de_listener_no_hay_pass) ... ok
+test_r19_swap_se_reporta_sin_atribuir_ni_umbral (tests.test_recursos_bt10.Bt10.test_r19_swap_se_reporta_sin_atribuir_ni_umbral)
+El swap es global del host: se reporta, no revierte el pass ... ok
+test_red_comportamiento_actual_con_pgrep_vacio (tests.test_recursos_bt10.Bt10.test_red_comportamiento_actual_con_pgrep_vacio)
+Regresión del defecto original (RED de I0): el runner viejo ... ok
+
+======================================================================
+ERROR: test_r10_salida_parcial (tests.test_adapter_v2.PoliticaAdapter.test_r10_salida_parcial)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r10b_backend_ilegible (tests.test_adapter_v2.PoliticaAdapter.test_r10b_backend_ilegible)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r11_passthrough_valido (tests.test_adapter_v2.PoliticaAdapter.test_r11_passthrough_valido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r12_salida_estructurada_valida (tests.test_adapter_v2.PoliticaAdapter.test_r12_salida_estructurada_valida)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r1_campo_desconocido (tests.test_adapter_v2.PoliticaAdapter.test_r1_campo_desconocido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r21_entrada_nan_rechazada_sin_backend (tests.test_adapter_v2.PoliticaAdapter.test_r21_entrada_nan_rechazada_sin_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r2_schema_anidado (tests.test_adapter_v2.PoliticaAdapter.test_r2_schema_anidado)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r3_tipo_no_string_y_bool_como_number (tests.test_adapter_v2.PoliticaAdapter.test_r3_tipo_no_string_y_bool_como_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r3c_salida_nan_no_es_valida (tests.test_adapter_v2.PoliticaAdapter.test_r3c_salida_nan_no_es_valida)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r4_additional_properties (tests.test_adapter_v2.PoliticaAdapter.test_r4_additional_properties)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r5_url_externa (tests.test_adapter_v2.PoliticaAdapter.test_r5_url_externa)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r5b_image_url_con_clave_extra (tests.test_adapter_v2.PoliticaAdapter.test_r5b_image_url_con_clave_extra)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r6_imagenes_truncadas (tests.test_adapter_v2.PoliticaAdapter.test_r6_imagenes_truncadas)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r6c_png_con_basura_tras_iend (tests.test_adapter_v2.PoliticaAdapter.test_r6c_png_con_basura_tras_iend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r7_firma_falsa (tests.test_adapter_v2.PoliticaAdapter.test_r7_firma_falsa)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r8_exceso_de_pixeles (tests.test_adapter_v2.PoliticaAdapter.test_r8_exceso_de_pixeles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r9_json_malformado_y_sin_messages (tests.test_adapter_v2.PoliticaAdapter.test_r9_json_malformado_y_sin_messages)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r9b_cl_no_ascii (tests.test_adapter_v2.PoliticaAdapter.test_r9b_cl_no_ascii)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_rutas_y_stream (tests.test_adapter_v2.PoliticaAdapter.test_rutas_y_stream)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_adapter_v2.py", line 118, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r14_huerfano_y_pid_reciclado_se_recuperan (tests.test_ciclo_arranque.Cerrojo.test_r14_huerfano_y_pid_reciclado_se_recuperan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 91, in setUp
+    if not puerto_libre():
+           ^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 65, in puerto_libre
+    s = socket.socket()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque.test_r13_segundo_arranque_bloquea_con_un_solo_motor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 91, in setUp
+    if not puerto_libre():
+           ^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 65, in puerto_libre
+    s = socket.socket()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso.test_r16_env_neutralizado_y_host_explicito)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 91, in setUp
+    if not puerto_libre():
+           ^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 65, in puerto_libre
+    s = socket.socket()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada.test_r18_stop_no_mata_ajenos)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 91, in setUp
+    if not puerto_libre():
+           ^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 65, in puerto_libre
+    s = socket.socket()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno.test_r15_puerto_ocupado_por_ajeno_bloquea_limpio)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 91, in setUp
+    if not puerto_libre():
+           ^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 65, in puerto_libre
+    s = socket.socket()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness.test_r17_readiness_exige_modelo_efectivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 91, in setUp
+    if not puerto_libre():
+           ^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 65, in puerto_libre
+    s = socket.socket()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_r17b_atajo_idempotente_exige_modelo (tests.test_ciclo_arranque.Readiness.test_r17b_atajo_idempotente_exige_modelo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 91, in setUp
+    if not puerto_libre():
+           ^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_ciclo_arranque.py", line 65, in puerto_libre
+    s = socket.socket()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_g4_rutas_administrativas_no_pasan (tests.test_gateway_i1.Allowlist.test_g4_rutas_administrativas_no_pasan)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_g1_capaabilities_sin_lo_no_activo (tests.test_gateway_i1.Capabilities.test_g1_capaabilities_sin_lo_no_activo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_g5_puerto_ocupado_falla_cerrado (tests.test_gateway_i1.Colision.test_g5_puerto_ocupado_falla_cerrado)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_g2_chunked_sin_content_length (tests.test_gateway_i1.Transporte.test_g2_chunked_sin_content_length)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_g3_compresion_rechazada_antes_de_leer (tests.test_gateway_i1.Transporte.test_g3_compresion_rechazada_antes_de_leer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 453, in __init__
+    self.socket = socket.socket(self.address_family,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 233, in __init__
+    _socket.socket.__init__(self, family, type, proto, fileno)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+FAIL: test_health_up (tests.test_mcp_server.ToolsConMotor.test_health_up)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_mcp_server.py", line 310, in test_health_up
+    self.assertEqual(datos["state"], "up")
+AssertionError: 'down' != 'up'
+- down
++ up
+
+
+======================================================================
+FAIL: test_infer_text_con_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_con_schema)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_mcp_server.py", line 317, in test_infer_text_con_schema
+    datos = contenido_json(requerir("tools/call", {"name": "infer_text", "arguments": args}))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 1] Operation not permitted>'}], 'isError': True}
+
+======================================================================
+FAIL: test_infer_text_sin_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_sin_schema)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_mcp_server.py", line 323, in test_infer_text_sin_schema
+    datos = contenido_json(requerir("tools/call", {"name": "infer_text", "arguments": args}))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 1] Operation not permitted>'}], 'isError': True}
+
+======================================================================
+FAIL: test_infer_vision_png_rojo (tests.test_mcp_server.ToolsConMotor.test_infer_vision_png_rojo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<WORKSPACE>/tests/test_mcp_server.py", line 331, in test_infer_vision_png_rojo
+    datos = contenido_json(requerir("tools/call", {"name": "infer_vision", "arguments": args}))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<WORKSPACE>/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 1] Operation not permitted>'}], 'isError': True}
+
+----------------------------------------------------------------------
+Ran 77 tests in 0.144s
+
+FAILED (failures=4, errors=31)
+    (pid 4242: RSS 1024 MiB bajo mmap; artefactos ~1144 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: listeners en 8091: ['4242', '4242']; sin pid atribuible no hay pass)
+    (B-T10: pid 4242 no es del motor: '/bin/sh -c sleep 60 # llama-server --port 8091')
+    (pid 4242: RSS 5120 MiB bajo mmap; artefactos ~0 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: sin RSS atribuible al pid 4242; el proceso desapareció entre lsof y ps)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)

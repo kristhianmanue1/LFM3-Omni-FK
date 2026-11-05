@@ -1,0 +1,15 @@
+test_goodbye_detection_uses_local_asr_without_files (tests.test_wsl_examples.WslExamples.test_goodbye_detection_uses_local_asr_without_files) ... ok
+test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) ... ok
+test_interruption_closes_microphone (tests.test_wsl_examples.WslExamples.test_interruption_closes_microphone) ... ok
+test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) ... ok
+test_oversized_ws_frame_rejected_before_payload_read (tests.test_wsl_examples.WslExamples.test_oversized_ws_frame_rejected_before_payload_read) ... ok
+test_ping_pong_preserves_payload_and_next_event (tests.test_wsl_examples.WslExamples.test_ping_pong_preserves_payload_and_next_event) ... ok
+test_reader_handles_heartbeat_and_stops_on_close (tests.test_wsl_examples.WslExamples.test_reader_handles_heartbeat_and_stops_on_close) ... ok
+test_voice_end_and_duration_cap_close_microphone (tests.test_wsl_examples.WslExamples.test_voice_end_and_duration_cap_close_microphone) ... Voz detectada.
+Voz detectada.
+ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.080s
+
+OK

@@ -1,0 +1,2 @@
+Verificando/descargando cudart-llama-b11960-bin-ubuntu-cuda-12.8-x64.tar.gz
+BLOQ: <urlopen error [Errno -3] Temporary failure in name resolution>

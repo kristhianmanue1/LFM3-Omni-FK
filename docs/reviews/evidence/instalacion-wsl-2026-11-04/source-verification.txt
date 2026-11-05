@@ -1,0 +1,3 @@
+154 archivos originales verificados al recuperar.
+Verificación histórica tras instalación, antes de este cierre: 151 idénticos; cambios esperados solo .gitignore, README.md y scripts/MANIFEST.json.
+10 fixtures ASR: SHA-256 coincide con manifiesto.
