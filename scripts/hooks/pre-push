@@ -4,7 +4,16 @@
 set -e
 
 repo_root="$(git rev-parse --show-toplevel)"
-python3 "$repo_root/scripts/check_sizes.py"
-python3 "$repo_root/scripts/check_plans.py"
-python3 "$repo_root/scripts/check_reports.py"
-python3 -m unittest discover -s "$repo_root/tests"
+# Runtime declarado del proyecto: Python >= 3.12 (Operador, 2026-11-04).
+# El python3 del sistema puede ser 3.9 y la suite actual lo exige
+# (p. ej. hashlib.file_digest en install_wsl.py); fallar cerrado.
+runtime="$(command -v python3.12 || command -v python3 || true)"
+if [ -z "$runtime" ] \
+   || ! "$runtime" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 12) else 1)'; then
+  echo "BLOQ: el gate exige Python >= 3.12 (runtime declarado del proyecto)" >&2
+  exit 1
+fi
+"$runtime" "$repo_root/scripts/check_sizes.py"
+"$runtime" "$repo_root/scripts/check_plans.py"
+"$runtime" "$repo_root/scripts/check_reports.py"
+"$runtime" -m unittest discover -s "$repo_root/tests"
