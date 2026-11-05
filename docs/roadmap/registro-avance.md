@@ -74,9 +74,12 @@ el agente con evidencia; la aceptación la decide el Operador.
 - Encargo: Operador, 2026-11-04 — integración multimodal en el PLAN
   LFM3-2 existente; «corre ronda adversarial del ajuste al plan para
   afinar y procede». Ejecución de I1-V0: Operador, 2026-11-05 —
-  «Encargar I1-V0» (sesión OpenCode).
-- Bloqueos: D-08 (ADR-007) antes de I1-VS; D-09 antes de voz o cámara
-  reales en gates; realtime nativo fuera por ggml-org/llama.cpp#31689.
+  «Encargar I1-V0» (sesión OpenCode). Encargo de I1-VA e I1-VT (D-10):
+  Operador, 2026-11-05, misma sesión.
+- Bloqueos: ninguno para I1-VA e I1-VT. D-08 aceptada (2026-11-05);
+  D-09 aceptada para gates con voz/cámara reales condicionada a D-10
+  implementada (I1-VT); realtime nativo fuera por
+  ggml-org/llama.cpp#31689.
 - Evidencia de partida: docs/reviews/evidence/plan2-ajuste-sesion/ y
   sondas-Mac14-2-2026-11-04/ (tests/sondas_multimodal.py); de esta
   TAREA: docs/reviews/evidence/i1-v0-sesion/.
@@ -87,6 +90,9 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-05 | `implementing` | 9c0035b | encargo de I1-V0; RED de las tres propiedades (evidence/i1-v0-sesion/red.txt) |
 | 2026-11-05 | `verifying` | 9c0035b + trabajo | GREEN: golden 12/12 con B-T8 corregido; unittest 78 OK; 5 gates OK; inventario reproduce hashes; ciclo vivo stop/serve con PATH fijado; ronda adversarial 1: fix-and-retry (H-1..H-4) |
 | 2026-11-05 | `accepted_local` (propuesto) | commit de esta TAREA | fixes de la ronda 1 aplicados y re-verificados (golden 12/12); ronda adversarial 2 sobre los fixes: proceed; v1 sin cambio |
+| 2026-11-05 | I1-V0 publicada en `origin/main` | 74733ee (rebase sobre f7b0d92) | push autorizado por el Operador; rebase por avance del remoto (sesión Dell G7, PR 1); hook pre-push fijado a Python ≥ 3.12 (a9aa1ff) tras rechazo con 3.9 |
+| 2026-11-05 | I1-VA: encargo (`not_started` → `designing`) | a9aa1ff | encargo del Operador; D-08 aceptada y D-09 (reales con D-10) registradas; SPEC con corpus y umbral CER antes de medir |
+| 2026-11-05 | I1-VT (D-10): encargo (`not_started`) | a9aa1ff | TAREA añadida al PLAN; condición de los gates de I1-V con voz/cámara reales |
 
 ## Salida prevista
 

@@ -11,4 +11,4 @@
 | [ADR-004](ADR-004-estrategia-validacion-v2-stdlib.md) | Validación de frontera del adaptador v2: validador propio stdlib con dialecto cerrado | aceptado (I0-D, 2026-11-04) | 2026-11-04 |
 | [ADR-005](ADR-005-stack-http-gateway-loopback.md) | Gateway I1 sobre http.server stdlib; puerto 8092 configurable con fallo cerrado por colisión | aceptado (I1-D, 2026-11-04); enmienda propuesta por ADR-006 (capabilities y streaming), vigente sin cambio hasta su aceptación | 2026-11-04 |
 | [ADR-006](ADR-006-modalidades-locales-y-streaming.md) | Modalidades locales del artefacto vigente por gate I1-V; SSE stdlib en loopback; ffmpeg como dependencia del motor | propuesto (ajuste PLAN LFM3-2) | 2026-11-04 |
-| [ADR-007](ADR-007-estrategia-voz-local.md) | Voz local: ASR por 8091, TTS por llama-tts; /v1/realtime fuera (#31689) | propuesto (resuelve D-08 al aceptarse) | 2026-11-04 |
+| [ADR-007](ADR-007-estrategia-voz-local.md) | Voz local: ASR por 8091, TTS por llama-tts; /v1/realtime fuera (#31689) | aceptado (D-08, Operador 2026-11-05) | 2026-11-04 |

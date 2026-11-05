@@ -120,8 +120,22 @@ TAREA I1-VA
     verificación: WAV corrupto, enorme o URL rechazados con contador cero.
   - [ ] fijar corpus sintético y umbral CER antes de medir;
     verificación: CER bajo umbral; capabilities anuncia transcripcion.
+TAREA I1-VT
+  Consumes: D-10 (aceptada; implementación pendiente), D-09 (gates con
+    voz/cámara reales del Operador)
+  Produce: retención privada de transcripciones por turno para auditoría
+  Steps:
+  - [ ] persistir transcripción de entrada y respuesta asociadas por
+    turno, con timestamps y parámetros/hashes, en archivos 0600 bajo
+    docs/reviews/evidence/privado/transcripciones/ (excluido de Git);
+    verificación: una sesión de prueba (fixture sintético; turno real
+    sólo con encargo) deja el archivo completo y el árbol de Git limpio.
+  - [ ] sanear y revisar con el Operador antes de publicar cualquier
+    extracto; verificación: ningún medio personal ni transcripción
+    aparece en un diff o push.
 TAREA I1-VS
-  Consumes: I1-VA, D-08 (ADR-007), D-09 si se usa voz real
+  Consumes: I1-VA, D-08 (ADR-007, aceptada 2026-11-05), D-09 con D-10
+    implementada para el gate con voz real
   Produce: síntesis de voz español vía llama-tts en el gateway
   Steps:
   - [ ] entregar texto por archivo 0600 o stdin, esquema cerrado, sin cola;

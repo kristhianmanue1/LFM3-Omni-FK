@@ -14,8 +14,8 @@ bloquean su tarea»; «D-02..D-07 se deciden antes de sus gates»).
 | D-06a | Prioridad de modalidad | **ACEPTADA** | Operador, 2026-11-04, encargo de integración multimodal: «Primera prioridad: voz», luego conversación, visión/video y combinada | I1-V |
 | D-06b | Hardware y presupuesto para candidatos (insumo: docs/roadmap/pruebas-hardware.md) | pendiente | — | antes de I6 |
 | D-07 | Publicación comercial y oferta a terceros | pendiente | — | antes de ofrecerla |
-| D-08 | Estrategia de voz (ADR-007: llama-tts; realtime fuera por #31689) | propuesta | ajuste PLAN LFM3-2, 2026-11-04 | antes de I1-VS |
-| D-09 | Datos de audio e imagen reales | aceptada para las pruebas exploratorias de esta sesión, sin retención de medios | Operador, 2026-11-04: solicita y valida voz/cámara y conversación; archivos temporales eliminados | no promueve gates I1-V ni autoriza publicar medios personales |
+| D-08 | Estrategia de voz (ADR-007: llama-tts; realtime fuera por #31689) | **aceptada** (Operador, 2026-11-05, sesión OpenCode: «Aceptar ADR-007») | ajuste PLAN LFM3-2, 2026-11-04; aceptación 2026-11-05 | cumplida: se aceptó antes de I1-VS |
+| D-09 | Datos de audio e imagen reales | aceptada para las pruebas exploratorias de esta sesión, sin retención de medios (2026-11-04); **aceptada para los gates de I1-V con voz/cámara reales del Operador, condicionada a D-10 implementada** (Operador, 2026-11-05, sesión OpenCode: «Reales con D-10») | Operador, 2026-11-04 y 2026-11-05 | D-10 implementada antes del primer gate con reales; medios personales jamás publicados |
 | D-10 | Transcripciones para verificación futura | **ACEPTADA; implementación pendiente** | Operador, 2026-11-04: «en proximas se guardaran trascripciones para verificacion» | antes de la próxima prueba personal que se quiera auditar por contenido |
 
 Responsable de D-02..D-10: el Operador. Sin fecha de calendario: la

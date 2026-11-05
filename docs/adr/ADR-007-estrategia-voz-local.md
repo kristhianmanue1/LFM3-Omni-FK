@@ -3,7 +3,7 @@
 ```text
 ADR-007: ASR vía llama-server 8091 (input_audio); TTS vía llama-tts
 --tts-lang es como subproceso; /v1/realtime nativo fuera de alcance
-Estado: propuesto (ajuste del PLAN LFM3-2, 2026-11-04); resuelve D-08
+Estado: aceptado (D-08, Operador 2026-11-05: «Aceptar ADR-007»; propuesto el 2026-11-04 en el ajuste del PLAN LFM3-2)
 cuando el Operador lo acepte; revocable con independencia de ADR-006
 Contexto: mismo modelo y mmproj registrados (ADR-001). Sondas:
   - input_audio en chat: ASR español exacto (P-2).
