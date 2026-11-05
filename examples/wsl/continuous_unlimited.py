@@ -1,4 +1,9 @@
-"""Sesión local autorizada sin límite total; termina con goodbye o SIGTERM."""
+"""Sesión local autorizada sin límite total; termina con goodbye o SIGTERM.
+
+D-10 pendiente: este flujo realtime aún no expone texto de turno, así que
+no retiene transcripciones (I1-VT cubre live_voice/conversacion_voz_local);
+no usarlo como sesión auditable hasta cablearlo.
+"""
 import array
 import base64
 from collections import deque

@@ -1,4 +1,9 @@
-"""Prueba autorizada: audio nativo WS en inglés, un turno, sin archivos de audio."""
+"""Prueba autorizada: audio nativo WS en inglés, un turno, sin archivos de audio.
+
+D-10 pendiente: este flujo realtime aún no expone texto de turno, así que
+no retiene transcripciones (I1-VT cubre live_voice/conversacion_voz_local);
+no usarlo como sesión auditable hasta cablearlo.
+"""
 import array
 import base64
 import importlib.util

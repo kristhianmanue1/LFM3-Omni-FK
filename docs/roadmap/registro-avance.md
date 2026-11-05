@@ -63,9 +63,9 @@ el agente con evidencia; la aceptación la decide el Operador.
 
 ### I1-V — Modalidades locales del artefacto vigente
 
-- Estado actual: `accepted_local` (propuesto al Operador) **sólo para
-  I1-V0**; I1-VA..VV siguen `not_started`. I0 e I1 conservan
-  `accepted_local`.
+- Estado actual: `accepted_local` (propuesto al Operador) para
+  **I1-V0 e I1-VT**; I1-VA encargada (en diseño); I1-VS/VR/VV
+  `not_started`. I0 e I1 conservan `accepted_local`.
 - Owner: agente ejecutor (GLM 5.3, OpenCode; ajuste del plan: Claude
   Opus 5.5, Claude Code). Reviewer: subagente con contexto fresco
   (ronda del ajuste: fix-and-retry -> proceed por relectura,
@@ -93,6 +93,8 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-05 | I1-V0 publicada en `origin/main` | 74733ee (rebase sobre f7b0d92) | push autorizado por el Operador; rebase por avance del remoto (sesión Dell G7, PR 1); hook pre-push fijado a Python ≥ 3.12 (a9aa1ff) tras rechazo con 3.9 |
 | 2026-11-05 | I1-VA: encargo (`not_started` → `designing`) | a9aa1ff | encargo del Operador; D-08 aceptada y D-09 (reales con D-10) registradas; SPEC con corpus y umbral CER antes de medir |
 | 2026-11-05 | I1-VT (D-10): encargo (`not_started`) | a9aa1ff | TAREA añadida al PLAN; condición de los gates de I1-V con voz/cámara reales |
+| 2026-11-05 | I1-VT `implementing` → `verifying` | 48111d1 + trabajo | RED 7/7 (módulo ausente); GREEN: src/transcripciones.py, cableado en live_voice y conversacion_voz_local, nota D-10 en los tres realtime; 8 pruebas nuevas |
+| 2026-11-05 | I1-VT `accepted_local` (propuesto) | commit de esta TAREA | unittest 100 OK; 5/5 gates; ronda adversarial 1 proceed (MED-1 + 6 LOW corregidos) y ronda 2 proceed (3 LOW de pulido aplicados); limitación declarada: realtime sin retención hasta I1-VR |
 
 ## Salida prevista
 

@@ -1,0 +1,8 @@
+Ran 100 tests in 23.506s
+OK (skipped=8)
+OK — 197 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v13 (2026-10-29)
+OK — 2 plan(es) verificados (estructura E1-E6)
+OK — 8 reporte(s) con capa técnica verificada; 1 exento(s)
+OK — al día: versión vigente corpus/v8
+OK — al día: versión vigente gate/v13
+git diff --check limpio

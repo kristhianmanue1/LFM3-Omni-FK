@@ -4,8 +4,10 @@ Exploratorio (ajuste PLAN LFM3-2, patrón de I1-VR; ADR-007): fin de turno
 por silencio medido, respuesta SSE del motor 8091, voz frase por frase con
 llama-tts --tts-lang es. Usa micrófono real: sólo con consentimiento del
 Operador (D-09). El audio vive en un directorio temporal que se borra al
-salir; nada se persiste. La salida del modelo es dato no confiable: sólo
-se reproduce, nunca se ejecuta.
+salir; las transcripciones de los turnos quedan retenidas en privado
+(D-10, TAREA I1-VT): docs/reviews/evidence/privado/transcripciones/.
+La salida del modelo es dato no confiable: sólo se reproduce, nunca se
+ejecuta.
 
 Uso: LFM3_CONSENTIMIENTO_D09=si python3.12 examples/conversacion_voz_local.py
      (macOS, micrófono :0)
@@ -15,7 +17,8 @@ import sys
 if sys.version_info < (3, 12):
     sys.exit("BLOQ: se requiere Python 3.12 o superior")
 
-import array, atexit, json, math, os, queue, re, shutil, subprocess
+import array, atexit, hashlib, importlib.util, json, math, os, queue, re
+import shutil, subprocess
 import tempfile, threading, time, urllib.request, wave
 
 DIR = tempfile.mkdtemp(prefix="lfm3-voz-")
@@ -172,6 +175,14 @@ def responder(historial, n):
 
 
 exigir_consentimiento("el micrófono")
+# D-10: retención privada de transcripciones (TAREA I1-VT).
+_espec = importlib.util.spec_from_file_location(
+    "transcripciones",
+    os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                 "src", "transcripciones.py"))
+transcripciones = importlib.util.module_from_spec(_espec)
+_espec.loader.exec_module(transcripciones)
+SESION = transcripciones.new_session()
 historial = [{"role": "system", "content": SISTEMA}]
 saludo = os.path.join(DIR, "rt_00.wav")
 sintetizar("Hola de nuevo. Ahora habla cuando escuches el pitido, y yo "
@@ -185,6 +196,18 @@ for n in range(1, TURNOS + 1):
     log(f"Tú [{time.time() - T0[0]:.1f} s]:", texto)
     historial.append({"role": "user", "content": texto})
     historial.append({"role": "assistant", "content": responder(historial, n)})
+    try:
+        with open(wav, "rb") as fuente:
+            huella = hashlib.sha256(fuente.read()).hexdigest()
+        transcripciones.record_turn(
+            SESION, user_text=texto, reply=historial[-1]["content"],
+            params={"flow": "SSE frase por frase", "max_tokens": 120,
+                    "tts": "llama-tts es"},
+            hashes={"input_wav": huella})
+    except ValueError as error:
+        log("   (turno sin transcripción válida; fin por D-10)",
+            type(error).__name__)
+        break
     if re.search(r"\badi[oó]s\b", texto.lower()):
         break
 log("fin de la conversación")

@@ -125,12 +125,12 @@ TAREA I1-VT
     voz/cámara reales del Operador)
   Produce: retención privada de transcripciones por turno para auditoría
   Steps:
-  - [ ] persistir transcripción de entrada y respuesta asociadas por
+  - [x] persistir transcripción de entrada y respuesta asociadas por
     turno, con timestamps y parámetros/hashes, en archivos 0600 bajo
     docs/reviews/evidence/privado/transcripciones/ (excluido de Git);
     verificación: una sesión de prueba (fixture sintético; turno real
     sólo con encargo) deja el archivo completo y el árbol de Git limpio.
-  - [ ] sanear y revisar con el Operador antes de publicar cualquier
+  - [x] sanear y revisar con el Operador antes de publicar cualquier
     extracto; verificación: ningún medio personal ni transcripción
     aparece en un diff o push.
 TAREA I1-VS

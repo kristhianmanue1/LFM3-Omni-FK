@@ -1,9 +1,12 @@
 """Prueba exploratoria local de un turno, autorizada en esta conversación.
 
 Captura PulseAudio durante 10 s, ASR local, respuesta local y TTS español.
-No conserva audio, prompts ni transcripciones en disco al terminar.
+No conserva audio ni prompts; la transcripción del turno queda retenida
+en privado (D-10, TAREA I1-VT): docs/reviews/evidence/privado/
+transcripciones/, JSONL 0600 fuera de Git.
 """
 import array
+import hashlib
 import importlib.util
 import json
 import math
@@ -39,6 +42,11 @@ def main():
     tts = wsl.executable(runtime, 'llama-tts')
     model = wsl.BASE / 'cache/LFM3-Omni-2B-Q4_K_M.gguf'
     projector = wsl.BASE / 'cache/mmproj-LFM3-Omni-2B-Q4_0.gguf'
+    retention_spec = importlib.util.spec_from_file_location(
+        'transcripciones', ROOT / 'src/transcripciones.py')
+    retention = importlib.util.module_from_spec(retention_spec)
+    retention_spec.loader.exec_module(retention)
+    session = retention.new_session()
 
     with tempfile.TemporaryDirectory(prefix='lfm3-live-voice-') as directory:
         folder = Path(directory)
@@ -93,7 +101,8 @@ def main():
         body = (f'--{boundary}\r\nContent-Disposition: form-data; name="language"'
                 f'\r\n\r\nes\r\n--{boundary}\r\nContent-Disposition: form-data; '
                 'name="file"; filename="input.wav"\r\nContent-Type: audio/wav\r\n\r\n').encode()
-        body += recording.read_bytes() + f'\r\n--{boundary}--\r\n'.encode()
+        audio = recording.read_bytes()
+        body += audio + f'\r\n--{boundary}--\r\n'.encode()
         transcript = request('/v1/audio/transcriptions', body,
                              'multipart/form-data; boundary=' + boundary).get('text')
         if not isinstance(transcript, str) or not transcript.strip() or len(transcript) > 3000:
@@ -106,9 +115,16 @@ def main():
                 {'role': 'user', 'content': transcript.strip()}],
             'temperature': 0, 'max_tokens': 100})['choices'][0]['message']['content']
         spoken = synthesize(reply, 'reply')
+        retention.record_turn(session, user_text=transcript.strip(),
+                              reply=reply,
+                              params={'language': 'es', 'max_tokens': 100,
+                                      'tts': 'llama-tts es'},
+                              hashes={'input_audio':
+                                      hashlib.sha256(audio).hexdigest()})
         print('RESPUESTA LISTA. Reproduciendo voz en español.', flush=True)
         play(spoken)
-    print('FIN: archivos temporales eliminados.', flush=True)
+    print('FIN: audio y prompts temporales eliminados; transcripción '
+          'retenida en privado (D-10).', flush=True)
     return 0
 
 
