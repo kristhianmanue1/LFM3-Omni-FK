@@ -6,11 +6,14 @@ La sesión personal terminó con goodbye. No hay capturas activas; el motor
 
 ## Publicación
 
-Rama `chore/wsl-dell-g7-evidence` publicada en GitHub (commits 0807d6e y
-c4ea850) con PR abierto hacia main:
+PR 1 fusionado a main con rebase (50149ff): commits finales c89861c
+(paquete de evidencia), bd1a200 (ajuste de prueba g2) y 50149ff (cierre).
+Los SHAs previos al rebase (0807d6e, c4ea850, de3a6ea) permanecen
+consultables en el historial del PR:
 https://github.com/kristhianmanue1/LFM3-Omni-FK/pull/1. Evidencia del
 push y enlaces: `reviews/evidence/sondas-WSL-RTX2060-2026-11-04/
-publication-push.txt`. Al fusionar el PR, retomar desde main.
+publication-push.txt`. Continuidad sembrada en memoria AN-KLA
+(checkpoint vigente; retomar con `an-kla --project-root . resume`).
 
 ## Estado verificado
 
