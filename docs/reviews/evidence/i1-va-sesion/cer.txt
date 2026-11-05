@@ -1,0 +1,11 @@
+corpus-01: CER 0.000 — 'Hola, ¿cómo estás hoy?'
+corpus-02: CER 0.070 — 'El servicio de inferencia funciona local.'
+corpus-03: CER 0.000 — 'La reunión es a las cuatro de la tarde.'
+corpus-04: CER 0.000 — 'Necesito un café antes de empezar.'
+corpus-05: CER 0.000 — 'El libro está sobre la mesa del salón.'
+corpus-06: CER 0.000 — 'Mañana viajaremos a la costa en tren.'
+corpus-07: CER 0.116 — 'La temperatura bajó 5 grados esta noche.'
+corpus-08: CER 0.000 — 'Gracias por escuchar mis palabras.'
+corpus-09: CER 0.000 — 'El proyecto avanza según lo planeado.'
+corpus-10: CER 0.000 — 'Hasta luego, que tengas buen día.'
+mediana=0.000 peor=0.116 criterio=CER mediano <= 0.10 y ningun caso > 0.25 -> PASS

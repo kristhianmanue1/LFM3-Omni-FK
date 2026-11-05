@@ -1,0 +1,154 @@
+test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) ... 
+  test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='firma falsa') ... FAIL
+  test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='cabeza corta') ... FAIL
+  test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='truncado a mitad') ... FAIL
+  test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='bytes sobrantes') ... FAIL
+  test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='fmt no pcm') ... FAIL
+  test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='bits distintos') ... FAIL
+  test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='canales cero') ... FAIL
+  test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='tasa cero') ... FAIL
+test_va2b_base64_invalido (tests.test_gateway_va.AudioInvalido.test_va2b_base64_invalido) ... FAIL
+test_va3_presupuesto_de_bytes_y_duracion (tests.test_gateway_va.AudioInvalido.test_va3_presupuesto_de_bytes_y_duracion) ... FAIL
+test_va4_formas_no_admitidas (tests.test_gateway_va.AudioInvalido.test_va4_formas_no_admitidas) ... ok
+test_va5_capabilities_anuncia_transcripcion_sin_lo_demas (tests.test_gateway_va.AudioInvalido.test_va5_capabilities_anuncia_transcripcion_sin_lo_demas) ... FAIL
+setUpClass (tests.test_gateway_va.CerPorUnidad) ... ERROR
+test_va1_audio_valido_atraviesa_y_llega_al_motor (tests.test_gateway_va.EntradaValida.test_va1_audio_valido_atraviesa_y_llega_al_motor) ... FAIL
+
+======================================================================
+ERROR: setUpClass (tests.test_gateway_va.CerPorUnidad)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 143, in setUpClass
+    spec.loader.exec_module(cls.mod)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1132, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1190, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/medir_cer_va.py'
+
+======================================================================
+FAIL: test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='firma falsa')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 79, in test_va2_wav_corrupto_o_truncado
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='cabeza corta')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 79, in test_va2_wav_corrupto_o_truncado
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='truncado a mitad')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 79, in test_va2_wav_corrupto_o_truncado
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='bytes sobrantes')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 79, in test_va2_wav_corrupto_o_truncado
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='fmt no pcm')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 79, in test_va2_wav_corrupto_o_truncado
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='bits distintos')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 79, in test_va2_wav_corrupto_o_truncado
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='canales cero')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 79, in test_va2_wav_corrupto_o_truncado
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) (caso='tasa cero')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 79, in test_va2_wav_corrupto_o_truncado
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va2b_base64_invalido (tests.test_gateway_va.AudioInvalido.test_va2b_base64_invalido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 88, in test_va2b_base64_invalido
+    self.assertEqual(cuerpo["error"]["code"], "invalid_audio")
+AssertionError: 'unknown_content_type' != 'invalid_audio'
+- unknown_content_type
++ invalid_audio
+
+
+======================================================================
+FAIL: test_va3_presupuesto_de_bytes_y_duracion (tests.test_gateway_va.AudioInvalido.test_va3_presupuesto_de_bytes_y_duracion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 95, in test_va3_presupuesto_de_bytes_y_duracion
+    self.assertIn("presupuesto", cuerpo["error"]["message"])
+AssertionError: 'presupuesto' not found in 'parte de contenido no admitida'
+
+======================================================================
+FAIL: test_va5_capabilities_anuncia_transcripcion_sin_lo_demas (tests.test_gateway_va.AudioInvalido.test_va5_capabilities_anuncia_transcripcion_sin_lo_demas)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 128, in test_va5_capabilities_anuncia_transcripcion_sin_lo_demas
+    self.assertIn("audio", cuerpo["entrada"])
+AssertionError: 'audio' not found in ['texto', 'imagen']
+
+======================================================================
+FAIL: test_va1_audio_valido_atraviesa_y_llega_al_motor (tests.test_gateway_va.EntradaValida.test_va1_audio_valido_atraviesa_y_llega_al_motor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_va.py", line 51, in test_va1_audio_valido_atraviesa_y_llega_al_motor
+    self.assertEqual(estado, 200, cuerpo)
+AssertionError: 400 != 200 : {'error': {'code': 'unknown_content_type', 'message': 'parte de contenido no admitida', 'request_id': 'ed1ce027f34c4a3a98ff4ee3bb8fe065'}}
+
+----------------------------------------------------------------------
+Ran 6 tests in 6.035s
+
+FAILED (failures=12, errors=1)

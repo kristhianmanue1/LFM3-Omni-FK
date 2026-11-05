@@ -64,8 +64,8 @@ el agente con evidencia; la aceptación la decide el Operador.
 ### I1-V — Modalidades locales del artefacto vigente
 
 - Estado actual: `accepted_local` (propuesto al Operador) para
-  **I1-V0 e I1-VT**; I1-VA encargada (en diseño); I1-VS/VR/VV
-  `not_started`. I0 e I1 conservan `accepted_local`.
+  **I1-V0, I1-VT e I1-VA**; I1-VS/VR/VV `not_started`. I0 e I1
+  conservan `accepted_local`.
 - Owner: agente ejecutor (GLM 5.3, OpenCode; ajuste del plan: Claude
   Opus 5.5, Claude Code). Reviewer: subagente con contexto fresco
   (ronda del ajuste: fix-and-retry -> proceed por relectura,
@@ -95,6 +95,8 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-05 | I1-VT (D-10): encargo (`not_started`) | a9aa1ff | TAREA añadida al PLAN; condición de los gates de I1-V con voz/cámara reales |
 | 2026-11-05 | I1-VT `implementing` → `verifying` | 48111d1 + trabajo | RED 7/7 (módulo ausente); GREEN: src/transcripciones.py, cableado en live_voice y conversacion_voz_local, nota D-10 en los tres realtime; 8 pruebas nuevas |
 | 2026-11-05 | I1-VT `accepted_local` (propuesto) | commit de esta TAREA | unittest 100 OK; 5/5 gates; ronda adversarial 1 proceed (MED-1 + 6 LOW corregidos) y ronda 2 proceed (3 LOW de pulido aplicados); limitación declarada: realtime sin retención hasta I1-VR |
+| 2026-11-05 | I1-VA `implementing` → `verifying` | c16ab5f + trabajo | RED 12 fallos; SPEC-i1-va + corpus/umbral fijados antes de medir; validación WAV estructural en frontera; ronda adversarial 1 fix-and-retry (H1 data duplicado + 3 MED) |
+| 2026-11-05 | I1-VA `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados; CER mediana 0.000 peor 0.116 PASS; demo 9/9; suite 110 OK; rondas 2 y 3 proceed; capabilities anuncia transcripcion |
 
 ## Salida prevista
 

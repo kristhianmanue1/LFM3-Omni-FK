@@ -98,8 +98,9 @@ class Capabilities(GatewayBase):
         estado, cuerpo = self.get("/v1/capabilities")
         self.assertEqual(estado, 200)
         self.assertEqual(self.contador(), 0)
-        self.assertEqual(cuerpo["entrada"], ["texto", "imagen"])
+        self.assertEqual(cuerpo["entrada"], ["texto", "imagen", "audio"])
         self.assertEqual(cuerpo["salida"], ["texto"])
+        self.assertTrue(cuerpo["transcripcion"])  # SPEC-i1-va §4
         for clave in ("streaming", "audio", "video", "voz"):
             self.assertFalse(cuerpo[clave], f"{clave} no puede anunciarse activo")
         self.assertEqual(CAPABILITIES["version"], "i1")

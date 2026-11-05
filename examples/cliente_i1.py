@@ -14,6 +14,7 @@ import struct
 import sys
 import urllib.error
 import urllib.request
+from pathlib import Path
 import zlib
 
 PUERTO = int(sys.argv[1]) if len(sys.argv) > 1 else 8092
@@ -88,6 +89,17 @@ def chat_imagen(url_png, pregunta, max_tokens=16):
         "max_tokens": max_tokens})
 
 
+def chat_transcripcion(wav, max_tokens=200):
+    """Transcripción vía input_audio (SPEC-i1-va): WAV en bytes."""
+    return _post({"messages": [{"role": "user", "content": [
+        {"type": "input_audio",
+         "input_audio": {"data": base64.b64encode(wav).decode(),
+                         "format": "wav"}},
+        {"type": "text",
+         "text": "Transcribe exactamente el audio, sin comentarios."}]}],
+        "max_tokens": max_tokens})
+
+
 def caso(nombre, condicion, detalle=""):
     RESULTADOS.append(condicion)
     marca = "OK " if condicion else "FAIL"
@@ -138,11 +150,29 @@ def _demo():
     caso("chat_imagen", estado == 200 and ("rojo" in texto or "red" in texto),
          f"estado={estado}")
 
+    # transcripción (SPEC-i1-va) con un caso del corpus sintético
+    wav = (Path(__file__).resolve().parent.parent
+           / "tests/medios-binarios/corpus-01.wav").read_bytes()
+    estado, cuerpo = chat_transcripcion(wav)
+    texto = cuerpo.get("choices", [{}])[0].get("message", {}).get("content", "")
+    caso("chat_transcripcion", estado == 200 and "hola" in texto.lower(),
+         f"estado={estado} texto={texto!r}")
+
     # rechazo controlado con código estable, sin tocar el motor
     estado, cuerpo = _post({"messages": [{"role": "user", "content": "h"}],
                             "seed": 7})
     caso("rechazo_controlado", estado == 400
          and cuerpo.get("error", {}).get("code") == "unknown_field",
+         f"estado={estado}")
+
+    # WAV corrupto: rechazo de frontera antes del motor (SPEC-i1-va §2)
+    estado, cuerpo = _post({"messages": [{"role": "user", "content": [
+        {"type": "input_audio",
+         "input_audio": {"data": base64.b64encode(b"RIFF roto").decode(),
+                         "format": "wav"}},
+        {"type": "text", "text": "x"}]}]})
+    caso("rechazo_audio_roto", estado == 400
+         and cuerpo.get("error", {}).get("code") == "invalid_audio",
          f"estado={estado}")
 
     fallos = RESULTADOS.count(False)

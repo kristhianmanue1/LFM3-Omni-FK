@@ -116,9 +116,9 @@ TAREA I1-VA
   Consumes: I1-V0, D-06a, perfil H
   Produce: transcripción español vía input_audio en chat del gateway
   Steps:
-  - [ ] validar WAV, bytes y duración y rechazar URL antes del motor;
+  - [x] validar WAV, bytes y duración y rechazar URL antes del motor;
     verificación: WAV corrupto, enorme o URL rechazados con contador cero.
-  - [ ] fijar corpus sintético y umbral CER antes de medir;
+  - [x] fijar corpus sintético y umbral CER antes de medir;
     verificación: CER bajo umbral; capabilities anuncia transcripcion.
 TAREA I1-VT
   Consumes: D-10 (aceptada; implementación pendiente), D-09 (gates con

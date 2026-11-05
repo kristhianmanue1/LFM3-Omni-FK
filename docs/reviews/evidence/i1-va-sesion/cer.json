@@ -1,0 +1,68 @@
+{
+ "criterio_pass": "CER mediano <= 0.10 y ningun caso > 0.25",
+ "mediana": 0.0,
+ "peor": 0.11627906976744186,
+ "pass": true,
+ "casos": [
+  {
+   "id": "corpus-01",
+   "referencia": "Hola, ¿cómo estás hoy?",
+   "prediccion": "Hola, ¿cómo estás hoy?",
+   "cer": 0.0
+  },
+  {
+   "id": "corpus-02",
+   "referencia": "El servicio de inferencia funciona en local.",
+   "prediccion": "El servicio de inferencia funciona local.",
+   "cer": 0.06976744186046512
+  },
+  {
+   "id": "corpus-03",
+   "referencia": "La reunión es a las cuatro de la tarde.",
+   "prediccion": "La reunión es a las cuatro de la tarde.",
+   "cer": 0.0
+  },
+  {
+   "id": "corpus-04",
+   "referencia": "Necesito un café antes de empezar.",
+   "prediccion": "Necesito un café antes de empezar.",
+   "cer": 0.0
+  },
+  {
+   "id": "corpus-05",
+   "referencia": "El libro está sobre la mesa del salón.",
+   "prediccion": "El libro está sobre la mesa del salón.",
+   "cer": 0.0
+  },
+  {
+   "id": "corpus-06",
+   "referencia": "Mañana viajaremos a la costa en tren.",
+   "prediccion": "Mañana viajaremos a la costa en tren.",
+   "cer": 0.0
+  },
+  {
+   "id": "corpus-07",
+   "referencia": "La temperatura bajó cinco grados esta noche.",
+   "prediccion": "La temperatura bajó 5 grados esta noche.",
+   "cer": 0.11627906976744186
+  },
+  {
+   "id": "corpus-08",
+   "referencia": "Gracias por escuchar mis palabras.",
+   "prediccion": "Gracias por escuchar mis palabras.",
+   "cer": 0.0
+  },
+  {
+   "id": "corpus-09",
+   "referencia": "El proyecto avanza según lo planeado.",
+   "prediccion": "El proyecto avanza según lo planeado.",
+   "cer": 0.0
+  },
+  {
+   "id": "corpus-10",
+   "referencia": "Hasta luego, que tengas buen día.",
+   "prediccion": "Hasta luego, que tengas buen día.",
+   "cer": 0.0
+  }
+ ]
+}

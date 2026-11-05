@@ -19,6 +19,8 @@ DEFAULT_PORT = 8092
 MAX_BODY_BYTES = 32 * 1024 * 1024
 MAX_IMAGEN_BYTES = 8 * 1024 * 1024
 MAX_PIXELES = 16_777_216
+MAX_AUDIO_BYTES = 4 * 1024 * 1024      # SPEC-i1-va §2
+MAX_AUDIO_SEGUNDOS = 60.0              # SPEC-i1-va §2
 MAX_PROPIEDADES = 32
 MAX_TOKENS = 4096
 BACKEND_TIMEOUT_S = 300
@@ -44,14 +46,16 @@ RUTAS_PERMITIDAS = (
 )
 
 # Capabilities declaradas por SPEC, jamás derivadas del motor y jamás
-# anunciando lo no activo (SPEC-i1 §3; cambiar exige SPEC nuevo).
+# anunciando lo no activo (SPEC-i1 §3; ADR-006 §1: una modalidad se
+# anuncia al cerrar su TAREA — transcripcion con I1-VA, SPEC-i1-va §4).
 CAPABILITIES = {
-    "entrada": ["texto", "imagen"],
+    "entrada": ["texto", "imagen", "audio"],
     "salida": ["texto"],
     "streaming": False,
     "audio": False,
     "video": False,
     "voz": False,
+    "transcripcion": True,
     "schema": "dialecto-v2",
     "version": "i1",
 }
@@ -177,6 +181,73 @@ def validar_imagen(url):
         validar_jpeg(datos)
 
 
+# ------------------------------------------------------------------ audio
+
+def validar_wav(datos):
+    """WAV PCM 16-bit bien formado y dentro de presupuesto (SPEC-i1-va
+    §2). Fail-closed ante cualquier desvío estructural: un solo fmt y
+    un solo data (duplicados = ambigüedad para el motor, se rechazan)
+    y tamaño RIFF consistente con el archivo."""
+    if len(datos) > MAX_AUDIO_BYTES:
+        _error(400, "invalid_audio", "audio sobre el presupuesto de bytes")
+    if len(datos) < 44 or datos[:4] != b"RIFF" or datos[8:12] != b"WAVE":
+        _error(400, "invalid_audio", "firma RIFF/WAVE ausente o falsa")
+    if struct.unpack("<I", datos[4:8])[0] != len(datos) - 8:
+        _error(400, "invalid_audio", "tamaño RIFF inconsistente con el archivo")
+    offset, fmt, data, visto_data = 12, None, 0, False
+    while offset + 8 <= len(datos):
+        longitud = struct.unpack("<I", datos[offset + 4:offset + 8])[0]
+        tipo = datos[offset:offset + 4]
+        fin = offset + 8 + longitud
+        if fin > len(datos):
+            _error(400, "invalid_audio", "chunk truncado")
+        cuerpo = datos[offset + 8:fin]
+        if tipo == b"fmt ":
+            if longitud != 16:
+                _error(400, "invalid_audio", "fmt inválido")
+            if fmt is not None:
+                _error(400, "invalid_audio", "chunk fmt duplicado")
+            fmt = struct.unpack("<HHIIHH", cuerpo)
+        elif tipo == b"data":
+            if visto_data:
+                _error(400, "invalid_audio", "chunk data duplicado")
+            visto_data, data = True, longitud
+        offset = fin
+    if offset != len(datos):
+        _error(400, "invalid_audio", "bytes sobrantes tras el último chunk")
+    if fmt is None or not visto_data:
+        _error(400, "invalid_audio", "WAV sin fmt o sin data")
+    formato, canales, tasa, _byte_rate, _alineacion, bits = fmt
+    if formato != 1:
+        _error(400, "invalid_audio", "sólo PCM (formato 1)")
+    if bits != 16:
+        _error(400, "invalid_audio", "sólo muestras de 16 bits")
+    if canales not in (1, 2):
+        _error(400, "invalid_audio", "canales fuera del dialecto")
+    if not 1 <= tasa <= 96000:
+        _error(400, "invalid_audio", "tasa de muestreo fuera de rango")
+    duracion = data / (tasa * canales * 2)
+    if duracion > MAX_AUDIO_SEGUNDOS:
+        _error(400, "invalid_audio", "audio sobre el presupuesto de duración")
+
+
+def validar_audio_entrada(parte):
+    """Parte input_audio del dialecto v2 (SPEC-i1-va §1): claves
+    exactas, format wav, base64 estricto y WAV válido. El audio entra
+    como datos; audio_url no existe en el dialecto (la parte cae en
+    unknown_content_type antes del motor)."""
+    if parte.get("format") != "wav":
+        _error(400, "invalid_audio", "sólo format wav en el dialecto v2")
+    crudo = parte.get("data")
+    if not isinstance(crudo, str):
+        _error(400, "invalid_audio", "data de audio inválido")
+    try:
+        datos = base64.b64decode(crudo, validate=True)
+    except (binascii.Error, ValueError):
+        _error(400, "invalid_audio", "base64 de audio inválido")
+    validar_wav(datos)
+
+
 # -------------------------------------------------------------- dialecto
 
 def validar_schema(schema):
@@ -245,6 +316,11 @@ def validar_payload(payload):
                 if not isinstance(url, str):
                     _error(400, "invalid_image", "URL de imagen inválida")
                 validar_imagen(url)
+                continue
+            if tipo == "input_audio" and set(parte) == {"type", "input_audio"} \
+                    and isinstance(parte.get("input_audio"), dict) \
+                    and set(parte["input_audio"]) == {"data", "format"}:
+                validar_audio_entrada(parte["input_audio"])
                 continue
             _error(400, "unknown_content_type", "parte de contenido no admitida")
     max_tokens = payload.get("max_tokens")

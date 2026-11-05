@@ -1,0 +1,86 @@
+{
+ "schema": "lfm3-omni/corpus-va/v1",
+ "fijado": "2026-11-05",
+ "procedencia": "frases fijadas antes de generar; WAV sintetizados con llama-tts 0.8.0 b11960 --tts-lang es sobre el artefacto congelado (ADR-001); sin voz humana; WAV en tests/medios-binarios/ (patrón declarado del gate)",
+ "frases": [
+  {
+   "id": "corpus-01",
+   "texto": "Hola, ¿cómo estás hoy?",
+   "wav": "medios-binarios/corpus-01.wav",
+   "sha256": "fb061081e5bf4cf9c8de3480b725b1dee13b9c00e82f2e1c73fb59c800d9e8bc",
+   "bytes": 76844
+  },
+  {
+   "id": "corpus-02",
+   "texto": "El servicio de inferencia funciona en local.",
+   "wav": "medios-binarios/corpus-02.wav",
+   "sha256": "10d615506fd949f3935cf5bf196ca1133e31e3b202ce500d32395337fac08367",
+   "bytes": 130604
+  },
+  {
+   "id": "corpus-03",
+   "texto": "La reunión es a las cuatro de la tarde.",
+   "wav": "medios-binarios/corpus-03.wav",
+   "sha256": "c4db132f7827f3a0d6e91b4af2d7db75f3d19b3f36cfab4895484d840ed2d315",
+   "bytes": 122924
+  },
+  {
+   "id": "corpus-04",
+   "texto": "Necesito un café antes de empezar.",
+   "wav": "medios-binarios/corpus-04.wav",
+   "sha256": "df08a0b2dea67a3bbbebb22044bcccf6c2251c81620986ab757cdbb4c16d712c",
+   "bytes": 99884
+  },
+  {
+   "id": "corpus-05",
+   "texto": "El libro está sobre la mesa del salón.",
+   "wav": "medios-binarios/corpus-05.wav",
+   "sha256": "204e737b68e514888a7e125948afdef101deaf35dc4465075b2a40b5e59c282b",
+   "bytes": 107564
+  },
+  {
+   "id": "corpus-06",
+   "texto": "Mañana viajaremos a la costa en tren.",
+   "wav": "medios-binarios/corpus-06.wav",
+   "sha256": "6f05e6a078d7e13d0dcda30e4284b6511d81ac25c504d4f93a061dc02ed1c5d3",
+   "bytes": 107564
+  },
+  {
+   "id": "corpus-07",
+   "texto": "La temperatura bajó cinco grados esta noche.",
+   "wav": "medios-binarios/corpus-07.wav",
+   "sha256": "6b7d2a4abca72b2acd75c015f2ee535175aca25b34815fe95335ce60ff48bae3",
+   "bytes": 138284
+  },
+  {
+   "id": "corpus-08",
+   "texto": "Gracias por escuchar mis palabras.",
+   "wav": "medios-binarios/corpus-08.wav",
+   "sha256": "929bba76555bc8dd273ecc71d138cccbf94a98f6e6e54198ab416e14a32591b4",
+   "bytes": 99884
+  },
+  {
+   "id": "corpus-09",
+   "texto": "El proyecto avanza según lo planeado.",
+   "wav": "medios-binarios/corpus-09.wav",
+   "sha256": "7013098458cd23294bf0bf718ea4882f7500cfffa22b33c39c1969c6702acf03",
+   "bytes": 107564
+  },
+  {
+   "id": "corpus-10",
+   "texto": "Hasta luego, que tengas buen día.",
+   "wav": "medios-binarios/corpus-10.wav",
+   "sha256": "a01646230122c57de7e4959c39e4a172d442b8287aebbe7169fc1cba48bed39c",
+   "bytes": 92204
+  }
+ ],
+ "metodo": {
+  "pipeline": "gateway 8092 POST /v1/chat/completions con parte input_audio + texto 'Transcribe exactamente el audio'",
+  "normalizacion": "minusculas; sin signos ¿?¡!.,;: ni comillas; espacios colapsados y sin bordes",
+  "cer": "distancia Levenshtein por caracter prediccion vs referencia / longitud de referencia (0 si ambas vacias)",
+  "criterio_pass": "CER mediano <= 0.10 y ningun caso > 0.25",
+  "umbral_declarado_antes_de_medir": true,
+  "umbral_mediana": 0.1,
+  "umbral_caso": 0.25
+ }
+}
