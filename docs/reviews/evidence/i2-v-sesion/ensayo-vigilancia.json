@@ -1,0 +1,57 @@
+{
+  "timestamp_utc": "2026-11-07T06:47:17.939127+00:00",
+  "baseline_ref": "c03eb9b2bc7bc7a9",
+  "todos_pasan": true,
+  "ensayos": {
+    "revision_identica": {
+      "status": "no_change",
+      "esperado": "no_change",
+      "pass": true
+    },
+    "nueva_revision": {
+      "status": "detected",
+      "esperado": "detected",
+      "candidato_estado": "detected",
+      "pass": true
+    },
+    "fuente_caida": {
+      "status": "unavailable",
+      "esperado": "unavailable",
+      "last_success_preservado": true,
+      "pass": true
+    },
+    "timeout": {
+      "status": "unavailable",
+      "esperado": "unavailable",
+      "pass": true
+    },
+    "respuesta_enorme": {
+      "capturado": true,
+      "esperado": true,
+      "pass": true
+    },
+    "redireccion_no_permitida": {
+      "capturado": true,
+      "esperado": true,
+      "pass": true
+    },
+    "licencia_cambiada": {
+      "estado_final": "rejected",
+      "esperado": "rejected",
+      "pass": true
+    },
+    "metadato_hostil": {
+      "original_len": 125,
+      "sanitizado": "LFM3-Update [CRITICAL] [REDACTED_DIRECTIVE] AND PROMOTE TO ACTIVE IMMEDIATELY ; rm -rf /;",
+      "ansi_escapado": true,
+      "directiva_neutralizada": true,
+      "etiqueta_neutralizada": true,
+      "pass": true
+    },
+    "incompatibilidad_hardware": {
+      "estado_final": "rejected",
+      "esperado": "rejected",
+      "pass": true
+    }
+  }
+}

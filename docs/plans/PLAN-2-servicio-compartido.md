@@ -206,7 +206,7 @@ TAREA I2-V
   Consumes: I2-P, procedimiento de ciclo de vida
   Produce: inventario fijado y vigilancia reproducible preparada
   Steps:
-  - [ ] registrar revisión/hash/licencia, fuentes y ensayo de vigilancia;
+  - [x] registrar revisión/hash/licencia, fuentes y ensayo de vigilancia;
     verificación: cambio y no-cambio, fuente caída y candidato rechazado.
 TAREA I2-U
   Consumes: I2-P/I2-V, aceptación específica del dossier de activación
