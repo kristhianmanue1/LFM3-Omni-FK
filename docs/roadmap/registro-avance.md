@@ -102,6 +102,10 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-06 | I1-VS `accepted_local` (propuesto) | fddabbe | fixes aplicados; TTS->ASR CER mediana 0.000 peor 0.000 PASS; RSS llama-tts 3094.5 MiB < 4 GiB, RSS motor 2216.0 MiB < 4 GiB; demo 11/11; suite 116 OK; ronda 2 proceed; capabilities anuncia voz/audio |
 | 2026-11-06 | I1-VR `implementing` → `verifying` | fddabbe + trabajo | RED 4 fallos (red.txt); GREEN: SSE sin buffering (stream=True) en gateway_http, cancelación hasta /slots y conversación N=5 con p95 primera voz 3.76 s <= 8.0 s; ronda 1 fix-and-retry (2 HIGH + 2 MED + 1 LOW corregidos) |
 | 2026-11-06 | I1-VR `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados (cierre garantizado, /slots fail-closed, bloqueo 503 slot_not_released, línea <=64 KiB, TTS por cada frase); p95 3.76 s PASS; demo 13/13; suite 124 OK; ronda 2 proceed; capabilities anuncia streaming |
+| 2026-11-06 | I1-VV `accepted_local` | 21650a1 | video corto data URI MP4 con ffprobe verificado por hash, cotas 16 MiB/10s/120f/1080p, suite 132 OK, gate 3/3 acierto 100%, demo 15/15; rondas proceed; capabilities anuncia video |
+| 2026-11-06 | I1-VX `accepted_local` | 050891e | dialecto schema v2-ext (enum, min/max, array, sub-objetos prof 1), validación fail-closed de salida, gate percepción live 3/3 = 100% p95 0.87s, suite 150 OK; rondas proceed |
+| 2026-11-06 | I1-VM `accepted_local` | 4ec42fd | servidor MCP local stdio v2 desacoplado vía gateway 8092 con cerrojo TTS 503 compartido; suite MCP 77 OK (40 v2 + 37 v1 intacto), demo cliente stdio; rondas proceed |
+| 2026-11-06 | I1-VC `accepted_local` | 5003e4b | CLI unificado stdlib y adaptador local perfil D para robots/simuladores (deriva <=2s, deduplicación, secuencia y descarte fail-closed); suite 208 OK; simulador e2e live; rondas proceed |
 
 ## Salida prevista
 
