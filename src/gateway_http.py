@@ -33,6 +33,9 @@ from gateway_core import (
     RUTAS_PERMITIDAS, TTS_TIMEOUT_S, ErrorV2, _error, _rechazar_constante,
     validar_payload, validar_payload_tts, validar_salida, validar_wav,
 )
+from gateway_auth import (
+    GLOBAL_DISPATCHER, GLOBAL_REGISTRY, FairQueueDispatcher, TokenRegistry,
+)
 
 LOCK_TTS = threading.Lock()
 LOCK_STREAM_SLOT = threading.Lock()
@@ -43,6 +46,34 @@ SNAP_HF = (
     / "models--LiquidAI--LFM3-Omni-2B-GGUF" / "snapshots"
     / "d508b88f08a5b4286f2d2805a6a8d69a0ff44c72"
 )
+
+
+def _determinar_scopes_chat(payload):
+    """Determina los scopes requeridos según la modalidad y esquema del mensaje
+    (SPEC-i2-piloto-privado §2.3)."""
+    if not isinstance(payload, dict):
+        return {"infer:text"}
+    scopes = {"infer:text"}
+    messages = payload.get("messages", [])
+    if isinstance(messages, list):
+        for msg in messages:
+            if not isinstance(msg, dict):
+                continue
+            content = msg.get("content")
+            if isinstance(content, list):
+                for parte in content:
+                    if isinstance(parte, dict):
+                        t = parte.get("type")
+                        if t in ("image_url", "video_url"):
+                            scopes.add("infer:vision")
+                        elif t == "input_audio":
+                            scopes.add("infer:audio")
+    rf = payload.get("response_format")
+    if isinstance(rf, dict) and rf.get("type") == "json_schema":
+        schema = rf.get("json_schema", {}).get("schema", {})
+        if isinstance(schema, dict) and "proposal" in schema.get("properties", {}):
+            scopes.add("profile:d")
+    return scopes
 
 
 def _enrutar(metodo, ruta):
@@ -312,6 +343,9 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(crudo)))
         self.send_header("X-Request-Id", self.request_id)
+        self.send_header("X-Service-Contract", "2")
+        if getattr(self, "project_id", None):
+            self.send_header("X-Project-Id", self.project_id)
         for clave, valor in (headers or {}).items():
             self.send_header(clave, valor)
         self.end_headers()
@@ -322,6 +356,9 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         self.send_header("Content-Type", tipo)
         self.send_header("Content-Length", str(len(datos)))
         self.send_header("X-Request-Id", self.request_id)
+        self.send_header("X-Service-Contract", "2")
+        if getattr(self, "project_id", None):
+            self.send_header("X-Project-Id", self.project_id)
         for clave, valor in (headers or {}).items():
             self.send_header(clave, valor)
         self.end_headers()
@@ -334,6 +371,13 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(crudo)))
         self.send_header("X-Request-Id", self.request_id)
+        self.send_header("X-Service-Contract", "2")
+        if getattr(self, "project_id", None):
+            self.send_header("X-Project-Id", self.project_id)
+        if exc.status == 429 and "retry_after" in exc.extra:
+            self.send_header("Retry-After", str(exc.extra["retry_after"]))
+        elif exc.status == 401:
+            self.send_header("WWW-Authenticate", "Bearer")
         self.end_headers()
         self.wfile.write(crudo)
 
@@ -432,8 +476,14 @@ class ManejadorGateway(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self.request_id = uuid.uuid4().hex
+        self.project_id = None
         try:
             _enrutar("GET", self.path)
+            if getattr(self.server, "auth_enabled", False) and self.path != "/healthz":
+                auth_h = self.headers.get("Authorization")
+                proj_h = self.headers.get("X-Project-ID")
+                self.server.tokens_registry.verify_request(auth_h, proj_h, required_scope=None)
+                self.project_id = proj_h.strip()
             if self.path == "/healthz":
                 self._json(200, b'{"status": "ok", "mode": "gateway-i1"}')
             elif self.path == "/v1/capabilities":
@@ -449,61 +499,91 @@ class ManejadorGateway(BaseHTTPRequestHandler):
 
     def do_POST(self):
         self.request_id = uuid.uuid4().hex
+        self.project_id = None
+        slot_adquirido = False
         try:
             _enrutar("POST", self.path)
+            # Validación previa de identidad antes de procesar cuerpo (SPEC-i2 §2)
+            proj_info = None
+            if getattr(self.server, "auth_enabled", False):
+                auth_h = self.headers.get("Authorization")
+                proj_h = self.headers.get("X-Project-ID")
+                proj_info = self.server.tokens_registry.verify_request(
+                    auth_h, proj_h, required_scopes=None
+                )
+                self.project_id = proj_h.strip()
+
             payload = self._leer_json_post()
-            if self.path == "/v1/audio/speech":
-                texto = validar_payload_tts(payload)
-                runner = getattr(self.server, "tts_runner", None)
-                wav = _sintetizar_wav(texto, runner=runner)
-                self._binario(200, "audio/wav", wav, {"X-V2-Mode": "tts-wav"})
-                return
-            validar_payload(
-                payload,
-                inspector_video=lambda d: _inspeccionar_mp4_ffprobe(
-                    d, getattr(self.server, "probe_runner", None)
-                ),
-            )
+
+            if getattr(self.server, "auth_enabled", False) and proj_info is not None:
+                auth_h = self.headers.get("Authorization")
+                proj_h = self.headers.get("X-Project-ID")
+                if self.path == "/v1/audio/speech":
+                    scopes_req = {"speech:synthesize"}
+                else:
+                    scopes_req = _determinar_scopes_chat(payload)
+                self.server.tokens_registry.verify_request(
+                    auth_h, proj_h, required_scopes=scopes_req
+                )
+                rl_cfg = proj_info.get("rate_limit", {})
+                self.server.dispatcher.acquire_slot(self.project_id, rl_cfg)
+                slot_adquirido = True
             try:
-                limpio = json.dumps(payload, allow_nan=False)
-            except (TypeError, ValueError):
-                _error(400, "invalid_json",
-                       "el cuerpo contiene valores no representables en JSON")
-            if payload.get("stream") is True:
-                self._proxy_sse(limpio.encode("utf-8"))
-                return
-            if not LOCK_STREAM_SLOT.acquire(timeout=2.5):
-                _error(503, "overloaded",
-                       "stream de inferencia en curso; reintente",
-                       detail="stream_in_progress")
-            try:
-                _asegurar_slot_confirmado(self.server.backend)
+                if self.path == "/v1/audio/speech":
+                    texto = validar_payload_tts(payload)
+                    runner = getattr(self.server, "tts_runner", None)
+                    wav = _sintetizar_wav(texto, runner=runner)
+                    self._binario(200, "audio/wav", wav, {"X-V2-Mode": "tts-wav"})
+                    return
+                validar_payload(
+                    payload,
+                    inspector_video=lambda d: _inspeccionar_mp4_ffprobe(
+                        d, getattr(self.server, "probe_runner", None)
+                    ),
+                )
+                try:
+                    limpio = json.dumps(payload, allow_nan=False)
+                except (TypeError, ValueError):
+                    _error(400, "invalid_json",
+                           "el cuerpo contiene valores no representables en JSON")
+                if payload.get("stream") is True:
+                    self._proxy_sse(limpio.encode("utf-8"))
+                    return
+                if not LOCK_STREAM_SLOT.acquire(timeout=2.5):
+                    _error(503, "overloaded",
+                           "stream de inferencia en curso; reintente",
+                           detail="stream_in_progress")
+                try:
+                    _asegurar_slot_confirmado(self.server.backend)
+                finally:
+                    LOCK_STREAM_SLOT.release()
+                formato = payload.get("response_format")
+                estado, cuerpo = _proxy(self.server.backend,
+                                        "/v1/chat/completions",
+                                        limpio.encode("utf-8"))
+                if estado != 200:
+                    _error(502, "backend_error", "el motor rechazó la petición",
+                           detail=f"backend_status_{estado}")
+                if formato is None:
+                    self._json(200, cuerpo, {"X-V2-Mode": "passthrough"})
+                    return
+                schema = formato["json_schema"]["schema"]
+                try:
+                    respuesta = json.loads(cuerpo,
+                                           parse_constant=_rechazar_constante)
+                    contenido = respuesta["choices"][0]["message"]["content"]
+                except (json.JSONDecodeError, KeyError, IndexError, TypeError,
+                        ValueError):
+                    _error(502, "backend_error", "respuesta del motor ilegible",
+                           detail="backend_shape")
+                if not isinstance(contenido, str):
+                    _error(502, "backend_error", "respuesta del motor ilegible",
+                           detail="backend_shape")
+                validar_salida(contenido, schema)
+                self._json(200, cuerpo, {"X-V2-Output-Validation": "valid"})
             finally:
-                LOCK_STREAM_SLOT.release()
-            formato = payload.get("response_format")
-            estado, cuerpo = _proxy(self.server.backend,
-                                    "/v1/chat/completions",
-                                    limpio.encode("utf-8"))
-            if estado != 200:
-                _error(502, "backend_error", "el motor rechazó la petición",
-                       detail=f"backend_status_{estado}")
-            if formato is None:
-                self._json(200, cuerpo, {"X-V2-Mode": "passthrough"})
-                return
-            schema = formato["json_schema"]["schema"]
-            try:
-                respuesta = json.loads(cuerpo,
-                                       parse_constant=_rechazar_constante)
-                contenido = respuesta["choices"][0]["message"]["content"]
-            except (json.JSONDecodeError, KeyError, IndexError, TypeError,
-                    ValueError):
-                _error(502, "backend_error", "respuesta del motor ilegible",
-                       detail="backend_shape")
-            if not isinstance(contenido, str):
-                _error(502, "backend_error", "respuesta del motor ilegible",
-                       detail="backend_shape")
-            validar_salida(contenido, schema)
-            self._json(200, cuerpo, {"X-V2-Output-Validation": "valid"})
+                if slot_adquirido and getattr(self, "project_id", None):
+                    self.server.dispatcher.release_slot(self.project_id)
         except ErrorV2 as exc:
             self._cuerpo_error(exc)
 
@@ -527,13 +607,25 @@ class ServidorGateway(ThreadingHTTPServer):
     daemon_threads = True
 
 
-def build_server(direccion, backend=DEFAULT_BACKEND):
+def build_server(
+    direccion,
+    backend=DEFAULT_BACKEND,
+    auth_enabled=None,
+    tokens_registry=None,
+    dispatcher=None,
+):
     global _SLOT_PENDIENTE
     _SLOT_PENDIENTE = False
     servidor = ServidorGateway(direccion, ManejadorGateway)
     servidor.backend = backend
     servidor.tts_runner = None
     servidor.probe_runner = None
+    servidor.auth_enabled = (
+        auth_enabled if auth_enabled is not None
+        else os.environ.get("LFM3_AUTH_ENABLED") == "1"
+    )
+    servidor.tokens_registry = tokens_registry or GLOBAL_REGISTRY
+    servidor.dispatcher = dispatcher or GLOBAL_DISPATCHER
     return servidor
 
 

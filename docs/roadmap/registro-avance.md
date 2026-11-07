@@ -107,11 +107,12 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-06 | I1-VM `accepted_local` | 4ec42fd | servidor MCP local stdio v2 desacoplado vía gateway 8092 con cerrojo TTS 503 compartido; suite MCP 77 OK (40 v2 + 37 v1 intacto), demo cliente stdio; rondas proceed |
 | 2026-11-06 | I1-VC `accepted_local` | 5003e4b | CLI unificado stdlib y adaptador local perfil D para robots/simuladores (deriva <=2s, deduplicación, secuencia y descarte fail-closed); suite 208 OK; simulador e2e live; rondas proceed |
 | 2026-11-06 | I2-D `accepted_local` | commit de esta TAREA | diseño y formalización de arquitectura I2: SPEC-i2, ADR-009, dossier-operacion-i2, D-02/D-03/D-04 formalizadas; ronda 1 fix-and-retry subsanada; ronda 2 proceed; 5 gates OK |
+| 2026-11-06 | I2-P `implementing` → `verifying` | HEAD actual | implementación auth Bearer, tokens.json 0600, recarga en memoria, token bucket, fair queuing, terminador TLS stdlib, anti-SSRF; suite 226 OK (18 tests I2 nuevos); 5 gates OK; ronda adversarial en curso |
 
 ## I2 — Servicio web privado por invitación
 
-- Estado actual: `accepted_local` para I2-D (propuesto al Operador);
-  `I2-P` `not_started`.
+- Estado actual: `accepted_local` para I2-D; `verifying` para I2-P
+  (propuesto al Operador).
 - Owner: agente ejecutor (OpenCode / Antigravity). Reviewer: subagente
   con contexto fresco (ronda adversarial I2-D).
 - Encargo: Operador, 2026-11-06 — «adelante» (ejecución de TAREA I2-D).

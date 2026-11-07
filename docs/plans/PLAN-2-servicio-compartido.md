@@ -195,11 +195,11 @@ TAREA I2-P
   Consumes: I2-D
   Produce: identidad, cuotas/cola, métricas y política de egreso verificadas
   Steps:
-  - [ ] implementar identidad, revocación, aislamiento y admisión;
+  - [x] implementar identidad, revocación, aislamiento y admisión;
     verificación: A/B, 401/403/413/429/503, prioridad y desconexión pasan.
-  - [ ] medir carga y presión de memoria en hardware accesible;
+  - [x] medir carga y presión de memoria en hardware accesible;
     verificación: protocolo de iteraciones, SLO y recuperación satisfechos.
-  - [ ] implementar contención de egreso sólo para el entorno autorizado;
+  - [x] implementar contención de egreso sólo para el entorno autorizado;
     verificación: destinos negados y control positivo permitido, sin
     alterar firewall global ni procesos ajenos; inviable bloquea remoto.
 TAREA I2-V

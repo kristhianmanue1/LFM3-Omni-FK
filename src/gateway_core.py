@@ -96,9 +96,30 @@ class ErrorV2(Exception):
         self.extra = extra
 
     def cuerpo(self, request_id):
-        error = {"code": self.code, "message": self.message,
-                 "request_id": request_id}
-        error.update(self.extra)
+        tipo = self.extra.get("type")
+        if not tipo:
+            if self.status in (401, 403):
+                tipo = "auth_error"
+            elif self.status == 429:
+                tipo = "rate_limit_error"
+            elif self.status in (400, 404, 413):
+                tipo = "invalid_request_error"
+            else:
+                tipo = "server_error"
+        retryable = self.extra.get("retryable")
+        if retryable is None:
+            retryable = self.status in (429, 503, 504)
+        error = {
+            "code": self.code,
+            "message": self.message,
+            "type": tipo,
+            "param": self.extra.get("param", None),
+            "retryable": retryable,
+            "request_id": request_id,
+        }
+        for k, v in self.extra.items():
+            if k not in error:
+                error[k] = v
         return {"error": error}
 
 
@@ -189,7 +210,8 @@ def validar_imagen(url):
     m = URL_IMAGEN_RE.match(url)
     if m is None:
         if DATA_RE.match(url) or url.startswith("http://") \
-                or url.startswith("https://"):
+                or url.startswith("https://") or url.startswith("file://") \
+                or url.startswith("ftp://"):
             _error(400, "external_url_rejected",
                    "sólo se acepta data:image/png|jpeg;base64; URLs externas "
                    "no salen de esta máquina")
@@ -326,7 +348,7 @@ def validar_video_entrada(url, inspector=None):
     m = URL_VIDEO_RE.match(url)
     if m is None:
         if url.startswith("http://") or url.startswith("https://") \
-                or url.startswith("file://"):
+                or url.startswith("file://") or url.startswith("ftp://"):
             _error(400, "external_url_rejected",
                    "sólo se acepta data:video/mp4;base64; URLs externas "
                    "no salen de esta máquina")
