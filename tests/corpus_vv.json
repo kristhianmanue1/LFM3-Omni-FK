@@ -1,0 +1,64 @@
+{
+  "schema": "lfm3-omni/corpus-vv/v1",
+  "fijado": "2026-11-06",
+  "procedencia": "fixtures temporales sintéticos generados con ffmpeg lavfi (ADR-001/ADR-006); sin cámara humana (D-09); versionados en tests/medios-binarios/",
+  "metodo": {
+    "pipeline": "gateway 8092 POST /v1/chat/completions con video_url data:video/mp4;base64,... y pregunta temporal",
+    "criterio_pass": "100% de los casos (3/3) responden con el orden temporal correcto (primero aparece antes que despues)",
+    "umbral_declarado_antes_de_medir": true,
+    "casos_requeridos": 3
+  },
+  "casos": [
+    {
+      "id": "corpus-vv-01",
+      "archivo": "medios-binarios/corpus-vv-01.mp4",
+      "sha256": "d95f30cbc1d8befc97e13c6a4d1ccd91c54fb23473be24ccd6b7f7ddd037ffc2",
+      "bytes": 2576,
+      "duracion_segundos": 4.25,
+      "fps": 8.0,
+      "frames": 34,
+      "resolucion": [
+        160,
+        120
+      ],
+      "pregunta": "What color is the video at the start and at the end?",
+      "esperado_primero": "red",
+      "esperado_despues": "blue",
+      "descripcion": "El video inicia rojo y termina azul"
+    },
+    {
+      "id": "corpus-vv-02",
+      "archivo": "medios-binarios/corpus-vv-02.mp4",
+      "sha256": "63332b7ee647f5929d6aadd1ff0c5789f6ea5b7c895398d8f14281cff1e037b5",
+      "bytes": 2576,
+      "duracion_segundos": 4.25,
+      "fps": 8.0,
+      "frames": 34,
+      "resolucion": [
+        160,
+        120
+      ],
+      "pregunta": "What color is the video at the start and at the end?",
+      "esperado_primero": "green",
+      "esperado_despues": "yellow",
+      "descripcion": "El video inicia verde y termina amarillo"
+    },
+    {
+      "id": "corpus-vv-03",
+      "archivo": "medios-binarios/corpus-vv-03.mp4",
+      "sha256": "085c41930a22c3c042c5ff2eb0f55620e81b6e57589efbe968fa3dd08ebab17c",
+      "bytes": 2563,
+      "duracion_segundos": 4.25,
+      "fps": 8.0,
+      "frames": 34,
+      "resolucion": [
+        160,
+        120
+      ],
+      "pregunta": "What color is the video at the start and at the end?",
+      "esperado_primero": "white",
+      "esperado_despues": "black",
+      "descripcion": "El video inicia blanco y termina negro"
+    }
+  ]
+}

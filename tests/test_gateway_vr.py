@@ -395,7 +395,7 @@ class SesionesYAislamiento(VrGatewayBase):
             self.assertEqual(stat.S_IMODE(s1.stat().st_mode), 0o600)
             self.assertEqual(stat.S_IMODE(s2.stat().st_mode), 0o600)
 
-    def test_vr5_capabilities_anuncia_streaming_true_y_video_false(self):
+    def test_vr5_capabilities_anuncia_streaming_y_video_activos(self):
         with urllib.request.urlopen(
             f"http://127.0.0.1:{self.port}/v1/capabilities", timeout=5
         ) as resp:
@@ -403,7 +403,7 @@ class SesionesYAislamiento(VrGatewayBase):
         self.assertTrue(caps["streaming"])
         self.assertTrue(caps["voz"])
         self.assertTrue(caps["transcripcion"])
-        self.assertFalse(caps["video"])
+        self.assertTrue(caps["video"])
 
 
 if __name__ == "__main__":

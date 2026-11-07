@@ -26,6 +26,14 @@ TTS_TIMEOUT_S = 120                    # SPEC-i1-vs §2
 LLAMA_TTS_SHA256 = (                   # F0 §7 / SPEC-i1-vs §2
     "b983acbd59f89df0da0cce9665c75366b94f5736331470fc73d2b8bb5c84c377"
 )
+MAX_VIDEO_BYTES = 16 * 1024 * 1024     # SPEC-i1-vv §2
+MAX_VIDEO_SEGUNDOS = 10.0              # SPEC-i1-vv §2
+MAX_VIDEO_FPS = 30.0                   # SPEC-i1-vv §2
+MAX_VIDEO_FRAMES = 120                 # SPEC-i1-vv §2
+MAX_VIDEO_PIXELES = 1920 * 1080        # SPEC-i1-vv §2
+FFPROBE_SHA256 = (                     # F0 §7 / SPEC-i1-vv §2
+    "daba6e06838d10260602536a676069cef6d756345e1c6d66268ceb7f2d5e7c39"
+)
 MAX_PROPIEDADES = 32
 MAX_TOKENS = 4096
 MAX_SSE_LINE_BYTES = 64 * 1024         # SPEC-i1-vr §2
@@ -42,6 +50,8 @@ TIPOS_SCHEMA = {"string", "integer", "number", "boolean"}
 FIRMA_PNG = b"\x89PNG\r\n\x1a\n"
 URL_IMAGEN_RE = re.compile(
     r"^data:image/(png|jpeg);base64,([A-Za-z0-9+/=\s]+)$")
+URL_VIDEO_RE = re.compile(
+    r"^data:video/mp4;base64,([A-Za-z0-9+/=\s]+)$")
 DATA_RE = re.compile(r"^data:")
 
 # Allowlist cerrado (SPEC-i1 §2): cualquier otra ruta es 404.
@@ -56,13 +66,13 @@ RUTAS_PERMITIDAS = (
 # Capabilities declaradas por SPEC, jamás derivadas del motor y jamás
 # anunciando lo no activo (SPEC-i1 §3; ADR-006 §1: una modalidad se
 # anuncia al cerrar su TAREA — transcripcion con I1-VA, voz/audio con
-# I1-VS, streaming con I1-VR, SPEC-i1-vr §4).
+# I1-VS, streaming con I1-VR, video con I1-VV, SPEC-i1-vv §4).
 CAPABILITIES = {
-    "entrada": ["texto", "imagen", "audio"],
+    "entrada": ["texto", "imagen", "audio", "video"],
     "salida": ["texto", "audio"],
     "streaming": True,
     "audio": True,
-    "video": False,
+    "video": True,
     "voz": True,
     "transcripcion": True,
     "schema": "dialecto-v2",
@@ -279,7 +289,8 @@ def validar_payload_tts(payload):
         _error(400, "invalid_tts_input",
                "input contiene caracteres de control o no imprimibles")
     if not texto.strip():
-        _error(400, "invalid_tts_input", "input no puede contener sólo espacios")
+        _error(400, "invalid_tts_input",
+               "input no puede contener sólo espacios")
     idioma = payload.get("language", "es")
     if idioma != "es":
         _error(400, "unsupported_field_value",
@@ -292,6 +303,40 @@ def validar_payload_tts(payload):
     if modelo is not None and not isinstance(modelo, str):
         _error(400, "unsupported_field_value", "model debe ser string")
     return texto
+
+
+def validar_mp4_bytes(datos):
+    """Valida bytes de un MP4 en memoria (SPEC-i1-vv §2): límite de bytes
+    y firma MP4 con caja ftyp presente."""
+    if len(datos) > MAX_VIDEO_BYTES:
+        _error(400, "invalid_video", "video sobre el presupuesto de bytes")
+    if len(datos) < 12 or datos[4:8] != b"ftyp":
+        _error(400, "invalid_video", "firma MP4/ftyp ausente o falsa")
+
+
+def validar_video_entrada(url, inspector=None):
+    """Parte video_url del dialecto v2 (SPEC-i1-vv §1): sólo data URI
+    base64 estricto de MP4; URLs externas rechazadas; bytes y cotas
+    validados antes del motor."""
+    m = URL_VIDEO_RE.match(url)
+    if m is None:
+        if url.startswith("http://") or url.startswith("https://") \
+                or url.startswith("file://"):
+            _error(400, "external_url_rejected",
+                   "sólo se acepta data:video/mp4;base64; URLs externas "
+                   "no salen de esta máquina")
+        if DATA_RE.match(url):
+            _error(400, "invalid_video",
+                   "sólo data:video/mp4;base64 admitido en el dialecto v2")
+        _error(400, "invalid_video", "URL de video no admitida")
+    crudo = m.group(1)
+    try:
+        datos = base64.b64decode(crudo, validate=True)
+    except (binascii.Error, ValueError):
+        _error(400, "invalid_video", "base64 de video inválido")
+    validar_mp4_bytes(datos)
+    if inspector is not None:
+        inspector(datos)
 
 
 # -------------------------------------------------------------- dialecto
@@ -327,7 +372,7 @@ def _numero(valor, bajo, alto, campo):
                f"valor fuera de rango en {campo}")
 
 
-def validar_payload(payload):
+def validar_payload(payload, inspector_video=None):
     if not isinstance(payload, dict):
         _error(400, "invalid_json", "el cuerpo debe ser un objeto JSON")
     if "stream" in payload and not isinstance(payload.get("stream"), bool):
@@ -372,7 +417,16 @@ def validar_payload(payload):
                     and set(parte["input_audio"]) == {"data", "format"}:
                 validar_audio_entrada(parte["input_audio"])
                 continue
-            _error(400, "unknown_content_type", "parte de contenido no admitida")
+            if tipo == "video_url" and set(parte) == {"type", "video_url"} \
+                    and isinstance(parte.get("video_url"), dict) \
+                    and set(parte["video_url"]) == {"url"}:
+                url = parte["video_url"].get("url")
+                if not isinstance(url, str):
+                    _error(400, "invalid_video", "URL de video inválida")
+                validar_video_entrada(url, inspector=inspector_video)
+                continue
+            _error(400, "unknown_content_type",
+                   "parte de contenido no admitida")
     max_tokens = payload.get("max_tokens")
     if max_tokens is not None:
         if isinstance(max_tokens, bool) or not isinstance(max_tokens, int) \

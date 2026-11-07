@@ -100,6 +100,15 @@ def chat_transcripcion(wav, max_tokens=200):
         "max_tokens": max_tokens})
 
 
+def chat_video(mp4_bytes, pregunta, max_tokens=32):
+    """Comprensión de video vía video_url (SPEC-i1-vv): MP4 en bytes."""
+    url = "data:video/mp4;base64," + base64.b64encode(mp4_bytes).decode()
+    return _post({"messages": [{"role": "user", "content": [
+        {"type": "video_url", "video_url": {"url": url}},
+        {"type": "text", "text": pregunta}]}],
+        "max_tokens": max_tokens})
+
+
 def sintetizar_voz(texto):
     """Síntesis de voz en español vía POST /v1/audio/speech (SPEC-i1-vs)."""
     req = urllib.request.Request(
@@ -241,6 +250,31 @@ def _demo():
     caso("rechazo_sse_schema", st_err_sse == 400
          and err_sse.get("error", {}).get("code") == "unsupported_field_value",
          f"estado={st_err_sse}")
+
+    # Video corto (SPEC-i1-vv) con fixture sintética del corpus
+    mp4 = (Path(__file__).resolve().parent.parent
+           / "tests/medios-binarios/corpus-vv-01.mp4").read_bytes()
+    st_vid, c_vid = chat_video(
+        mp4,
+        "¿Qué color aparece primero en el video y qué color después? "
+        "Responde breve.",
+    )
+    txt_vid = (c_vid.get("choices", [{}])[0]
+               .get("message", {}).get("content", "").lower())
+    caso("chat_video", st_vid == 200
+         and ("rojo" in txt_vid or "red" in txt_vid)
+         and ("azul" in txt_vid or "blue" in txt_vid),
+         f"estado={st_vid} texto={txt_vid!r}")
+
+    # MP4 corrupto: rechazo de frontera antes del motor (SPEC-i1-vv §2)
+    st_vid_roto, err_vid = _post({"messages": [{"role": "user", "content": [
+        {"type": "video_url",
+         "video_url": {"url": "data:video/mp4;base64,"
+                               + base64.b64encode(b"RIFF roto").decode()}},
+        {"type": "text", "text": "x"}]}]})
+    caso("rechazo_video_roto", st_vid_roto == 400
+         and err_vid.get("error", {}).get("code") == "invalid_video",
+         f"estado={st_vid_roto}")
 
     fallos = RESULTADOS.count(False)
     print(f"CLIENTE resumen: {len(RESULTADOS) - fallos} OK, {fallos} FAIL")

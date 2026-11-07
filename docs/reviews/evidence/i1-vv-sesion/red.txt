@@ -1,0 +1,112 @@
+test_vv6_capabilities_anuncia_video_y_todas_las_modalidades (tests.test_gateway_vv.CapabilitiesVideo.test_vv6_capabilities_anuncia_video_y_todas_las_modalidades) ... FAIL
+test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) ... 
+  test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) (caso='cabeza corta') ... FAIL
+  test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) (caso='sin ftyp') ... FAIL
+  test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) (caso='truncado') ... FAIL
+  test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) (caso='basura aleatoria') ... FAIL
+test_vv2b_base64_invalido (tests.test_gateway_vv.VideoInvalido.test_vv2b_base64_invalido) ... FAIL
+test_vv3_presupuesto_duracion_fps_y_frames (tests.test_gateway_vv.VideoInvalido.test_vv3_presupuesto_duracion_fps_y_frames) ... FAIL
+test_vv4_formas_no_admitidas_y_urls_externas (tests.test_gateway_vv.VideoInvalido.test_vv4_formas_no_admitidas_y_urls_externas) ... ok
+test_vv5_ffprobe_alterado_o_ausente_falla_502 (tests.test_gateway_vv.VideoInvalido.test_vv5_ffprobe_alterado_o_ausente_falla_502) ... ERROR
+test_vv1_video_valido_atraviesa_y_llega_al_motor (tests.test_gateway_vv.VideoValido.test_vv1_video_valido_atraviesa_y_llega_al_motor) ... FAIL
+
+======================================================================
+ERROR: test_vv5_ffprobe_alterado_o_ausente_falla_502 (tests.test_gateway_vv.VideoInvalido.test_vv5_ffprobe_alterado_o_ausente_falla_502)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 184, in test_vv5_ffprobe_alterado_o_ausente_falla_502
+    with mock.patch.object(
+         ^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1467, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1437, in get_original
+    raise AttributeError(
+AttributeError: <module 'gateway_http' from '/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_http.py'> does not have the attribute '_resolver_ffprobe'
+
+======================================================================
+FAIL: test_vv6_capabilities_anuncia_video_y_todas_las_modalidades (tests.test_gateway_vv.CapabilitiesVideo.test_vv6_capabilities_anuncia_video_y_todas_las_modalidades)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 198, in test_vv6_capabilities_anuncia_video_y_todas_las_modalidades
+    self.assertIn("video", cuerpo["entrada"])
+AssertionError: 'video' not found in ['texto', 'imagen', 'audio']
+
+======================================================================
+FAIL: test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) (caso='cabeza corta')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 98, in test_vv2_mp4_corrupto_truncado_o_sin_ftyp
+    self.assertEqual(cuerpo["error"]["code"], "invalid_video")
+AssertionError: 'unknown_content_type' != 'invalid_video'
+- unknown_content_type
++ invalid_video
+
+
+======================================================================
+FAIL: test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) (caso='sin ftyp')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 98, in test_vv2_mp4_corrupto_truncado_o_sin_ftyp
+    self.assertEqual(cuerpo["error"]["code"], "invalid_video")
+AssertionError: 'unknown_content_type' != 'invalid_video'
+- unknown_content_type
++ invalid_video
+
+
+======================================================================
+FAIL: test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) (caso='truncado')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 98, in test_vv2_mp4_corrupto_truncado_o_sin_ftyp
+    self.assertEqual(cuerpo["error"]["code"], "invalid_video")
+AssertionError: 'unknown_content_type' != 'invalid_video'
+- unknown_content_type
++ invalid_video
+
+
+======================================================================
+FAIL: test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) (caso='basura aleatoria')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 98, in test_vv2_mp4_corrupto_truncado_o_sin_ftyp
+    self.assertEqual(cuerpo["error"]["code"], "invalid_video")
+AssertionError: 'unknown_content_type' != 'invalid_video'
+- unknown_content_type
++ invalid_video
+
+
+======================================================================
+FAIL: test_vv2b_base64_invalido (tests.test_gateway_vv.VideoInvalido.test_vv2b_base64_invalido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 112, in test_vv2b_base64_invalido
+    self.assertEqual(cuerpo["error"]["code"], "invalid_video")
+AssertionError: 'unknown_content_type' != 'invalid_video'
+- unknown_content_type
++ invalid_video
+
+
+======================================================================
+FAIL: test_vv3_presupuesto_duracion_fps_y_frames (tests.test_gateway_vv.VideoInvalido.test_vv3_presupuesto_duracion_fps_y_frames)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 120, in test_vv3_presupuesto_duracion_fps_y_frames
+    self.assertEqual(cuerpo["error"]["code"], "invalid_video")
+AssertionError: 'unknown_content_type' != 'invalid_video'
+- unknown_content_type
++ invalid_video
+
+
+======================================================================
+FAIL: test_vv1_video_valido_atraviesa_y_llega_al_motor (tests.test_gateway_vv.VideoValido.test_vv1_video_valido_atraviesa_y_llega_al_motor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vv.py", line 72, in test_vv1_video_valido_atraviesa_y_llega_al_motor
+    self.assertEqual(estado, 200, cuerpo)
+AssertionError: 400 != 200 : {'error': {'code': 'unknown_content_type', 'message': 'parte de contenido no admitida', 'request_id': 'fd27e059fe1c45e7be1c016b8753ec40'}}
+
+----------------------------------------------------------------------
+Ran 7 tests in 7.057s
+
+FAILED (failures=8, errors=1)

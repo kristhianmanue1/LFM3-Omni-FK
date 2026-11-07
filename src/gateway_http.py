@@ -28,9 +28,10 @@ import urllib.request
 
 from gateway_core import (
     BACKEND_TIMEOUT_S, CAPABILITIES, DEFAULT_BACKEND, DEFAULT_PORT,
-    LLAMA_TTS_SHA256, MAX_BODY_BYTES, MAX_SSE_LINE_BYTES, RUTAS_PERMITIDAS,
-    TTS_TIMEOUT_S, ErrorV2, _error, _rechazar_constante, validar_payload,
-    validar_payload_tts, validar_salida, validar_wav,
+    FFPROBE_SHA256, LLAMA_TTS_SHA256, MAX_BODY_BYTES, MAX_SSE_LINE_BYTES,
+    MAX_VIDEO_FPS, MAX_VIDEO_FRAMES, MAX_VIDEO_PIXELES, MAX_VIDEO_SEGUNDOS,
+    RUTAS_PERMITIDAS, TTS_TIMEOUT_S, ErrorV2, _error, _rechazar_constante,
+    validar_payload, validar_payload_tts, validar_salida, validar_wav,
 )
 
 LOCK_TTS = threading.Lock()
@@ -111,6 +112,111 @@ def _sha256_archivo(ruta):
         for bloque in iter(lambda: f.read(1 << 20), b""):
             h.update(bloque)
     return h.hexdigest()
+
+
+def _resolver_ffprobe():
+    """Resuelve ffprobe con PATH fijado y comprueba hash registrado en
+    F0 §7 (SPEC-i1-vv §2)."""
+    motor_logico = shutil.which("llama-server") or shutil.which("ffprobe")
+    if not motor_logico:
+        raise OSError("ffprobe no está en PATH")
+    path_fijado = str(Path(motor_logico).parent) + os.pathsep + PATH_SISTEMA
+    bin_probe = shutil.which("ffprobe", path=path_fijado)
+    if not bin_probe:
+        raise OSError("ffprobe no está en el PATH fijado")
+    real_probe = Path(bin_probe).resolve()
+    if _sha256_archivo(real_probe) != FFPROBE_SHA256:
+        raise OSError("hash de ffprobe difiere del inventario congelado")
+    return str(real_probe), path_fijado
+
+
+def _inspeccionar_mp4_ffprobe(datos, probe_runner=None):
+    """Inspecciona con ffprobe el contenedor MP4 y valida cotas de
+    duración, FPS, frames y resolución antes de llamar al motor
+    (SPEC-i1-vv §2)."""
+    if probe_runner is not None:
+        probe_runner(datos)
+        return
+    try:
+        bin_probe, path_fijado = _resolver_ffprobe()
+    except OSError:
+        _error(502, "backend_error", "ffprobe alterado o ausente",
+               detail="ffmpeg_hash_mismatch")
+    dir_tmp = None
+    try:
+        dir_tmp = tempfile.mkdtemp(prefix="lfm3-probe-")
+        os.chmod(dir_tmp, 0o700)
+        mp4_path = os.path.join(dir_tmp, "in.mp4")
+        fd = os.open(mp4_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "wb") as f:
+            f.write(datos)
+        cmd = [
+            bin_probe, "-v", "error", "-select_streams", "v:0",
+            "-show_entries",
+            "stream=width,height,r_frame_rate,nb_frames,duration",
+            "-show_entries", "format=duration", "-of", "json", mp4_path,
+        ]
+        try:
+            res = subprocess.run(
+                cmd, env={"PATH": path_fijado}, capture_output=True, text=True,
+                timeout=15, check=False,
+            )
+        except (subprocess.SubprocessError, OSError):
+            _error(400, "invalid_video",
+                   "ffprobe no pudo analizar el video en el tiempo límite")
+        if res.returncode != 0:
+            _error(400, "invalid_video", "ffprobe no pudo analizar el video")
+        try:
+            info = json.loads(res.stdout)
+        except json.JSONDecodeError:
+            _error(400, "invalid_video", "salida de ffprobe ilegible")
+        streams = info.get("streams", [])
+        if not streams or not isinstance(streams[0], dict):
+            _error(400, "invalid_video",
+                   "el archivo no contiene stream de video")
+        v = streams[0]
+        ancho = v.get("width")
+        alto = v.get("height")
+        if not isinstance(ancho, int) or not isinstance(alto, int) \
+                or ancho <= 0 or alto <= 0 \
+                or ancho * alto > MAX_VIDEO_PIXELES:
+            _error(400, "invalid_video",
+                   "resolución de video sobre el presupuesto")
+        dur_str = v.get("duration") or info.get("format", {}).get("duration")
+        try:
+            duracion = float(dur_str) if dur_str else 0.0
+        except (ValueError, TypeError):
+            duracion = 0.0
+        if duracion <= 0.0 or duracion > MAX_VIDEO_SEGUNDOS:
+            _error(400, "invalid_video",
+                   "video sobre el presupuesto de duración")
+        r_fps = v.get("r_frame_rate", "0/1")
+        fps = 0.0
+        if "/" in str(r_fps):
+            num, den = str(r_fps).split("/", 1)
+            try:
+                fps = float(num) / float(den) if float(den) > 0 else 0.0
+            except ValueError:
+                pass
+        else:
+            try:
+                fps = float(r_fps)
+            except (ValueError, TypeError):
+                fps = 0.0
+        if fps <= 0.0 or fps > MAX_VIDEO_FPS:
+            _error(400, "invalid_video", "video sobre el presupuesto de FPS")
+        nb_frames = v.get("nb_frames")
+        frames = 0
+        if nb_frames and str(nb_frames).isdigit():
+            frames = int(nb_frames)
+        elif duracion > 0 and fps > 0:
+            frames = int(duracion * fps)
+        if frames <= 0 or frames > MAX_VIDEO_FRAMES:
+            _error(400, "invalid_video",
+                   "video sobre el presupuesto de frames")
+    finally:
+        if dir_tmp is not None:
+            shutil.rmtree(dir_tmp, ignore_errors=True)
 
 
 def _resolver_entorno_tts():
@@ -352,7 +458,12 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 wav = _sintetizar_wav(texto, runner=runner)
                 self._binario(200, "audio/wav", wav, {"X-V2-Mode": "tts-wav"})
                 return
-            validar_payload(payload)
+            validar_payload(
+                payload,
+                inspector_video=lambda d: _inspeccionar_mp4_ffprobe(
+                    d, getattr(self.server, "probe_runner", None)
+                ),
+            )
             try:
                 limpio = json.dumps(payload, allow_nan=False)
             except (TypeError, ValueError):
@@ -422,6 +533,7 @@ def build_server(direccion, backend=DEFAULT_BACKEND):
     servidor = ServidorGateway(direccion, ManejadorGateway)
     servidor.backend = backend
     servidor.tts_runner = None
+    servidor.probe_runner = None
     return servidor
 
 

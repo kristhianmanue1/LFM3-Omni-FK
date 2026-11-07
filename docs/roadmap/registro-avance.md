@@ -64,7 +64,7 @@ el agente con evidencia; la aceptación la decide el Operador.
 ### I1-V — Modalidades locales del artefacto vigente
 
 - Estado actual: `accepted_local` (propuesto al Operador) para
-  **I1-V0, I1-VT, I1-VA, I1-VS e I1-VR**; I1-VV/VX/VM/VC `not_started`. I0
+  **I1-V0, I1-VT, I1-VA, I1-VS, I1-VR e I1-VV**; I1-VX/VM/VC `not_started`. I0
   e I1 conservan `accepted_local`.
 - Owner: agente ejecutor (GLM 5.3, OpenCode; ajuste del plan: Claude
   Opus 5.5, Claude Code). Reviewer: subagente con contexto fresco

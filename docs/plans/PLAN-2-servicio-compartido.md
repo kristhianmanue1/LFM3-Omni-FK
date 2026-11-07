@@ -156,7 +156,7 @@ TAREA I1-VV
   Consumes: I1-V0, ADR-006
   Produce: video corto con límites de duración, FPS, frames y bytes
   Steps:
-  - [ ] fijar preguntas temporales sintéticas antes de medir;
+  - [x] fijar preguntas temporales sintéticas antes de medir;
     verificación: pasan, o video no se anuncia; hash ffmpeg verificado.
 TAREA I1-VX
   Consumes: I1-VA, ADR-004, ADR-008

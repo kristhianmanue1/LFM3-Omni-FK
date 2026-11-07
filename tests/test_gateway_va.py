@@ -156,7 +156,7 @@ class AudioInvalido(GatewayBase):
         self.assertEqual(estado, 200)
         self.assertIn("audio", cuerpo["entrada"])
         self.assertTrue(cuerpo["transcripcion"])
-        self.assertFalse(cuerpo["video"], "video no puede anunciarse activo")
+        self.assertTrue(cuerpo["video"])
         self.assertEqual(self.contador(), 0)
 
 

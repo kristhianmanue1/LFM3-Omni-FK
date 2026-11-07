@@ -225,12 +225,12 @@ class CapabilitiesSpeech(SpeechBase):
     def test_vs5_capabilities_anuncia_voz_y_audio_salida(self):
         estado, cuerpo = self.get("/v1/capabilities")
         self.assertEqual(estado, 200)
-        self.assertEqual(cuerpo["entrada"], ["texto", "imagen", "audio"])
+        self.assertEqual(cuerpo["entrada"], ["texto", "imagen", "audio", "video"])
         self.assertEqual(cuerpo["salida"], ["texto", "audio"])
         self.assertTrue(cuerpo["transcripcion"])
         self.assertTrue(cuerpo["voz"])
         self.assertTrue(cuerpo["audio"])
-        self.assertFalse(cuerpo["video"])
+        self.assertTrue(cuerpo["video"])
 
 
 if __name__ == "__main__":

@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-11-07T03:38:12Z",
+  "plataforma": "macOS-27.2-arm64-arm-64bit",
+  "total_casos": 3,
+  "aciertos_temporales": 3,
+  "tasa_acierto": 1.0,
+  "latencias_s": [
+    0.981,
+    1.237,
+    1.449
+  ],
+  "p95_latencia_s": 1.449,
+  "criterio_p95_cumplido": true,
+  "criterio_acierto_cumplido": true,
+  "rss_inicial_motor_mib": 1162.38,
+  "rss_final_motor_mib": 1178.2,
+  "pico_rss_motor_mib": 1178.2,
+  "criterio_rss_cumplido": true,
+  "casos": [
+    {
+      "id": "corpus-vv-01",
+      "archivo": "medios-binarios/corpus-vv-01.mp4",
+      "esperado_primero": "red",
+      "esperado_despues": "blue",
+      "texto_respuesta": "At the start of the video, the screen is **red**. At the end, it changes to **blue** (a royal/indigo blue). So the video begins red and ends blue.",
+      "indice_primero": 43,
+      "indice_despues": 78,
+      "orden_correcto": true,
+      "latencia_ms": 1236.71,
+      "usage": {
+        "completion_tokens": 41,
+        "prompt_tokens": 138,
+        "total_tokens": 179,
+        "prompt_tokens_details": {
+          "cached_tokens": 1
+        }
+      }
+    },
+    {
+      "id": "corpus-vv-02",
+      "archivo": "medios-binarios/corpus-vv-02.mp4",
+      "esperado_primero": "green",
+      "esperado_despues": "yellow",
+      "texto_respuesta": "At the start of the video, the screen is **green**. By the end, it changes to **yellow** (a bright yellow).",
+      "indice_primero": 43,
+      "indice_despues": 80,
+      "orden_correcto": true,
+      "latencia_ms": 980.75,
+      "usage": {
+        "completion_tokens": 29,
+        "prompt_tokens": 138,
+        "total_tokens": 167,
+        "prompt_tokens_details": {
+          "cached_tokens": 1
+        }
+      }
+    },
+    {
+      "id": "corpus-vv-03",
+      "archivo": "medios-binarios/corpus-vv-03.mp4",
+      "esperado_primero": "white",
+      "esperado_despues": "black",
+      "texto_respuesta": "The video is **white** at both the start and the end. The first frame (0.0 seconds) shows a plain white screen, and the final frame (3.0 seconds) is also completely black — but the initial white frame is the one that appears at the very start of the video, while the",
+      "indice_primero": 15,
+      "indice_despues": 165,
+      "orden_correcto": true,
+      "latencia_ms": 1449.08,
+      "usage": {
+        "completion_tokens": 64,
+        "prompt_tokens": 138,
+        "total_tokens": 202,
+        "prompt_tokens_details": {
+          "cached_tokens": 1
+        }
+      }
+    }
+  ]
+}
