@@ -3,9 +3,9 @@
 ```text
 ADR-006: Las modalidades que el artefacto congelado ya soporta se
 habilitan en loopback por gate (ampliación I1-V); SSE stdlib permitido
-Estado: propuesto (ajuste del PLAN LFM3-2, Operador 2026-11-04: «corre
-ronda adversarial del ajuste al plan para afinar y procede»); enmienda
-ADR-005 en dos obligaciones; sin activación remota
+Estado: aceptado (ajuste del PLAN LFM3-2, Operador 2026-11-04 y
+ratificado 2026-11-06); enmienda ADR-005 en dos obligaciones; sin
+activación remota
 Contexto: sondas de sesión (docs/reviews/2026-11-plan2-ajuste-
 multimodal.md, P-1..P-11) muestran que llama-server 0.8.0 b11960 con el
 modelo y mmproj registrados declara modalities vision/video/audio,

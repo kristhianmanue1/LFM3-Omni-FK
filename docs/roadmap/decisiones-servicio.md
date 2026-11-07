@@ -16,9 +16,10 @@ bloquean su tarea»; «D-02..D-07 se deciden antes de sus gates»).
 | D-07 | Publicación comercial y oferta a terceros | pendiente | — | antes de ofrecerla |
 | D-08 | Estrategia de voz (ADR-007: llama-tts; realtime fuera por #31689) | **aceptada** (Operador, 2026-11-05, sesión OpenCode: «Aceptar ADR-007») | ajuste PLAN LFM3-2, 2026-11-04; aceptación 2026-11-05 | cumplida: se aceptó antes de I1-VS |
 | D-09 | Datos de audio e imagen reales | aceptada para las pruebas exploratorias de esta sesión, sin retención de medios (2026-11-04); **aceptada para los gates de I1-V con voz/cámara reales del Operador, condicionada a D-10 implementada** (Operador, 2026-11-05, sesión OpenCode: «Reales con D-10») | Operador, 2026-11-04 y 2026-11-05 | D-10 implementada antes del primer gate con reales; medios personales jamás publicados |
-| D-10 | Transcripciones para verificación futura | **ACEPTADA; implementación pendiente** | Operador, 2026-11-04: «en proximas se guardaran trascripciones para verificacion» | antes de la próxima prueba personal que se quiera auditar por contenido |
+| D-10 | Transcripciones para verificación futura | **ACEPTADA e implementada (I1-VT)** | Operador, 2026-11-04 y 2026-11-05 (commit `c16ab5f`) | cumplida para voz local (`src/transcripciones.py`); pendiente cablear en SSE (`I1-VR`) |
+| D-11 | Orientación local I1-V para agentes, robots y humanos (ADR-008: schema v2-ext, MCP local v2, CLI y perfil D en loopback antes de I2) | **ACEPTADA** | Operador, 2026-11-06: «ronda adversarial para afinar y procede, tienes aprobados commits, merges, pr push, etc segun convenga en el avance» | I1-VX / I1-VM / I1-VC |
 
-Responsable de D-02..D-10: el Operador. Sin fecha de calendario: la
+Responsable de D-02..D-11: el Operador. Sin fecha de calendario: la
 fecha límite es su gate (regla del plan); ninguna tarea pendiente de
 estas decisiones se inicia antes. Mientras faltan, rigen los defaults
 seguros de `objetivo-y-alcance-servicio.md` (sólo fixtures sintéticos,

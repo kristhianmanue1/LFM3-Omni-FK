@@ -6,8 +6,9 @@
 run/*.log
 run/*.pid
 
-# Artefactos de Python.
+# Artefactos de Python y OS.
 __pycache__/
+.DS_Store
 
 # Evidencia personal del Operador (voz, imagen): local, nunca publicar (repo
 # público; D-09 pendiente). El gate de tamaños lo salta (skip_dirs).
