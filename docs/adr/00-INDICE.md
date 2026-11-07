@@ -13,3 +13,4 @@
 | [ADR-006](ADR-006-modalidades-locales-y-streaming.md) | Modalidades locales del artefacto vigente por gate I1-V; SSE stdlib en loopback; ffmpeg como dependencia del motor | aceptado (Operador, 2026-11-04/06; ajuste PLAN LFM3-2) | 2026-11-04 |
 | [ADR-007](ADR-007-estrategia-voz-local.md) | Voz local: ASR por 8091, TTS por llama-tts; /v1/realtime fuera (#31689) | aceptado (D-08, Operador 2026-11-05) | 2026-11-04 |
 | [ADR-008](ADR-008-superficie-omnimodal-agentes-robots-cli.md) | Superficie omnimodal local para agentes, robots y humanos (schema v2-ext, MCP local v2, CLI y perfil D en I1-V) | aceptado (Operador, 2026-11-06) | 2026-11-06 |
+| [ADR-009](ADR-009-identidad-red-egreso-piloto-i2.md) | Identidad, red, contención de egreso y supervisión para el piloto privado I2 | aceptado (I2-D, 2026-11-06) | 2026-11-06 |

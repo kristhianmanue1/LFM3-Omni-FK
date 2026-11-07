@@ -186,9 +186,9 @@ TAREA I2-D
   Consumes: I1, D-02/D-03/D-04, S-03/S-04/S-07/S-08/S-10
   Produce: SPEC-PILOT, ADR identidad/red/egreso/supervisor y dossier
   Steps:
-  - [ ] fijar proyectos, datos, SLO, host, TLS, responsables y presupuesto;
+  - [x] fijar proyectos, datos, SLO, host, TLS, responsables y presupuesto;
     verificación: decisiones aceptadas antes de medición y exposición.
-  - [ ] cerrar egreso, destinos de mantenimiento y dos perfiles de carga;
+  - [x] cerrar egreso, destinos de mantenimiento y dos perfiles de carga;
     verificación: mecanismo viable y permisos aceptados, responsables de
     vigilancia/suplente/canal registrados y benchmark distinto de piloto.
 TAREA I2-P

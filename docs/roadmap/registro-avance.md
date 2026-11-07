@@ -106,6 +106,20 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-06 | I1-VX `accepted_local` | 050891e | dialecto schema v2-ext (enum, min/max, array, sub-objetos prof 1), validación fail-closed de salida, gate percepción live 3/3 = 100% p95 0.87s, suite 150 OK; rondas proceed |
 | 2026-11-06 | I1-VM `accepted_local` | 4ec42fd | servidor MCP local stdio v2 desacoplado vía gateway 8092 con cerrojo TTS 503 compartido; suite MCP 77 OK (40 v2 + 37 v1 intacto), demo cliente stdio; rondas proceed |
 | 2026-11-06 | I1-VC `accepted_local` | 5003e4b | CLI unificado stdlib y adaptador local perfil D para robots/simuladores (deriva <=2s, deduplicación, secuencia y descarte fail-closed); suite 208 OK; simulador e2e live; rondas proceed |
+| 2026-11-06 | I2-D `accepted_local` | commit de esta TAREA | diseño y formalización de arquitectura I2: SPEC-i2, ADR-009, dossier-operacion-i2, D-02/D-03/D-04 formalizadas; ronda 1 fix-and-retry subsanada; ronda 2 proceed; 5 gates OK |
+
+## I2 — Servicio web privado por invitación
+
+- Estado actual: `accepted_local` para I2-D (propuesto al Operador);
+  `I2-P` `not_started`.
+- Owner: agente ejecutor (OpenCode / Antigravity). Reviewer: subagente
+  con contexto fresco (ronda adversarial I2-D).
+- Encargo: Operador, 2026-11-06 — «adelante» (ejecución de TAREA I2-D).
+- Alcance de archivos: `docs/specs/SPEC-i2-piloto-privado.md`,
+  `docs/adr/ADR-009-identidad-red-egreso-piloto-i2.md`,
+  `docs/roadmap/dossier-operacion-i2.md`, `docs/roadmap/decisiones-servicio.md`,
+  `docs/plans/PLAN-2-servicio-compartido.md`, `docs/reviews/`.
+- Bloqueos: ninguno para diseño I2-D. Activación de red/código en I2-P.
 
 ## Salida prevista
 
