@@ -238,19 +238,19 @@ TAREA I4-C
   Consumes: I3, S-06/S-10, perfiles W/D
   Produce: clientes Python/JS/app y adaptador de dispositivo con simulador
   Steps:
-  - [ ] entregar ejemplos ejecutables con login/cancelación/errores;
+  - [x] entregar ejemplos ejecutables con login/cancelación/errores;
     verificación: W/D conformidad, observación caducada y sin efectos físicos.
 TAREA I4-UI
   Consumes: I4-C, D-05 y encargo separado de UI
   Produce: handoff frontExpert+Skevi para UI externa, no código UI aquí
   Steps:
-  - [ ] incorporar contrato, permisos, límites y estados al proyecto UI;
+  - [x] incorporar contrato, permisos, límites y estados al proyecto UI;
     verificación: adopción v2 y demo de usuario en ese repo autorizados.
 TAREA I4-U
   Consumes: I4-C; I4-UI sólo si encargo de UI vigente
   Produce: web/app/dispositivo simulado utilizables según perfiles aceptados
   Steps:
-  - [ ] probar consumidor representativo por perfil anunciado;
+  - [x] probar consumidor representativo por perfil anunciado;
     verificación: tabla de compatibilidad real y retirada de no probados.
 TAREA I5-D
   Consumes: I4, perfil J, S-04/S-07/S-10

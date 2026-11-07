@@ -14,4 +14,5 @@
 | [ADR-007](ADR-007-estrategia-voz-local.md) | Voz local: ASR por 8091, TTS por llama-tts; /v1/realtime fuera (#31689) | aceptado (D-08, Operador 2026-11-05) | 2026-11-04 |
 | [ADR-008](ADR-008-superficie-omnimodal-agentes-robots-cli.md) | Superficie omnimodal local para agentes, robots y humanos (schema v2-ext, MCP local v2, CLI y perfil D en I1-V) | aceptado (Operador, 2026-11-06) | 2026-11-06 |
 | [ADR-009](ADR-009-identidad-red-egreso-piloto-i2.md) | Identidad, red, contención de egreso y supervisión para el piloto privado I2 | aceptado (I2-D, 2026-11-06) | 2026-11-06 |
-| [ADR-010](ADR-010-mcp-remoto-versiones-auth-transporte.md) | Servidor MCP remoto desacoplado, transporte Streamable HTTP, autenticación por scopes y catálogo omnimodal integral | propuesto (I3-D, 2026-11-07) | 2026-11-07 |
+| [ADR-010](ADR-010-mcp-remoto-versiones-auth-transporte.md) | Servidor MCP remoto desacoplado, transporte Streamable HTTP, autenticación por scopes y catálogo omnimodal integral | aceptado, implementado (I3, 2026-11-07) | 2026-11-07 |
+| [ADR-011](ADR-011-perfiles-consumo-wd-handoff-frontexpert.md) | Perfiles de consumo W y D, clientes SDK de referencia y handoff formal para frontExpert | aceptado (I4, 2026-11-07) | 2026-11-07 |

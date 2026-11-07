@@ -17,6 +17,7 @@ Aplica salvaguardas de tiempo real antes y después de la inferencia:
 from datetime import datetime, timezone
 import json
 import os
+import ssl
 import urllib.error
 import urllib.request
 
@@ -38,13 +39,16 @@ def _parse_iso(fecha_str):
 class RobotAdapterD:
     """Adaptador de perfil D con estado local de correlación y deduplicación."""
 
-    def __init__(self, gateway_url=None):
+    def __init__(self, gateway_url=None, auth_token=None, ssl_verify=True):
         if gateway_url:
             self.gateway_url = gateway_url.rstrip("/")
         else:
             host = os.environ.get("LFM3_GATEWAY_HOST", "127.0.0.1")
             port = int(os.environ.get("LFM3_GATEWAY_PORT", "8092"))
-            self.gateway_url = f"http://{host}:{port}"
+            scheme = "https" if port == 8443 else "http"
+            self.gateway_url = f"{scheme}://{host}:{port}"
+        self.auth_token = auth_token or os.environ.get("LFM3_AUTH_TOKEN")
+        self.ssl_verify = ssl_verify
         self.vistos = set()
         self.ultimo_observed_at = {}
 
@@ -163,14 +167,27 @@ class RobotAdapterD:
         t_inicio = ahora
         url_completions = f"{self.gateway_url}/v1/chat/completions"
         req_bytes = json.dumps(payload_gw).encode("utf-8")
+        headers = {"Content-Type": "application/json"}
+        token = solicitud.get("auth_token") or self.auth_token
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        c_req_id = solicitud.get("client_request_id") or f"d-{obs_id}"
+        headers["X-Client-Request-ID"] = c_req_id
+
         req = urllib.request.Request(
             url_completions,
             data=req_bytes,
-            headers={"Content-Type": "application/json"},
+            headers=headers,
             method="POST",
         )
+        ctx = None
+        if self.gateway_url.startswith("https://") and not self.ssl_verify:
+            ctx = ssl._create_unverified_context()
         try:
-            with urllib.request.urlopen(req, timeout=10) as resp:
+            kwargs = {"timeout": 10}
+            if ctx is not None:
+                kwargs["context"] = ctx
+            with urllib.request.urlopen(req, **kwargs) as resp:
                 resp_raw = resp.read()
                 cuerpo_gw = json.loads(resp_raw.decode("utf-8"))
         except urllib.error.HTTPError as exc:
