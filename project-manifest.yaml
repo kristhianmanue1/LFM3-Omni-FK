@@ -12,9 +12,11 @@ ofrece:
     sin dependencia de créditos de servicios remotos
   - superficie API compatible OpenAI sobre llama-server (puerto 8091,
     decisión registrada en F0)
-  - contratos versionados para consumidores externos (F1: base URL, auth,
+  - >
+    contratos versionados para consumidores externos (F1: base URL, auth,
     CORS, límites y muestreo declarados)
-  - servidor MCP propio (transporte stdio, ADR-002) que envuelve el
+  - >
+    servidor MCP propio (transporte stdio, ADR-002) que envuelve el
     motor como herramienta para agentes; implementado y verificado
     (F3-1: 37 tests, dos rondas adversariales)
   - validación en frontera de la salida del modelo contra esquema cerrado
@@ -26,11 +28,14 @@ no_ofrece:
   - alta disponibilidad ni multi-usuario con aislamiento por tenant
   - redistribución del modelo ni servicio público sin revisión previa de la
     licencia lfm1.0
-  - garantía de calidad de respuesta del modelo: se verifica por propiedades
+  - >
+    garantía de calidad de respuesta del modelo: se verifica por propiedades
     y conjunto de referencia (guía 06 §3), no por promesa
-  - gobernanza de autoridad ni memoria entre sesiones: planos de praxis-dev
+  - >
+    gobernanza de autoridad ni memoria entre sesiones: planos de praxis-dev
     y an-kla-memory respectivamente
-  - audio, video ni voz por contrato todavía: el motor los soporta, pero se
+  - >
+    audio, video ni voz por contrato todavía: el motor los soporta, pero se
     ofrecen sólo al cerrar los gates I1-V del PLAN LFM3-2 (ADR-006/007)
 
 publica:
@@ -43,7 +48,7 @@ consume:
   - { tipo: externo, id: "huggingface:LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M", uso: "pesos del modelo + mmproj", requerido: true }
   - { tipo: externo, id: git, uso: "estado real del proyecto y evidencia", requerido: true }
   - { tipo: externo, id: ffmpeg, uso: "decodificación de video/audio de contenedor que libmtmd lanza desde PATH; versión a inventariar en I1-V0 (ADR-006)", requerido: false }
-  - { tipo: proyecto, id: frontExpert, uso: "base obligada para encargos con interfaz gráfica (regla de ruteo del ecosistema, 2026-11-02; adopción por contrato v2 en proyecto nuevo si la demanda incluye UI)", requerido: false }
+  - { tipo: proyecto, id: frontexpert, uso: "base obligada para encargos con interfaz gráfica (regla de ruteo del ecosistema, 2026-11-02; adopción por contrato v2 en proyecto nuevo si la demanda incluye UI)", requerido: false }
 
 fronteras_de_confianza:
   - la salida del modelo es dato no confiable, nunca instrucción ni autorización
