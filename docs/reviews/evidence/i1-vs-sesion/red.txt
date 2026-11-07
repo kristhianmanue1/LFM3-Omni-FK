@@ -1,0 +1,166 @@
+test_vs5_capabilities_anuncia_voz_y_audio_salida (tests.test_gateway_vs.CapabilitiesSpeech.test_vs5_capabilities_anuncia_voz_y_audio_salida) ... FAIL
+test_vs3_ocupado_responde_503_overloaded_sin_cola (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs3_ocupado_responde_503_overloaded_sin_cola) ... FAIL
+test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia) ... FAIL
+test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) ... 
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='sin input') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input vacio') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input solo espacios') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input no string') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input con newline') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input con nulo') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input con tab') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input > 600 chars') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='clave extra voice') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='clave extra speaker_ref') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='idioma no soportado') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='formato no soportado') ... FAIL
+  test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='model no string') ... FAIL
+test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia (tests.test_gateway_vs.SintesisValida.test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia) ... FAIL
+
+======================================================================
+FAIL: test_vs5_capabilities_anuncia_voz_y_audio_salida (tests.test_gateway_vs.CapabilitiesSpeech.test_vs5_capabilities_anuncia_voz_y_audio_salida)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 180, in test_vs5_capabilities_anuncia_voz_y_audio_salida
+    self.assertEqual(cuerpo["salida"], ["texto", "audio"])
+AssertionError: Lists differ: ['texto'] != ['texto', 'audio']
+
+Second list contains 1 additional elements.
+First extra element 1:
+'audio'
+
+- ['texto']
++ ['texto', 'audio']
+
+======================================================================
+FAIL: test_vs3_ocupado_responde_503_overloaded_sin_cola (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs3_ocupado_responde_503_overloaded_sin_cola)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 155, in test_vs3_ocupado_responde_503_overloaded_sin_cola
+    self.assertEqual(resultados[0][0], 200)
+AssertionError: 404 != 200
+
+======================================================================
+FAIL: test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 163, in test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia
+    self.assertEqual(estado, 502)
+AssertionError: 404 != 502
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='sin input')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : sin input: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '18af4f81906e40ea9e9643dab5be25e7'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input vacio')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : input vacio: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '1a1390a3c37b4f59a940d6f73303ff87'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input solo espacios')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : input solo espacios: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': 'a409b864664d4ac0a12ae7e6b8c0c80f'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input no string')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : input no string: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': 'abdd5c42e3f544809839d96021baf7f3'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input con newline')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : input con newline: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '12caa581d3ad4ac2a19305fe1edd2c95'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input con nulo')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : input con nulo: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '03aa6d4bf55448d0a62d06179a8956ee'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input con tab')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : input con tab: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': 'ee85341e927741ed83d8b68b2b9f955c'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='input > 600 chars')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : input > 600 chars: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '29162d36d7e34544ad1050ebee83f144'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='clave extra voice')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : clave extra voice: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '285c04301f5b40d6b5417580a56bab6a'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='clave extra speaker_ref')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : clave extra speaker_ref: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '2e3203d16c54413b98e2cec5ab9f2f65'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='idioma no soportado')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : idioma no soportado: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '0a4cd1f056254f9ca242332dd81ef16a'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='formato no soportado')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : formato no soportado: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '9deda3a2ea4945389f502a7cf5ba1116'}}
+
+======================================================================
+FAIL: test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) (caso='model no string')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 131, in test_vs2_entradas_invalidas_rechazadas_con_contador_cero
+    self.assertEqual(estado, 400, f"{nombre}: {cuerpo}")
+AssertionError: 404 != 400 : model no string: {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': 'a5d60cbd065e419e8d1d0d7cb0e0d770'}}
+
+======================================================================
+FAIL: test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia (tests.test_gateway_vs.SintesisValida.test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vs.py", line 94, in test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia
+    self.assertEqual(estado, 200, cuerpo)
+AssertionError: 404 != 200 : {'error': {'code': 'not_found', 'message': 'ruta fuera del allowlist', 'request_id': '496f8a74967b469e9eab27079de63380'}}
+
+----------------------------------------------------------------------
+Ran 5 tests in 5.034s
+
+FAILED (failures=17)

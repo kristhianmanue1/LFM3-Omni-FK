@@ -118,6 +118,21 @@ sólo tras su gate; voz o cámara reales sólo con D-09 aceptada.
 - I1-VV: límites de duración/FPS/frames/bytes; preguntas temporales
   sintéticas; readiness compara hash de ffmpeg con el inventario. Si no
   pasa, video no se anuncia.
+- I1-VX (ADR-008): extensión del dialecto de schema v2 en stdlib (`enum`,
+  `minimum`/`maximum` sin `bool`, `array` acotado 0..64 y sub-objeto de
+  nivel 1 bajo la raíz con `required` y rechazo de claves sobrantes en
+  todo objeto) y demostración de percepción multimodal estructurada
+  (audio+schema e imagen+schema en un solo turno). v1 e I0/I1 intactos.
+- I1-VM (ADR-008): perfil MCP local v2 sobre stdio que valida con
+  `gateway_core` y enruta la ejecución por el gateway loopback `8092`
+  (compartiendo el cerrojo único de `llama-tts` y los límites de S-05),
+  exponiendo texto, visión, audio, síntesis de voz, capabilities (y
+  video si `I1-VV` cerró su gate) sin alterar `mcp-tools-v1`.
+- I1-VC (ADR-008): CLI unificado stdlib sobre el gateway loopback (8092)
+  para modalidades activas y adaptador local del perfil D con simulador
+  (`observed_at`/`expires_at` verificados antes y después de inferir,
+  deduplicación/orden por `observation_id`, descarte de salida incompleta
+  y `enum` cerrado sin actuadores; identidad remota de `device_id` en I4).
 
 Rollback I1-V: retirar ruta del allowlist y la capability; v1 y I1 intactos.
 

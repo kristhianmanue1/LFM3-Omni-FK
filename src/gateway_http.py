@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
 """Gateway HTTP del servicio compartido — transporte loopback
-(SPEC I1, ADR-005). Políticas en gateway_core; aquí sólo transporte:
-enrutado con allowlist, límites de transporte antes de costos
-(compresión y chunked rechazados sin leer), proxy al motor v1 y
-validación de salida estructurada.
+(SPEC I1, ADR-005; ampliado en I1-VA/I1-VS, ADR-006/007). Políticas en
+gateway_core; aquí sólo transporte: enrutado con allowlist, límites de
+transporte antes de costos (compresión y chunked rechazados sin leer),
+proxy al motor v1, validación de salida estructurada y síntesis de voz
+local vía llama-tts con exclusión mutua sin cola.
 
 Sin dependencias: stdlib 3.12+. Puerto default 8092
 (LFM3_GATEWAY_PORT para tests); colisión → BLOQ + exit 1.
 """
 
+import hashlib
 import json
 import os
+from pathlib import Path
+import shutil
+import subprocess
 import sys
+import tempfile
+import threading
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import urllib.error
@@ -19,8 +26,17 @@ import urllib.request
 
 from gateway_core import (
     BACKEND_TIMEOUT_S, CAPABILITIES, DEFAULT_BACKEND, DEFAULT_PORT,
-    MAX_BODY_BYTES, RUTAS_PERMITIDAS, ErrorV2, _error, _rechazar_constante,
-    validar_payload, validar_salida,
+    LLAMA_TTS_SHA256, MAX_BODY_BYTES, RUTAS_PERMITIDAS, TTS_TIMEOUT_S,
+    ErrorV2, _error, _rechazar_constante, validar_payload,
+    validar_payload_tts, validar_salida, validar_wav,
+)
+
+LOCK_TTS = threading.Lock()
+PATH_SISTEMA = "/usr/bin:/bin:/usr/sbin:/sbin"
+SNAP_HF = (
+    Path.home() / ".cache" / "huggingface" / "hub"
+    / "models--LiquidAI--LFM3-Omni-2B-GGUF" / "snapshots"
+    / "d508b88f08a5b4286f2d2805a6a8d69a0ff44c72"
 )
 
 
@@ -48,6 +64,99 @@ def _proxy(backend, ruta, cuerpo=None, timeout=BACKEND_TIMEOUT_S):
                detail="backend_unreachable")
 
 
+def _sha256_archivo(ruta):
+    h = hashlib.sha256()
+    with open(ruta, "rb") as f:
+        for bloque in iter(lambda: f.read(1 << 20), b""):
+            h.update(bloque)
+    return h.hexdigest()
+
+
+def _resolver_entorno_tts():
+    """Resuelve llama-tts con PATH fijado, comprueba hash registrado en
+    F0 §7 y localiza los pesos GGUF y mmproj del snapshot congelado
+    (SPEC-i1-vs §2; sin overrides por variables de entorno)."""
+    motor_logico = shutil.which("llama-server") or shutil.which("llama-tts")
+    if not motor_logico:
+        raise OSError("llama-tts no está en PATH")
+    path_fijado = str(Path(motor_logico).parent) + os.pathsep + PATH_SISTEMA
+    bin_tts = shutil.which("llama-tts", path=path_fijado)
+    if not bin_tts:
+        raise OSError("llama-tts no está en el PATH fijado")
+    real_tts = Path(bin_tts).resolve()
+    if _sha256_archivo(real_tts) != LLAMA_TTS_SHA256:
+        raise OSError("hash de llama-tts difiere del inventario congelado")
+    modelo = SNAP_HF / "LFM3-Omni-2B-Q4_K_M.gguf"
+    mmproj = SNAP_HF / "mmproj-LFM3-Omni-2B-Q4_0.gguf"
+    if not modelo.is_file() or not mmproj.is_file():
+        raise OSError("pesos GGUF o mmproj no encontrados")
+    env = {
+        k: v for k, v in os.environ.items()
+        if not k.startswith("LLAMA_ARG_")
+    }
+    env["PATH"] = path_fijado
+    return str(real_tts), str(modelo), str(mmproj), env
+
+
+def _ejecutar_tts_real(argv, _prompt_path, _wav_path, env):
+    proc = subprocess.run(
+        argv, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        timeout=TTS_TIMEOUT_S, check=False,
+    )
+    if proc.returncode != 0:
+        raise OSError(f"llama-tts terminó con código {proc.returncode}")
+
+
+def _sintetizar_wav(texto, runner=None):
+    """Ejecuta una síntesis con exclusión mutua sin cola (ADR-007,
+    SPEC-i1-vs §2). Texto en archivo 0600 y limpieza garantizada."""
+    if not LOCK_TTS.acquire(blocking=False):
+        _error(503, "overloaded",
+               "síntesis de voz en curso; reintente sin cola")
+    dir_tmp = None
+    try:
+        try:
+            dir_tmp = tempfile.mkdtemp(prefix="lfm3-tts-")
+            os.chmod(dir_tmp, 0o700)
+            prompt_path = os.path.join(dir_tmp, "prompt.txt")
+            wav_path = os.path.join(dir_tmp, "out.wav")
+            fd = os.open(
+                prompt_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            with os.fdopen(fd, "w", encoding="utf-8") as f:
+                f.write(texto)
+            if runner is not None:
+                argv = [
+                    "llama-tts", "-m", "modelo.gguf", "-mm", "mmproj.gguf",
+                    "--tts-lang", "es", "--no-escape",
+                    "-f", prompt_path, "-o", wav_path,
+                ]
+                runner(argv, prompt_path, wav_path, {"PATH": PATH_SISTEMA})
+            else:
+                bin_tts, modelo, mmproj, env = _resolver_entorno_tts()
+                argv = [
+                    bin_tts, "-m", modelo, "-mm", mmproj,
+                    "--tts-lang", "es", "--no-escape",
+                    "-f", prompt_path, "-o", wav_path,
+                ]
+                _ejecutar_tts_real(argv, prompt_path, wav_path, env)
+            if not os.path.isfile(wav_path):
+                raise OSError("llama-tts no produjo archivo WAV")
+            datos = Path(wav_path).read_bytes()
+        except (OSError, subprocess.SubprocessError):
+            _error(502, "backend_error", "fallo en síntesis de voz",
+                   detail="tts_failed")
+        try:
+            validar_wav(datos, exigir_muestras=True)
+        except ErrorV2:
+            _error(502, "backend_error", "salida WAV de síntesis inválida",
+                   detail="invalid_tts_output")
+        return datos
+    finally:
+        if dir_tmp is not None:
+            shutil.rmtree(dir_tmp, ignore_errors=True)
+        LOCK_TTS.release()
+
+
 class ManejadorGateway(BaseHTTPRequestHandler):
     server_version = "lfm3-gateway-i1/0.1"
 
@@ -61,6 +170,16 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(crudo)
 
+    def _binario(self, status, tipo, datos, headers=None):
+        self.send_response(status)
+        self.send_header("Content-Type", tipo)
+        self.send_header("Content-Length", str(len(datos)))
+        self.send_header("X-Request-Id", self.request_id)
+        for clave, valor in (headers or {}).items():
+            self.send_header(clave, valor)
+        self.end_headers()
+        self.wfile.write(datos)
+
     def _cuerpo_error(self, exc):
         crudo = json.dumps(exc.cuerpo(self.request_id)).encode()
         self.close_connection = True
@@ -70,6 +189,34 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         self.send_header("X-Request-Id", self.request_id)
         self.end_headers()
         self.wfile.write(crudo)
+
+    def _leer_json_post(self):
+        """Límites de transporte antes de costo (SPEC-i1 §4): compresión
+        y Transfer-Encoding rechazados sin leer; Content-Length <= 32 MiB."""
+        if (self.headers.get("Transfer-Encoding") or "").strip():
+            _error(400, "payload_too_large",
+                   "Transfer-Encoding no admitido",
+                   detail="content_length_required")
+        codificacion = (self.headers.get("Content-Encoding")
+                        or "identity").strip().lower()
+        if codificacion not in ("identity", ""):
+            _error(400, "payload_too_large",
+                   "entrada comprimida no admitida",
+                   detail="compressed_input_rejected")
+        longitud = self.headers.get("Content-Length")
+        if longitud is None or not longitud.isascii() \
+                or not longitud.isdigit():
+            _error(400, "payload_too_large",
+                   "Content-Length requerido (chunked no admitido)",
+                   detail="content_length_required")
+        if int(longitud) > MAX_BODY_BYTES:
+            _error(413, "payload_too_large", "cuerpo sobre el presupuesto")
+        crudo = self.rfile.read(int(longitud))
+        try:
+            return json.loads(crudo, parse_constant=_rechazar_constante)
+        except (json.JSONDecodeError, ValueError):
+            _error(400, "invalid_json",
+                   "JSON malformado o con constantes no-JSON")
 
     def do_GET(self):
         self.request_id = uuid.uuid4().hex
@@ -92,33 +239,13 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         self.request_id = uuid.uuid4().hex
         try:
             _enrutar("POST", self.path)
-            # Límites de transporte antes de costo (SPEC-i1 §4):
-            # compresión rechazada sin leer; TE chunked rechazado aunque
-            # venga con Content-Length; sin CL → 400.
-            if (self.headers.get("Transfer-Encoding") or "").strip():
-                _error(400, "payload_too_large",
-                       "Transfer-Encoding no admitido",
-                       detail="content_length_required")
-            codificacion = (self.headers.get("Content-Encoding")
-                            or "identity").strip().lower()
-            if codificacion not in ("identity", ""):
-                _error(400, "payload_too_large",
-                       "entrada comprimida no admitida",
-                       detail="compressed_input_rejected")
-            longitud = self.headers.get("Content-Length")
-            if longitud is None or not longitud.isascii() \
-                    or not longitud.isdigit():
-                _error(400, "payload_too_large",
-                       "Content-Length requerido (chunked no admitido)",
-                       detail="content_length_required")
-            if int(longitud) > MAX_BODY_BYTES:
-                _error(413, "payload_too_large", "cuerpo sobre el presupuesto")
-            crudo = self.rfile.read(int(longitud))
-            try:
-                payload = json.loads(crudo, parse_constant=_rechazar_constante)
-            except (json.JSONDecodeError, ValueError):
-                _error(400, "invalid_json",
-                       "JSON malformado o con constantes no-JSON")
+            payload = self._leer_json_post()
+            if self.path == "/v1/audio/speech":
+                texto = validar_payload_tts(payload)
+                runner = getattr(self.server, "tts_runner", None)
+                wav = _sintetizar_wav(texto, runner=runner)
+                self._binario(200, "audio/wav", wav, {"X-V2-Mode": "tts-wav"})
+                return
             validar_payload(payload)
             try:
                 limpio = json.dumps(payload, allow_nan=False)
@@ -175,6 +302,7 @@ class ServidorGateway(ThreadingHTTPServer):
 def build_server(direccion, backend=DEFAULT_BACKEND):
     servidor = ServidorGateway(direccion, ManejadorGateway)
     servidor.backend = backend
+    servidor.tts_runner = None
     return servidor
 
 

@@ -100,6 +100,19 @@ def chat_transcripcion(wav, max_tokens=200):
         "max_tokens": max_tokens})
 
 
+def sintetizar_voz(texto):
+    """Síntesis de voz en español vía POST /v1/audio/speech (SPEC-i1-vs)."""
+    req = urllib.request.Request(
+        BASE + "/v1/audio/speech",
+        data=json.dumps({"input": texto}).encode("utf-8"),
+        headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            return resp.status, resp.read()
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read())
+
+
 def caso(nombre, condicion, detalle=""):
     RESULTADOS.append(condicion)
     marca = "OK " if condicion else "FAIL"
@@ -120,7 +133,8 @@ def _demo():
          f"estado={estado}")
 
     estado, caps = capabilities()
-    caso("capabilities", estado == 200 and caps.get("voz") is False
+    caso("capabilities", estado == 200 and caps.get("voz") is True
+         and caps.get("transcripcion") is True
          and "imagen" in caps.get("entrada", []), f"estado={estado}")
 
     estado, cuerpo = modelos()
@@ -173,6 +187,18 @@ def _demo():
         {"type": "text", "text": "x"}]}]})
     caso("rechazo_audio_roto", estado == 400
          and cuerpo.get("error", {}).get("code") == "invalid_audio",
+         f"estado={estado}")
+
+    # Síntesis de voz (SPEC-i1-vs) + rechazo de frontera en /v1/audio/speech
+    estado, wav_out = sintetizar_voz("Hola, prueba de síntesis local.")
+    caso("sintetizar_voz", estado == 200 and isinstance(wav_out, bytes)
+         and wav_out[:4] == b"RIFF" and wav_out[8:12] == b"WAVE",
+         f"estado={estado} bytes={len(wav_out) if isinstance(wav_out, bytes) else 0}")
+
+    estado, err_tts = sintetizar_voz("Hola\ncon control")
+    caso("rechazo_tts_control", estado == 400
+         and isinstance(err_tts, dict)
+         and err_tts.get("error", {}).get("code") == "invalid_tts_input",
          f"estado={estado}")
 
     fallos = RESULTADOS.count(False)

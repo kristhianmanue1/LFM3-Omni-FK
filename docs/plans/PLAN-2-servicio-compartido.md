@@ -40,9 +40,11 @@ Procedencia: AGENTS y guías 01/02/04/06; razón: autonomía sin ampliar autorid
 ## Secuencia y gates
 
 I0 -> I1 -> I2 -> I3 -> I4 -> I5; vigilancia diseñada desde I0 y operativa
-con I2. Ampliación local I1-V (ADR-006/007): I1-V0 -> VA -> VS -> VR -> VV
-habilita modalidades del artefacto congelado en loopback; no depende de I2
-ni lo bloquea, y sus rutas quedan fuera de exposición remota salvo I2-D. I6 es condicional por candidato o modalidad; no bloquea I0–I5.
+con I2. Ampliación local I1-V (ADR-006/007/008): I1-V0 -> VA -> VS -> VR
+-> VV -> VX -> VM -> VC habilita las modalidades del artefacto congelado y
+su consumo por agentes MCP, CLI y perfil D en loopback; no depende de I2
+ni lo bloquea, y sus rutas quedan fuera de exposición remota salvo I2-D.
+I6 es condicional por candidato o modalidad; no bloquea I0–I5.
 I4 puede usar H si un cliente MCP concreto no está aprobado; no saltar el
 control de identidad/carga de I2. Decisiones pendientes bloquean su tarea.
 
@@ -138,9 +140,9 @@ TAREA I1-VS
     implementada para el gate con voz real
   Produce: síntesis de voz español vía llama-tts en el gateway
   Steps:
-  - [ ] entregar texto por archivo 0600 o stdin, esquema cerrado, sin cola;
+  - [x] entregar texto por archivo 0600 o stdin, esquema cerrado, sin cola;
     verificación: ida-vuelta TTS->ASR contiene el texto; ocupado da 503.
-  - [ ] medir pico de memoria y swap del subproceso;
+  - [x] medir pico de memoria y swap del subproceso;
     verificación: REQ-5/B-T10 ampliado pasa; escucha del Operador registrada.
 TAREA I1-VR
   Consumes: I1-VA, I1-VS, ADR-006
@@ -156,6 +158,30 @@ TAREA I1-VV
   Steps:
   - [ ] fijar preguntas temporales sintéticas antes de medir;
     verificación: pasan, o video no se anuncia; hash ffmpeg verificado.
+TAREA I1-VX
+  Consumes: I1-VA, ADR-004, ADR-008
+  Produce: dialecto schema v2-ext y percepción multimodal estructurada
+  Steps:
+  - [ ] ampliar schema/salida en gateway_core (enum, cotas, array, prof 1);
+    verificación: objeto prof>1, $ref, claves extra o bool numérico fallan.
+  - [ ] demostrar percepción estructurada (audio+schema e imagen+schema);
+    verificación: fixtures y demo extraen JSON validado en un solo turno.
+TAREA I1-VM
+  Consumes: I1-VX, I1-VS, I1-VV, ADR-002, ADR-008
+  Produce: servidor MCP local v2 (stdio) vía gateway 8092 y gateway_core
+  Steps:
+  - [ ] validar con gateway_core y delegar en 8092 compartiendo cerrojo TTS;
+    verificación: igual rechazo/admisión HTTP/MCP y mcp-tools-v1 intacto.
+  - [ ] completar texto, visión, audio, voz (y video si activo) por MCP v2;
+    verificación: suite MCP v2, exclusión mutua TTS 503 y v1 en verde.
+TAREA I1-VC
+  Consumes: I1-VX, I1-VS, I1-VV, ADR-008, perfil D
+  Produce: CLI unificado sobre 8092 y adaptador local perfil D con simulador
+  Steps:
+  - [ ] entregar CLI stdlib para modalidades activas y schema contra 8092;
+    verificación: subcomandos y pipes JSON pasan con errores controlados.
+  - [ ] validar perfil D (expires_at pre/post, observation_id, complete);
+    verificación: caducada, repetida, incompleta o fuera de enum se descarta.
 TAREA I2-D
   Consumes: I1, D-02/D-03/D-04, S-03/S-04/S-07/S-08/S-10
   Produce: SPEC-PILOT, ADR identidad/red/egreso/supervisor y dossier

@@ -1,0 +1,64 @@
+{
+  "schema": "lfm3-omni/gate-vs/v1",
+  "criterio_cer": "CER mediano <= 0.15 y ningun caso > 0.30",
+  "criterio_memoria": "RSS subproceso llama-tts < 4 GiB y RSS motor 8091 < 4 GiB",
+  "mediana_cer": 0.0,
+  "peor_cer": 0.0,
+  "cer_pass": true,
+  "rss_tts_bytes": 3244851200,
+  "rss_tts_mib": 3094.5,
+  "rss_tts_pass": true,
+  "rss_motor_8091_bytes": 2323611648,
+  "rss_motor_8091_mib": 2216.0,
+  "rss_motor_pass": true,
+  "swap_host_antes_mib": 1394.12,
+  "swap_host_despues_mib": 1894.38,
+  "pass": true,
+  "casos": [
+    {
+      "id": "vs-01",
+      "procedencia": "corpus-01 de tests/corpus_va.json (fijado 2026-11-05)",
+      "referencia": "Hola, ¿cómo estás hoy?",
+      "prediccion": "Hola, ¿cómo estás hoy?",
+      "cer": 0.0,
+      "tts_segundos": 2.44,
+      "wav_bytes": 84524
+    },
+    {
+      "id": "vs-02",
+      "procedencia": "corpus-02 de tests/corpus_va.json (fijado 2026-11-05)",
+      "referencia": "El servicio de inferencia funciona en local.",
+      "prediccion": "El servicio de inferencia funciona en local.",
+      "cer": 0.0,
+      "tts_segundos": 1.9,
+      "wav_bytes": 130604
+    },
+    {
+      "id": "vs-03",
+      "procedencia": "corpus-03 de tests/corpus_va.json (fijado 2026-11-05)",
+      "referencia": "La reunión es a las cuatro de la tarde.",
+      "prediccion": "La reunión es a las cuatro de la tarde.",
+      "cer": 0.0,
+      "tts_segundos": 1.59,
+      "wav_bytes": 107564
+    },
+    {
+      "id": "vs-04",
+      "procedencia": "corpus-04 de tests/corpus_va.json (fijado 2026-11-05)",
+      "referencia": "Necesito un café antes de empezar.",
+      "prediccion": "Necesito un café antes de empezar.",
+      "cer": 0.0,
+      "tts_segundos": 1.53,
+      "wav_bytes": 99884
+    },
+    {
+      "id": "vs-05",
+      "procedencia": "corpus-08 de tests/corpus_va.json (fijado 2026-11-05)",
+      "referencia": "Gracias por escuchar mis palabras.",
+      "prediccion": "Gracias por escuchar mis palabras.",
+      "cer": 0.0,
+      "tts_segundos": 1.42,
+      "wav_bytes": 92204
+    }
+  ]
+}

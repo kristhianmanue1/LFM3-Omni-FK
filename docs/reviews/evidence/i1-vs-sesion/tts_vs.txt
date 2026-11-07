@@ -1,0 +1,6 @@
+vs-01: CER 0.000 (2.44s) -> 'Hola, ¿cómo estás hoy?'
+vs-02: CER 0.000 (1.90s) -> 'El servicio de inferencia funciona en local.'
+vs-03: CER 0.000 (1.59s) -> 'La reunión es a las cuatro de la tarde.'
+vs-04: CER 0.000 (1.53s) -> 'Necesito un café antes de empezar.'
+vs-05: CER 0.000 (1.42s) -> 'Gracias por escuchar mis palabras.'
+mediana_cer=0.000 peor_cer=0.000 rss_tts=3094.5MiB rss_motor=2216.0MiB swap_host=1394->1894MiB -> PASS
