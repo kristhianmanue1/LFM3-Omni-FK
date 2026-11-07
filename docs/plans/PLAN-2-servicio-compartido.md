@@ -170,9 +170,9 @@ TAREA I1-VM
   Consumes: I1-VX, I1-VS, I1-VV, ADR-002, ADR-008
   Produce: servidor MCP local v2 (stdio) vía gateway 8092 y gateway_core
   Steps:
-  - [ ] validar con gateway_core y delegar en 8092 compartiendo cerrojo TTS;
+  - [x] validar con gateway_core y delegar en 8092 compartiendo cerrojo TTS;
     verificación: igual rechazo/admisión HTTP/MCP y mcp-tools-v1 intacto.
-  - [ ] completar texto, visión, audio, voz (y video si activo) por MCP v2;
+  - [x] completar texto, visión, audio, voz (y video si activo) por MCP v2;
     verificación: suite MCP v2, exclusión mutua TTS 503 y v1 en verde.
 TAREA I1-VC
   Consumes: I1-VX, I1-VS, I1-VV, ADR-008, perfil D
