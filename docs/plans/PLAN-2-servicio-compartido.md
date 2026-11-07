@@ -218,15 +218,15 @@ TAREA I3-D
   Consumes: I2, S-05/S-06, perfil M
   Produce: SPEC-MCP-REMOTE y ADR de versiones/auth/clientes
   Steps:
-  - [ ] fijar Streamable HTTP, OAuth/discovery y matriz de versiones;
+  - [x] fijar Streamable HTTP, OAuth/discovery y matriz de versiones;
     verificación: dos clientes elegidos y pruebas negativas acordados.
 TAREA I3-M
   Consumes: I3-D, núcleo común
   Produce: MCP remoto, cancelación y SSE de texto libre bajo proxy remoto
   Steps:
-  - [ ] implementar sin estado de initialize global entre identidades;
+  - [x] implementar sin estado de initialize global entre identidades;
     verificación: MCP H/M cuota común, origin, token audience y sesión A/B.
-  - [ ] verificar proxy, stream terminal y cancelación en backend;
+  - [x] verificar proxy, stream terminal y cancelación en backend;
     verificación: sin buffering ni cupos liberados antes de confirmación.
 TAREA I3-U
   Consumes: I3-M

@@ -30,8 +30,9 @@ from gateway_core import (
     BACKEND_TIMEOUT_S, CAPABILITIES, DEFAULT_BACKEND, DEFAULT_PORT,
     FFPROBE_SHA256, LLAMA_TTS_SHA256, MAX_BODY_BYTES, MAX_SSE_LINE_BYTES,
     MAX_VIDEO_FPS, MAX_VIDEO_FRAMES, MAX_VIDEO_PIXELES, MAX_VIDEO_SEGUNDOS,
-    RUTAS_PERMITIDAS, TTS_TIMEOUT_S, ErrorV2, _error, _rechazar_constante,
-    validar_payload, validar_payload_tts, validar_salida, validar_wav,
+    RUTAS_MCP, RUTAS_PERMITIDAS, TTS_TIMEOUT_S, ErrorV2, _error,
+    _rechazar_constante, validar_payload, validar_payload_tts, validar_salida,
+    validar_wav,
 )
 from gateway_auth import (
     GLOBAL_DISPATCHER, GLOBAL_REGISTRY, FairQueueDispatcher, TokenRegistry,
@@ -85,9 +86,9 @@ def _determinar_scopes_chat(payload):
 
 def _enrutar(metodo, ruta):
     """Allowlist ÚNICO de enrutado (SPEC-i1 §2): una ruta sólo responde
-    si el par método+ruta está en RUTAS_PERMITIDAS; añadir un if/elif
+    si el par método+ruta está en RUTAS_PERMITIDAS o RUTAS_MCP; añadir un if/elif
     sin la tupla queda cortado aquí por diseño."""
-    if f"{metodo} {ruta}" not in set(RUTAS_PERMITIDAS):
+    if f"{metodo} {ruta}" not in set(RUTAS_PERMITIDAS) and f"{metodo} {ruta}" not in set(RUTAS_MCP):
         _error(404, "not_found", "ruta fuera del allowlist")
 
 
@@ -499,6 +500,12 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 estado, cuerpo = _proxy(self.server.backend, "/v1/models",
                                         timeout=10)
                 self._json(estado, cuerpo)
+            elif self.path == "/mcp":
+                handler = getattr(self.server, "mcp_remote_handler", None)
+                if handler is None:
+                    _error(501, "not_implemented", "mcp remoto no inicializado")
+                handler.handle_get(self)
+                return
             else:
                 _error(404, "not_found", "ruta fuera del allowlist")
         except ErrorV2 as exc:
@@ -521,6 +528,13 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 self.project_id = proj_h.strip()
 
             payload = self._leer_json_post()
+
+            if self.path == "/mcp":
+                handler = getattr(self.server, "mcp_remote_handler", None)
+                if handler is None:
+                    _error(501, "not_implemented", "mcp remoto no inicializado")
+                handler.handle_post(self, proj_info, payload=payload)
+                return
 
             if getattr(self.server, "auth_enabled", False) and proj_info is not None:
                 auth_h = self.headers.get("Authorization")
@@ -633,6 +647,8 @@ def build_server(
     )
     servidor.tokens_registry = tokens_registry or GLOBAL_REGISTRY
     servidor.dispatcher = dispatcher or GLOBAL_DISPATCHER
+    from mcp_remote import MCPRemoteHandler
+    servidor.mcp_remote_handler = MCPRemoteHandler(backend_url=backend)
     return servidor
 
 

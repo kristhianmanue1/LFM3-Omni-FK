@@ -67,6 +67,10 @@ RUTAS_PERMITIDAS = (
     "GET /v1/capabilities",
     "GET /healthz",
 )
+RUTAS_MCP = (
+    "POST /mcp",
+    "GET /mcp",
+)
 
 # Capabilities declaradas por SPEC, jamás derivadas del motor y jamás
 # anunciando lo no activo (SPEC-i1 §3; ADR-006 §1: una modalidad se
