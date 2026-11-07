@@ -276,17 +276,17 @@ TAREA I6-E
   Consumes: I2-V, D-06, S-09/S-11 y demanda medida
   Produce: triaje y SPEC de evaluación por motor/modelo/modalidad
   Steps:
-  - [ ] clasificar candidato: rechazo temprano o evaluación autorizada;
+  - [x] clasificar candidato: rechazo temprano o evaluación autorizada;
     verificación: licencia/compatibilidad/coste y razón trazables, sin
     descarga ni benchmark si se rechaza antes de autorizar evaluación.
-  - [ ] evaluar motor/modelo o modalidad sin cambiar baseline/golden;
+  - [x] evaluar motor/modelo o modalidad sin cambiar baseline/golden;
     verificación: dataset, calidad/latencia/memoria y presupuesto previos,
     o no-aplica justificado por rechazo temprano del candidato.
 TAREA I6-U
   Consumes: I6-E; promoción requiere aceptación específica de activación
   Produce: capacidades mejoradas usables o rechazo que preserva baseline
   Steps:
-  - [ ] cerrar rechazo sin activar, o promover sólo con contrato/migración;
+  - [x] cerrar rechazo sin activar, o promover sólo con contrato/migración;
     verificación: rechazo conserva hashes/config baseline y razones; sólo
     promoción exige canario, rollback y demo de capacidades afectadas.
 

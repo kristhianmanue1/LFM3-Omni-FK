@@ -16,4 +16,5 @@
 | [ADR-009](ADR-009-identidad-red-egreso-piloto-i2.md) | Identidad, red, contención de egreso y supervisión para el piloto privado I2 | aceptado (I2-D, 2026-11-06) | 2026-11-06 |
 | [ADR-010](ADR-010-mcp-remoto-versiones-auth-transporte.md) | Servidor MCP remoto desacoplado, transporte Streamable HTTP, autenticación por scopes y catálogo omnimodal integral | aceptado, implementado (I3, 2026-11-07) | 2026-11-07 |
 | [ADR-011](ADR-011-perfiles-consumo-wd-handoff-frontexpert.md) | Perfiles de consumo W y D, clientes SDK de referencia y handoff formal para frontExpert | aceptado, implementado (I4, 2026-11-07) | 2026-11-07 |
-| [ADR-012](ADR-012-trabajos-largos-persistencia-idempotencia.md) | Trabajos largos en segundo plano (Perfil J), persistencia atómica, idempotencia RFC 8785 y recuperación ante fallos | aceptado (I5, 2026-11-07) | 2026-11-07 |
+| [ADR-012](ADR-012-trabajos-largos-persistencia-idempotencia.md) | Trabajos largos en segundo plano (Perfil J), persistencia atómica, idempotencia RFC 8785 y recuperación ante fallos | aceptado, implementado (I5, 2026-11-07) | 2026-11-07 |
+| [ADR-013](ADR-013-triaje-evaluacion-promocion-modelos.md) | Triaje formal de candidatos, evaluación comparativa contra Golden Dataset y protocolo gobernado de promoción o rechazo | aceptado (I6, 2026-11-07) | 2026-11-07 |
