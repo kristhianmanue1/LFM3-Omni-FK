@@ -190,11 +190,13 @@ def _demo():
     except (json.JSONDecodeError, KeyError, TypeError):
         datos = None
     caso("chat_schema", estado == 200 and isinstance(datos, dict)
-         and isinstance(datos.get("edad"), int), f"estado={estado} datos={datos}")
+         and isinstance(datos.get("edad"), int),
+         f"estado={estado} datos={datos}")
 
     estado, cuerpo = chat_imagen(png_rojo(),
                                  "¿De qué color es la imagen? Una palabra.")
-    texto = cuerpo.get("choices", [{}])[0].get("message", {}).get("content", "").lower()
+    txt_cuerpo = cuerpo.get("choices", [{}])[0].get("message", {})
+    texto = (txt_cuerpo.get("content") or "").lower()
     caso("chat_imagen", estado == 200 and ("rojo" in texto or "red" in texto),
          f"estado={estado}")
 
@@ -225,9 +227,10 @@ def _demo():
 
     # Síntesis de voz (SPEC-i1-vs) + rechazo de frontera en /v1/audio/speech
     estado, wav_out = sintetizar_voz("Hola, prueba de síntesis local.")
+    len_wav = len(wav_out) if isinstance(wav_out, bytes) else 0
     caso("sintetizar_voz", estado == 200 and isinstance(wav_out, bytes)
          and wav_out[:4] == b"RIFF" and wav_out[8:12] == b"WAVE",
-         f"estado={estado} bytes={len(wav_out) if isinstance(wav_out, bytes) else 0}")
+         f"estado={estado} bytes={len_wav}")
 
     estado, err_tts = sintetizar_voz("Hola\ncon control")
     caso("rechazo_tts_control", estado == 400
@@ -275,6 +278,70 @@ def _demo():
     caso("rechazo_video_roto", st_vid_roto == 400
          and err_vid.get("error", {}).get("code") == "invalid_video",
          f"estado={st_vid_roto}")
+
+    # Schema v2-ext (SPEC-i1-vx): enum, cotas y objeto anidado
+    schema_vx = {
+        "type": "object",
+        "properties": {
+            "accion": {"type": "string", "enum": ["iniciar", "detener"]},
+            "prioridad": {"type": "integer", "minimum": 1, "maximum": 5},
+            "meta": {
+                "type": "object",
+                "properties": {"modulo": {"type": "string"}},
+                "required": ["modulo"],
+            },
+        },
+        "required": ["accion", "prioridad", "meta"],
+    }
+    st_vx, c_vx = _post({
+        "messages": [{
+            "role": "user",
+            "content": (
+                "Genera JSON: accion 'iniciar', prioridad 3, "
+                "meta modulo 'core'."
+            ),
+        }],
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {"name": "comando", "schema": schema_vx},
+        },
+        "max_tokens": 48,
+        "temperature": 0.0,
+    })
+    txt_vx = (c_vx.get("choices", [{}])[0]
+              .get("message", {}).get("content", ""))
+    d_vx = json.loads(txt_vx) if st_vx == 200 and txt_vx else {}
+    caso("schema_v2_ext", st_vx == 200
+         and d_vx.get("accion") == "iniciar"
+         and d_vx.get("prioridad") == 3
+         and d_vx.get("meta", {}).get("modulo") == "core",
+         f"estado={st_vx} datos={d_vx}")
+
+    # Schema inválido v2-ext: profundidad > 1 rechaza 400 antes del motor
+    schema_profundo = {
+        "type": "object",
+        "properties": {
+            "o1": {
+                "type": "object",
+                "properties": {
+                    "o2": {
+                        "type": "object",
+                        "properties": {"x": {"type": "string"}},
+                    }
+                },
+            }
+        },
+    }
+    st_err_schema, err_schema = _post({
+        "messages": [{"role": "user", "content": "x"}],
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {"name": "bad", "schema": schema_profundo},
+        },
+    })
+    caso("rechazo_schema_profundo", st_err_schema == 400
+         and err_schema.get("error", {}).get("code") == "unsupported_schema",
+         f"estado={st_err_schema}")
 
     fallos = RESULTADOS.count(False)
     print(f"CLIENTE resumen: {len(RESULTADOS) - fallos} OK, {fallos} FAIL")

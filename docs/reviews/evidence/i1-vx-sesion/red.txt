@@ -1,0 +1,140 @@
+test_vx7_payload_con_schema_v2_ext_atraviesa (tests.test_gateway_vx.GatewayHttpVx.test_vx7_payload_con_schema_v2_ext_atraviesa) ... FAIL
+test_vx8_multimodal_audio_con_schema_atraviesa (tests.test_gateway_vx.GatewayHttpVx.test_vx8_multimodal_audio_con_schema_atraviesa) ... FAIL
+test_vx1_salida_enum (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx1_salida_enum) ... FAIL
+test_vx2_salida_min_max (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx2_salida_min_max) ... FAIL
+test_vx3_salida_array_escalar (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx3_salida_array_escalar) ... ERROR
+test_vx4_salida_object_anidado_estricto (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx4_salida_object_anidado_estricto) ... ERROR
+test_vx1_enum_escalar_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx1_enum_escalar_valido) ... ERROR
+test_vx1b_enum_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx1b_enum_invalido_rechaza_400) ... ok
+test_vx2_min_max_numerico_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx2_min_max_numerico_valido) ... ERROR
+test_vx2b_min_max_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx2b_min_max_invalido_rechaza_400) ... ok
+test_vx3_array_escalares_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx3_array_escalares_valido) ... ERROR
+test_vx3b_array_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx3b_array_invalido_rechaza_400) ... ok
+test_vx4_array_objetos_planos_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx4_array_objetos_planos_valido) ... ERROR
+test_vx5_object_anidado_nivel_1_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx5_object_anidado_nivel_1_valido) ... ERROR
+test_vx6_rechazo_profundidad_mayor_1_y_ref (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx6_rechazo_profundidad_mayor_1_y_ref) ... ok
+
+======================================================================
+ERROR: test_vx3_salida_array_escalar (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx3_salida_array_escalar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 273, in test_vx3_salida_array_escalar
+    self.assertEqual(validar_salida('{"valores": [10, 20]}', s), "valid")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 485, in validar_salida
+    _error(502, "output_not_valid",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 101, in _error
+    raise ErrorV2(status, code, message, **extra)
+gateway_core.ErrorV2: tipo de 'valores' no satisface array
+
+======================================================================
+ERROR: test_vx4_salida_object_anidado_estricto (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx4_salida_object_anidado_estricto)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 297, in test_vx4_salida_object_anidado_estricto
+    validar_salida('{"persona": {"nombre": "Ana", "edad": 30}}', s),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 485, in validar_salida
+    _error(502, "output_not_valid",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 101, in _error
+    raise ErrorV2(status, code, message, **extra)
+gateway_core.ErrorV2: tipo de 'persona' no satisface object
+
+======================================================================
+ERROR: test_vx1_enum_escalar_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx1_enum_escalar_valido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 45, in test_vx1_enum_escalar_valido
+    validar_schema(s)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 357, in validar_schema
+    _error(400, "unsupported_schema",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 101, in _error
+    raise ErrorV2(status, code, message, **extra)
+gateway_core.ErrorV2: propiedad con keywords fuera del dialecto
+
+======================================================================
+ERROR: test_vx2_min_max_numerico_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx2_min_max_numerico_valido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 78, in test_vx2_min_max_numerico_valido
+    validar_schema(s)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 357, in validar_schema
+    _error(400, "unsupported_schema",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 101, in _error
+    raise ErrorV2(status, code, message, **extra)
+gateway_core.ErrorV2: propiedad con keywords fuera del dialecto
+
+======================================================================
+ERROR: test_vx3_array_escalares_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx3_array_escalares_valido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 115, in test_vx3_array_escalares_valido
+    validar_schema(s)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 357, in validar_schema
+    _error(400, "unsupported_schema",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 101, in _error
+    raise ErrorV2(status, code, message, **extra)
+gateway_core.ErrorV2: propiedad con keywords fuera del dialecto
+
+======================================================================
+ERROR: test_vx4_array_objetos_planos_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx4_array_objetos_planos_valido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 159, in test_vx4_array_objetos_planos_valido
+    validar_schema(s)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 357, in validar_schema
+    _error(400, "unsupported_schema",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 101, in _error
+    raise ErrorV2(status, code, message, **extra)
+gateway_core.ErrorV2: propiedad con keywords fuera del dialecto
+
+======================================================================
+ERROR: test_vx5_object_anidado_nivel_1_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx5_object_anidado_nivel_1_valido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 175, in test_vx5_object_anidado_nivel_1_valido
+    validar_schema(s)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 357, in validar_schema
+    _error(400, "unsupported_schema",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/src/gateway_core.py", line 101, in _error
+    raise ErrorV2(status, code, message, **extra)
+gateway_core.ErrorV2: propiedad con keywords fuera del dialecto
+
+======================================================================
+FAIL: test_vx7_payload_con_schema_v2_ext_atraviesa (tests.test_gateway_vx.GatewayHttpVx.test_vx7_payload_con_schema_v2_ext_atraviesa)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 330, in test_vx7_payload_con_schema_v2_ext_atraviesa
+    self.assertEqual(estado, 200)
+AssertionError: 400 != 200
+
+======================================================================
+FAIL: test_vx8_multimodal_audio_con_schema_atraviesa (tests.test_gateway_vx.GatewayHttpVx.test_vx8_multimodal_audio_con_schema_atraviesa)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 361, in test_vx8_multimodal_audio_con_schema_atraviesa
+    self.assertEqual(estado, 200)
+AssertionError: 400 != 200
+
+======================================================================
+FAIL: test_vx1_salida_enum (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx1_salida_enum)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 242, in test_vx1_salida_enum
+    with self.assertRaises(ErrorV2) as ctx:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ErrorV2 not raised
+
+======================================================================
+FAIL: test_vx2_salida_min_max (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx2_salida_min_max)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vx.py", line 253, in test_vx2_salida_min_max
+    with self.assertRaises(ErrorV2):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ErrorV2 not raised
+
+----------------------------------------------------------------------
+Ran 15 tests in 2.023s
+
+FAILED (failures=4, errors=7)

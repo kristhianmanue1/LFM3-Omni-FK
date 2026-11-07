@@ -1,0 +1,55 @@
+{
+  "timestamp": "2026-11-07T04:13:44Z",
+  "plataforma": "macOS-27.2-arm64-arm-64bit",
+  "total_casos": 3,
+  "aciertos": 3,
+  "tasa_acierto": 1.0,
+  "latencias_s": [
+    0.554,
+    0.554,
+    0.874
+  ],
+  "p95_latencia_s": 0.874,
+  "criterio_p95_cumplido": true,
+  "criterio_acierto_cumplido": true,
+  "rss_inicial_motor_mib": 1136.41,
+  "rss_final_motor_mib": 1159.14,
+  "pico_rss_motor_mib": 1159.14,
+  "criterio_rss_cumplido": true,
+  "casos": [
+    {
+      "caso": "imagen_mas_schema_enum",
+      "status": 200,
+      "latencia_s": 0.554,
+      "datos": {
+        "color_principal": "rojo"
+      },
+      "acierto": true
+    },
+    {
+      "caso": "audio_mas_schema_enum_array",
+      "status": 200,
+      "latencia_s": 0.874,
+      "datos": {
+        "idioma": "es",
+        "tipo_mensaje": "saludo",
+        "palabras_clave": [
+          "hola"
+        ]
+      },
+      "acierto": true
+    },
+    {
+      "caso": "objeto_anidado_cotas",
+      "status": 200,
+      "latencia_s": 0.554,
+      "datos": {
+        "entidad": {
+          "nombre": "Carlos",
+          "edad": 28
+        }
+      },
+      "acierto": true
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+test_vx7_payload_con_schema_v2_ext_atraviesa (tests.test_gateway_vx.GatewayHttpVx.test_vx7_payload_con_schema_v2_ext_atraviesa) ... ok
+test_vx8_multimodal_audio_con_schema_atraviesa (tests.test_gateway_vx.GatewayHttpVx.test_vx8_multimodal_audio_con_schema_atraviesa) ... ok
+test_vx1_salida_enum (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx1_salida_enum) ... ok
+test_vx1c_salida_enum_number_equivalente (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx1c_salida_enum_number_equivalente) ... ok
+test_vx2_salida_min_max (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx2_salida_min_max) ... ok
+test_vx3_salida_array_escalar (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx3_salida_array_escalar) ... ok
+test_vx3b_salida_array_sin_maxitems_supera_64_falla_502 (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx3b_salida_array_sin_maxitems_supera_64_falla_502) ... ok
+test_vx4_salida_object_anidado_estricto (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx4_salida_object_anidado_estricto) ... ok
+test_vx5_salida_array_objetos_planos (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx5_salida_array_objetos_planos) ... ok
+test_vx1_enum_escalar_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx1_enum_escalar_valido) ... ok
+test_vx1b_enum_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx1b_enum_invalido_rechaza_400) ... ok
+test_vx2_min_max_numerico_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx2_min_max_numerico_valido) ... ok
+test_vx2b_min_max_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx2b_min_max_invalido_rechaza_400) ... ok
+test_vx3_array_escalares_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx3_array_escalares_valido) ... ok
+test_vx3b_array_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx3b_array_invalido_rechaza_400) ... ok
+test_vx4_array_objetos_planos_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx4_array_objetos_planos_valido) ... ok
+test_vx5_object_anidado_nivel_1_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx5_object_anidado_nivel_1_valido) ... ok
+test_vx6_rechazo_profundidad_mayor_1_y_ref (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx6_rechazo_profundidad_mayor_1_y_ref) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.536s
+
+OK

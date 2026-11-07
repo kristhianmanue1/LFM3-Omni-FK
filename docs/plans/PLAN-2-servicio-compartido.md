@@ -162,9 +162,9 @@ TAREA I1-VX
   Consumes: I1-VA, ADR-004, ADR-008
   Produce: dialecto schema v2-ext y percepción multimodal estructurada
   Steps:
-  - [ ] ampliar schema/salida en gateway_core (enum, cotas, array, prof 1);
+  - [x] ampliar schema/salida en gateway_core (enum, cotas, array, prof 1);
     verificación: objeto prof>1, $ref, claves extra o bool numérico fallan.
-  - [ ] demostrar percepción estructurada (audio+schema e imagen+schema);
+  - [x] demostrar percepción estructurada (audio+schema e imagen+schema);
     verificación: fixtures y demo extraen JSON validado en un solo turno.
 TAREA I1-VM
   Consumes: I1-VX, I1-VS, I1-VV, ADR-002, ADR-008
