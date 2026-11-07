@@ -1,0 +1,14 @@
+CLIENTE OK  salud — estado=200
+CLIENTE OK  capabilities — estado=200
+CLIENTE OK  modelos — ids=['LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M']
+CLIENTE OK  chat_texto — estado=200
+CLIENTE OK  chat_schema — estado=200 datos={'nombre': 'Ana', 'edad': 34}
+CLIENTE OK  chat_imagen — estado=200
+CLIENTE OK  chat_transcripcion — estado=200 texto='Hola, ¿cómo estás hoy?'
+CLIENTE OK  rechazo_controlado — estado=400
+CLIENTE OK  rechazo_audio_roto — estado=400
+CLIENTE OK  sintetizar_voz — estado=200 bytes=99884
+CLIENTE OK  rechazo_tts_control — estado=400
+CLIENTE OK  chat_sse — estado=200 modo=sse-passthrough done=True
+CLIENTE OK  rechazo_sse_schema — estado=400
+CLIENTE resumen: 13 OK, 0 FAIL

@@ -230,7 +230,6 @@ class CapabilitiesSpeech(SpeechBase):
         self.assertTrue(cuerpo["transcripcion"])
         self.assertTrue(cuerpo["voz"])
         self.assertTrue(cuerpo["audio"])
-        self.assertFalse(cuerpo["streaming"])
         self.assertFalse(cuerpo["video"])
 
 

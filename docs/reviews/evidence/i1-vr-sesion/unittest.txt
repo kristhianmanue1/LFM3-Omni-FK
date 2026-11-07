@@ -1,0 +1,254 @@
+test_r10_salida_parcial (tests.test_adapter_v2.PoliticaAdapter.test_r10_salida_parcial) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51551)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51552)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r10b_backend_ilegible (tests.test_adapter_v2.PoliticaAdapter.test_r10b_backend_ilegible) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51555)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51556)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r11_passthrough_valido (tests.test_adapter_v2.PoliticaAdapter.test_r11_passthrough_valido) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51561)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51562)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r12_salida_estructurada_valida (tests.test_adapter_v2.PoliticaAdapter.test_r12_salida_estructurada_valida) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51569)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51570)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r1_campo_desconocido (tests.test_adapter_v2.PoliticaAdapter.test_r1_campo_desconocido) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51573)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51574)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r21_entrada_nan_rechazada_sin_backend (tests.test_adapter_v2.PoliticaAdapter.test_r21_entrada_nan_rechazada_sin_backend) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51577)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51578)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r2_schema_anidado (tests.test_adapter_v2.PoliticaAdapter.test_r2_schema_anidado) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51581)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51582)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r3_tipo_no_string_y_bool_como_number (tests.test_adapter_v2.PoliticaAdapter.test_r3_tipo_no_string_y_bool_como_number) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51584)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51585)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r3c_salida_nan_no_es_valida (tests.test_adapter_v2.PoliticaAdapter.test_r3c_salida_nan_no_es_valida) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51593)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51594)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r4_additional_properties (tests.test_adapter_v2.PoliticaAdapter.test_r4_additional_properties) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51597)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51598)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r5_url_externa (tests.test_adapter_v2.PoliticaAdapter.test_r5_url_externa) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51600)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51601)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r5b_image_url_con_clave_extra (tests.test_adapter_v2.PoliticaAdapter.test_r5b_image_url_con_clave_extra) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51606)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51607)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r6_imagenes_truncadas (tests.test_adapter_v2.PoliticaAdapter.test_r6_imagenes_truncadas) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51609)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51610)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r6c_png_con_basura_tras_iend (tests.test_adapter_v2.PoliticaAdapter.test_r6c_png_con_basura_tras_iend) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51617)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51618)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r7_firma_falsa (tests.test_adapter_v2.PoliticaAdapter.test_r7_firma_falsa) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51620)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51621)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r8_exceso_de_pixeles (tests.test_adapter_v2.PoliticaAdapter.test_r8_exceso_de_pixeles) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51624)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51625)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r9_json_malformado_y_sin_messages (tests.test_adapter_v2.PoliticaAdapter.test_r9_json_malformado_y_sin_messages) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51627)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51628)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r9b_cl_no_ascii (tests.test_adapter_v2.PoliticaAdapter.test_r9b_cl_no_ascii) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51635)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51636)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_rutas_y_stream (tests.test_adapter_v2.PoliticaAdapter.test_rutas_y_stream) ... ok
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:84: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 51638)>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/suite.py:84: ResourceWarning: unclosed <socket.socket fd=5, family=2, type=1, proto=0, laddr=('127.0.0.1', 51639)>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+test_r14_huerfano_y_pid_reciclado_se_recuperan (tests.test_ciclo_arranque.Cerrojo.test_r14_huerfano_y_pid_reciclado_se_recuperan) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque.test_r13_segundo_arranque_bloquea_con_un_solo_motor) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso.test_r16_env_neutralizado_y_host_explicito) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r16b_path_fijado_al_lanzar_el_motor (tests.test_ciclo_arranque.EntornoAdverso.test_r16b_path_fijado_al_lanzar_el_motor) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada.test_r18_stop_no_mata_ajenos) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno.test_r15_puerto_ocupado_por_ajeno_bloquea_limpio) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness.test_r17_readiness_exige_modelo_efectivo) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_r17b_atajo_idempotente_exige_modelo (tests.test_ciclo_arranque.Readiness.test_r17b_atajo_idempotente_exige_modelo) ... skipped 'puerto 8091 ocupado; el fixture no asume puerto libre'
+test_g4_rutas_administrativas_no_pasan (tests.test_gateway_i1.Allowlist.test_g4_rutas_administrativas_no_pasan) ... ok
+test_g1_capaabilities_sin_lo_no_activo (tests.test_gateway_i1.Capabilities.test_g1_capaabilities_sin_lo_no_activo) ... ok
+test_g5_puerto_ocupado_falla_cerrado (tests.test_gateway_i1.Colision.test_g5_puerto_ocupado_falla_cerrado) ... ok
+test_g6_core_sin_transporte (tests.test_gateway_i1.FronteraInterna.test_g6_core_sin_transporte) ... ok
+test_g2_chunked_sin_content_length (tests.test_gateway_i1.Transporte.test_g2_chunked_sin_content_length) ... ok
+test_g3_compresion_rechazada_antes_de_leer (tests.test_gateway_i1.Transporte.test_g3_compresion_rechazada_antes_de_leer) ... ok
+test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) ... ok
+test_va2b_base64_invalido (tests.test_gateway_va.AudioInvalido.test_va2b_base64_invalido) ... ok
+test_va2c_chunks_duplicados_o_tamano_inconsistente (tests.test_gateway_va.AudioInvalido.test_va2c_chunks_duplicados_o_tamano_inconsistente) ... ok
+test_va3_presupuesto_de_bytes_y_duracion (tests.test_gateway_va.AudioInvalido.test_va3_presupuesto_de_bytes_y_duracion) ... ok
+test_va4_formas_no_admitidas (tests.test_gateway_va.AudioInvalido.test_va4_formas_no_admitidas) ... ok
+test_va5_capabilities_anuncia_transcripcion_sin_lo_demas (tests.test_gateway_va.AudioInvalido.test_va5_capabilities_anuncia_transcripcion_sin_lo_demas) ... ok
+test_cer_casos_conocidos (tests.test_gateway_va.CerPorUnidad.test_cer_casos_conocidos) ... ok
+test_criterio_pass_declarado_en_corpus (tests.test_gateway_va.CerPorUnidad.test_criterio_pass_declarado_en_corpus) ... ok
+test_normaliza_minusculas_sin_puntuacion (tests.test_gateway_va.CerPorUnidad.test_normaliza_minusculas_sin_puntuacion) ... ok
+test_va1_audio_valido_atraviesa_y_llega_al_motor (tests.test_gateway_va.EntradaValida.test_va1_audio_valido_atraviesa_y_llega_al_motor) ... ok
+test_vr4_dos_sesiones_d10_no_se_cruzan (tests.test_gateway_vr.SesionesYAislamiento.test_vr4_dos_sesiones_d10_no_se_cruzan) ... ok
+test_vr5_capabilities_anuncia_streaming_true_y_video_false (tests.test_gateway_vr.SesionesYAislamiento.test_vr5_capabilities_anuncia_streaming_true_y_video_false) ... ok
+test_vr1_sse_entrega_eventos_y_stream_false_conserva_json (tests.test_gateway_vr.StreamingSSE.test_vr1_sse_entrega_eventos_y_stream_false_conserva_json) ... ok
+test_vr2_stream_invalido_o_con_schema_rechaza_antes_del_motor (tests.test_gateway_vr.StreamingSSE.test_vr2_stream_invalido_o_con_schema_rechaza_antes_del_motor) ... ok
+test_vr3_desconexion_cancela_backend_y_confirma_slot_libre (tests.test_gateway_vr.StreamingSSE.test_vr3_desconexion_cancela_backend_y_confirma_slot_libre) ... ok
+test_vr3b_error_backend_en_stream_da_502_json (tests.test_gateway_vr.StreamingSSE.test_vr3b_error_backend_en_stream_da_502_json) ... ok
+test_vr3c_slots_fail_closed_y_bloqueo_hasta_confirmacion (tests.test_gateway_vr.StreamingSSE.test_vr3c_slots_fail_closed_y_bloqueo_hasta_confirmacion) ... ok
+test_vr3d_linea_sse_excesiva_corta_y_verifica_slots (tests.test_gateway_vr.StreamingSSE.test_vr3d_linea_sse_excesiva_corta_y_verifica_slots) ... ok
+test_vs5_capabilities_anuncia_voz_y_audio_salida (tests.test_gateway_vs.CapabilitiesSpeech.test_vs5_capabilities_anuncia_voz_y_audio_salida) ... ok
+test_vs3_ocupado_responde_503_overloaded_sin_cola (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs3_ocupado_responde_503_overloaded_sin_cola) ... ok
+test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia) ... ok
+test_vs4b_resolver_entorno_tts_verifica_hash_y_limpia_env (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs4b_resolver_entorno_tts_verifica_hash_y_limpia_env) ... ok
+test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) ... ok
+test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia (tests.test_gateway_vs.SintesisValida.test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia) ... ok
+test_cached_corrupt_not_reused (tests.test_install_wsl.InstallationIntegrity.test_cached_corrupt_not_reused) ... ok
+test_download_corrupt_never_published (tests.test_install_wsl.InstallationIntegrity.test_download_corrupt_never_published) ... ok
+test_installation_lock_rejects_second_writer (tests.test_install_wsl.InstallationIntegrity.test_installation_lock_rejects_second_writer) ... ok
+test_runtime_tampering_and_added_files_rejected (tests.test_install_wsl.InstallationIntegrity.test_runtime_tampering_and_added_files_rejected) ... ok
+test_tar_traversal_and_symlink_escape_rejected (tests.test_install_wsl.InstallationIntegrity.test_tar_traversal_and_symlink_escape_rejected) ... ok
+test_valid_download_then_offline_reuse (tests.test_install_wsl.InstallationIntegrity.test_valid_download_then_offline_reuse) ... ok
+test_200_no_parseable_es_salida_invalida (tests.test_mcp_server.ClasificacionHTTP.test_200_no_parseable_es_salida_invalida) ... ok
+test_400_con_detalle_estructurado (tests.test_mcp_server.ClasificacionHTTP.test_400_con_detalle_estructurado) ... ok
+test_400_con_error_no_dict_y_no_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_no_dict_y_no_string) ... ok
+test_400_con_error_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_string) ... ok
+test_500_generico (tests.test_mcp_server.ClasificacionHTTP.test_500_generico) ... ok
+test_503_es_reintentable (tests.test_mcp_server.ClasificacionHTTP.test_503_es_reintentable) ... ok
+test_main_sobrevive_surrogate_e2e (tests.test_mcp_server.ClasificacionHTTP.test_main_sobrevive_surrogate_e2e) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_mensaje_no_objeto_32600) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server.ClasificacionHTTP.test_parse_error_32700) ... ok
+test_schema_profundo_no_mata (tests.test_mcp_server.ClasificacionHTTP.test_schema_profundo_no_mata) ... ok
+test_initialize (tests.test_mcp_server.Handshake.test_initialize) ... ok
+test_metodo_desconocido (tests.test_mcp_server.Handshake.test_metodo_desconocido) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server.Handshake.test_notificacion_sin_respuesta) ... ok
+test_tools_antes_de_initialize (tests.test_mcp_server.Handshake.test_tools_antes_de_initialize) ... ok
+test_tools_list_tres (tests.test_mcp_server.Handshake.test_tools_list_tres) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server.Handshake.test_version_no_soportada_negocia_default) ... ok
+test_health_reporta_down (tests.test_mcp_server.MotorCaido.test_health_reporta_down) ... ok
+test_infer_text_motor_caido (tests.test_mcp_server.MotorCaido.test_infer_text_motor_caido) ... ok
+test_health_up (tests.test_mcp_server.ToolsConMotor.test_health_up) ... ok
+test_infer_text_con_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_con_schema) ... ok
+test_infer_text_sin_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_sin_schema) ... ok
+test_infer_vision_png_rojo (tests.test_mcp_server.ToolsConMotor.test_infer_vision_png_rojo) ... ok
+test_campo_no_declarado_rechazado_por_nombre (tests.test_mcp_server.Validacion.test_campo_no_declarado_rechazado_por_nombre) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server.Validacion.test_choices_vacio_es_salida_invalida) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server.Validacion.test_health_con_arguments_rechazado) ... ok
+test_imagen_basura_rechazada_en_frontera (tests.test_mcp_server.Validacion.test_imagen_basura_rechazada_en_frontera) ... ok
+test_imagen_no_base64_rechazada (tests.test_mcp_server.Validacion.test_imagen_no_base64_rechazada) ... ok
+test_max_tokens_booleano_cero_y_4097 (tests.test_mcp_server.Validacion.test_max_tokens_booleano_cero_y_4097) ... ok
+test_prompt_8000_aceptado (tests.test_mcp_server.Validacion.test_prompt_8000_aceptado) ... ok
+test_prompt_8001_rechazado (tests.test_mcp_server.Validacion.test_prompt_8001_rechazado) ... ok
+test_salida_json_valido_pero_no_conforme (tests.test_mcp_server.Validacion.test_salida_json_valido_pero_no_conforme) ... ok
+test_schema_con_claves_no_soportadas_rechazado (tests.test_mcp_server.Validacion.test_schema_con_claves_no_soportadas_rechazado) ... ok
+test_schema_null_rechazado (tests.test_mcp_server.Validacion.test_schema_null_rechazado) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server.Validacion.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_es_error_de_protocolo (tests.test_mcp_server.Validacion.test_tool_desconocida_es_error_de_protocolo) ... ok
+test_usage_ausente_o_nulo_es_salida_invalida (tests.test_mcp_server.Validacion.test_usage_ausente_o_nulo_es_salida_invalida) ... ok
+test_r19_condicion_sana_pasa_y_reporta (tests.test_recursos_bt10.Bt10.test_r19_condicion_sana_pasa_y_reporta) ... ok
+test_r19_dos_listeners_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_dos_listeners_no_hay_pass) ... ok
+test_r19_pid_reciclado_o_ajeno_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_pid_reciclado_o_ajeno_no_hay_pass) ... ok
+test_r19_rss_sobre_umbral_falla (tests.test_recursos_bt10.Bt10.test_r19_rss_sobre_umbral_falla) ... ok
+test_r19_rss_vacio_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_rss_vacio_no_hay_pass) ... ok
+test_r19_sin_pid_de_listener_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_sin_pid_de_listener_no_hay_pass) ... ok
+test_r19_swap_se_reporta_sin_atribuir_ni_umbral (tests.test_recursos_bt10.Bt10.test_r19_swap_se_reporta_sin_atribuir_ni_umbral)
+El swap es global del host: se reporta, no revierte el pass ... ok
+test_red_comportamiento_actual_con_pgrep_vacio (tests.test_recursos_bt10.Bt10.test_red_comportamiento_actual_con_pgrep_vacio)
+Regresión del defecto original (RED de I0): el runner viejo ... ok
+test_synthetic_session_complete_and_ignored_by_git (tests.test_transcripciones.SyntheticSession.test_synthetic_session_complete_and_ignored_by_git) ... ok
+test_empty_or_invalid_text_writes_nothing (tests.test_transcripciones.TurnRetention.test_empty_or_invalid_text_writes_nothing) ... ok
+test_full_turn_leaves_0600_jsonl_with_both_texts (tests.test_transcripciones.TurnRetention.test_full_turn_leaves_0600_jsonl_with_both_texts) ... ok
+test_invalid_or_unconfined_session_is_rejected (tests.test_transcripciones.TurnRetention.test_invalid_or_unconfined_session_is_rejected) ... ok
+test_sessions_do_not_collide_within_the_same_second (tests.test_transcripciones.TurnRetention.test_sessions_do_not_collide_within_the_same_second) ... ok
+test_several_turns_append_in_order (tests.test_transcripciones.TurnRetention.test_several_turns_append_in_order) ... ok
+test_examples_with_native_text_retain_turns (tests.test_transcripciones.Wiring.test_examples_with_native_text_retain_turns) ... ok
+test_realtime_flows_declare_d10_pending (tests.test_transcripciones.Wiring.test_realtime_flows_declare_d10_pending) ... ok
+test_goodbye_detection_uses_local_asr_without_files (tests.test_wsl_examples.WslExamples.test_goodbye_detection_uses_local_asr_without_files) ... ok
+test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) ... ok
+test_interruption_closes_microphone (tests.test_wsl_examples.WslExamples.test_interruption_closes_microphone) ... ok
+test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) ... ok
+test_oversized_ws_frame_rejected_before_payload_read (tests.test_wsl_examples.WslExamples.test_oversized_ws_frame_rejected_before_payload_read) ... ok
+test_ping_pong_preserves_payload_and_next_event (tests.test_wsl_examples.WslExamples.test_ping_pong_preserves_payload_and_next_event) ... ok
+test_reader_handles_heartbeat_and_stops_on_close (tests.test_wsl_examples.WslExamples.test_reader_handles_heartbeat_and_stops_on_close) ... ok
+test_voice_end_and_duration_cap_close_microphone (tests.test_wsl_examples.WslExamples.test_voice_end_and_duration_cap_close_microphone) ...     (pid 4242: RSS 1024 MiB bajo mmap; artefactos ~1144 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: listeners en 8091: ['4242', '4242']; sin pid atribuible no hay pass)
+    (B-T10: pid 4242 no es del motor: '/bin/sh -c sleep 60 # llama-server --port 8091')
+    (pid 4242: RSS 5120 MiB bajo mmap; artefactos ~2613 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: sin RSS atribuible al pid 4242; el proceso desapareció entre lsof y ps)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+Voz detectada.
+Voz detectada.
+ok
+
+----------------------------------------------------------------------
+Ran 124 tests in 41.319s
+
+OK (skipped=8)

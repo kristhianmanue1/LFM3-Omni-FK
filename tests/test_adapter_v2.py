@@ -325,7 +325,7 @@ class PoliticaAdapter(AdapterBase):
         self.assertSinBackend(e, c)
         self.assertEqual(c["error"]["code"], "not_found")
         e, c, _ = self.post({"messages": [{"role": "user", "content": "h"}],
-                             "stream": True})
+                             "stream": 1})
         self.assertSinBackend(e, c)
         self.assertEqual(c["error"]["code"], "unsupported_field_value")
 

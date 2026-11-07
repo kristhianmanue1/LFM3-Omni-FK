@@ -28,14 +28,15 @@ LLAMA_TTS_SHA256 = (                   # F0 §7 / SPEC-i1-vs §2
 )
 MAX_PROPIEDADES = 32
 MAX_TOKENS = 4096
+MAX_SSE_LINE_BYTES = 64 * 1024         # SPEC-i1-vr §2
 BACKEND_TIMEOUT_S = 300
 
 CLAVES_TOP = {
     "model", "messages", "tools", "tool_choice", "temperature",
-    "top_p", "max_tokens", "response_format",
+    "top_p", "max_tokens", "response_format", "stream",
 }
 CLAVES_TTS = {"input", "language", "response_format", "model"}
-CLAVES_NO_SOPORTADAS = {"stream"}
+CLAVES_NO_SOPORTADAS = set()
 ROLES = {"system", "user", "assistant"}
 TIPOS_SCHEMA = {"string", "integer", "number", "boolean"}
 FIRMA_PNG = b"\x89PNG\r\n\x1a\n"
@@ -55,11 +56,11 @@ RUTAS_PERMITIDAS = (
 # Capabilities declaradas por SPEC, jamás derivadas del motor y jamás
 # anunciando lo no activo (SPEC-i1 §3; ADR-006 §1: una modalidad se
 # anuncia al cerrar su TAREA — transcripcion con I1-VA, voz/audio con
-# I1-VS, SPEC-i1-vs §4).
+# I1-VS, streaming con I1-VR, SPEC-i1-vr §4).
 CAPABILITIES = {
     "entrada": ["texto", "imagen", "audio"],
     "salida": ["texto", "audio"],
-    "streaming": False,
+    "streaming": True,
     "audio": True,
     "video": False,
     "voz": True,
@@ -329,9 +330,13 @@ def _numero(valor, bajo, alto, campo):
 def validar_payload(payload):
     if not isinstance(payload, dict):
         _error(400, "invalid_json", "el cuerpo debe ser un objeto JSON")
-    if "stream" in payload:
+    if "stream" in payload and not isinstance(payload.get("stream"), bool):
         _error(400, "unsupported_field_value",
-               "streaming no soportado en el gateway I0/I1")
+               "stream debe ser booleano (true o false)")
+    if payload.get("stream") is True \
+            and payload.get("response_format") is not None:
+        _error(400, "unsupported_field_value",
+               "streaming no compatible con response_format json_schema")
     desconocidas = set(payload) - CLAVES_TOP
     if desconocidas:
         _error(400, "unknown_field",

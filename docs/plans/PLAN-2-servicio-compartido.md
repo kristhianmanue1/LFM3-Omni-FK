@@ -148,9 +148,9 @@ TAREA I1-VR
   Consumes: I1-VA, I1-VS, ADR-006
   Produce: conversación local por turnos con SSE de texto y voz por frase
   Steps:
-  - [ ] fijar en SPEC p95, N y marca de fin de turno antes de medir;
+  - [x] fijar en SPEC p95, N y marca de fin de turno antes de medir;
     verificación: p95 de primera voz dentro del umbral fijado.
-  - [ ] cancelar turno y desconexión hasta la tarea del motor;
+  - [x] cancelar turno y desconexión hasta la tarea del motor;
     verificación: slot liberado confirmado; dos sesiones no se cruzan.
 TAREA I1-VV
   Consumes: I1-V0, ADR-006

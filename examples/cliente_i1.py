@@ -113,6 +113,30 @@ def sintetizar_voz(texto):
         return exc.code, json.loads(exc.read())
 
 
+def chat_sse(mensaje, max_tokens=24):
+    """Stream SSE en POST /v1/chat/completions (SPEC-i1-vr)."""
+    req = urllib.request.Request(
+        BASE + "/v1/chat/completions",
+        data=json.dumps({"messages": [{"role": "user", "content": mensaje}],
+                         "max_tokens": max_tokens,
+                         "stream": True}).encode("utf-8"),
+        headers={"Content-Type": "application/json"})
+    trozos, vio_done = [], False
+    with urllib.request.urlopen(req, timeout=120) as resp:
+        estado = resp.status
+        modo = resp.headers.get("X-V2-Mode", "")
+        for raw in resp:
+            linea = raw.decode("utf-8", errors="replace").strip()
+            if linea == "data: [DONE]":
+                vio_done = True
+            elif linea.startswith("data: "):
+                delta = (json.loads(linea[6:]).get("choices", [{}])[0]
+                         .get("delta", {}).get("content") or "")
+                if delta:
+                    trozos.append(delta)
+    return estado, modo, "".join(trozos), vio_done
+
+
 def caso(nombre, condicion, detalle=""):
     RESULTADOS.append(condicion)
     marca = "OK " if condicion else "FAIL"
@@ -135,6 +159,7 @@ def _demo():
     estado, caps = capabilities()
     caso("capabilities", estado == 200 and caps.get("voz") is True
          and caps.get("transcripcion") is True
+         and caps.get("streaming") is True
          and "imagen" in caps.get("entrada", []), f"estado={estado}")
 
     estado, cuerpo = modelos()
@@ -200,6 +225,22 @@ def _demo():
          and isinstance(err_tts, dict)
          and err_tts.get("error", {}).get("code") == "invalid_tts_input",
          f"estado={estado}")
+
+    # Stream SSE (SPEC-i1-vr) + rechazo de stream con response_format
+    st_sse, modo_sse, txt_sse, done_sse = chat_sse("Di: uno, dos, tres.")
+    caso("chat_sse", st_sse == 200 and modo_sse == "sse-passthrough"
+         and bool(txt_sse) and done_sse,
+         f"estado={st_sse} modo={modo_sse} done={done_sse}")
+
+    st_err_sse, err_sse = _post({
+        "messages": [{"role": "user", "content": "h"}],
+        "stream": True,
+        "response_format": {"type": "json_schema",
+                            "json_schema": {"name": "x", "schema": schema}},
+    })
+    caso("rechazo_sse_schema", st_err_sse == 400
+         and err_sse.get("error", {}).get("code") == "unsupported_field_value",
+         f"estado={st_err_sse}")
 
     fallos = RESULTADOS.count(False)
     print(f"CLIENTE resumen: {len(RESULTADOS) - fallos} OK, {fallos} FAIL")

@@ -1,0 +1,6 @@
+turno 1/5: primera_voz=2.79s (asr=0.43s, frases_tts=2) -> 'Estoy bien, gracias por preguntar.'
+turno 2/5: primera_voz=3.69s (asr=0.34s, frases_tts=1) -> 'Sí, el servicio de inferencia se ejecuta localmente, sin necesidad de conexión externa.'
+turno 3/5: primera_voz=3.76s (asr=0.35s, frases_tts=1) -> 'Entendido, la reunión se llevará a cabo a las cuatro de la tarde.'
+turno 4/5: primera_voz=3.27s (asr=0.33s, frases_tts=1) -> 'Podemos preparar un café para ti antes de comenzar la reunión.'
+turno 5/5: primera_voz=3.46s (asr=0.35s, frases_tts=1) -> 'El libro está bien colocado sobre la mesa del salón, listo para que lo veas.'
+VR gate: N=5 p95=3.76s (<= 8.0s) cancelacion=True d10_ok=True -> PASS

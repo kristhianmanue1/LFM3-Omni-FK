@@ -64,7 +64,7 @@ el agente con evidencia; la aceptación la decide el Operador.
 ### I1-V — Modalidades locales del artefacto vigente
 
 - Estado actual: `accepted_local` (propuesto al Operador) para
-  **I1-V0, I1-VT, I1-VA e I1-VS**; I1-VR/VV/VX/VM/VC `not_started`. I0
+  **I1-V0, I1-VT, I1-VA, I1-VS e I1-VR**; I1-VV/VX/VM/VC `not_started`. I0
   e I1 conservan `accepted_local`.
 - Owner: agente ejecutor (GLM 5.3, OpenCode; ajuste del plan: Claude
   Opus 5.5, Claude Code). Reviewer: subagente con contexto fresco
@@ -99,7 +99,9 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-05 | I1-VA `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados; CER mediana 0.000 peor 0.116 PASS; demo 9/9; suite 110 OK; rondas 2 y 3 proceed; capabilities anuncia transcripcion |
 | 2026-11-06 | orientación ADR-008 (`D-11`) | f8eb30c | ADR-008 y tareas I1-VX, I1-VM, I1-VC añadidas; ronda adversarial doble fix-and-retry -> proceed |
 | 2026-11-06 | I1-VS `implementing` → `verifying` | f8eb30c + trabajo | RED 17 fallos (red.txt); GREEN: POST /v1/audio/speech con texto por archivo 0600 (-f), exclusión mutua 503 sin cola, hash llama-tts verificado; ronda 1 fix-and-retry (H-1 WAV data(0) + 3 MED + 1 LOW) |
-| 2026-11-06 | I1-VS `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados; TTS->ASR CER mediana 0.000 peor 0.000 PASS; RSS llama-tts 3094.5 MiB < 4 GiB, RSS motor 2216.0 MiB < 4 GiB; demo 11/11; suite 116 OK; ronda 2 proceed; capabilities anuncia voz/audio |
+| 2026-11-06 | I1-VS `accepted_local` (propuesto) | fddabbe | fixes aplicados; TTS->ASR CER mediana 0.000 peor 0.000 PASS; RSS llama-tts 3094.5 MiB < 4 GiB, RSS motor 2216.0 MiB < 4 GiB; demo 11/11; suite 116 OK; ronda 2 proceed; capabilities anuncia voz/audio |
+| 2026-11-06 | I1-VR `implementing` → `verifying` | fddabbe + trabajo | RED 4 fallos (red.txt); GREEN: SSE sin buffering (stream=True) en gateway_http, cancelación hasta /slots y conversación N=5 con p95 primera voz 3.76 s <= 8.0 s; ronda 1 fix-and-retry (2 HIGH + 2 MED + 1 LOW corregidos) |
+| 2026-11-06 | I1-VR `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados (cierre garantizado, /slots fail-closed, bloqueo 503 slot_not_released, línea <=64 KiB, TTS por cada frase); p95 3.76 s PASS; demo 13/13; suite 124 OK; ronda 2 proceed; capabilities anuncia streaming |
 
 ## Salida prevista
 

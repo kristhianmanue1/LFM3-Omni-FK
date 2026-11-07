@@ -11,6 +11,7 @@ Sin dependencias: stdlib 3.12+. Puerto default 8092
 """
 
 import hashlib
+import http.client
 import json
 import os
 from pathlib import Path
@@ -19,6 +20,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import urllib.error
@@ -26,12 +28,14 @@ import urllib.request
 
 from gateway_core import (
     BACKEND_TIMEOUT_S, CAPABILITIES, DEFAULT_BACKEND, DEFAULT_PORT,
-    LLAMA_TTS_SHA256, MAX_BODY_BYTES, RUTAS_PERMITIDAS, TTS_TIMEOUT_S,
-    ErrorV2, _error, _rechazar_constante, validar_payload,
+    LLAMA_TTS_SHA256, MAX_BODY_BYTES, MAX_SSE_LINE_BYTES, RUTAS_PERMITIDAS,
+    TTS_TIMEOUT_S, ErrorV2, _error, _rechazar_constante, validar_payload,
     validar_payload_tts, validar_salida, validar_wav,
 )
 
 LOCK_TTS = threading.Lock()
+LOCK_STREAM_SLOT = threading.Lock()
+_SLOT_PENDIENTE = False
 PATH_SISTEMA = "/usr/bin:/bin:/usr/sbin:/sbin"
 SNAP_HF = (
     Path.home() / ".cache" / "huggingface" / "hub"
@@ -62,6 +66,43 @@ def _proxy(backend, ruta, cuerpo=None, timeout=BACKEND_TIMEOUT_S):
     except (urllib.error.URLError, TimeoutError, OSError):
         _error(502, "backend_error", "motor inalcanzable",
                detail="backend_unreachable")
+
+
+def _esperar_liberacion_slot(backend, timeout=2.0):
+    """Tras desconexión o final incompleto de un stream SSE, consulta
+    GET /slots del backend hasta confirmar que al menos un slot existe
+    y todos reportan is_processing == False (ADR-006 §2, SPEC-i1-vr §2)."""
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        try:
+            with urllib.request.urlopen(
+                    backend + "/slots", timeout=1.0) as resp:
+                slots = json.loads(resp.read())
+            if isinstance(slots, list) and len(slots) > 0 and all(
+                    isinstance(s, dict)
+                    and isinstance(s.get("is_processing"), bool)
+                    and s["is_processing"] is False
+                    for s in slots):
+                return True
+        except (urllib.error.URLError, TimeoutError, OSError, ValueError):
+            pass
+        time.sleep(0.025)
+    return False
+
+
+def _asegurar_slot_confirmado(backend):
+    """Con LOCK_STREAM_SLOT adquirido: si un stream previo terminó sin
+    [DONE] y el motor no había confirmado liberación, vuelve a verificar
+    /slots y rechaza con 503 overloaded si sigue sin confirmar."""
+    global _SLOT_PENDIENTE
+    if not _SLOT_PENDIENTE:
+        return
+    if _esperar_liberacion_slot(backend, timeout=0.5):
+        _SLOT_PENDIENTE = False
+        return
+    _error(503, "overloaded",
+           "slot del motor pendiente de confirmación de liberación",
+           detail="slot_not_released")
 
 
 def _sha256_archivo(ruta):
@@ -190,6 +231,71 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(crudo)
 
+    def _proxy_sse(self, cuerpo):
+        """Stream SSE sin buffering hacia el cliente (SPEC-i1-vr §2,
+        ADR-006 §2). Si el cliente se desconecta o el stream no alcanza
+        data: [DONE], cierra la conexión con el motor y exige
+        confirmación de /slots antes de permitir otra inferencia."""
+        global _SLOT_PENDIENTE
+        if not LOCK_STREAM_SLOT.acquire(timeout=2.5):
+            _error(503, "overloaded",
+                   "stream de inferencia en curso; reintente",
+                   detail="stream_in_progress")
+        try:
+            _asegurar_slot_confirmado(self.server.backend)
+            req = urllib.request.Request(
+                self.server.backend + "/v1/chat/completions",
+                data=cuerpo,
+                headers={"Content-Type": "application/json"},
+            )
+            try:
+                resp = urllib.request.urlopen(req, timeout=BACKEND_TIMEOUT_S)
+            except urllib.error.HTTPError as exc:
+                exc.close()
+                _error(502, "backend_error", "el motor rechazó la petición",
+                       detail=f"backend_status_{exc.code}")
+            except (urllib.error.URLError, TimeoutError, OSError):
+                _error(502, "backend_error", "motor inalcanzable",
+                       detail="backend_unreachable")
+            vio_done = False
+            try:
+                if resp.status != 200:
+                    _error(502, "backend_error",
+                           "el motor rechazó la petición",
+                           detail=f"backend_status_{resp.status}")
+                self.close_connection = True
+                self.send_response(200)
+                self.send_header("Content-Type",
+                                 "text/event-stream; charset=utf-8")
+                self.send_header("Cache-Control", "no-cache")
+                self.send_header("X-Accel-Buffering", "no")
+                self.send_header("Connection", "close")
+                self.send_header("X-Request-Id", self.request_id)
+                self.send_header("X-V2-Mode", "sse-passthrough")
+                self.end_headers()
+                while True:
+                    linea = resp.readline(MAX_SSE_LINE_BYTES + 1)
+                    if not linea:
+                        break
+                    if len(linea) > MAX_SSE_LINE_BYTES:
+                        break
+                    self.wfile.write(linea)
+                    self.wfile.flush()
+                    if linea.strip() == b"data: [DONE]":
+                        vio_done = True
+                        break
+            except (BrokenPipeError, ConnectionResetError, OSError,
+                    http.client.HTTPException):
+                pass
+            finally:
+                resp.close()
+                if not vio_done:
+                    _SLOT_PENDIENTE = True
+                    if _esperar_liberacion_slot(self.server.backend):
+                        _SLOT_PENDIENTE = False
+        finally:
+            LOCK_STREAM_SLOT.release()
+
     def _leer_json_post(self):
         """Límites de transporte antes de costo (SPEC-i1 §4): compresión
         y Transfer-Encoding rechazados sin leer; Content-Length <= 32 MiB."""
@@ -252,6 +358,17 @@ class ManejadorGateway(BaseHTTPRequestHandler):
             except (TypeError, ValueError):
                 _error(400, "invalid_json",
                        "el cuerpo contiene valores no representables en JSON")
+            if payload.get("stream") is True:
+                self._proxy_sse(limpio.encode("utf-8"))
+                return
+            if not LOCK_STREAM_SLOT.acquire(timeout=2.5):
+                _error(503, "overloaded",
+                       "stream de inferencia en curso; reintente",
+                       detail="stream_in_progress")
+            try:
+                _asegurar_slot_confirmado(self.server.backend)
+            finally:
+                LOCK_STREAM_SLOT.release()
             formato = payload.get("response_format")
             estado, cuerpo = _proxy(self.server.backend,
                                     "/v1/chat/completions",
@@ -300,6 +417,8 @@ class ServidorGateway(ThreadingHTTPServer):
 
 
 def build_server(direccion, backend=DEFAULT_BACKEND):
+    global _SLOT_PENDIENTE
+    _SLOT_PENDIENTE = False
     servidor = ServidorGateway(direccion, ManejadorGateway)
     servidor.backend = backend
     servidor.tts_runner = None

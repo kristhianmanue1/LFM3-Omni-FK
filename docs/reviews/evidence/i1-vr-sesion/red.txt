@@ -1,0 +1,61 @@
+test_vr4_dos_sesiones_d10_no_se_cruzan (tests.test_gateway_vr.SesionesYAislamiento.test_vr4_dos_sesiones_d10_no_se_cruzan) ... ok
+test_vr5_capabilities_anuncia_streaming_true_y_video_false (tests.test_gateway_vr.SesionesYAislamiento.test_vr5_capabilities_anuncia_streaming_true_y_video_false) ... FAIL
+test_vr1_sse_entrega_eventos_y_stream_false_conserva_json (tests.test_gateway_vr.StreamingSSE.test_vr1_sse_entrega_eventos_y_stream_false_conserva_json) ... ERROR
+test_vr2_stream_invalido_o_con_schema_rechaza_antes_del_motor (tests.test_gateway_vr.StreamingSSE.test_vr2_stream_invalido_o_con_schema_rechaza_antes_del_motor) ... ok
+test_vr3_desconexion_cancela_backend_y_confirma_slot_libre (tests.test_gateway_vr.StreamingSSE.test_vr3_desconexion_cancela_backend_y_confirma_slot_libre) ... FAIL
+test_vr3b_error_backend_en_stream_da_502_json (tests.test_gateway_vr.StreamingSSE.test_vr3b_error_backend_en_stream_da_502_json) ... FAIL
+
+======================================================================
+ERROR: test_vr1_sse_entrega_eventos_y_stream_false_conserva_json (tests.test_gateway_vr.StreamingSSE.test_vr1_sse_entrega_eventos_y_stream_false_conserva_json)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vr.py", line 164, in test_vr1_sse_entrega_eventos_y_stream_false_conserva_json
+    with urllib.request.urlopen(req, timeout=15) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 521, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 630, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 559, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 639, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 400: Bad Request
+
+======================================================================
+FAIL: test_vr5_capabilities_anuncia_streaming_true_y_video_false (tests.test_gateway_vr.SesionesYAislamiento.test_vr5_capabilities_anuncia_streaming_true_y_video_false)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vr.py", line 319, in test_vr5_capabilities_anuncia_streaming_true_y_video_false
+    self.assertTrue(caps["streaming"])
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_vr3_desconexion_cancela_backend_y_confirma_slot_libre (tests.test_gateway_vr.StreamingSSE.test_vr3_desconexion_cancela_backend_y_confirma_slot_libre)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vr.py", line 248, in test_vr3_desconexion_cancela_backend_y_confirma_slot_libre
+    self.assertIn(b"data: ", recibido)
+AssertionError: b'data: ' not found in b'HTTP/1.0 400 Bad Request\r\nServer: lfm3-gateway-i1/0.1 Python/3.12.12\r\nDate: Sat, 07 Nov 2026 02:59:57 GMT\r\nContent-Type: application/json\r\nContent-Length: 153\r\nX-Request-Id: b5fd95a059f942ed9a4fc091491b94f0\r\n\r\n{"error": {"code": "unsupported_field_value", "message": "streaming no soportado en el gateway I0/I1", "request_id": "b5fd95a059f942ed9a4fc091491b94f0"}}'
+
+======================================================================
+FAIL: test_vr3b_error_backend_en_stream_da_502_json (tests.test_gateway_vr.StreamingSSE.test_vr3b_error_backend_en_stream_da_502_json)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni/tests/test_gateway_vr.py", line 270, in test_vr3b_error_backend_en_stream_da_502_json
+    self.assertEqual(estado, 502)
+AssertionError: 400 != 502
+
+----------------------------------------------------------------------
+Ran 6 tests in 6.021s
+
+FAILED (failures=3, errors=1)

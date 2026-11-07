@@ -1,0 +1,87 @@
+{
+  "schema": "lfm3-omni/gate-vr/v1",
+  "marca_fin_de_turno": "t_eot = time.monotonic() al disponer del WAV del turno para enviar a 8092",
+  "n_turnos_fijado": 5,
+  "umbral_p95_primera_voz_s": 8.0,
+  "p95_primera_voz_s": 3.76,
+  "max_primera_voz_s": 3.76,
+  "d10_sesiones_aisladas_0600": true,
+  "cancelacion_sse_motor_vivo": {
+    "recibio_sse_antes_de_cortar": true,
+    "slot_liberado_confirmado": true,
+    "tiempo_confirmacion_s": 0.153
+  },
+  "pass": true,
+  "turnos": [
+    {
+      "turno": 1,
+      "fixture_id": "corpus-01",
+      "referencia_audio": "Hola, ¿cómo estás hoy?",
+      "user_text_asr": "Hola, ¿cómo estás hoy?",
+      "primera_frase": "Estoy bien, gracias por preguntar.",
+      "reply_completo": "Estoy bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?",
+      "num_frases": 2,
+      "frases_sintetizadas": 2,
+      "asr_s": 0.434,
+      "ttft_desde_eot_s": 0.594,
+      "latencia_primera_voz_s": 2.787,
+      "first_tts_wav_bytes": 99884
+    },
+    {
+      "turno": 2,
+      "fixture_id": "corpus-02",
+      "referencia_audio": "El servicio de inferencia funciona en local.",
+      "user_text_asr": "El servicio de inferencia funciona local.",
+      "primera_frase": "Sí, el servicio de inferencia se ejecuta localmente, sin necesidad de conexión externa.",
+      "reply_completo": "Sí, el servicio de inferencia se ejecuta localmente, sin necesidad de conexión externa.",
+      "num_frases": 1,
+      "frases_sintetizadas": 1,
+      "asr_s": 0.341,
+      "ttft_desde_eot_s": 0.575,
+      "latencia_primera_voz_s": 3.69,
+      "first_tts_wav_bytes": 299564
+    },
+    {
+      "turno": 3,
+      "fixture_id": "corpus-03",
+      "referencia_audio": "La reunión es a las cuatro de la tarde.",
+      "user_text_asr": "La reunión es a las cuatro de la tarde.",
+      "primera_frase": "Entendido, la reunión se llevará a cabo a las cuatro de la tarde.",
+      "reply_completo": "Entendido, la reunión se llevará a cabo a las cuatro de la tarde.",
+      "num_frases": 1,
+      "frases_sintetizadas": 1,
+      "asr_s": 0.349,
+      "ttft_desde_eot_s": 0.676,
+      "latencia_primera_voz_s": 3.76,
+      "first_tts_wav_bytes": 199724
+    },
+    {
+      "turno": 4,
+      "fixture_id": "corpus-04",
+      "referencia_audio": "Necesito un café antes de empezar.",
+      "user_text_asr": "Necesito un café antes de empezar.",
+      "primera_frase": "Podemos preparar un café para ti antes de comenzar la reunión.",
+      "reply_completo": "Podemos preparar un café para ti antes de comenzar la reunión.",
+      "num_frases": 1,
+      "frases_sintetizadas": 1,
+      "asr_s": 0.333,
+      "ttft_desde_eot_s": 0.695,
+      "latencia_primera_voz_s": 3.273,
+      "first_tts_wav_bytes": 192044
+    },
+    {
+      "turno": 5,
+      "fixture_id": "corpus-05",
+      "referencia_audio": "El libro está sobre la mesa del salón.",
+      "user_text_asr": "El libro está sobre la mesa del salón.",
+      "primera_frase": "El libro está bien colocado sobre la mesa del salón, listo para que lo veas.",
+      "reply_completo": "El libro está bien colocado sobre la mesa del salón, listo para que lo veas.",
+      "num_frases": 1,
+      "frases_sintetizadas": 1,
+      "asr_s": 0.353,
+      "ttft_desde_eot_s": 0.754,
+      "latencia_primera_voz_s": 3.455,
+      "first_tts_wav_bytes": 222764
+    }
+  ]
+}
