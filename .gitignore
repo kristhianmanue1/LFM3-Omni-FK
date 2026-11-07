@@ -21,3 +21,7 @@ run/build/
 
 # Certificados y claves TLS locales generados en el host
 config/certs/
+
+# Almacenamiento local privado de jobs duraderos (Fase I5, Perfil J)
+run/jobs/
+privado/jobs/

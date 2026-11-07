@@ -30,7 +30,7 @@ from gateway_core import (
     BACKEND_TIMEOUT_S, CAPABILITIES, DEFAULT_BACKEND, DEFAULT_PORT,
     FFPROBE_SHA256, LLAMA_TTS_SHA256, MAX_BODY_BYTES, MAX_SSE_LINE_BYTES,
     MAX_VIDEO_FPS, MAX_VIDEO_FRAMES, MAX_VIDEO_PIXELES, MAX_VIDEO_SEGUNDOS,
-    RUTAS_MCP, RUTAS_PERMITIDAS, TTS_TIMEOUT_S, ErrorV2, _error,
+    RUTAS_JOBS, RUTAS_MCP, RUTAS_PERMITIDAS, TTS_TIMEOUT_S, ErrorV2, _error,
     _rechazar_constante, validar_payload, validar_payload_tts, validar_salida,
     validar_wav,
 )
@@ -86,9 +86,15 @@ def _determinar_scopes_chat(payload):
 
 def _enrutar(metodo, ruta):
     """Allowlist ÚNICO de enrutado (SPEC-i1 §2): una ruta sólo responde
-    si el par método+ruta está en RUTAS_PERMITIDAS o RUTAS_MCP; añadir un if/elif
-    sin la tupla queda cortado aquí por diseño."""
-    if f"{metodo} {ruta}" not in set(RUTAS_PERMITIDAS) and f"{metodo} {ruta}" not in set(RUTAS_MCP):
+    si el par método+ruta está en RUTAS_PERMITIDAS, RUTAS_MCP o RUTAS_JOBS;
+    añadir un if/elif sin la tupla queda cortado aquí por diseño."""
+    ruta_base = "/jobs" if ruta.startswith("/jobs/") else ruta
+    clave = f"{metodo} {ruta_base}"
+    if (
+        f"{metodo} {ruta}" not in set(RUTAS_PERMITIDAS)
+        and f"{metodo} {ruta}" not in set(RUTAS_MCP)
+        and clave not in set(RUTAS_JOBS)
+    ):
         _error(404, "not_found", "ruta fuera del allowlist")
 
 
@@ -506,6 +512,22 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                     _error(501, "not_implemented", "mcp remoto no inicializado")
                 handler.handle_get(self)
                 return
+            elif self.path.startswith("/jobs/"):
+                jm = getattr(self.server, "jobs_manager", None)
+                if jm is None:
+                    _error(501, "not_implemented", "jobs no inicializado")
+                proj_id = self.project_id or "default"
+                if getattr(self.server, "auth_enabled", False):
+                    auth_h = self.headers.get("Authorization")
+                    proj_h = self.headers.get("X-Project-ID")
+                    self.server.tokens_registry.verify_request(
+                        auth_h, proj_h, required_scopes={"jobs:read"}
+                    )
+                    proj_id = proj_h.strip()
+                job_id = self.path[len("/jobs/"):]
+                status, res = jm.get_job(proj_id, job_id)
+                self._json(status, json.dumps(res).encode())
+                return
             else:
                 _error(404, "not_found", "ruta fuera del allowlist")
         except ErrorV2 as exc:
@@ -534,6 +556,26 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 if handler is None:
                     _error(501, "not_implemented", "mcp remoto no inicializado")
                 handler.handle_post(self, proj_info, payload=payload)
+                return
+
+            if self.path == "/jobs":
+                jm = getattr(self.server, "jobs_manager", None)
+                if jm is None:
+                    _error(501, "not_implemented", "jobs no inicializado")
+                idemp_key = self.headers.get("Idempotency-Key") or ""
+                proj_id = self.project_id or "default"
+                if getattr(self.server, "auth_enabled", False):
+                    auth_h = self.headers.get("Authorization")
+                    proj_h = self.headers.get("X-Project-ID")
+                    self.server.tokens_registry.verify_request(
+                        auth_h, proj_h, required_scopes={"jobs:create"}
+                    )
+                    proj_id = proj_h.strip()
+                op = payload.get("operation")
+                job_payload = payload.get("payload", {})
+                ttl = payload.get("ttl_seconds", 3600)
+                status, res = jm.create_job(proj_id, op, job_payload, idemp_key, ttl_seconds=ttl)
+                self._json(status, json.dumps(res).encode())
                 return
 
             if getattr(self.server, "auth_enabled", False) and proj_info is not None:
@@ -608,6 +650,31 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         except ErrorV2 as exc:
             self._cuerpo_error(exc)
 
+    def do_DELETE(self):
+        self.request_id = uuid.uuid4().hex
+        self.project_id = None
+        try:
+            _enrutar("DELETE", self.path)
+            if self.path.startswith("/jobs/"):
+                jm = getattr(self.server, "jobs_manager", None)
+                if jm is None:
+                    _error(501, "not_implemented", "jobs no inicializado")
+                proj_id = "default"
+                if getattr(self.server, "auth_enabled", False):
+                    auth_h = self.headers.get("Authorization")
+                    proj_h = self.headers.get("X-Project-ID")
+                    self.server.tokens_registry.verify_request(
+                        auth_h, proj_h, required_scopes={"jobs:cancel"}
+                    )
+                    proj_id = proj_h.strip()
+                job_id = self.path[len("/jobs/"):]
+                status, res = jm.cancel_job(proj_id, job_id)
+                self._json(status, json.dumps(res).encode())
+                return
+            _error(404, "not_found", "ruta fuera del allowlist")
+        except ErrorV2 as exc:
+            self._cuerpo_error(exc)
+
     def _metodo_no_soportado(self):
         self.request_id = uuid.uuid4().hex
         try:
@@ -616,7 +683,6 @@ class ManejadorGateway(BaseHTTPRequestHandler):
             self._cuerpo_error(exc)
 
     do_PUT = _metodo_no_soportado
-    do_DELETE = _metodo_no_soportado
     do_PATCH = _metodo_no_soportado
     do_OPTIONS = _metodo_no_soportado
 
@@ -649,6 +715,8 @@ def build_server(
     servidor.dispatcher = dispatcher or GLOBAL_DISPATCHER
     from mcp_remote import MCPRemoteHandler
     servidor.mcp_remote_handler = MCPRemoteHandler(backend_url=backend)
+    from jobs_manager import JobsManager
+    servidor.jobs_manager = JobsManager(backend_url=backend)
     return servidor
 
 

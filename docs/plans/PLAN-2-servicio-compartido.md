@@ -256,21 +256,21 @@ TAREA I5-D
   Consumes: I4, perfil J, S-04/S-07/S-10
   Produce: SPEC-JOBS y ADR de persistencia/retención/durabilidad
   Steps:
-  - [ ] cerrar estados, aislamiento, idempotencia y recuperación;
+  - [x] cerrar estados, aislamiento, idempotencia y recuperación;
     verificación: fixtures de reinicio, duplicado y caducidad antes de código.
 TAREA I5-J
   Consumes: I5-D
   Produce: trabajos largos con resultados privados y TTL
   Steps:
-  - [ ] implementar colas compartidas justas y reclamo atómico;
+  - [x] implementar colas compartidas justas y reclamo atómico;
     verificación: dos workers no duplican job; restart no repite running.
-  - [ ] demostrar cancelación, borrado y no acceso entre proyectos;
+  - [x] demostrar cancelación, borrado y no acceso entre proyectos;
     verificación: matriz J y tráfico interactivo dentro del SLO ratificado.
 TAREA I5-U
   Consumes: I5-J
   Produce: cliente de trabajo largo usable con consulta y cancelación
   Steps:
-  - [ ] demostrar envío, consulta, resultado, expiración y rollback;
+  - [x] demostrar envío, consulta, resultado, expiración y rollback;
     verificación: recuperación desde fallo con durabilidad declarada probada.
 TAREA I6-E
   Consumes: I2-V, D-06, S-09/S-11 y demanda medida
