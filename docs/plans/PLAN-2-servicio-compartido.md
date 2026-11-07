@@ -178,9 +178,9 @@ TAREA I1-VC
   Consumes: I1-VX, I1-VS, I1-VV, ADR-008, perfil D
   Produce: CLI unificado sobre 8092 y adaptador local perfil D con simulador
   Steps:
-  - [ ] entregar CLI stdlib para modalidades activas y schema contra 8092;
+  - [x] entregar CLI stdlib para modalidades activas y schema contra 8092;
     verificación: subcomandos y pipes JSON pasan con errores controlados.
-  - [ ] validar perfil D (expires_at pre/post, observation_id, complete);
+  - [x] validar perfil D (expires_at pre/post, observation_id, complete);
     verificación: caducada, repetida, incompleta o fuera de enum se descarta.
 TAREA I2-D
   Consumes: I1, D-02/D-03/D-04, S-03/S-04/S-07/S-08/S-10
