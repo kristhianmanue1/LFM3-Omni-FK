@@ -1,0 +1,25 @@
+==============================================================
+ DEMOSTRACIÓN DE CONSUMO DEL PILOTO PRIVADO HTTPS (FASE I2)
+==============================================================
+
+[1] Verificando endpoint público de salud (/healthz)...
+  Status: 200 | Terminador TLS: lfm3-stdlib
+  Respuesta: {'status': 'ok', 'mode': 'gateway-i1'}
+
+[2] Proyecto Alpha: Inferencia de texto (/v1/chat/completions)...
+  Status: 200 | Contrato: 2 | Proyecto: proyecto-alpha
+  Respuesta del modelo: 'ALPHA_ACTIVO'
+
+[3] Proyecto Alpha intentando propuesta robótica (sin scope profile:d)...
+  Status esperado: 403 (403 Forbidden)
+  Error devuelto: el proyecto no posee el scope requerido: 'profile:d'
+
+[4] Proyecto Beta: Propuesta estructurada de acción (Perfil D autorizado)...
+  Status: 200 | Validación v2: valid | Proyecto: proyecto-beta
+  Propuesta estructurada validada: {"observation_id": "obstacle_front", "action": "move_forward", "confidence": 0.85}
+
+[5] Proyecto Beta intentando síntesis de voz (sin scope speech:synthesize)...
+  Status esperado: 403 (403 Forbidden)
+  Error devuelto: el proyecto no posee el scope requerido: 'speech:synthesize'
+
+Demostración de onboarding concluida con éxito.

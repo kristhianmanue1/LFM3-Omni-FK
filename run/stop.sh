@@ -65,11 +65,13 @@ detener_puerto() {
   return 1
 }
 
-TARGET="${1:-8091}"
+TARGET="${1:---all}"
 if [ "$TARGET" = "--all" ]; then
   detener_puerto 8443 || true
   detener_puerto 8092 || true
   detener_puerto 8091
+  rm -rf "$DIR/serve_pilot.lock" 2>/dev/null || true
+  rm -f "$DIR/gateway.pid" "$DIR/tls.pid" 2>/dev/null || true
 else
   detener_puerto "$TARGET"
 fi

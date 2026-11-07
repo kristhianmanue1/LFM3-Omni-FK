@@ -70,8 +70,15 @@ def _determinar_scopes_chat(payload):
                             scopes.add("infer:audio")
     rf = payload.get("response_format")
     if isinstance(rf, dict) and rf.get("type") == "json_schema":
-        schema = rf.get("json_schema", {}).get("schema", {})
-        if isinstance(schema, dict) and "proposal" in schema.get("properties", {}):
+        js = rf.get("json_schema", {})
+        schema = js.get("schema", {}) if isinstance(js, dict) else {}
+        props = schema.get("properties", {}) if isinstance(schema, dict) else {}
+        name = (js.get("name") or "").lower() if isinstance(js, dict) else ""
+        if (
+            "proposal" in props
+            or {"observation_id", "action"}.issubset(set(props.keys()))
+            or name in ("action_proposal", "robot_proposal", "perfil_d")
+        ):
             scopes.add("profile:d")
     return scopes
 

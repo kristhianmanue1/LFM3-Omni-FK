@@ -212,7 +212,7 @@ TAREA I2-U
   Consumes: I2-P/I2-V, aceptación específica del dossier de activación
   Produce: piloto HTTPS privado usable por dos proyectos identificados
   Steps:
-  - [ ] activar sólo alcance aceptado y probar desde cliente externo;
+  - [x] activar sólo alcance aceptado y probar desde cliente externo;
     verificación: TLS, identidad, modelo efectivo y rollback real pasan.
 TAREA I3-D
   Consumes: I2, S-05/S-06, perfil M

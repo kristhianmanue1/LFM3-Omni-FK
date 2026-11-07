@@ -108,12 +108,12 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-06 | I1-VC `accepted_local` | 5003e4b | CLI unificado stdlib y adaptador local perfil D para robots/simuladores (deriva <=2s, deduplicación, secuencia y descarte fail-closed); suite 208 OK; simulador e2e live; rondas proceed |
 | 2026-11-06 | I2-D `accepted_local` | commit de esta TAREA | diseño y formalización de arquitectura I2: SPEC-i2, ADR-009, dossier-operacion-i2, D-02/D-03/D-04 formalizadas; ronda 1 fix-and-retry subsanada; ronda 2 proceed; 5 gates OK |
 | 2026-11-06 | I2-P `accepted_local` | 5fe4258 | implementación auth Bearer, tokens.json 0600, recarga en memoria, token bucket, fair queuing, terminador TLS stdlib, anti-SSRF; suite 232 OK (24 tests I2 nuevos); 5 gates OK; ronda 2 proceed |
-| 2026-11-07 | I2-V `accepted_local` | commit de esta TAREA | vigilancia reproducible de ciclo de vida (src/vigilancia.py), presupuesto tiempo/bytes/red, máquina estados 10 estados con blocked, triaje temprano, sanitización 5 capas, 9 escenarios de ensayo OK, 19 tests nuevos (suite 251 OK); rondas 1 y 2 proceed |
+| 2026-11-07 | I2-V `accepted_local` | 3a172d4 | vigilancia reproducible de ciclo de vida (src/vigilancia.py), presupuesto tiempo/bytes/red, máquina estados 10 estados con blocked, triaje temprano, sanitización 5 capas, 9 escenarios de ensayo OK, 19 tests nuevos (suite 251 OK); rondas 1 y 2 proceed |
+| 2026-11-07 | I2-U `accepted_local` | commit de esta TAREA | piloto HTTPS privado activado (run/serve_pilot.sh con lock y fail-closed, run/stop.sh --all con rollback real, scope profile:d cerrado en gateway_http.py, demo cliente 5/5 OK, 12 tests nuevos suite 263 OK); rondas 1 y 2 proceed |
 
 ## I2 — Servicio web privado por invitación
 
-- Estado actual: `accepted_local` para I2-D, I2-P e I2-V; pendiente I2-U
-  (propuesto al Operador).
+- Estado actual: `accepted_local` completo (I2-D, I2-P, I2-V, I2-U cerrados).
 - Owner: agente ejecutor (OpenCode / Antigravity). Reviewer: subagente
   con contexto fresco (ronda adversarial I2-D).
 - Encargo: Operador, 2026-11-06 — «adelante» (ejecución de TAREA I2-D).
