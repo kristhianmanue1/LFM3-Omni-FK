@@ -119,7 +119,8 @@ actitud positiva: es intentar demostrar que está mal.
 - **Ataca lo que rompe, no el estilo:** invariantes violados, errores
   silenciados, casos edge sin cubrir, contratos incumplidos byte a byte,
   compatibilidad rota, recursos sin liberar, entrada no confiable sin
-  validar, tests que pasan pero no prueban el requisito.
+  validar, tests que pasan pero no prueban el requisito — forma: el
+  catálogo de defectos de templates/skevi/review-defect-catalog.md (ADR-035).
 - **Prohibido:** una ronda que sólo elogia o comenta estilo no cuenta como
   adversarial.
 
@@ -230,14 +231,13 @@ historia compartida, reset destructivo, borrado de ramas remotas, tags,
 releases, publicación, instalación de dependencias nuevas y su actualización
 cuando afecta archivos del repositorio, **ampliación de la superficie de
 ejecución declarada en la TAREA** (estándar §6.8), y cualquier comando
-destructivo. El
-otorgante, las condiciones y la aceptación por
-operación se rigen por el estándar §1.4, §4.3, §6.2 y §6.6, sujetos a
-`AGENTS.md` y a las instrucciones superiores aplicables. Una autorización
-anterior no habilita operaciones fuera de su alcance o vigencia. Si cubre
-explícitamente una secuencia aún vigente, se verifica esa cobertura; no
-se inventa una autorización distinta por cambiar de tarea. Ante duda se
-aplica fail-closed, sin ampliar ni renovar el permiso por inferencia.
+destructivo. El otorgante, las condiciones y la aceptación por operación se
+rigen por el estándar §1.4, §4.3, §6.2 y §6.6, sujetos a `AGENTS.md` y a las
+instrucciones superiores aplicables. Una autorización anterior no habilita
+operaciones fuera de su alcance o vigencia. Si cubre explícitamente una
+secuencia aún vigente, se verifica esa cobertura; no se inventa una
+autorización distinta por cambiar de tarea. Ante duda se aplica fail-closed,
+sin ampliar ni renovar el permiso por inferencia.
 
 Al hito verificado, propón `push` ordinario o `merge` con dossier en dos capas
 (folio, destino, commit, evidencia, riesgos; §4.3, ADR-044), mejor un lote
@@ -254,9 +254,8 @@ repositorio es, como mínimo, tarea Bounded.
 Procedencia: [PROP-008](../history/PROP-008-integracion-ankla-por-contrato.md).
 Razón: el hueco textual de «dependencias nuevas» no cubría los upgrades.
 
-Ante un estado inesperado de Git (commit, rama o push que tú no hiciste):
-detente, audita (`reflog`, remoto) y reporta. No destruyas trabajo ajeno
-para "dejarlo limpio".
+Ante un estado inesperado de Git: detente, audita (`reflog`, remoto) y
+reporta (estándar §4.3); no destruyas trabajo ajeno para «dejarlo limpio».
 
 ## 8. Cuándo detenerte y preguntar
 
@@ -265,7 +264,8 @@ para "dejarlo limpio".
 - evidencia contradictoria: el entorno no coincide con lo que F0 registró;
 - falta un permiso o una dependencia;
 - llevas dos intentos fallidos en el mismo problema: el tercero empieza con
-  un diagnóstico escrito, no con otro intento ciego.
+  un diagnóstico escrito, no con otro intento ciego (forma: la sección de
+  diagnóstico del catálogo de defectos, ADR-035).
 
 ## 9. Gate de F3 (por tarea)
 

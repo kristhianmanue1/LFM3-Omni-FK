@@ -1,7 +1,7 @@
 """Vigilancia reproducible y ciclo de vida de motor/modelo (Fase I2-V).
 
 Implementa el procedimiento definido en docs/roadmap/ciclo-vida-modelo.md:
-- Inspección de baseline e integridad de artefactos locales (scripts/inventario_motor.py).
+- Inspección de baseline e integridad de artefactos locales (tools/inventario_motor.py).
 - Consulta acotada de fuentes oficiales bajo presupuesto estricto (<= 12 requests,
   <= 5 MiB, <= 120 s) con allowlist cerrado anti-SSRF y redirecciones controladas.
 - Registro estructurado de corridas con estados closed-world (no_change, detected,
@@ -728,7 +728,7 @@ def main():
     salida_dir.mkdir(parents=True, exist_ok=True)
 
     print("[1/3] Capturando y verificando inventario de baseline congelado...")
-    script_inv = raiz / "scripts" / "inventario_motor.py"
+    script_inv = raiz / "tools" / "inventario_motor.py"
     res = subprocess.run(
         [sys.executable, str(script_inv)],
         capture_output=True,

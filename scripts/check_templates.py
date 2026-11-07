@@ -70,7 +70,11 @@ DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 # aterrizada por ADR-031): <origen>@<revisión>. El origen es texto sin @
 # ni espacios —URL o ruta relativa—; la revisión es hex minúsculas de 7 a
 # 64 dígitos: sha de Git corto o completo, incluido SHA-256 de repo.
-SOURCE_RE = re.compile(r"^[^@\s]+@[0-9a-f]{7,64}$")
+# A-7 de PROP-002, aterrizada por ADR-031: `source` es procedencia cerrada
+# <origen>@<revisión> — la revisión es hex minúsculas de 7 a 64 dígitos, o
+# la referencia simbólica HEAD, que sólo vale en auto-hospedaje y se
+# verifica contra el remote de este repositorio (ADR-048).
+SOURCE_RE = re.compile(r"^[^@\s]+@([0-9a-f]{7,64}|HEAD)$")
 # Namespace en minúsculas + /vN: cubre "plantillas/v1" y "gate/v2" con la
 # misma expresión — el espacio de nombres lo declara la familia, no el regex.
 VERSION_RE = re.compile(r"^[a-z]+/v\d+(\.\d+)*$")
@@ -176,6 +180,30 @@ def _load_manifest(path: Path) -> dict:
     return data
 
 
+def _origen_propio(base: Path, origen: str) -> bool:
+    """ADR-048: True si `origen` es el remote origin del repositorio que
+    contiene a `base` — la única condición bajo la que un registro de
+    instalación puede declarar `@HEAD`. Sin Git o sin remote, False
+    (fail-closed, ADR-007)."""
+
+    def _canon(url: str) -> str:
+        return (url.strip().removeprefix("https://")
+                .removeprefix("git@").replace(":", "/")
+                .removesuffix(".git").rstrip("/").lower())
+
+    import subprocess
+    try:
+        probe = subprocess.run(
+            ["git", "config", "--get", "remote.origin.url"],
+            cwd=base, capture_output=True, text=True)
+    except OSError:
+        return False
+    if probe.returncode != 0:
+        return False
+    remoto = probe.stdout.strip()
+    return bool(remoto) and _canon(origen) == _canon(remoto)
+
+
 def _load_install(path: Path) -> dict:
     label = "installed"
     try:
@@ -207,6 +235,13 @@ def _load_install(path: Path) -> dict:
              and SOURCE_RE.match(data["source"]),
              f"{label}: source debe ser <origen>@<revisión> "
              "(p. ej. https://github.com/org/repo@0a1b2c3)")
+    origen, _, revision = data["source"].rpartition("@")
+    if revision == "HEAD":
+        # ADR-048: la referencia simbólica sólo vale cuando el origen
+        # declarado es este propio repositorio (auto-hospedaje).
+        _require(_origen_propio(path.parent, origen),
+                 f"{label}: source @HEAD sólo en auto-hospedaje "
+                 "(el origen declarado no es el remote de este repositorio)")
     _require(isinstance(data["customized"], list)
              and all(isinstance(v, str) for v in data["customized"]),
              f"{label}: customized debe ser una lista de nombres de archivo")

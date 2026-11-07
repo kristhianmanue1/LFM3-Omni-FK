@@ -66,7 +66,7 @@ done
 # PATH (libmtmd) para audio/video de contenedor; el PATH heredado del
 # entorno no decide qué binario corre. Se ancla al directorio del propio
 # motor (resuelto antes de descartar el PATH heredado) + directorios del
-# sistema. El inventario del artefacto (scripts/inventario_motor.py)
+# sistema. El inventario del artefacto (tools/inventario_motor.py)
 # resuelve con el mismo criterio.
 MOTOR_BIN="$(command -v llama-server)" || {
   echo "BLOQ: llama-server no está en PATH" >&2

@@ -1,14 +1,12 @@
 {
   "schema": "skevi/script-manifest/v1",
-  "version": "gate/v13",
-  "generated_at": "2026-10-29T15:35:14Z",
+  "version": "gate/v14",
+  "generated_at": "2026-11-07T13:31:45Z",
   "files": {
-    "check_sizes.py": "sha256:ad0cdfc8d618f97c14e45cb94e9f2111b6567db9f74edda75bb9ccb50c12d054",
+    "check_sizes.py": "sha256:97e7ec01674975ada336c902c21828ed34a6fd3a20009f49aa3cb9a541d6b65e",
     "check_plans.py": "sha256:37f9203df1e37b8765d49f5715465348871f89c27ee1a367d3b034accf720395",
     "check_reports.py": "sha256:5663866d6575765be22353f9587c743005f3e612153efd492279b68bf0a0f21c",
-    "check_templates.py": "sha256:12ffbcdac0c27c3b9cd7e9f2f4cb14b9390667790ff85db2d6f9687167b480e7",
-    "inventario_motor.py": "sha256:35b5f77fdb11fd3d24f4f144418e099ad180bc86a03ae46a58c605e754311c19",
-    "install_wsl.py": "sha256:4ea0fc199158ac35b4a6a344f02b4a7e65f7f3a770ee4e0e0b08550e4292bd83"
+    "check_templates.py": "sha256:467401c3fb566b4b37f69766d9638981dc2fdc198829ff0584044f67ca238ad8"
   },
   "history": [
     {
@@ -105,6 +103,15 @@
       "changes": {
         "check_plans.py": "ADR-046: frontera final en OPERACION_RE — «pushes», «merged» y «mergeable» ya no activan E6; «Force-Push», la negación y la palabra exacta siguen activando. No breaking: ningún plan válido pasa a fallar. Tests de flexión en test_check_plans.py",
         "check_sizes.py": "GATE_VERSION y GATE_GENERATED_AT a gate/v13 (2026-10-29)"
+      }
+    },
+    {
+      "from": "gate/v13",
+      "to": "gate/v14",
+      "breaking": false,
+      "changes": {
+        "check_templates.py": "source acepta @HEAD solo en auto-hospedaje, verificando el remote origin (ADR-048)",
+        "check_sizes.py": "identidad del gate a gate/v14"
       }
     }
   ]

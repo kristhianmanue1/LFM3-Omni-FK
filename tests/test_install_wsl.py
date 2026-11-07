@@ -10,7 +10,7 @@ import unittest
 from unittest.mock import patch
 
 SPEC = importlib.util.spec_from_file_location(
-    "install_wsl", Path(__file__).resolve().parents[1] / "scripts/install_wsl.py")
+    "install_wsl", Path(__file__).resolve().parents[1] / "tools/install_wsl.py")
 wsl = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(wsl)
 

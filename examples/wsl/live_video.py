@@ -18,7 +18,7 @@ def main():
     os.umask(0o077)
     if not os.access('/dev/video0', os.R_OK | os.W_OK):
         raise OSError('sin permiso para /dev/video0')
-    spec = importlib.util.spec_from_file_location('wsl', ROOT / 'scripts/install_wsl.py')
+    spec = importlib.util.spec_from_file_location('wsl', ROOT / 'tools/install_wsl.py')
     wsl = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(wsl)
     runtime = wsl.BASE / 'runtime'

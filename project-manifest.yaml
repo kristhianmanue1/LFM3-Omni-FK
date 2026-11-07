@@ -21,7 +21,7 @@ ofrece:
     (F3-1: 37 tests, dos rondas adversariales)
   - validación en frontera de la salida del modelo contra esquema cerrado
     (guía 06 §5)
-  - método de trabajo Skevi adoptado (plantillas/v18, gate/v13, corpus/v8)
+  - método de trabajo Skevi adoptado (plantillas/v22, gate/v14, corpus/v10)
 
 no_ofrece:
   - entrenamiento, fine-tuning ni producción de modelos

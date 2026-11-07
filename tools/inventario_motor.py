@@ -12,7 +12,7 @@ Las herramientas se resuelven con el mismo PATH fijado que run/serve.sh
 sistema. El hash registrado es así el del binario que el motor usaría,
 no el que el PATH heredado del entorno decidiera.
 
-Uso: python3 scripts/inventario_motor.py
+Uso: python3 tools/inventario_motor.py
 """
 
 import hashlib

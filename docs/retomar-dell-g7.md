@@ -55,11 +55,11 @@ el punto de retoma; no hay una memoria AN-KLA verificada.
 ## Motor y regresión
 
 ```bash
-python3 scripts/install_wsl.py --check
+python3 tools/install_wsl.py --check
 curl --fail http://127.0.0.1:8091/health
 ```
 
-Si no está activo, `python3 scripts/install_wsl.py --serve` lo arranca
+Si no está activo, `python3 tools/install_wsl.py --serve` lo arranca
 en primer plano. No duplicar arranque si el puerto ya sirve el modelo.
 En otra terminal: `python3 tests/run_golden.py` y
 `python3 -m unittest discover -v`.

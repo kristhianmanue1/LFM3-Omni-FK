@@ -4,7 +4,7 @@ Versiones conservadas de las pruebas del Dell G7 7700.
 Requisitos, consentimiento, límites y siguiente trabajo:
 [retomar Dell G7](../../docs/retomar-dell-g7.md).
 
-Usan el runtime fijado por `scripts/install_wsl.py` y el motor 8091.
+Usan el runtime fijado por `tools/install_wsl.py` y el motor 8091.
 No requieren paquetes Python externos. Importarlos no abre dispositivos.
 Ejecutarlos requiere `LFM3_CONSENTIMIENTO_D09=si`.
 

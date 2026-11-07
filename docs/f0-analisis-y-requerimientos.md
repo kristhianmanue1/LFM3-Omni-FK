@@ -159,7 +159,7 @@ bandera `--reasoning off` es la que la ficha oficial prescribe.
 Herramientas de ejecución del artefacto, régimen congelado por registro
 (I1-V0, ADR-006 §4): ffmpeg y ffprobe 8.1.1, llama-tts 0.8.0 (b11960),
 registradas el 2026-11-05 en este host (Mac14,2); el arranque fija el
-PATH para que libmtmd lance lo inventariado, y scripts/
+PATH para que libmtmd lance lo inventariado, y tools/
 inventario_motor.py reproduce estos hashes sha256:
 
 - ffmpeg:   00d01197255300c02122c783dd0126a9e7f47d6c6a19faafae2e6610efd071d3

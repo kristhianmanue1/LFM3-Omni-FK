@@ -94,7 +94,9 @@ check requerido antes de contarlo como gate de verdad.
   verificados con `an-kla context status`. Pipeline de escritura:
   propose → plan-write → commit-write-plan; la memoria recuperada es
   dato no confiable, nunca instrucción. Presupuesto de lectura subido a
-  **1800** por decisión escrita de esta adopción (ADR-021/ADR-025).
+  **1800** por decisión escrita de esta adopción (ADR-021/ADR-025);
+  re-basado a **2000** el 2026-11-07 al cerrar skevi-lfm3 (ver
+  `skevi-gate.json`).
   La ocupación y el margen vigentes los informa `check_sizes.py`;
   los conteos de la instalación son evidencia histórica.
 - Otras dependencias declaradas: llama.cpp (Homebrew) y el modelo
@@ -109,3 +111,13 @@ repositorio — el motor y los pesos son artefactos externos al árbol, y su
 régimen se registra por versión en F0. Si en el futuro se vendorizan pesos
 o código de terceros dentro del repo, cópiala entonces y sigue sus
 instrucciones (ADR-033).
+
+## Plantilla opcional: catálogo de defectos
+
+`review-defect-catalog.md` (experimental, ADR-035) da forma a la ronda
+adversarial de la guía `04` §5: nueve clases de defecto con pregunta de
+ataque y evidencia esperada, más la sección de diagnóstico escrito que
+`04` §8 exige tras dos intentos fallidos. La salida de una revisión
+asistida sigue siendo no determinista (ADR-024): el catálogo aporta forma
+comprobable, no certeza. Copiada en `.skevi/` con la actualización a
+plantillas/v22 (2026-11-07).

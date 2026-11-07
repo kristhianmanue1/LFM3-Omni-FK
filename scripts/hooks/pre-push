@@ -6,7 +6,7 @@ set -e
 repo_root="$(git rev-parse --show-toplevel)"
 # Runtime declarado del proyecto: Python >= 3.12 (Operador, 2026-11-04).
 # El python3 del sistema puede ser 3.9 y la suite actual lo exige
-# (p. ej. hashlib.file_digest en install_wsl.py); fallar cerrado.
+# (p. ej. hashlib.file_digest en tools/install_wsl.py); fallar cerrado.
 runtime="$(command -v python3.12 || command -v python3 || true)"
 if [ -z "$runtime" ] \
    || ! "$runtime" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 12) else 1)'; then

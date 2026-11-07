@@ -34,7 +34,7 @@ def main():
     if os.environ.get("LFM3_CONSENTIMIENTO_D09") != "si":
         raise ValueError("D09: requiere LFM3_CONSENTIMIENTO_D09=si para usar dispositivos reales")
     os.umask(0o077)
-    spec = importlib.util.spec_from_file_location('wsl', ROOT / 'scripts/install_wsl.py')
+    spec = importlib.util.spec_from_file_location('wsl', ROOT / 'tools/install_wsl.py')
     wsl = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(wsl)
     runtime = wsl.BASE / 'runtime'

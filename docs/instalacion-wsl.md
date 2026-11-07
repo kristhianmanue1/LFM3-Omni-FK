@@ -41,9 +41,9 @@ esta cifra no constituye una línea base de rendimiento aislada.
 Desde la raíz del proyecto:
 
 ```bash
-python3 scripts/install_wsl.py --check
-python3 scripts/install_wsl.py
-python3 scripts/install_wsl.py --serve
+python3 tools/install_wsl.py --check
+python3 tools/install_wsl.py
+python3 tools/install_wsl.py --serve
 ```
 
 El primer comando diagnostica DNS, sockets, GPU y dependencias. El segundo

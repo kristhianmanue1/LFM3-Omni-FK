@@ -121,7 +121,7 @@ Códigos estables: `invalid_json`, `missing_messages`,
 
 ## 9. Inventario del artefacto (I0-R)
 
-`scripts/inventario_motor.py`: ruta, revisión (`llama-server
+`tools/inventario_motor.py`: ruta, revisión (`llama-server
 --version`), sha256, bytes y licencia declarada de binario, GGUF y
 mmproj. JSON a stdout; falla cerrado si falta un artefacto.
 
@@ -150,7 +150,7 @@ mmproj. JSON a stdout; falla cerrado si falta un artefacto.
 | R17b | atajo idempotente exige modelo efectivo (BLOQ si no) | `test_ciclo_arranque::r17b` |
 | R18 | `stop.sh` no mata ajenos (ni por subcadena de puerto) | `test_ciclo_arranque::r18` |
 | R19 | B-T10 sin PID o RSS vacío falla; pid por listener con propiedad | `test_recursos_bt10` |
-| R20 | inventario por ruta/hash/licencia | corrida `scripts/inventario_motor.py` |
+| R20 | inventario por ruta/hash/licencia | corrida `tools/inventario_motor.py` |
 | R21 | NaN/Infinity: entrada → 400; salida validada → 502 | `test_adapter_v2::r3c/r21` |
 | R22 | basura tras IEND y claves extra en `image_url` → rechazo | `test_adapter_v2::r6c/r5b` |
 
@@ -168,7 +168,7 @@ python3.12 -m unittest tests.test_adapter_v2 tests.test_ciclo_arranque \
 bash run/serve.sh
 python3.12 tests/run_golden.py --rapido
 python3.12 -m unittest tests.test_mcp_server -v
-python3.12 scripts/inventario_motor.py
+python3.12 tools/inventario_motor.py
 bash run/stop.sh
 ```
 
