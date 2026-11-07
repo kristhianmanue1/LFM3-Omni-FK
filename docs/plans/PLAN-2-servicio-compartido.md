@@ -232,7 +232,7 @@ TAREA I3-U
   Consumes: I3-M
   Produce: agentes remotos utilizables y onboarding por cliente
   Steps:
-  - [ ] completar tareas reales texto/imagen con dos clientes de agentes;
+  - [x] completar tareas reales texto/imagen con dos clientes de agentes;
     verificación: transcripciones, scopes/revocación y stdio v1 conservado.
 TAREA I4-C
   Consumes: I3, S-06/S-10, perfiles W/D
