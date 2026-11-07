@@ -21,6 +21,11 @@ MAX_IMAGEN_BYTES = 8 * 1024 * 1024
 MAX_PIXELES = 16_777_216
 MAX_AUDIO_BYTES = 4 * 1024 * 1024      # SPEC-i1-va §2
 MAX_AUDIO_SEGUNDOS = 60.0              # SPEC-i1-va §2
+MAX_TTS_CHARS = 600                    # SPEC-i1-vs §1
+TTS_TIMEOUT_S = 120                    # SPEC-i1-vs §2
+LLAMA_TTS_SHA256 = (                   # F0 §7 / SPEC-i1-vs §2
+    "b983acbd59f89df0da0cce9665c75366b94f5736331470fc73d2b8bb5c84c377"
+)
 MAX_PROPIEDADES = 32
 MAX_TOKENS = 4096
 BACKEND_TIMEOUT_S = 300
@@ -29,6 +34,7 @@ CLAVES_TOP = {
     "model", "messages", "tools", "tool_choice", "temperature",
     "top_p", "max_tokens", "response_format",
 }
+CLAVES_TTS = {"input", "language", "response_format", "model"}
 CLAVES_NO_SOPORTADAS = {"stream"}
 ROLES = {"system", "user", "assistant"}
 TIPOS_SCHEMA = {"string", "integer", "number", "boolean"}
@@ -40,6 +46,7 @@ DATA_RE = re.compile(r"^data:")
 # Allowlist cerrado (SPEC-i1 §2): cualquier otra ruta es 404.
 RUTAS_PERMITIDAS = (
     "POST /v1/chat/completions",
+    "POST /v1/audio/speech",
     "GET /v1/models",
     "GET /v1/capabilities",
     "GET /healthz",
@@ -47,14 +54,15 @@ RUTAS_PERMITIDAS = (
 
 # Capabilities declaradas por SPEC, jamás derivadas del motor y jamás
 # anunciando lo no activo (SPEC-i1 §3; ADR-006 §1: una modalidad se
-# anuncia al cerrar su TAREA — transcripcion con I1-VA, SPEC-i1-va §4).
+# anuncia al cerrar su TAREA — transcripcion con I1-VA, voz/audio con
+# I1-VS, SPEC-i1-vs §4).
 CAPABILITIES = {
     "entrada": ["texto", "imagen", "audio"],
-    "salida": ["texto"],
+    "salida": ["texto", "audio"],
     "streaming": False,
-    "audio": False,
+    "audio": True,
     "video": False,
-    "voz": False,
+    "voz": True,
     "transcripcion": True,
     "schema": "dialecto-v2",
     "version": "i1",
@@ -183,9 +191,10 @@ def validar_imagen(url):
 
 # ------------------------------------------------------------------ audio
 
-def validar_wav(datos):
+def validar_wav(datos, exigir_muestras=False):
     """WAV PCM 16-bit bien formado y dentro de presupuesto (SPEC-i1-va
-    §2). Fail-closed ante cualquier desvío estructural: un solo fmt y
+    §2; exigir_muestras=True en SPEC-i1-vs §2 para salida de síntesis).
+    Fail-closed ante cualquier desvío estructural: un solo fmt y
     un solo data (duplicados = ambigüedad para el motor, se rechazan)
     y tamaño RIFF consistente con el archivo."""
     if len(datos) > MAX_AUDIO_BYTES:
@@ -226,6 +235,8 @@ def validar_wav(datos):
         _error(400, "invalid_audio", "canales fuera del dialecto")
     if not 1 <= tasa <= 96000:
         _error(400, "invalid_audio", "tasa de muestreo fuera de rango")
+    if exigir_muestras and (data <= 0 or data % (canales * 2) != 0):
+        _error(400, "invalid_audio", "WAV sin muestras válidas")
     duracion = data / (tasa * canales * 2)
     if duracion > MAX_AUDIO_SEGUNDOS:
         _error(400, "invalid_audio", "audio sobre el presupuesto de duración")
@@ -246,6 +257,40 @@ def validar_audio_entrada(parte):
     except (binascii.Error, ValueError):
         _error(400, "invalid_audio", "base64 de audio inválido")
     validar_wav(datos)
+
+
+def validar_payload_tts(payload):
+    """Valida cuerpo de POST /v1/audio/speech (SPEC-i1-vs §1, ADR-007).
+    Rechaza claves desconocidas (voice, speaker_ref, stream, etc.),
+    exige input string 1..600 sin caracteres de control, language es y
+    response_format wav. Devuelve el texto validado."""
+    if not isinstance(payload, dict):
+        _error(400, "invalid_json", "el cuerpo debe ser un objeto JSON")
+    desconocidas = set(payload) - CLAVES_TTS
+    if desconocidas:
+        _error(400, "unknown_field",
+               f"{len(desconocidas)} campo(s) no admitidos en /v1/audio/speech")
+    texto = payload.get("input")
+    if not isinstance(texto, str) or not (1 <= len(texto) <= MAX_TTS_CHARS):
+        _error(400, "invalid_tts_input",
+               f"input debe ser string de 1..{MAX_TTS_CHARS} caracteres")
+    if any(ord(c) < 32 or ord(c) == 127 or not c.isprintable() for c in texto):
+        _error(400, "invalid_tts_input",
+               "input contiene caracteres de control o no imprimibles")
+    if not texto.strip():
+        _error(400, "invalid_tts_input", "input no puede contener sólo espacios")
+    idioma = payload.get("language", "es")
+    if idioma != "es":
+        _error(400, "unsupported_field_value",
+               "sólo language 'es' admitido en el dialecto v2")
+    formato = payload.get("response_format", "wav")
+    if formato != "wav":
+        _error(400, "unsupported_field_value",
+               "sólo response_format 'wav' admitido en el dialecto v2")
+    modelo = payload.get("model")
+    if modelo is not None and not isinstance(modelo, str):
+        _error(400, "unsupported_field_value", "model debe ser string")
+    return texto
 
 
 # -------------------------------------------------------------- dialecto

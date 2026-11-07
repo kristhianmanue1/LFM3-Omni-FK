@@ -99,9 +99,11 @@ class Capabilities(GatewayBase):
         self.assertEqual(estado, 200)
         self.assertEqual(self.contador(), 0)
         self.assertEqual(cuerpo["entrada"], ["texto", "imagen", "audio"])
-        self.assertEqual(cuerpo["salida"], ["texto"])
+        self.assertEqual(cuerpo["salida"], ["texto", "audio"])
         self.assertTrue(cuerpo["transcripcion"])  # SPEC-i1-va §4
-        for clave in ("streaming", "audio", "video", "voz"):
+        self.assertTrue(cuerpo["voz"])            # SPEC-i1-vs §4
+        self.assertTrue(cuerpo["audio"])          # SPEC-i1-vs §4
+        for clave in ("streaming", "video"):
             self.assertFalse(cuerpo[clave], f"{clave} no puede anunciarse activo")
         self.assertEqual(CAPABILITIES["version"], "i1")
 
@@ -161,8 +163,8 @@ class Allowlist(GatewayBase):
             self.assertEqual(c["error"]["code"], "not_found")
         self.assertEqual(self.contador(), 0)
         self.assertEqual(sorted(RUTAS_PERMITIDAS), sorted([
-            "POST /v1/chat/completions", "GET /v1/models",
-            "GET /v1/capabilities", "GET /healthz"]))
+            "POST /v1/chat/completions", "POST /v1/audio/speech",
+            "GET /v1/models", "GET /v1/capabilities", "GET /healthz"]))
         # equivalencia enrutado ≡ tupla: toda ruta del allowlist responde;
         # una fuera de ella es 404 aunque el código la mencione.
         from gateway_http import _enrutar

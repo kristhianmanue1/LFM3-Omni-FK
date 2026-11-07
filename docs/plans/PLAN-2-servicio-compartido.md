@@ -140,9 +140,9 @@ TAREA I1-VS
     implementada para el gate con voz real
   Produce: síntesis de voz español vía llama-tts en el gateway
   Steps:
-  - [ ] entregar texto por archivo 0600 o stdin, esquema cerrado, sin cola;
+  - [x] entregar texto por archivo 0600 o stdin, esquema cerrado, sin cola;
     verificación: ida-vuelta TTS->ASR contiene el texto; ocupado da 503.
-  - [ ] medir pico de memoria y swap del subproceso;
+  - [x] medir pico de memoria y swap del subproceso;
     verificación: REQ-5/B-T10 ampliado pasa; escucha del Operador registrada.
 TAREA I1-VR
   Consumes: I1-VA, I1-VS, ADR-006

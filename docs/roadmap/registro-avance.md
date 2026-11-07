@@ -64,8 +64,8 @@ el agente con evidencia; la aceptación la decide el Operador.
 ### I1-V — Modalidades locales del artefacto vigente
 
 - Estado actual: `accepted_local` (propuesto al Operador) para
-  **I1-V0, I1-VT e I1-VA**; I1-VS/VR/VV `not_started`. I0 e I1
-  conservan `accepted_local`.
+  **I1-V0, I1-VT, I1-VA e I1-VS**; I1-VR/VV/VX/VM/VC `not_started`. I0
+  e I1 conservan `accepted_local`.
 - Owner: agente ejecutor (GLM 5.3, OpenCode; ajuste del plan: Claude
   Opus 5.5, Claude Code). Reviewer: subagente con contexto fresco
   (ronda del ajuste: fix-and-retry -> proceed por relectura,
@@ -97,6 +97,9 @@ el agente con evidencia; la aceptación la decide el Operador.
 | 2026-11-05 | I1-VT `accepted_local` (propuesto) | commit de esta TAREA | unittest 100 OK; 5/5 gates; ronda adversarial 1 proceed (MED-1 + 6 LOW corregidos) y ronda 2 proceed (3 LOW de pulido aplicados); limitación declarada: realtime sin retención hasta I1-VR |
 | 2026-11-05 | I1-VA `implementing` → `verifying` | c16ab5f + trabajo | RED 12 fallos; SPEC-i1-va + corpus/umbral fijados antes de medir; validación WAV estructural en frontera; ronda adversarial 1 fix-and-retry (H1 data duplicado + 3 MED) |
 | 2026-11-05 | I1-VA `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados; CER mediana 0.000 peor 0.116 PASS; demo 9/9; suite 110 OK; rondas 2 y 3 proceed; capabilities anuncia transcripcion |
+| 2026-11-06 | orientación ADR-008 (`D-11`) | f8eb30c | ADR-008 y tareas I1-VX, I1-VM, I1-VC añadidas; ronda adversarial doble fix-and-retry -> proceed |
+| 2026-11-06 | I1-VS `implementing` → `verifying` | f8eb30c + trabajo | RED 17 fallos (red.txt); GREEN: POST /v1/audio/speech con texto por archivo 0600 (-f), exclusión mutua 503 sin cola, hash llama-tts verificado; ronda 1 fix-and-retry (H-1 WAV data(0) + 3 MED + 1 LOW) |
+| 2026-11-06 | I1-VS `accepted_local` (propuesto) | commit de esta TAREA | fixes aplicados; TTS->ASR CER mediana 0.000 peor 0.000 PASS; RSS llama-tts 3094.5 MiB < 4 GiB, RSS motor 2216.0 MiB < 4 GiB; demo 11/11; suite 116 OK; ronda 2 proceed; capabilities anuncia voz/audio |
 
 ## Salida prevista
 
