@@ -37,6 +37,12 @@ from gateway_core import (
 from gateway_auth import (
     GLOBAL_DISPATCHER, GLOBAL_REGISTRY, FairQueueDispatcher, TokenRegistry,
 )
+# La frontera del Perfil J (rutas /jobs) vive en gateway_jobs y se
+# delega desde aquí (reorganización del expediente, §3.3 del estándar).
+from gateway_jobs import (
+    construir_jobs_manager, manejar_delete_job, manejar_get_job,
+    manejar_post_job,
+)
 
 LOCK_TTS = threading.Lock()
 LOCK_STREAM_SLOT = threading.Lock()
@@ -82,16 +88,6 @@ def _determinar_scopes_chat(payload):
         ):
             scopes.add("profile:d")
     return scopes
-
-
-# Scope de la modalidad por operación del Perfil J (SPEC-i5 §2.1): el
-# mismo scope que exige H para ese contenido (SPEC-i2 §2.3).
-SCOPE_POR_OPERACION = {
-    "infer_text": "infer:text",
-    "infer_vision": "infer:vision",
-    "infer_audio": "infer:audio",
-    "infer_video": "infer:vision",
-}
 
 
 def _enrutar(metodo, ruta):
@@ -522,7 +518,8 @@ class ManejadorGateway(BaseHTTPRequestHandler):
             if getattr(self.server, "auth_enabled", False) and self.path != "/healthz":
                 auth_h = self.headers.get("Authorization")
                 proj_h = self.headers.get("X-Project-ID")
-                self.server.tokens_registry.verify_request(auth_h, proj_h, required_scope=None)
+                self.server.tokens_registry.verify_request(
+                    auth_h, proj_h, required_scope=None)
                 self.project_id = proj_h.strip()
             if self.path == "/healthz":
                 self._json(200, b'{"status": "ok", "mode": "gateway-i1"}')
@@ -539,20 +536,7 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 handler.handle_get(self)
                 return
             elif self.path.startswith("/jobs/"):
-                jm = getattr(self.server, "jobs_manager", None)
-                if jm is None:
-                    _error(501, "not_implemented", "jobs no inicializado")
-                proj_id = self.project_id or "default"
-                if getattr(self.server, "auth_enabled", False):
-                    auth_h = self.headers.get("Authorization")
-                    proj_h = self.headers.get("X-Project-ID")
-                    self.server.tokens_registry.verify_request(
-                        auth_h, proj_h, required_scopes={"jobs:read"}
-                    )
-                    proj_id = proj_h.strip()
-                job_id = self.path[len("/jobs/"):]
-                status, res = jm.get_job(proj_id, job_id)
-                self._json(status, json.dumps(res).encode())
+                manejar_get_job(self)
                 return
             else:
                 _error(404, "not_found", "ruta fuera del allowlist")
@@ -585,40 +569,7 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 return
 
             if self.path == "/jobs":
-                jm = getattr(self.server, "jobs_manager", None)
-                if jm is None:
-                    _error(501, "not_implemented", "jobs no inicializado")
-                if not isinstance(payload, dict):
-                    _error(400, "invalid_json", "el cuerpo debe ser un "
-                           "objeto JSON")
-                idemp_key = self.headers.get("Idempotency-Key") or ""
-                proj_id = self.project_id or "default"
-                op = payload.get("operation")
-                job_payload = payload.get("payload", {})
-                ttl = payload.get("ttl_seconds", 3600)
-                if isinstance(ttl, bool) or not isinstance(ttl, int) \
-                        or not (60 <= ttl <= 86400):
-                    _error(400, "unsupported_field_value", "ttl_seconds "
-                           "debe ser entero en 60..86400")
-                if getattr(self.server, "auth_enabled", False):
-                    auth_h = self.headers.get("Authorization")
-                    proj_h = self.headers.get("X-Project-ID")
-                    # SPEC-i5 §2.1: jobs:create + scope de modalidad.
-                    scopes_req = {"jobs:create"} | _determinar_scopes_chat(job_payload)
-                    if isinstance(op, str) \
-                            and op in SCOPE_POR_OPERACION:
-                        scopes_req.add(SCOPE_POR_OPERACION[op])
-                    self.server.tokens_registry.verify_request(
-                        auth_h, proj_h, required_scopes=scopes_req)
-                    proj_id = proj_h.strip()
-                # Sin passthrough (BLOCKER-1): núcleo de validación de H.
-                validar_payload(
-                    job_payload,
-                    inspector_video=lambda d: _inspeccionar_mp4_ffprobe(
-                        d, getattr(self.server, "probe_runner", None)))
-                status, res = jm.create_job(
-                    proj_id, op, job_payload, idemp_key, ttl_seconds=ttl)
-                self._json(status, json.dumps(res).encode())
+                manejar_post_job(self, payload)
                 return
 
             if getattr(self.server, "auth_enabled", False) and proj_info is not None:
@@ -699,20 +650,7 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         try:
             _enrutar("DELETE", self.path)
             if self.path.startswith("/jobs/"):
-                jm = getattr(self.server, "jobs_manager", None)
-                if jm is None:
-                    _error(501, "not_implemented", "jobs no inicializado")
-                proj_id = "default"
-                if getattr(self.server, "auth_enabled", False):
-                    auth_h = self.headers.get("Authorization")
-                    proj_h = self.headers.get("X-Project-ID")
-                    self.server.tokens_registry.verify_request(
-                        auth_h, proj_h, required_scopes={"jobs:cancel"}
-                    )
-                    proj_id = proj_h.strip()
-                job_id = self.path[len("/jobs/"):]
-                status, res = jm.cancel_job(proj_id, job_id)
-                self._json(status, json.dumps(res).encode())
+                manejar_delete_job(self)
                 return
             _error(404, "not_found", "ruta fuera del allowlist")
         except ErrorV2 as exc:
@@ -758,18 +696,9 @@ def build_server(
     servidor.dispatcher = dispatcher or GLOBAL_DISPATCHER
     from mcp_remote import MCPRemoteHandler
     servidor.mcp_remote_handler = MCPRemoteHandler(backend_url=backend)
-    from jobs_manager import JobsManager
-
-    def limites_de_proyecto(project_id):
-        info = servidor.tokens_registry.get_project(project_id) or {}
-        return info.get("rate_limit") or {}
-
-    # El worker de jobs comparte admisión con H/M (HIGH-1).
-    servidor.jobs_manager = JobsManager(
-        backend_url=backend,
-        dispatcher=servidor.dispatcher,
-        rate_limit_lookup=limites_de_proyecto,
-    )
+    # El worker de jobs comparte admisión con H/M (HIGH-1); la
+    # construcción vive en gateway_jobs con la frontera del Perfil J.
+    servidor.jobs_manager = construir_jobs_manager(servidor)
     return servidor
 
 

@@ -1,0 +1,200 @@
+lsof: sin listeners en 8091/8092/8443
+----
+test_01_orden_lexicografico_de_claves (tests.test_jobs_i5.CanonicalJsonRFC8785Tests.test_01_orden_lexicografico_de_claves) ... ok
+test_02_rechazo_valores_no_finitos (tests.test_jobs_i5.CanonicalJsonRFC8785Tests.test_02_rechazo_valores_no_finitos) ... ok
+test_09_post_jobs_http_flujo_completo (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_09_post_jobs_http_flujo_completo) ... ok
+test_10_rechazo_por_scope_insuficiente (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_10_rechazo_por_scope_insuficiente) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'Forbidden'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_11_cliente_jobs_script (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_11_cliente_jobs_script) ... ok
+test_03_crear_job_e_idempotencia_coincidente (tests.test_jobs_i5.JobsManagerDirectTests.test_03_crear_job_e_idempotencia_coincidente) ... ok
+test_04_conflicto_idempotencia_payload_distinto (tests.test_jobs_i5.JobsManagerDirectTests.test_04_conflicto_idempotencia_payload_distinto) ... ok
+test_05_aislamiento_multi_inquilino (tests.test_jobs_i5.JobsManagerDirectTests.test_05_aislamiento_multi_inquilino) ... ok
+test_06_limite_de_cola_por_proyecto (tests.test_jobs_i5.JobsManagerDirectTests.test_06_limite_de_cola_por_proyecto) ... ok
+test_07_cancelacion_de_job_en_cola (tests.test_jobs_i5.JobsManagerDirectTests.test_07_cancelacion_de_job_en_cola) ... ok
+test_08_recuperacion_reinicio_running_pasa_a_failed (tests.test_jobs_i5.JobsManagerDirectTests.test_08_recuperacion_reinicio_running_pasa_a_failed) ... ok
+test_01_forma_es6_de_numeros (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_01_forma_es6_de_numeros) ... ok
+test_02_enteros_fuera_del_rango_doble (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_02_enteros_fuera_del_rango_doble) ... ok
+test_03_orden_de_claves_por_utf16 (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_03_orden_de_claves_por_utf16) ... ok
+test_04_escapes_minimos_de_cadena (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_04_escapes_minimos_de_cadena) ... ok
+test_05_no_finitos_rechazados (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_05_no_finitos_rechazados) ... ok
+test_16_oserror_al_escribir_job_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_16_oserror_al_escribir_job_sin_202) ... ok
+test_17_oserror_al_escribir_registro_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_17_oserror_al_escribir_registro_sin_202) ... ok
+test_18_job_en_cola_sin_registro_jamais_se_ejecuta (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_18_job_en_cola_sin_registro_jamais_se_ejecuta) ... ok
+test_06_scope_de_modalidad_exigido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_06_scope_de_modalidad_exigido) ... ok
+test_07_scope_de_modalidad_de_vision (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_07_scope_de_modalidad_de_vision) ... ok
+test_08_payload_fuera_de_dialecto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_08_payload_fuera_de_dialecto_rechazado) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_09_clave_duplicada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_09_clave_duplicada_rechazada) ... ok
+test_10_clave_duplicada_anidada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_10_clave_duplicada_anidada_rechazada) ... ok
+test_11_control_positivo_flujo_valido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_11_control_positivo_flujo_valido) ... ok
+test_23_sobre_no_objeto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_23_sobre_no_objeto_rechazado) ... ok
+test_24_ttl_invalido_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_24_ttl_invalido_rechazado) ... ok
+test_19_dos_instancias_no_ejecutan_dos_veces (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_19_dos_instancias_no_ejecutan_dos_veces) ... ok
+test_20_worker_pasa_por_dispatcher_compartido (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_20_worker_pasa_por_dispatcher_compartido) ... ok
+test_26_worker_sobrevive_dispatcher_hostil (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_26_worker_sobrevive_dispatcher_hostil) ... jobs-worker: fallo inesperado en job-hostil-1: RuntimeError('config de rate_limit corrupta')
+ok
+test_21_purga_y_tombstone_al_expirar (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_21_purga_y_tombstone_al_expirar) ... ok
+test_22_permisos_restringidos (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_22_permisos_restringidos) ... ok
+test_25_410_estable_y_delete_terminal_tras_purga (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_25_410_estable_y_delete_terminal_tras_purga) ... ok
+test_12_finish_reason_no_stop_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_12_finish_reason_no_stop_es_fallo) ... ok
+test_13_salida_fuera_de_esquema_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_13_salida_fuera_de_esquema_es_fallo) ... ok
+test_14_control_positivo_salida_valida (tests.test_jobs_boundary_i5.SalidaBackendTests.test_14_control_positivo_salida_valida) ... ok
+test_15_expires_recalculada_tras_terminal (tests.test_jobs_boundary_i5.SalidaBackendTests.test_15_expires_recalculada_tras_terminal) ... ok
+test_g4_rutas_administrativas_no_pasan (tests.test_gateway_i1.Allowlist.test_g4_rutas_administrativas_no_pasan) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 404: 'Not Found'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_g1_capaabilities_sin_lo_no_activo (tests.test_gateway_i1.Capabilities.test_g1_capaabilities_sin_lo_no_activo) ... ok
+test_g5_puerto_ocupado_falla_cerrado (tests.test_gateway_i1.Colision.test_g5_puerto_ocupado_falla_cerrado) ... ok
+test_g6_core_sin_transporte (tests.test_gateway_i1.FronteraInterna.test_g6_core_sin_transporte) ... ok
+test_g2_chunked_sin_content_length (tests.test_gateway_i1.Transporte.test_g2_chunked_sin_content_length) ... ok
+test_g3_compresion_rechazada_antes_de_leer (tests.test_gateway_i1.Transporte.test_g3_compresion_rechazada_antes_de_leer) ... ok
+test_cola_llena_503 (tests.test_gateway_i2.TestFairQueuing.test_cola_llena_503) ... ok
+test_queue_timeout_504 (tests.test_gateway_i2.TestFairQueuing.test_queue_timeout_504) ... ok
+test_timeout_no_libera_motor_si_otra_peticion_sigue_activa (tests.test_gateway_i2.TestFairQueuing.test_timeout_no_libera_motor_si_otra_peticion_sigue_activa) ... ok
+test_anti_ssrf_rechazo_file_http_en_imagenes (tests.test_gateway_i2.TestGatewayE2EConAuth.test_anti_ssrf_rechazo_file_http_en_imagenes) ... ok
+test_anti_ssrf_video_ftp_rechazado (tests.test_gateway_i2.TestGatewayE2EConAuth.test_anti_ssrf_video_ftp_rechazado) ... ok
+test_capabilities_exige_auth (tests.test_gateway_i2.TestGatewayE2EConAuth.test_capabilities_exige_auth) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'Unauthorized'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_chat_completions_auth_exitosa (tests.test_gateway_i2.TestGatewayE2EConAuth.test_chat_completions_auth_exitosa) ... ok
+test_chat_multimodal_imagen_mas_profile_d_exige_ambos_scopes (tests.test_gateway_i2.TestGatewayE2EConAuth.test_chat_multimodal_imagen_mas_profile_d_exige_ambos_scopes) ... ok
+test_chat_scope_insuficiente_audio_en_proyecto_beta (tests.test_gateway_i2.TestGatewayE2EConAuth.test_chat_scope_insuficiente_audio_en_proyecto_beta) ... ok
+test_do_post_rechaza_no_autenticado_antes_de_leer_cuerpo (tests.test_gateway_i2.TestGatewayE2EConAuth.test_do_post_rechaza_no_autenticado_antes_de_leer_cuerpo) ... ok
+test_healthz_es_publico_sin_auth (tests.test_gateway_i2.TestGatewayE2EConAuth.test_healthz_es_publico_sin_auth) ... ok
+test_rate_limit_exceeded_incluye_retry_after (tests.test_gateway_i2.TestGatewayE2EConAuth.test_rate_limit_exceeded_incluye_retry_after) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 429: 'Too Many Requests'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_https_get_healthz_con_cert_verificado (tests.test_gateway_i2.TestGatewayTLS.test_https_get_healthz_con_cert_verificado) ... ok
+test_tls_gateway_unreachable_devuelve_sobre_cerrado_502 (tests.test_gateway_i2.TestGatewayTLS.test_tls_gateway_unreachable_devuelve_sobre_cerrado_502) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 502: 'Bad Gateway'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_burst_y_agotamiento (tests.test_gateway_i2.TestTokenBucket.test_burst_y_agotamiento) ... ok
+test_project_id_ausente_400 (tests.test_gateway_i2.TestTokenRegistry.test_project_id_ausente_400) ... ok
+test_project_id_caracteres_invalidos_400 (tests.test_gateway_i2.TestTokenRegistry.test_project_id_caracteres_invalidos_400) ... ok
+test_project_mismatch_403 (tests.test_gateway_i2.TestTokenRegistry.test_project_mismatch_403) ... ok
+test_recarga_en_caliente_revocacion (tests.test_gateway_i2.TestTokenRegistry.test_recarga_en_caliente_revocacion) ... ok
+test_scope_insuficiente_403 (tests.test_gateway_i2.TestTokenRegistry.test_scope_insuficiente_403) ... ok
+test_token_ausente_401 (tests.test_gateway_i2.TestTokenRegistry.test_token_ausente_401) ... ok
+test_token_invalido_formato_401 (tests.test_gateway_i2.TestTokenRegistry.test_token_invalido_formato_401) ... ok
+test_token_longitud_erronea_401 (tests.test_gateway_i2.TestTokenRegistry.test_token_longitud_erronea_401) ... ok
+test_verificacion_exitosa (tests.test_gateway_i2.TestTokenRegistry.test_verificacion_exitosa) ... ok
+test_vr4_dos_sesiones_d10_no_se_cruzan (tests.test_gateway_vr.SesionesYAislamiento.test_vr4_dos_sesiones_d10_no_se_cruzan) ... ok
+test_vr5_capabilities_anuncia_streaming_y_video_activos (tests.test_gateway_vr.SesionesYAislamiento.test_vr5_capabilities_anuncia_streaming_y_video_activos) ... ok
+test_vr1_sse_entrega_eventos_y_stream_false_conserva_json (tests.test_gateway_vr.StreamingSSE.test_vr1_sse_entrega_eventos_y_stream_false_conserva_json) ... ok
+test_vr2_stream_invalido_o_con_schema_rechaza_antes_del_motor (tests.test_gateway_vr.StreamingSSE.test_vr2_stream_invalido_o_con_schema_rechaza_antes_del_motor) ... ok
+test_vr3_desconexion_cancela_backend_y_confirma_slot_libre (tests.test_gateway_vr.StreamingSSE.test_vr3_desconexion_cancela_backend_y_confirma_slot_libre) ... ok
+test_vr3b_error_backend_en_stream_da_502_json (tests.test_gateway_vr.StreamingSSE.test_vr3b_error_backend_en_stream_da_502_json) ... ok
+test_vr3c_slots_fail_closed_y_bloqueo_hasta_confirmacion (tests.test_gateway_vr.StreamingSSE.test_vr3c_slots_fail_closed_y_bloqueo_hasta_confirmacion) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 503: 'Service Unavailable'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_vr3d_linea_sse_excesiva_corta_y_verifica_slots (tests.test_gateway_vr.StreamingSSE.test_vr3d_linea_sse_excesiva_corta_y_verifica_slots) ... ok
+test_vs5_capabilities_anuncia_voz_y_audio_salida (tests.test_gateway_vs.CapabilitiesSpeech.test_vs5_capabilities_anuncia_voz_y_audio_salida) ... ok
+test_vs3_ocupado_responde_503_overloaded_sin_cola (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs3_ocupado_responde_503_overloaded_sin_cola) ... ok
+test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia) ... ok
+test_vs4b_resolver_entorno_tts_verifica_hash_y_limpia_env (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs4b_resolver_entorno_tts_verifica_hash_y_limpia_env) ... ok
+test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) ... ok
+test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia (tests.test_gateway_vs.SintesisValida.test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia) ... ok
+test_vv6_capabilities_anuncia_video_y_todas_las_modalidades (tests.test_gateway_vv.CapabilitiesVideo.test_vv6_capabilities_anuncia_video_y_todas_las_modalidades) ... ok
+test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) ... ok
+test_vv2b_base64_invalido (tests.test_gateway_vv.VideoInvalido.test_vv2b_base64_invalido) ... ok
+test_vv3_presupuesto_duracion_fps_y_frames (tests.test_gateway_vv.VideoInvalido.test_vv3_presupuesto_duracion_fps_y_frames) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_vv4_formas_no_admitidas_y_urls_externas (tests.test_gateway_vv.VideoInvalido.test_vv4_formas_no_admitidas_y_urls_externas) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_vv5_ffprobe_alterado_o_ausente_falla_502 (tests.test_gateway_vv.VideoInvalido.test_vv5_ffprobe_alterado_o_ausente_falla_502) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 502: 'Bad Gateway'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_vv5b_ffprobe_timeout_o_error_responde_400 (tests.test_gateway_vv.VideoInvalido.test_vv5b_ffprobe_timeout_o_error_responde_400) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_vv1_video_valido_atraviesa_y_llega_al_motor (tests.test_gateway_vv.VideoValido.test_vv1_video_valido_atraviesa_y_llega_al_motor) ... ok
+test_01_mcp_get_sse_channel (tests.test_mcp_remote.TestMCPRemote.test_01_mcp_get_sse_channel)
+Verifica canal SSE en GET /mcp y rechazo sin cabecera Accept apropiada. ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_02_mcp_initialize_and_session (tests.test_mcp_remote.TestMCPRemote.test_02_mcp_initialize_and_session)
+Verifica negociación de protocolo initialize y emisión de Mcp-Session-Id. ... ok
+test_03_mcp_tools_list_omnimodal (tests.test_mcp_remote.TestMCPRemote.test_03_mcp_tools_list_omnimodal)
+Verifica catálogo completo de 8 herramientas omnimodales en tools/list. ... ok
+test_04_mcp_tools_call_health_and_capabilities (tests.test_mcp_remote.TestMCPRemote.test_04_mcp_tools_call_health_and_capabilities)
+Verifica invocación a health y capabilities. ... ok
+test_05_mcp_tools_call_infer_text_plain_and_schema (tests.test_mcp_remote.TestMCPRemote.test_05_mcp_tools_call_infer_text_plain_and_schema)
+Verifica infer_text con texto plano y con validación de schema v2-ext. ... ok
+test_06_mcp_tools_call_infer_vision_and_anti_ssrf (tests.test_mcp_remote.TestMCPRemote.test_06_mcp_tools_call_infer_vision_and_anti_ssrf)
+Verifica infer_vision y contención estricta de egreso anti-SSRF. ... ok
+test_07_mcp_tools_call_infer_audio (tests.test_mcp_remote.TestMCPRemote.test_07_mcp_tools_call_infer_audio)
+Verifica infer_audio con WAV válido y rechazo de audio inválido. ... ok
+test_08_mcp_tools_call_synthesize_speech_and_tts_busy (tests.test_mcp_remote.TestMCPRemote.test_08_mcp_tools_call_synthesize_speech_and_tts_busy)
+Verifica synthesize_speech y exclusión mutua 503/tts_busy. ... ok
+test_09_mcp_tools_call_infer_video (tests.test_mcp_remote.TestMCPRemote.test_09_mcp_tools_call_infer_video)
+Verifica infer_video con MP4 sintético y comprobación de ftyp. ... ok
+test_10_mcp_tools_call_conversational_turn (tests.test_mcp_remote.TestMCPRemote.test_10_mcp_tools_call_conversational_turn)
+Verifica conversational_turn con historial multi-turno y síntesis de voz. ... ok
+test_11_mcp_auth_and_scope_failures (tests.test_mcp_remote.TestMCPRemote.test_11_mcp_auth_and_scope_failures)
+Verifica rechazos de autenticación y de scopes no autorizados. ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'Forbidden'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'Unauthorized'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_12_mcp_session_isolation (tests.test_mcp_remote.TestMCPRemote.test_12_mcp_session_isolation)
+Verifica que una sesión creada por proyecto-alpha es rechazada si la usa proyecto-beta. ... ok
+test_initialize_valido (tests.test_mcp_server_v2.HandshakeV2.test_initialize_valido) ... ok
+test_metodo_antes_de_initialize_rechazado_32002 (tests.test_mcp_server_v2.HandshakeV2.test_metodo_antes_de_initialize_rechazado_32002) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server_v2.HandshakeV2.test_notificacion_sin_respuesta) ... ok
+test_tools_list_seis_herramientas (tests.test_mcp_server_v2.HandshakeV2.test_tools_list_seis_herramientas) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server_v2.HandshakeV2.test_version_no_soportada_negocia_default) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server_v2.HealthV2.test_health_con_arguments_rechazado) ... ok
+test_health_gateway_down (tests.test_mcp_server_v2.HealthV2.test_health_gateway_down) ... ok
+test_health_gateway_up (tests.test_mcp_server_v2.HealthV2.test_health_gateway_up) ... ok
+test_infer_audio_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_invalido_rechazado_en_frontera) ... ok
+test_infer_audio_wav_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_wav_valido) ... ok
+test_infer_video_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_invalido_rechazado_en_frontera) ... ok
+test_infer_video_mp4_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_mp4_valido) ... ok
+test_infer_vision_imagen_invalida_rechazada_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_imagen_invalida_rechazada_en_frontera) ... ok
+test_infer_vision_png_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_png_valido) ... ok
+test_max_tokens_default_1024_en_vision (tests.test_mcp_server_v2.InferMultimodalV2.test_max_tokens_default_1024_en_vision) ... ok
+test_campos_extra_rechazados (tests.test_mcp_server_v2.InferTextV2.test_campos_extra_rechazados) ... ok
+test_infer_text_con_schema_v2_ext_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_con_schema_v2_ext_exitoso) ... ok
+test_infer_text_salida_que_viola_schema_es_salida_invalida (tests.test_mcp_server_v2.InferTextV2.test_infer_text_salida_que_viola_schema_es_salida_invalida) ... ok
+test_infer_text_sin_schema_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_sin_schema_exitoso) ... ok
+test_max_tokens_booleano_cero_y_4097_rechazados (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_booleano_cero_y_4097_rechazados) ... ok
+test_max_tokens_default_512 (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_default_512) ... ok
+test_prompt_invalido_rechazado (tests.test_mcp_server_v2.InferTextV2.test_prompt_invalido_rechazado) ... ok
+test_schema_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferTextV2.test_schema_invalido_rechazado_en_frontera) ... ok
+test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo) ... ok
+test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo) ... ok
+test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo) ... ok
+test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway) ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 503: 'Service Unavailable'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_choices_vacio_es_salida_invalida) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_mensaje_no_objeto_32600) ... ok
+test_metodo_desconocido_32601 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_metodo_desconocido_32601) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_parse_error_32700) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_32602 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_tool_desconocida_32602) ... ok
+test_usage_ausente_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_usage_ausente_es_salida_invalida) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso) ... ok
+
+----------------------------------------------------------------------
+Ran 141 tests in 53.850s
+
+OK
+exit=0
+----
+lsof final: sin listeners en 8091/8092/8443

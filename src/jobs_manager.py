@@ -7,8 +7,8 @@ Decisión: docs/adr/ADR-012-trabajos-largos-persistencia-idempotencia.md
 Expediente: docs/reviews/evidence/fix-i5-jobs-frontera/ (fix-i5)
 
 Garantías: idempotencia canónica RFC 8785 con tombstone 24 h (§J);
-persistencia atómica durable (fsync de archivo y directorio, registro
-de idempotencia como commit de la admisión); recuperación fail-closed;
+persistencia atómica durable en jobs_storage (el registro de
+idempotencia es el commit de la admisión); recuperación fail-closed;
 reclamo atómico entre procesos (flock) con admisión compartida con
 H/M; salida del modelo validada (completitud y esquema) antes de
 persistir; retención §J con purga verificable y permisos 0600/0700.
@@ -17,7 +17,6 @@ persistir; retención §J con purga verificable y permisos 0600/0700.
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal
 import fcntl
 import hashlib
 import json
@@ -33,111 +32,28 @@ from typing import Any, Callable
 
 from gateway_core import ErrorV2, _error, validar_salida
 
+# La serialización canónica vive en canonical_json y la persistencia
+# durable en jobs_storage (reorganización del expediente, §3.3 del
+# estándar: mover sin cambiar comportamiento). El serializador se
+# re-exporta porque la frontera pública del módulo lo prometía.
+from canonical_json import canonical_json_rfc8785
+from jobs_storage import JobsStorage
+
 IDEMPOTENCY_KEY_RE = re.compile(r"^[A-Za-z0-9_\-\.:]{1,64}$")
 ALLOWED_OPERATIONS = {"infer_text", "infer_vision", "infer_audio", "infer_video"}
 DEFAULT_TTL_SECONDS = 3600  # 1 hora tras terminal (§J)
 MAX_TTL_SECONDS = 86400  # 24 horas
-TOMBSTONE_IDEMP_HORAS = 24  # ventana de deduplicación de §J
 MAX_QUEUED_PER_PROJECT = 1
 MAX_QUEUED_GLOBAL = 8
 ADMISION_TIMEOUT_S = 60.0  # presupuesto de cola compartido (§J)
 REINTENTO_ADMISION_S = 0.5
-MSG_IDEMPOTENCY_CONFLICT = ("Idempotency-Key ya utilizada con un "
-                                            "cuerpo de solicitud diferente")
-_ENTERO_MAX = 2**53 - 1  # rango exacto de dobles IEEE 754
-
-_ESCAPES_CORTOS = {
-    '"': '\\"', "\\": "\\\\", "\b": "\\b", "\f": "\\f",
-    "\n": "\\n", "\r": "\\r", "\t": "\\t",
-}
+MSG_IDEMPOTENCY_CONFLICT = (
+    "Idempotency-Key ya utilizada con un cuerpo de solicitud diferente")
 
 
 def _respuesta_error(status: int, code: str, message: str) -> tuple[int, dict]:
     """Cuerpo de error homogéneo (la frontera HTTP lo reenvía)."""
     return status, {"error": {"code": code, "message": message}}
-
-
-def _serializar_cadena(texto: str) -> str:
-    """Escapes mínimos RFC 8785 §3.2.2.2 para controles y comillas."""
-    partes = ['"']
-    for caracter in texto:
-        if caracter in _ESCAPES_CORTOS:
-            partes.append(_ESCAPES_CORTOS[caracter])
-        elif caracter < "\u0020":
-            partes.append(f"\\u{ord(caracter):04x}")
-        else:
-            partes.append(caracter)
-    partes.append('"')
-    return "".join(partes)
-
-
-def _digitos_cortos(valor: float) -> tuple[str, int]:
-    """(digitos, exp) con valor == int(digitos)*10**exp (repr corta)."""
-    tupla = Decimal(repr(valor)).as_tuple()
-    digitos = "".join(str(d) for d in tupla.digits)
-    exponente = tupla.exponent
-    recorte = len(digitos) - len(digitos.rstrip("0"))
-    if recorte:
-        digitos = digitos[:-recorte]
-        exponente += recorte
-    return digitos, exponente
-
-
-def _numero_es6(valor: float) -> str:
-    """Número en forma ES6 (RFC 8785 §3.2.2.3), la de JSON.stringify."""
-    if valor != valor or valor in (float("inf"), float("-inf")):
-        raise ValueError("número no finito no es serializable en JSON")
-    if valor == 0:
-        return "0"  # incluye -0.0: JSON.stringify(-0) === "0"
-    prefijo = "-" if valor < 0 else ""
-    digitos, exponente = _digitos_cortos(abs(valor))
-    n = exponente + len(digitos)  # valor == 0.d1..dk * 10**n
-    k = len(digitos)
-    if k <= n <= 21:
-        return prefijo + digitos + "0" * (n - k)
-    if 0 < n <= 21:
-        return prefijo + digitos[:n] + "." + digitos[n:]
-    if -6 < n <= 0:
-        return prefijo + "0." + "0" * (-n) + digitos
-    mantisa = digitos[0] + ("." + digitos[1:] if k > 1 else "")
-    signo_e = "+" if n - 1 >= 0 else "-"
-    return f"{prefijo}{mantisa}e{signo_e}{abs(n - 1)}"
-
-
-def _serializar_valor(valor: Any) -> str:
-    if valor is True:
-        return "true"
-    if valor is False:
-        return "false"
-    if valor is None:
-        return "null"
-    if isinstance(valor, int):
-        if not (-_ENTERO_MAX <= valor <= _ENTERO_MAX):
-            raise ValueError(
-                f"entero {valor} fuera del rango exacto de dobles IEEE 754")
-        return str(valor)
-    if isinstance(valor, float):
-        return _numero_es6(valor)
-    if isinstance(valor, str):
-        return _serializar_cadena(valor)
-    if isinstance(valor, list):
-        return "[" + ",".join(_serializar_valor(v) for v in valor) + "]"
-    if isinstance(valor, dict):
-        if not all(isinstance(clave, str) for clave in valor):
-            raise TypeError("clave de objeto no es cadena")
-        # RFC 8785 §3.2.2.3: orden por unidades de código UTF-16, no por
-        # punto de código (sorted() de Python desordenaría los astrales).
-        claves = sorted(valor, key=lambda c: c.encode("utf-16-be"))
-        cuerpo = ",".join(
-            _serializar_cadena(c) + ":" + _serializar_valor(valor[c])
-            for c in claves)
-        return "{" + cuerpo + "}"
-    raise TypeError(f"tipo no serializable en JSON: {type(valor).__name__}")
-
-
-def canonical_json_rfc8785(data: Any) -> bytes:
-    """RFC 8785: claves UTF-16, números ES6, enteros en rango doble."""
-    return _serializar_valor(data).encode("utf-8")
 
 
 class JobsManager:
@@ -148,15 +64,13 @@ class JobsManager:
                  dispatcher: Any = None,
                  rate_limit_lookup: Callable[[str], dict] | None = None):
         if jobs_dir:
-            self.base_dir = Path(jobs_dir)
+            base_dir = Path(jobs_dir)
         else:
-            self.base_dir = Path(os.environ.get("LFM3_JOBS_DIR", "run/jobs"))
-        self.data_dir = self.base_dir / "data"
-        self.idemp_dir, self.claims_dir = (self.base_dir / "idempotency",
-                                          self.base_dir / "claims")
-        for directorio in (self.base_dir, self.data_dir, self.idemp_dir):
-            directorio.mkdir(parents=True, exist_ok=True)
-            os.chmod(directorio, 0o700)  # confidencialidad (§J)
+            base_dir = Path(os.environ.get("LFM3_JOBS_DIR", "run/jobs"))
+        self.storage = JobsStorage(base_dir)
+        self.data_dir = self.storage.data_dir
+        self.idemp_dir = self.storage.idemp_dir
+        self.claims_dir = self.storage.claims_dir
         self.backend_url = backend_url.rstrip("/")
         # Admisión compartida con H/M (HIGH-1); None = sin (tests).
         self.dispatcher = dispatcher
@@ -211,114 +125,25 @@ class JobsManager:
                             self._cerrar(data, "failed")
         return recuperados
 
-    def _volcar_tmp_durable(self, directorio: Path, nombre: str,
-                            datos: bytes) -> Path:
-        """tmp 0600 con fsync; el fallo limpia el tmp y propaga."""
-        directorio.mkdir(parents=True, exist_ok=True)
-        os.chmod(directorio, 0o700)
-        tmp = directorio / f"{nombre}.tmp.{os.getpid()}.{threading.get_ident()}"
-        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-        try:
-            vista = memoryview(datos)
-            while vista:
-                vista = vista[os.write(fd, vista):]
-            os.fsync(fd)
-        except OSError:
-            os.close(fd)
-            tmp.unlink(missing_ok=True)
-            raise
-        os.close(fd)
-        return tmp
-
-    def _fsync_directorio(self, directorio: Path):
-        dfd = os.open(directorio, os.O_RDONLY)
-        try:
-            os.fsync(dfd)
-        finally:
-            os.close(dfd)
-
-    def _reemplazar_durable(self, tmp: Path, destino: Path):
-        try:
-            os.replace(tmp, destino)
-        except OSError:
-            tmp.unlink(missing_ok=True)
-            raise
-        self._fsync_directorio(destino.parent)
-
     def _save_job_atomically(self, job_dict: dict) -> None:
-        """tmp 0600 + fsync + rename + fsync de directorio (BLOCKER-2).
-        Los fallos de E/S se propagan: nada se reporta sin que conste."""
-        target_dir = self.data_dir / job_dict["project_id"]
-        target_file = target_dir / f"{job_dict['job_id']}.json"
-        datos = json.dumps(
-            job_dict, indent=2, ensure_ascii=False).encode("utf-8")
-        tmp = self._volcar_tmp_durable(target_dir, target_file.name, datos)
-        self._reemplazar_durable(tmp, target_file)
+        """Delega la escritura durable en el almacenamiento; los fallos
+        de E/S se propagan (BLOCKER-2: nada se reporta sin que conste)."""
+        self.storage.save_job(job_dict)
 
     def _load_job(self, project_id: str, job_id: str) -> dict | None:
-        target_file = self.data_dir / project_id / f"{job_id}.json"
-        if not target_file.exists():
-            return None
-        try:
-            return json.loads(target_file.read_text(encoding="utf-8"))
-        except Exception:
-            return None
-
-    def _commit_registro_idempotencia(self, project_id: str, key: str,
-                                      job_id: str, payload_hash: str):
-        """Registro exclusivo: tmp durable + os.link. Vive
-        TOMBSTONE_IDEMP_HORAS (ventana de deduplicación de §J)."""
-        target_dir = self.idemp_dir / project_id
-        target_dir.mkdir(parents=True, exist_ok=True)
-        os.chmod(target_dir, 0o700)
-        key_hash = hashlib.sha256(key.encode("utf-8")).hexdigest()
-        target_file = target_dir / f"{key_hash}.json"
-        expiracion = (datetime.now(timezone.utc)
-                      + timedelta(hours=TOMBSTONE_IDEMP_HORAS)).isoformat()
-        record = {"key": key, "job_id": job_id,
-                  "payload_hash": payload_hash, "expires_at": expiracion}
-        tmp = self._volcar_tmp_durable(target_dir, target_file.name,
-                                       json.dumps(record).encode())
-        try:
-            os.link(tmp, target_file)
-        except OSError:
-            tmp.unlink(missing_ok=True)
-            raise
-        tmp.unlink(missing_ok=True)
-        self._fsync_directorio(target_dir)
-
-    def _lookup_idempotency_record(self, project_id: str, key: str) -> dict | None:
-        key_hash = hashlib.sha256(key.encode("utf-8")).hexdigest()
-        target_file = self.idemp_dir / project_id / f"{key_hash}.json"
-        if not target_file.exists():
-            return None
-        try:
-            record = json.loads(target_file.read_text(encoding="utf-8"))
-            dt_exp = datetime.fromisoformat(record["expires_at"])
-            if datetime.now(timezone.utc) > dt_exp:
-                target_file.unlink(missing_ok=True)
-                return None
-            return record
-        except Exception:
-            return None
+        return self.storage.load_job(project_id, job_id)
 
     def _registro_confirma_admision(self, job: dict) -> bool:
         """True si el registro de idempotencia apunta a este job vivo."""
         clave = job.get("idempotency_key")
         if not isinstance(clave, str):
             return False
-        rec = self._lookup_idempotency_record(
+        rec = self.storage.lookup_idempotency_record(
             job.get("project_id", ""), clave)
         return bool(rec and rec.get("job_id") == job.get("job_id"))
 
     def _descartar_job_sin_admision(self, project_id: str, job_id: str):
-        """Best-effort: sin commit de registro no hay job; el arranque
-        reconcilia cualquier resto (no se ejecuta)."""
-        try:
-            (self.data_dir / project_id / f"{job_id}.json").unlink(
-                missing_ok=True)
-        except OSError:
-            pass
+        self.storage.eliminar_job(project_id, job_id)
 
     def create_job(self, project_id: str, operation: str, payload: dict,
                    idempotency_key: str,
@@ -349,11 +174,13 @@ class JobsManager:
 
         self._purgar_expirados()
         with self.lock:
-            rec = self._lookup_idempotency_record(project_id, idempotency_key)
+            rec = self.storage.lookup_idempotency_record(
+                project_id, idempotency_key)
             if rec:
                 if rec["payload_hash"] != payload_hash:
                     return _respuesta_error(
-                        409, "idempotency_conflict", MSG_IDEMPOTENCY_CONFLICT)
+                        409, "idempotency_conflict",
+                        MSG_IDEMPOTENCY_CONFLICT)
                 existente = self._load_job(project_id, rec["job_id"])
                 if existente is None \
                         or existente.get("state") == "expired" \
@@ -389,12 +216,20 @@ class JobsManager:
                 f"{project_id}:{idempotency_key}:{ahora.isoformat()}"
                 .encode()).hexdigest()[:16]
             job_dict = {
-                "job_id": job_id, "contract_version": "2",
-                "project_id": project_id, "operation": operation,
-                "payload": payload, "idempotency_key": idempotency_key,
-                "ttl_seconds": ttl, "state": "queued",
-                "created_at": ahora.isoformat(), "started_at": None,
-                "completed_at": None, "expires_at": expira.isoformat(),                "result": None, "error": None,
+                "job_id": job_id,
+                "contract_version": "2",
+                "project_id": project_id,
+                "operation": operation,
+                "payload": payload,
+                "idempotency_key": idempotency_key,
+                "ttl_seconds": ttl,
+                "state": "queued",
+                "created_at": ahora.isoformat(),
+                "started_at": None,
+                "completed_at": None,
+                "expires_at": expira.isoformat(),
+                "result": None,
+                "error": None,
                 "model_revision": "LiquidAI/LFM3-Omni-2B-GGUF",
             }
             try:
@@ -404,7 +239,7 @@ class JobsManager:
                     500, "storage_error",
                     "No se pudo persistir el trabajo; admisión denegada")
             try:
-                self._commit_registro_idempotencia(
+                self.storage.commit_registro_idempotencia(
                     project_id, idempotency_key, job_id, payload_hash)
             except FileExistsError:
                 return self._resolver_rival(
@@ -422,7 +257,8 @@ class JobsManager:
                         payload_hash: str, job_id_propio: str):
         """Otra instancia commitó la misma clave: seguir SU admisión."""
         self._descartar_job_sin_admision(project_id, job_id_propio)
-        rival = self._lookup_idempotency_record(project_id, idempotency_key)
+        rival = self.storage.lookup_idempotency_record(
+            project_id, idempotency_key)
         if rival is None:
             return _respuesta_error(
                 500, "storage_error",
@@ -540,9 +376,8 @@ class JobsManager:
         """Reclamo atómico entre procesos (HIGH-1): flock exclusivo
         por job; fd o None si lo tiene otro, no está en cola o venció."""
         try:
-            self.claims_dir.mkdir(parents=True, exist_ok=True)
-            os.chmod(self.claims_dir, 0o700)
-            fd = os.open(self.claims_dir / f"{job_id}.lock",
+            claims_dir = self.storage.asegurar_claims_dir()
+            fd = os.open(claims_dir / f"{job_id}.lock",
                          os.O_RDWR | os.O_CREAT, 0o600)
         except OSError:
             return None
@@ -692,10 +527,7 @@ class JobsManager:
             "model_revision": job.get("model_revision"),
         }
         self._save_job_atomically(tombstone)
-        try:
-            (self.claims_dir / f"{job_id}.lock").unlink(missing_ok=True)
-        except OSError:
-            pass
+        self.storage.eliminar_claim(job_id)
 
     def _purgar_expirados(self) -> int:
         """Barrido: vencidos a tombstone, registros vencidos fuera."""

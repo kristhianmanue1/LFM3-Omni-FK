@@ -1,0 +1,36 @@
+refactor-listo — D5 reorganización pura (fix-i5 intento 2, 2026-11-08)
+
+== git diff --stat (tracked) ==
+ src/gateway_http.py |  99 +++-----------------
+ src/jobs_manager.py | 262 ++++++++++------------------------------------------
+ 2 files changed, 61 insertions(+), 300 deletions(-)
+
+== archivos nuevos ==
+     110 src/canonical_json.py
+     154 src/jobs_storage.py
+     124 src/gateway_jobs.py
+     388 total
+
+== batería ANTES (refactor-antes.txt) ==
+Ran 141 tests in 54.471s
+OK
+exit=0
+
+== batería DESPUÉS (refactor-despues.txt) ==
+Ran 141 tests in 53.850s
+OK
+exit=0
+
+== misma batería, mismo resultado: 141 tests OK antes y después ==
+
+== gates ==
+OK — 315 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+OK — 2 plan(es) verificados (estructura E1-E6)
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+
+== columna máxima por archivo tocado ==
+src/jobs_manager.py: 632 líneas, columna máx 81
+src/gateway_http.py: 729 líneas, columna máx 87
+src/canonical_json.py: 110 líneas, columna máx 76
+src/jobs_storage.py: 154 líneas, columna máx 80
+src/gateway_jobs.py: 124 líneas, columna máx 79
