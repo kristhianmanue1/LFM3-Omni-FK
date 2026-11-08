@@ -1,0 +1,17 @@
+== clon temporal: /var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T//mutacion-i3.g2Cw7q ==
+== BASELINE (clon sin mutar; debe estar en verde) ==
+BASELINE test_11 rc=1 ; sonda rc=0
+BASELINE en rojo: el clon no reproduce el verde; aborto sin veredicto
+-- últimas líneas de la corrida (baseline) --
+test_engine_up (tests.test_engine_probe.DeterministicEngineProbe.test_engine_up) ... ok
+test_error_5xx (tests.test_engine_probe.DeterministicEngineProbe.test_error_5xx) ... ok
+test_malformed_response (tests.test_engine_probe.DeterministicEngineProbe.test_malformed_response) ... ok
+test_probe_timeout (tests.test_engine_probe.DeterministicEngineProbe.test_probe_timeout) ... ok
+test_status_not_ok (tests.test_engine_probe.DeterministicEngineProbe.test_status_not_ok) ... ok
+test_transport_error_is_not_absence (tests.test_engine_probe.DeterministicEngineProbe.test_transport_error_is_not_absence) ... ok
+test_verified_absence (tests.test_engine_probe.DeterministicEngineProbe.test_verified_absence) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.545s
+
+OK

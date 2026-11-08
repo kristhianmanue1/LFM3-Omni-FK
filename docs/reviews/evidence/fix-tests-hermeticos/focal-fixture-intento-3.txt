@@ -1,0 +1,25 @@
+== estado 2026-11-07T23:33:24 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)
+
+== corrida: python3 -m unittest tests.test_hermetic_fixture -v ==
+
+test_kill_vigilado_definido_por_el_fixture (tests.test_hermetic_fixture.HermeticEnvironment.test_kill_vigilado_definido_por_el_fixture) ... ok
+test_minimal_env_sin_herencia_del_host (tests.test_hermetic_fixture.HermeticEnvironment.test_minimal_env_sin_herencia_del_host) ... ok
+test_precedencia_del_lsof_del_fixture (tests.test_hermetic_fixture.HermeticEnvironment.test_precedencia_del_lsof_del_fixture) ... ok
+test_kill_niega_pid_no_inscrito (tests.test_hermetic_fixture.KillGuard.test_kill_niega_pid_no_inscrito) ... ok
+test_kill_niega_pid_reciclado (tests.test_hermetic_fixture.KillGuard.test_kill_niega_pid_reciclado) ... ok
+test_kill_permite_proceso_inscrito (tests.test_hermetic_fixture.KillGuard.test_kill_permite_proceso_inscrito) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.073s
+
+OK
+== rc=0 ==
+== estado 2026-11-07T23:33:24 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)

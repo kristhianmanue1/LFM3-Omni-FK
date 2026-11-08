@@ -1,0 +1,34 @@
+== gates del AGENTS.md ==
+-- check_sizes --
+OK — 346 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc=0
+-- check_plans --
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc=0
+-- check_reports --
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc=0
+== git ==
+-- git diff --check --
+rc=0
+-- git status --porcelain --
+ M tests/test_ciclo_arranque.py
+ M tests/test_piloto_live_i2.py
+ D tests/test_sonda_motor.py
+?? docs/reviews/evidence/fix-tests-hermeticos/capturar-intento-3.py
+?? docs/reviews/evidence/fix-tests-hermeticos/focal-fixture-intento-3.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/focal-intento-3.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_checks_git-intento-3.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_suite_1-intento-3.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_suite_2-intento-3.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/informe-intento-3.md
+?? docs/reviews/evidence/fix-tests-hermeticos/mandato-intento-3.md
+?? docs/reviews/evidence/fix-tests-hermeticos/mutacion-intento-3.sh
+?? docs/reviews/evidence/fix-tests-hermeticos/mutantes-intento-3-abortado.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/mutantes-intento-3.txt
+?? tests/hermetic_fixture.py
+?? tests/test_engine_probe.py
+?? tests/test_hermetic_fixture.py
+== estado final de listeners y procesos ==
+  (ninguno)
+  (ninguno)

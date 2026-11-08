@@ -1,24 +1,27 @@
 #!/usr/bin/env python3
 """Controles deterministas de la sonda de motor (fix-tests-hermeticos).
 
-Cada rama de la guarda queda fijada con un servidor falso en un puerto
-efímero o con un puerto liberado a propósito: motor arriba, ausencia
-verificada (conexión rehusada), respuesta malformada, 5xx, status
-distinto de ok y timeout. Sólo la ausencia verificada produce
-reason=None (lo único que justifica saltar); el resto son errores de
-sonda con motivo (hacen fallar la guarda).
+Cada rama de la guarda queda fijada de forma determinista: las ramas con
+respuesta usan servidores falsos en puertos efímeros (motor arriba,
+respuesta malformada, 5xx, status distinto de ok y timeout) y la rama de
+ausencia verificada simula la conexión rehusada con ``mock`` (sin liberar
+un puerto real que otro proceso pudiera ocupar — hallazgo 5 de la ronda
+2). Sólo la ausencia verificada produce ``reason=None`` (lo único que
+justifica saltar); el resto son errores de sonda con motivo (hacen fallar
+la guarda).
 """
 
 from __future__ import annotations
 
 import contextlib
-import socket
 import sys
 import threading
 import time
 import unittest
+import urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from unittest import mock
 
 RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ))
@@ -80,51 +83,68 @@ def _serving(handler):
         thread.join(timeout=5)
 
 
-class SondaMotorDeterminista(unittest.TestCase):
-    """Las dos ramas de la guarda, sin depender del motor real."""
+class DeterministicEngineProbe(unittest.TestCase):
+    """Las ramas de la guarda, sin depender del motor real."""
 
-    def test_motor_arriba(self):
+    def test_engine_up(self):
         with _serving(_Canned) as url:
             up, reason = probe_engine(url, timeout=2.0)
         self.assertTrue(up)
         self.assertIsNone(reason)
 
-    def test_ausencia_verificada(self):
-        # puerto efímero reservado y liberado: nada escucha ahí
-        sock = socket.socket()
-        sock.bind(("127.0.0.1", 0))
-        port = sock.getsockname()[1]
-        sock.close()
-        up, reason = probe_engine(
-            f"http://127.0.0.1:{port}/health", timeout=2.0)
+    def test_verified_absence(self):
+        # conexión rehusada simulada: ausencia verificada determinista,
+        # sin puerto real liberado que otro proceso pudiera ocupar
+        with mock.patch(
+                "urllib.request.urlopen",
+                side_effect=urllib.error.URLError(ConnectionRefusedError())):
+            up, reason = probe_engine(
+                "http://127.0.0.1:8091/health", timeout=1.0)
         self.assertFalse(up)
         self.assertIsNone(
             reason,
             "una conexión rehusada es ausencia verificada, no un "
             "error de sonda")
 
-    def test_respuesta_malformada(self):
+    def test_transport_error_is_not_absence(self):
+        # un error de transporte distinto de la conexión rehusada NO es
+        # ausencia: la guarda debe fallar con su motivo, nunca saltar
+        with mock.patch(
+                "urllib.request.urlopen",
+                side_effect=urllib.error.URLError(TimeoutError("forced"))):
+            up, reason = probe_engine(
+                "http://127.0.0.1:8091/health", timeout=1.0)
+        self.assertFalse(up)
+        self.assertIsNotNone(
+            reason, "un error de sonda se tomó como ausencia verificada")
+        self.assertIn("error de sonda", reason)
+
+    def test_malformed_response(self):
         with _serving(_Malformed) as url:
             up, reason = probe_engine(url, timeout=2.0)
         self.assertFalse(up)
+        self.assertIsNotNone(reason)
         self.assertIn("malformada", reason)
 
     def test_error_5xx(self):
         with _serving(_Error5xx) as url:
             up, reason = probe_engine(url, timeout=2.0)
         self.assertFalse(up)
+        self.assertIsNotNone(reason)
         self.assertIn("500", reason)
 
-    def test_status_distinto_de_ok(self):
+    def test_status_not_ok(self):
         with _serving(_StatusDown) as url:
             up, reason = probe_engine(url, timeout=2.0)
         self.assertFalse(up)
+        self.assertIsNotNone(reason)
         self.assertIn("status distinto de ok", reason)
 
-    def test_timeout_de_sonda(self):
+    def test_probe_timeout(self):
         with _serving(_Hanging) as url:
             up, reason = probe_engine(url, timeout=0.4)
         self.assertFalse(up)
+        self.assertIsNotNone(reason)
         self.assertIn("timeout", reason)
 
 
