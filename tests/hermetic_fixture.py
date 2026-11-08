@@ -358,7 +358,27 @@ class HermeticFixture:
 
     def __init__(self, prefix="hermetic-", node_bin=None,
                  verify_timeout=10.0):
+        self.node_bin = node_bin
+        # Plazo de stop_and_verify para la salida de los procesos propios
+        # tras el centinela (los controles del fixture lo acortan).
+        self.verify_timeout = verify_timeout
         self.tmp = Path(tempfile.mkdtemp(prefix=prefix))
+        try:
+            self._prepare()
+            self._write_substitutes()
+        except BaseException:
+            # Autolimpieza de la preparación (hallazgo MED ronda 4): si
+            # algo falla a mitad, ningún caller pudo aún registrar
+            # final_cleanup y sólo existen directorios y archivos — sin
+            # procesos que conservar —, así que el tmp se borra y el
+            # error original se propaga. El borrado es best-effort: no
+            # debe enmascarar ese error con uno propio de rmtree.
+            shutil.rmtree(self.tmp, ignore_errors=True)
+            raise
+
+    def _prepare(self):
+        """Esqueleto del tmp: directorios, registros vacíos y rutas
+        canónicas de los artefactos del fixture."""
         self.bin_dir = self.tmp / "bin"
         self.listeners_dir = self.tmp / "listeners"
         self.http_state_dir = self.tmp / "http_state"
@@ -370,11 +390,6 @@ class HermeticFixture:
         self.kill_denied_path = self.tmp / "kill_denied.log"
         self.sentinel_path = self.tmp / "shutdown"
         self.invocations_path = self.tmp / "invocations.log"
-        self.node_bin = node_bin
-        # Plazo de stop_and_verify para la salida de los procesos propios
-        # tras el centinela (los controles del fixture lo acortan).
-        self.verify_timeout = verify_timeout
-        self._write_substitutes()
 
     # -- entorno y ejecución de las copias -----------------------------
 
@@ -514,6 +529,20 @@ class HermeticFixture:
             if pid and self.pid_alive(int(pid)):
                 return True
         return False
+
+    def http_state(self, port):
+        """Id del modelo publicado en el puerto, o None si aún no hay.
+
+        El curl sustituto sólo responde /health y /v1/models cuando el
+        registro ``http_state`` existe: esperar a su valor hace
+        determinista la rama que serve.sh tomará ante un servicio de
+        control (listener publicado y estado HTTP publicado, sin
+        carrera entre ambos registros).
+        """
+        path = self.http_state_dir / str(port)
+        if not path.exists():
+            return None
+        return path.read_text(encoding="utf-8").strip() or None
 
     def denials(self):
         if not self.kill_denied_path.exists():

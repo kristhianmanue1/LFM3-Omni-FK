@@ -22,6 +22,9 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 RUN = RAIZ / "run"
+# Modelo efectivo registrado en el runbook (run/serve.sh MODELO_ID): el
+# mismo id que publica el sustituto del fixture por defecto.
+EFFECTIVE_MODEL_ID = "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M"
 sys.path.insert(0, str(RAIZ))
 
 from tests.hermetic_fixture import HermeticFixture  # noqa: E402
@@ -48,6 +51,23 @@ class CicloArranqueBase(unittest.TestCase):
         while time.time() < deadline and len(self.fx.invocations()) < minimum:
             time.sleep(0.1)
         return self.fx.invocations()
+
+    def wait_for_foreign_service(self, model_id):
+        """Espera al servicio ajeno de control: listener VIVO y estado
+        HTTP ya publicado. Sin el estado publicado el curl sustituto
+        aún rehusaría /health y serve.sh tomaría la rama del puerto
+        ocupado en vez de la del modelo (hallazgo HIGH ronda 4: la rama
+        probada debe ser la correcta por construcción, no por suerte).
+        """
+        deadline = time.time() + 5
+        while time.time() < deadline and not (
+                self.fx.listener_alive(8091)
+                and self.fx.http_state(8091) == model_id):
+            time.sleep(0.05)
+        self.assertTrue(self.fx.listener_alive(8091),
+                        "el servicio ajeno de control no arrancó")
+        self.assertEqual(self.fx.http_state(8091), model_id,
+                         "el servicio ajeno no publicó su modelo efectivo")
 
     def assert_serve_up(self, process, message="", timeout=120):
         """Espera el fin de serve.sh y exige éxito con readiness efectiva.
@@ -202,20 +222,49 @@ class Readiness(CicloArranqueBase):
         ajeno = self.fx.launch_foreign(listen=True,
                                        models_id="modelo-equivocado")
         self.addCleanup(self.fx.terminate_handle, ajeno)
-        deadline = time.time() + 5
-        while time.time() < deadline and not self.fx.listener_alive(8091):
-            time.sleep(0.05)
-        self.assertTrue(self.fx.listener_alive(8091),
-                        "el servicio ajeno de control no arrancó")
+        self.wait_for_foreign_service("modelo-equivocado")
         p = self.lanzar_serve()
         rc = p.wait(timeout=60)
         stdout = p.stdout.read()
+        stderr = p.stderr.read()
         p.stdout.close()
+        p.stderr.close()
         self.assertNotEqual(rc, 0, "el atajo idempotente declaró arriba "
                                    "sin el modelo efectivo")
         self.assertNotIn("arriba", stdout)
+        # Hallazgo HIGH ronda 4: exigir el motivo BLOQ exacto prueba que
+        # se tomó la rama del modelo equivocado (run/serve.sh:20-31) y
+        # no la de puerto ocupado (:36-39), que también haría fallar
+        # sin «arriba» y sin lanzar el motor.
+        self.assertIn("responde /health pero sin el modelo efectivo",
+                      stderr,
+                      "el BLOQ llegó por otra rama (esperado el rechazo "
+                      f"por modelo efectivo): {stderr}")
         self.assertEqual(len(self.fx.invocations()), 0,
                          "el atajo lanzó un segundo motor")
+
+    def test_r17c_idempotent_shortcut_with_effective_model(self):
+        # Control positivo del hallazgo HIGH ronda 4: el atajo
+        # idempotente también debe ACEPTAR. Un servicio ajeno que ya
+        # sirve el modelo efectivo registrado produce éxito sin lanzar
+        # ningún motor.
+        foreign = self.fx.launch_foreign(listen=True,
+                                         models_id=EFFECTIVE_MODEL_ID)
+        self.addCleanup(self.fx.terminate_handle, foreign)
+        self.wait_for_foreign_service(EFFECTIVE_MODEL_ID)
+        p = self.lanzar_serve()
+        rc = p.wait(timeout=60)
+        stdout = p.stdout.read()
+        stderr = p.stderr.read()
+        p.stdout.close()
+        p.stderr.close()
+        self.assertEqual(rc, 0, "el atajo idempotente rechazó un servicio "
+                                 "ya arriba con el modelo efectivo: "
+                                 f"{stdout}{stderr}")
+        self.assertIn("arriba: /health y modelo efectivo OK", stdout)
+        self.assertEqual(len(self.fx.invocations()), 0,
+                         "el atajo idempotente lanzó un motor pese al "
+                         "servicio ya arriba")
 
 
 class Parada(CicloArranqueBase):

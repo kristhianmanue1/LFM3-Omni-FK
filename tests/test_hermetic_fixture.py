@@ -13,9 +13,11 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import tempfile
 import time
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -200,6 +202,30 @@ class CleanupKeepsSceneForSurvivors(unittest.TestCase):
         case.fx.final_cleanup()
         self.assertFalse(case.fx.tmp.exists(),
                          "el tmp sobrevivió a una limpieza sin riesgos")
+
+
+class SelfCleaningConstructor(unittest.TestCase):
+    """La preparación del fixture se recoge sola si falla a mitad.
+
+    Control del hallazgo MED de la ronda 4: el constructor crea el tmp y
+    escribe los sustitutos ANTES de que un caller pueda registrar
+    final_cleanup; un fallo durante esa preparación dejaría el tmp
+    huérfano. El fixture debe borrarlo y propagar el error original.
+    """
+
+    def test_prepare_failure_deletes_tmp_and_propagates(self):
+        prefix = "hermetic-selfclean-"
+        root = Path(tempfile.gettempdir())
+        before = set(root.glob(prefix + "*"))
+        with mock.patch.object(
+                HermeticFixture, "_write_substitutes",
+                side_effect=OSError("fallo inducido en la preparación")):
+            with self.assertRaises(OSError):
+                HermeticFixture(prefix=prefix)
+        leaked = set(root.glob(prefix + "*")) - before
+        self.assertEqual(
+            leaked, set(),
+            f"la preparación fallida filtró su tmp: {leaked}")
 
 
 if __name__ == "__main__":

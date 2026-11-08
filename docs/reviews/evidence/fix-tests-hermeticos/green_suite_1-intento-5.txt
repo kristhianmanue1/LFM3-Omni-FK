@@ -1,0 +1,193 @@
+== estado 2026-11-08T00:47:52 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)
+
+== corrida: python3 -m unittest discover -s tests -t . ==
+    (pid 4242: RSS 1024 MiB bajo mmap; artefactos ~1144 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: listeners en 8091: ['4242', '4242']; sin pid atribuible no hay pass)
+    (B-T10: pid 4242 no es del motor: '/bin/sh -c sleep 60 # llama-server --port 8091')
+    (pid 4242: RSS 5120 MiB bajo mmap; artefactos ~2613 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: sin RSS atribuible al pid 4242; el proceso desapareció entre lsof y ps)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+Voz detectada.
+Voz detectada.
+........../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 502: 'Bad Gateway'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59123)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59124)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59127)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59128)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59131)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59132)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59135)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59136)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59139)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59140)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59142)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59143)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59145)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59146)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59148)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59149)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59153)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59154)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59159)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59160)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59162)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59163)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59167)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59168)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59170)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59171)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59174)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59175)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59177)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59178)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59180)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59181)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59184)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59185)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59188)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:107: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59189)>
+  for index, test in enumerate(self):
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 404: 'Not Found'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed <socket.socket fd=3, family=2, type=1, proto=0, laddr=('127.0.0.1', 59191)>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/unittest/suite.py:84: ResourceWarning: unclosed <socket.socket fd=4, family=2, type=1, proto=0, laddr=('127.0.0.1', 59192)>
+  return self.run(*args, **kwds)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+............................................/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'Unauthorized'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'Forbidden'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+..../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 429: 'Too Many Requests'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+............................./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 503: 'Service Unavailable'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+.........../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 502: 'Bad Gateway'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+....................................s/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'Forbidden'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+......../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+........../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'Unauthorized'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+......./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'e'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 500: 'e'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+..............s......................................../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 503: 'Service Unavailable'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+............../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 503: 'e'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+............../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'Unauthorized'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+.../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'Forbidden'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 429: 'Too Many Requests'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+../opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 413: 'Content Too Large'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+./opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+...............................................
+----------------------------------------------------------------------
+Ran 321 tests in 121.972s
+
+OK (skipped=2)
+== rc=0 ==
+== estado 2026-11-08T00:49:54 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)

@@ -125,12 +125,13 @@ class TestPilotoPrivadoLive(unittest.TestCase):
         # (addClassCleanup): si una preparación posterior falla (p. ej.
         # la generación de certificados), unittest igualmente recoge
         # todo lo ya abierto. El defecto original (sólo tearDownClass)
-        # venía de main; cerrado aquí por la ronda 3.
+        # venía de main; cerrado en la ronda 3 y afinado en la ronda 4:
+        # el cierre de cada servidor se registra ANTES de arrancar su
+        # hilo (ver _start_server).
         # 1. Backend falso
         cls.backend = ThreadingHTTPServer(("127.0.0.1", 0), BackendMotorSimulado)
         cls.backend_port = cls.backend.server_address[1]
-        threading.Thread(target=cls.backend.serve_forever, daemon=True).start()
-        cls.addClassCleanup(cls._close_server, cls.backend)
+        cls._start_server(cls.backend)
 
         # 2. Configuración temporal de tokens y certificados
         cls.temp_dir = tempfile.TemporaryDirectory()
@@ -186,8 +187,7 @@ class TestPilotoPrivadoLive(unittest.TestCase):
             dispatcher=cls.dispatcher,
         )
         cls.gateway_port = cls.gateway.server_address[1]
-        threading.Thread(target=cls.gateway.serve_forever, daemon=True).start()
-        cls.addClassCleanup(cls._close_server, cls.gateway)
+        cls._start_server(cls.gateway)
 
         # 4. Terminador TLS
         cls.tls_server = build_tls_server(
@@ -196,8 +196,7 @@ class TestPilotoPrivadoLive(unittest.TestCase):
             certs_dir=cls.certs_dir,
         )
         cls.tls_port = cls.tls_server.server_address[1]
-        threading.Thread(target=cls.tls_server.serve_forever, daemon=True).start()
-        cls.addClassCleanup(cls._close_server, cls.tls_server)
+        cls._start_server(cls.tls_server)
 
         # Contexto SSL para cliente de prueba que confía en el certificado local
         cls.ssl_context = ssl.create_default_context(cafile=str(cls.cert_pem))
@@ -206,8 +205,26 @@ class TestPilotoPrivadoLive(unittest.TestCase):
         self.dispatcher._limiters.clear()
 
     @classmethod
-    def _close_server(cls, server):
-        server.shutdown()
+    def _start_server(cls, server):
+        """Registra el cierre del servidor y DESPUÉS arranca su hilo.
+
+        Hallazgo MED de la ronda 4: el addClassCleanup va justo tras
+        crear el servidor y ANTES de Thread.start(); si el arranque del
+        hilo falla, unittest igualmente recoge el socket ya abierto.
+        shutdown() sólo se pide cuando el hilo llegó a correr: el evento
+        que lo despierta sólo lo pone serve_forever, y esperarlo contra
+        un hilo que jamás arrancó sería un bloqueo eterno de limpieza.
+        """
+        started = [False]
+        cls.addClassCleanup(cls._close_server, server, started)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        started[0] = True
+
+    @classmethod
+    def _close_server(cls, server, started):
+        """Cierra el servidor; shutdown() sólo si su hilo llegó a correr."""
+        if started[0]:
+            server.shutdown()
         server.server_close()
 
     def _peticion_https(
