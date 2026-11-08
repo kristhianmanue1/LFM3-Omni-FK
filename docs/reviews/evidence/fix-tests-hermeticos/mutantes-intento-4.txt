@@ -1,0 +1,49 @@
+== clon temporal: /var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T//mutacion-i3.qGiLRp ==
+== BASELINE (clon sin mutar; debe estar en verde) ==
+BASELINE test_11 rc=0 ; sonda rc=0
+== MUTANTE 1: quitar detener_puerto 8443 de run/stop.sh ==
+MUTANTE 1 muere
+-- últimas líneas de la corrida (mut1) --
+Traceback (most recent call last):
+  File "/private/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/mutacion-i3.qGiLRp/repo/tests/test_piloto_live_i2.py", line 561, in test_11_rollback_parada_limpia
+    self.assertIn(f"detenido: sin escucha en {port}",
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  stop_run.stdout)
+                  ^^^^^^^^^^^^^^^^
+AssertionError: 'detenido: sin escucha en 8443' not found in 'detenido: sin escucha en 8092\ndetenido: sin escucha en 8091\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 6.027s
+
+FAILED (failures=1)
+== MUTANTE 2: kill del fixture permisivo (rc de negativa anulado) ==
+MUTANTE 2 muere
+-- últimas líneas de la corrida (mut2) --
+    self.assertNotEqual(stop_control.returncode, 0,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        "stop.sh declaró el 8091 libre con un "
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        "listener ajeno vivo")
+                        ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 == 0 : stop.sh declaró el 8091 libre con un listener ajeno vivo
+
+----------------------------------------------------------------------
+Ran 1 test in 7.034s
+
+FAILED (failures=1)
+== MUTANTE 3: error de sonda tomado como ausencia ==
+MUTANTE 3 muere
+-- últimas líneas de la corrida (mut3) --
+Traceback (most recent call last):
+  File "/private/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/mutacion-i3.qGiLRp/repo/tests/test_engine_probe.py", line 118, in test_transport_error_is_not_absence
+    self.assertIsNotNone(
+    ~~~~~~~~~~~~~~~~~~~~^
+        reason, "un error de sonda se tomó como ausencia verificada")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None : un error de sonda se tomó como ausencia verificada
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.552s
+
+FAILED (failures=1)
+== fin del script de mutación ==

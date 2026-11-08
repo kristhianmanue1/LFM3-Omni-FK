@@ -30,6 +30,9 @@ Materializa el diseño cerrado del Operador (mandato-intento-3):
 - limpieza por handle ``Popen`` y por centinela, con verificación: si un
   proceso propio sigue vivo tras el plazo, la prueba FALLA con el PID y
   el motivo; nunca hay señal desde Python a un PID leído de archivo.
+  Con supervivientes, el tmp y el centinela quedan conservados para
+  diagnóstico (una sola limpieza con ``try/finally``); el borrado del
+  tmp ocurre sólo cuando ya es seguro y sin silenciar sus fallos.
 """
 
 from __future__ import annotations
@@ -125,34 +128,34 @@ done
 [ -n "$port" ] || exit 0
 registry="$STUB_DIR/listeners/$port"
 [ -f "$registry" ] || exit 0
-vivos=""
+alive=""
 while read -r pid; do
   case "$pid" in
     ""|*[!0-9]*) continue ;;
   esac
-  duplicado=0
-  for visto in $vivos; do
-    if [ "$visto" = "$pid" ]; then
-      duplicado=1
+  duplicate=0
+  for seen in $alive; do
+    if [ "$seen" = "$pid" ]; then
+      duplicate=1
     fi
   done
-  if [ "$duplicado" = 1 ]; then
+  if [ "$duplicate" = 1 ]; then
     continue
   fi
   state="$(/bin/ps -p "$pid" -o stat= 2>/dev/null || true)"
   case "$state" in
     ""|Z*) continue ;;
   esac
-  vivos="$vivos $pid"
+  alive="$alive $pid"
 done < "$registry"
-[ -n "$vivos" ] || exit 0
+[ -n "$alive" ] || exit 0
 if [ "$pids_only" = 1 ]; then
-  for pid in $vivos; do
+  for pid in $alive; do
     printf '%s\n' "$pid"
   done
 else
   printf 'COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME\n'
-  for pid in $vivos; do
+  for pid in $alive; do
     printf 'fixture-stub %s fixture 6u IPv4 0t0 TCP 127.0.0.1:%s (LISTEN)\n' "$pid" "$port"
   done
 fi
@@ -178,7 +181,7 @@ host_port="${rest%%/*}"
 port="${host_port##*:}"
 registry="$STUB_DIR/listeners/$port"
 [ -f "$registry" ] || exit 7
-vivo=0
+alive=0
 while read -r pid; do
   case "$pid" in
     ""|*[!0-9]*) continue ;;
@@ -187,10 +190,10 @@ while read -r pid; do
   case "$state" in
     ""|Z*) continue ;;
   esac
-  vivo=1
+  alive=1
   break
 done < "$registry"
-[ "$vivo" = 1 ] || exit 7
+[ "$alive" = 1 ] || exit 7
 service="$STUB_DIR/http_state/$port"
 [ -f "$service" ] || exit 7
 case "$url" in
@@ -249,8 +252,8 @@ with open(listener, "a") as handle:
     handle.write(str(pid) + "\n")
 with open(os.path.join(stub_dir, "http_state", "8091"), "w") as handle:
     handle.write(model_id)
-apagar = os.path.join(stub_dir, "apagar")
-while not os.path.exists(apagar):
+sentinel = os.path.join(stub_dir, "shutdown")
+while not os.path.exists(sentinel):
     if not any(line.strip() == str(pid) for line in
                open(listener).read().splitlines()):
         break  # baja del registro: el servicio dejó de escuchar
@@ -269,17 +272,17 @@ const pid = String(process.pid);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 (async () => {
   await sleep(parseFloat(process.env.STUB_LOAD_SECS || "0") * 1000);
-  const modelo = process.env.STUB_MODELS_ID ||
+  const model_id = process.env.STUB_MODELS_ID ||
       "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M";
   const listener = path.join(dir, "listeners", "8091");
   fs.appendFileSync(listener, pid + "\n");
-  fs.writeFileSync(path.join(dir, "http_state", "8091"), modelo);
-  const apagar = path.join(dir, "apagar");
+  fs.writeFileSync(path.join(dir, "http_state", "8091"), model_id);
+  const sentinel = path.join(dir, "shutdown");
   for (;;) {
-    if (fs.existsSync(apagar)) process.exit(0);
-    let lineas = "";
-    try { lineas = fs.readFileSync(listener, "utf8"); } catch (error) {}
-    if (!lineas.split("\n").includes(pid)) process.exit(0);
+    if (fs.existsSync(sentinel)) process.exit(0);
+    let lines = "";
+    try { lines = fs.readFileSync(listener, "utf8"); } catch (error) {}
+    if (!lines.split("\n").includes(pid)) process.exit(0);
     await sleep(100);
   }
 })();
@@ -304,7 +307,7 @@ model_id = os.environ.get("FOREIGN_MODELS_ID")
 if model_id:
     with open(os.path.join(stub_dir, "http_state", "8091"), "w") as handle:
         handle.write(model_id)
-while not os.path.exists(os.path.join(stub_dir, "apagar")):
+while not os.path.exists(os.path.join(stub_dir, "shutdown")):
     time.sleep(0.1)
 '''
 
@@ -317,9 +320,9 @@ const path = require("path");
 const dir = process.env.STUB_DIR;
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 (async () => {
-  const apagar = path.join(dir, "apagar");
+  const sentinel = path.join(dir, "shutdown");
   for (;;) {
-    if (fs.existsSync(apagar)) process.exit(0);
+    if (fs.existsSync(sentinel)) process.exit(0);
     await sleep(100);
   }
 })();
@@ -336,7 +339,7 @@ stub_dir = os.environ["STUB_DIR"]
 listener = os.path.join(stub_dir, "listeners", "__PORT__")
 with open(listener, "a") as handle:
     handle.write(str(os.getpid()) + "\n")
-sentinel = os.path.join(stub_dir, "apagar")
+sentinel = os.path.join(stub_dir, "shutdown")
 while not os.path.exists(sentinel):
     time.sleep(0.1)
 '''
@@ -353,7 +356,8 @@ class HermeticFixture:
     motor.
     """
 
-    def __init__(self, prefix="hermetic-", node_bin=None):
+    def __init__(self, prefix="hermetic-", node_bin=None,
+                 verify_timeout=10.0):
         self.tmp = Path(tempfile.mkdtemp(prefix=prefix))
         self.bin_dir = self.tmp / "bin"
         self.listeners_dir = self.tmp / "listeners"
@@ -364,9 +368,12 @@ class HermeticFixture:
         self.owned_pids_path = self.tmp / "owned_pids"
         self.owned_pids_path.write_text("", encoding="utf-8")
         self.kill_denied_path = self.tmp / "kill_denied.log"
-        self.sentinel_path = self.tmp / "apagar"
+        self.sentinel_path = self.tmp / "shutdown"
         self.invocations_path = self.tmp / "invocations.log"
         self.node_bin = node_bin
+        # Plazo de stop_and_verify para la salida de los procesos propios
+        # tras el centinela (los controles del fixture lo acortan).
+        self.verify_timeout = verify_timeout
         self._write_substitutes()
 
     # -- entorno y ejecución de las copias -----------------------------
@@ -594,11 +601,12 @@ class HermeticFixture:
         Ninguna señal sale de aquí: los hijos directos ya se terminaron
         por handle en limpiezas previas (LIFO) y los nacidos de serve.sh
         salen solos al ver el centinela. Si algo sigue vivo tras el
-        plazo, la prueba FALLA con el PID y su hora de inicio inscrita;
-        el centinela no se borra nunca antes de confirmar.
+        plazo (``verify_timeout``), la prueba FALLA con el PID, su hora
+        de inicio inscrita y la ruta del tmp conservado; el centinela
+        no se borra nunca antes de confirmar.
         """
         self.sentinel_path.write_text("", encoding="utf-8")
-        deadline = time.time() + 10
+        deadline = time.time() + self.verify_timeout
         survivors = self._survivors()
         while time.time() < deadline and survivors:
             time.sleep(0.1)
@@ -606,19 +614,41 @@ class HermeticFixture:
         if survivors:
             raise AssertionError(
                 "procesos del fixture vivos tras el centinela (pid, hora "
-                f"de inicio inscrita): {survivors}; motivo: un proceso "
-                "nacido de serve.sh ignoró el centinela o un handle "
-                "propio no se terminó en su limpieza")
+                f"de inicio inscrita): {survivors}; tmp y centinela "
+                f"conservados para diagnóstico: {self.tmp}; motivo: un "
+                "proceso nacido de serve.sh ignoró el centinela o un "
+                "handle propio no se terminó en su limpieza")
 
     def register_cleanup(self, testcase):
-        """Registra la limpieza completa en el TestCase (orden LIFO).
+        """Registra la limpieza completa en el TestCase: UNA sola pieza.
 
-        El borrado del tmp se inscribe primero (corre al final) y la
-        parada por centinela con verificación después: si algún proceso
-        propio sigue vivo, la prueba falla antes de recoger el tmp.
+        Hallazgo 2 de la ronda 3: con dos limpiezas separadas, un fallo
+        de ``stop_and_verify`` no impedía que la limpieza siguiente
+        borrara el tmp (y con él el centinela) antes de que los hijos
+        pudieran observarlo. Ahora un único cleanup con ``try/finally``
+        conserva la escena mientras haya supervivientes y borra sólo
+        cuando ya es seguro.
         """
-        testcase.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
-        testcase.addCleanup(self.stop_and_verify)
+        testcase.addCleanup(self.final_cleanup)
+
+    def final_cleanup(self):
+        """Centinela, verificación y borrado del tmp, en una sola pieza.
+
+        Idempotente: si el tmp ya no existe, no hay nada que hacer. El
+        borrado ocurre sólo cuando ya es seguro (sin supervivientes) y
+        sin ``ignore_errors``: un fallo de borrado se propaga como error
+        de limpieza, nunca se silencia.
+        """
+        if not self.tmp.exists():
+            return
+        try:
+            self.stop_and_verify()
+        finally:
+            # Con supervivientes el tmp y el centinela se conservan
+            # (diagnóstico): el fallo ya viaja en la excepción de
+            # stop_and_verify y la escena debe seguir en pie.
+            if not self._survivors():
+                shutil.rmtree(self.tmp)
 
     # -- escritura de sustitutos ---------------------------------------
 

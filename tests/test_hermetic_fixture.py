@@ -17,8 +17,8 @@ import time
 import unittest
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RAIZ))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 
 from tests.hermetic_fixture import HermeticFixture  # noqa: E402
 
@@ -35,7 +35,7 @@ class HermeticEnvironment(unittest.TestCase):
             ["/bin/bash", "--noprofile", "--norc", "-c", code],
             env=self.fx.env(), capture_output=True, text=True)
 
-    def test_minimal_env_sin_herencia_del_host(self):
+    def test_minimal_env_without_host_inheritance(self):
         out = self.bash("env")
         self.assertEqual(out.returncode, 0, out.stderr)
         seen = {}
@@ -62,7 +62,7 @@ class HermeticEnvironment(unittest.TestCase):
         self.assertEqual(inherited, [],
                          "funciones Bash exportadas del host en el entorno")
 
-    def test_precedencia_del_lsof_del_fixture(self):
+    def test_fixture_lsof_precedence(self):
         # Control positivo de precedencia (hallazgo 1 de la ronda 2): en
         # el entorno hermético «lsof» resuelve al ejecutable del fixture,
         # no a una función ni a un binario del host.
@@ -71,7 +71,7 @@ class HermeticEnvironment(unittest.TestCase):
         self.assertIn(f"{self.fx.bin_dir}/lsof", out.stdout)
         self.assertNotIn("function", out.stdout)
 
-    def test_kill_vigilado_definido_por_el_fixture(self):
+    def test_guarded_kill_defined_by_fixture(self):
         out = self.bash("type kill")
         self.assertEqual(out.returncode, 0, out.stderr)
         self.assertIn("is a function", out.stdout,
@@ -104,7 +104,7 @@ class KillGuard(unittest.TestCase):
             f"la negativa ({reason}) no quedó registrada: "
             f"{self.fx.denials()}")
 
-    def test_kill_permite_proceso_inscrito(self):
+    def test_kill_allows_registered_process(self):
         process = self.sleeper()
         self.fx.own(process)
         out = self.guarded_kill(process.pid)
@@ -116,7 +116,7 @@ class KillGuard(unittest.TestCase):
                              "el kill vigilado no terminó al inscrito")
         self.assertEqual(self.fx.denials(), [])
 
-    def test_kill_niega_pid_no_inscrito(self):
+    def test_kill_denies_unregistered_pid(self):
         process = self.sleeper()
         out = self.guarded_kill(process.pid)
         self.assertEqual(out.returncode, 1)
@@ -124,7 +124,7 @@ class KillGuard(unittest.TestCase):
                           "el kill vigilado señaló un PID ajeno al fixture")
         self.assert_denial(process.pid, "reason=not-registered")
 
-    def test_kill_niega_pid_reciclado(self):
+    def test_kill_denies_recycled_pid(self):
         # Control del mandato-intento-3: PID inscrito con una hora de
         # inicio falsa (la de un proceso anterior que recicló el PID): el
         # kill vigilado debe negarse y el proceso actual sobrevivir.
@@ -136,6 +136,70 @@ class KillGuard(unittest.TestCase):
         self.assertIsNone(process.poll(),
                           "el kill vigilado señaló un PID reciclado")
         self.assert_denial(process.pid, "reason=start-time-mismatch")
+
+
+class CleanupKeepsSceneForSurvivors(unittest.TestCase):
+    """Con supervivientes, la limpieza conserva tmp y centinela.
+
+    Control del hallazgo 2 de la ronda 3: si un proceso propio ignora
+    el centinela, el test falla con su PID y la ruta conservada, y el
+    directorio y el centinela siguen presentes. El sustituto termina
+    al final POR SU HANDLE, nunca por un PID leído de archivo; sólo
+    entonces el borrado procede. El caso interior se define DENTRO del
+    método para que el cargador de unittest no lo recoja como test
+    autónomo (está diseñado para fallar por su limpieza).
+    """
+
+    def test_survivor_keeps_tmp_and_sentinel(self):
+        class IgnoringSubstituteCase(unittest.TestCase):
+            """Un sustituto que ignora el centinela: forma hermética de
+            un hijo nacido de serve.sh que no atiende la orden de
+            salida (vive sin handle de limpieza propio; el fixture sólo
+            puede liberarlo por centinela, que él ignora)."""
+
+            def test_ignores_sentinel(inner):
+                inner.fx = HermeticFixture(prefix="hermetic-cleanup-",
+                                           verify_timeout=1.0)
+                inner.fx.register_cleanup(inner)
+                inner.survivor = subprocess.Popen(
+                    [sys.executable, "-c", "import time; time.sleep(60)"],
+                    env=inner.fx.env(), stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL)
+                inner.fx.own(inner.survivor)
+                self.assertTrue(inner.fx.pid_alive(inner.survivor.pid))
+
+        case = IgnoringSubstituteCase("test_ignores_sentinel")
+        result = unittest.TestResult()
+        case.run(result)
+        # red de seguridad del propio control: aunque cualquier aserción
+        # de abajo falle, el sustituto termina por handle y la escena se
+        # recoge cuando ya sea seguro
+        if hasattr(case, "survivor"):
+            self.addCleanup(case.fx.final_cleanup)
+            self.addCleanup(case.fx.terminate_handle, case.survivor)
+        self.assertEqual(len(result.failures), 1,
+                         f"el caso interior debió fallar por su limpieza "
+                         f"(superviviente vivo): {result.failures}")
+        self.assertEqual(len(result.errors), 0, result.errors)
+        failure_text = result.failures[0][1]
+        self.assertIn(str(case.survivor.pid), failure_text,
+                      "el fallo no nombra el PID del superviviente")
+        self.assertIn(str(case.fx.tmp), failure_text,
+                      "el fallo no nombra la ruta conservada")
+        # la escena queda en pie: centinela y directorio presentes
+        self.assertTrue(case.fx.sentinel_path.exists(),
+                        "el centinela se borró con un superviviente vivo")
+        self.assertTrue(case.fx.tmp.exists(),
+                        "el tmp se borró con un superviviente vivo")
+        # fin del control: el sustituto termina por su handle, nunca por
+        # un PID leído de archivo
+        case.fx.terminate_handle(case.survivor)
+        self.assertIsNotNone(case.survivor.poll(),
+                             "el sustituto no terminó por su handle")
+        # ya sin supervivientes, el borrado procede (sin ignore_errors)
+        case.fx.final_cleanup()
+        self.assertFalse(case.fx.tmp.exists(),
+                         "el tmp sobrevivió a una limpieza sin riesgos")
 
 
 if __name__ == "__main__":

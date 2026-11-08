@@ -43,13 +43,13 @@ class CicloArranqueBase(unittest.TestCase):
         self.addCleanup(self.fx.terminate_handle, process)
         return process
 
-    def esperar_invocaciones(self, minimo=1, timeout=10):
+    def wait_for_invocations(self, minimum=1, timeout=10):
         deadline = time.time() + timeout
-        while time.time() < deadline and len(self.fx.invocations()) < minimo:
+        while time.time() < deadline and len(self.fx.invocations()) < minimum:
             time.sleep(0.1)
         return self.fx.invocations()
 
-    def assertArriba(self, process, mensaje="", timeout=120):
+    def assert_serve_up(self, process, message="", timeout=120):
         """Espera el fin de serve.sh y exige éxito con readiness efectiva.
 
         La readiness hermética: serve.sh sólo imprime «arriba» tras ver
@@ -61,11 +61,11 @@ class CicloArranqueBase(unittest.TestCase):
         stderr = process.stderr.read()
         process.stdout.close()
         process.stderr.close()
-        self.assertEqual(rc, 0, f"{mensaje}: serve.sh no reportó éxito: "
+        self.assertEqual(rc, 0, f"{message}: serve.sh no reportó éxito: "
                                 f"{stdout}{stderr}")
-        self.assertIn("arriba", stdout, mensaje)
+        self.assertIn("arriba", stdout, message)
         self.assertTrue(self.fx.listener_alive(8091),
-                        f"{mensaje}: no quedó listener vivo del motor")
+                        f"{message}: no quedó listener vivo del motor")
         return stdout
 
     def assertLimpio(self):
@@ -78,7 +78,7 @@ class CicloArranqueBase(unittest.TestCase):
 class DobleArranque(CicloArranqueBase):
     def test_r13_segundo_arranque_bloquea_con_un_solo_motor(self):
         primero = self.lanzar_serve(STUB_LOAD_SECS="2")
-        self.assertTrue(self.esperar_invocaciones(),
+        self.assertTrue(self.wait_for_invocations(),
                         "el primer motor nunca arrancó")
         segundo = self.lanzar_serve()
         rc2 = segundo.wait(timeout=120)
@@ -102,7 +102,7 @@ class Cerrojo(CicloArranqueBase):
         (self.fx.tmp / "serve.lock").mkdir()
         (self.fx.tmp / "serve.lock" / "pid").write_text(str(muerto.pid))
         p = self.lanzar_serve()
-        self.assertArriba(p, "un cerrojo huérfano bloqueó el arranque")
+        self.assert_serve_up(p, "un cerrojo huérfano bloqueó el arranque")
         # Parar el servicio del primer escenario: baja del listener en el
         # registro (el servicio deja de responder: el segundo arranque
         # debe ejercitar el cerrojo, no el atajo idempotente) y
@@ -122,8 +122,8 @@ class Cerrojo(CicloArranqueBase):
         (self.fx.tmp / "serve.lock").mkdir()
         (self.fx.tmp / "serve.lock" / "pid").write_text(str(ajeno.pid))
         p2 = self.lanzar_serve()
-        self.assertArriba(p2, "un pid ajeno vivo del cerrojo bloqueó el "
-                              "arranque")
+        self.assert_serve_up(p2, "un pid ajeno vivo del cerrojo bloqueó el "
+                                 "arranque")
 
 
 class PuertoAjeno(CicloArranqueBase):
@@ -145,7 +145,7 @@ class EntornoAdverso(CicloArranqueBase):
     def test_r16_env_neutralizado_y_host_explicito(self):
         p = self.lanzar_serve(LLAMA_ARG_HOST="0.0.0.0", LLAMA_ARG_PORT="8080",
                               STUB_LOAD_SECS="0.2")
-        self.assertArriba(p)
+        self.assert_serve_up(p)
         inv = self.fx.invocations()
         self.assertEqual(len(inv), 1)
         self.assertEqual(inv[0]["env"], [],
@@ -164,10 +164,11 @@ class EntornoAdverso(CicloArranqueBase):
         veneno.mkdir()
         (veneno / "ffmpeg").write_text("#!/bin/sh\nexit 7\n")
         (veneno / "ffmpeg").chmod(0o755)
-        adverso = os.pathsep.join([str(veneno), str(self.fx.bin_dir),
-                                   "/usr/bin:/bin:/usr/sbin:/sbin"])
-        p = self.lanzar_serve(STUB_LOAD_SECS="0.2", PATH=adverso)
-        self.assertArriba(p)
+        adversarial_path = os.pathsep.join(
+            [str(veneno), str(self.fx.bin_dir),
+             "/usr/bin:/bin:/usr/sbin:/sbin"])
+        p = self.lanzar_serve(STUB_LOAD_SECS="0.2", PATH=adversarial_path)
+        self.assert_serve_up(p)
         inv = self.fx.invocations()
         self.assertEqual(len(inv), 1)
         path_motor = inv[0]["path"].split(os.pathsep)
@@ -235,9 +236,9 @@ class Parada(CicloArranqueBase):
                       "la víctima no presenta el patrón hostil en su "
                       "comando")
         (self.fx.tmp / "llama-server.pid").write_text(str(victima.pid))
-        parada = self.fx.run_script(self.stop, timeout=60)
-        self.assertEqual(parada.returncode, 0,
-                         parada.stderr + parada.stdout)
+        stop_run = self.fx.run_script(self.stop, timeout=60)
+        self.assertEqual(stop_run.returncode, 0,
+                         stop_run.stderr + stop_run.stdout)
         self.assertIsNone(victima.poll(),
                           "stop.sh mató un proceso ajeno con el patrón en "
                           "el comando")

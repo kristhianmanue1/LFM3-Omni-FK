@@ -28,9 +28,9 @@ import unittest
 import urllib.error
 import urllib.request
 
-RAIZ = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(RAIZ))
-sys.path.insert(0, str(RAIZ / "src"))
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
 
 from tests.hermetic_fixture import HermeticFixture  # noqa: E402
 from gateway_auth import FairQueueDispatcher, TokenRegistry  # noqa: E402
@@ -121,13 +121,20 @@ class TestPilotoPrivadoLive(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        # Cada adquisición registra su limpieza INMEDIATAMENTE
+        # (addClassCleanup): si una preparación posterior falla (p. ej.
+        # la generación de certificados), unittest igualmente recoge
+        # todo lo ya abierto. El defecto original (sólo tearDownClass)
+        # venía de main; cerrado aquí por la ronda 3.
         # 1. Backend falso
         cls.backend = ThreadingHTTPServer(("127.0.0.1", 0), BackendMotorSimulado)
         cls.backend_port = cls.backend.server_address[1]
         threading.Thread(target=cls.backend.serve_forever, daemon=True).start()
+        cls.addClassCleanup(cls._close_server, cls.backend)
 
         # 2. Configuración temporal de tokens y certificados
         cls.temp_dir = tempfile.TemporaryDirectory()
+        cls.addClassCleanup(cls.temp_dir.cleanup)
         cls.temp_path = Path(cls.temp_dir.name)
         cls.tokens_path = cls.temp_path / "tokens.json"
 
@@ -180,6 +187,7 @@ class TestPilotoPrivadoLive(unittest.TestCase):
         )
         cls.gateway_port = cls.gateway.server_address[1]
         threading.Thread(target=cls.gateway.serve_forever, daemon=True).start()
+        cls.addClassCleanup(cls._close_server, cls.gateway)
 
         # 4. Terminador TLS
         cls.tls_server = build_tls_server(
@@ -189,6 +197,7 @@ class TestPilotoPrivadoLive(unittest.TestCase):
         )
         cls.tls_port = cls.tls_server.server_address[1]
         threading.Thread(target=cls.tls_server.serve_forever, daemon=True).start()
+        cls.addClassCleanup(cls._close_server, cls.tls_server)
 
         # Contexto SSL para cliente de prueba que confía en el certificado local
         cls.ssl_context = ssl.create_default_context(cafile=str(cls.cert_pem))
@@ -197,14 +206,9 @@ class TestPilotoPrivadoLive(unittest.TestCase):
         self.dispatcher._limiters.clear()
 
     @classmethod
-    def tearDownClass(cls):
-        cls.tls_server.shutdown()
-        cls.tls_server.server_close()
-        cls.gateway.shutdown()
-        cls.gateway.server_close()
-        cls.backend.shutdown()
-        cls.backend.server_close()
-        cls.temp_dir.cleanup()
+    def _close_server(cls, server):
+        server.shutdown()
+        server.server_close()
 
     def _peticion_https(
         self,
@@ -483,27 +487,34 @@ class TestPilotoPrivadoLive(unittest.TestCase):
         tmp = fx.tmp
         serve = tmp / "serve.sh"
         stop = tmp / "stop.sh"
-        shutil.copy2(RAIZ / "run" / "serve.sh", serve)
-        shutil.copy2(RAIZ / "run" / "stop.sh", stop)
+        shutil.copy2(ROOT / "run" / "serve.sh", serve)
+        shutil.copy2(ROOT / "run" / "stop.sh", stop)
 
         # Listeners sustitutos de gateway (8092) y TLS (8443): su comando
         # pasa el patrón de stop.sh y sólo existen en el registro del
-        # fixture; se inscriben como propios al nacer y ante cualquier
-        # fallo el test los termina por handle.
+        # fixture. El cleanup de cada Popen se registra INMEDIATAMENTE
+        # tras crearlo, antes de la adquisición siguiente (hallazgo 1 de
+        # la ronda 3): un fallo en el segundo Popen no puede dejar al
+        # primero sin handle. La inscripción como propio va después, con
+        # manejo del fallo (los handles ya están garantizados).
         gateway = subprocess.Popen(
             [sys.executable,
              str(fx.write_listener_substitute("gateway_http.py", 8092))],
             env=fx.env(), stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL)
+        self.addCleanup(fx.terminate_handle, gateway)
         tls = subprocess.Popen(
             [sys.executable,
              str(fx.write_listener_substitute("gateway_tls.py", 8443))],
             env=fx.env(), stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL)
-        self.addCleanup(fx.terminate_handle, gateway)
         self.addCleanup(fx.terminate_handle, tls)
-        fx.own(gateway)
-        fx.own(tls)
+        for name, proc in (("gateway", gateway), ("tls", tls)):
+            try:
+                fx.own(proc)
+            except RuntimeError as error:
+                self.fail(f"el sustituto de {name} murió antes de "
+                          f"inscribirse: {error}")
         deadline = time.time() + 5
         while time.time() < deadline and not (
                 fx.listener_alive(8092) and fx.listener_alive(8443)):
@@ -597,6 +608,48 @@ class TestPilotoPrivadoLive(unittest.TestCase):
                          "serve_pilot.lock", "gateway.pid", "tls.pid"):
             self.assertFalse((tmp / leftover).exists(),
                              f"stop.sh dejó {leftover}")
+
+    def test_11b_second_popen_failure_collects_first_child(self):
+        """Fallo en la segunda adquisición: el primer hijo queda recogido.
+
+        Control del hallazgo 1 de la ronda 3 sobre el patrón de test_11:
+        el cleanup de cada Popen se registra inmediatamente tras su
+        creación; si el segundo Popen falla (aquí: intérprete
+        inexistente), el primero termina POR SU HANDLE y queda recogido
+        (returncode leído, sin zombie).
+        """
+        fx = HermeticFixture(prefix="hermetic-acquire-")
+        fx.register_cleanup(self)
+        first = subprocess.Popen(
+            [sys.executable,
+             str(fx.write_listener_substitute("gateway_http.py", 8092))],
+            env=fx.env(), stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL)
+        # registrado antes de la segunda adquisición, no después de ambas
+        self.addCleanup(fx.terminate_handle, first)
+        with self.assertRaises(FileNotFoundError):
+            subprocess.Popen(
+                [str(fx.tmp / "missing-interpreter"),
+                 str(fx.write_listener_substitute("gateway_tls.py", 8443))],
+                env=fx.env(), stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL)
+        # inscripción posterior con manejo del fallo: los handles ya
+        # están registrados para ambos
+        try:
+            fx.own(first)
+        except RuntimeError as error:
+            self.fail(f"el primer sustituto murió antes de inscribirse: "
+                      f"{error}")
+        # correr las limpiezas YA: el primero debe terminar por handle y
+        # quedar recogido aunque la segunda adquisición falló
+        self.doCleanups()
+        self.assertIsNotNone(
+            first.poll(),
+            "el primer hijo no quedó recogido tras fallar la segunda "
+            "adquisición")
+        self.assertFalse(
+            fx.pid_alive(first.pid),
+            f"el primer hijo sigue vivo o zombie (pid {first.pid})")
 
 
 

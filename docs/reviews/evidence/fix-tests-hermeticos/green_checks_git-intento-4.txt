@@ -1,0 +1,40 @@
+== gates del AGENTS.md ==
+-- python3 scripts/check_sizes.py --
+OK — 353 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc=0
+-- python3 scripts/check_plans.py --
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc=0
+-- python3 scripts/check_reports.py --
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc=0
+-- drift del kit (extra, como en intento 3) --
+OK — al día: versión vigente gate/v14
+rc=0
+OK — al día: versión vigente corpus/v10
+rc=0
+== git diff --check ==
+rc=0
+== git diff --check 60c6568..HEAD (rango de la rama) ==
+rc=0
+== git status --porcelain ==
+ M tests/hermetic_fixture.py
+ M tests/test_ciclo_arranque.py
+ M tests/test_engine_probe.py
+ M tests/test_hermetic_fixture.py
+ M tests/test_piloto_live_i2.py
+?? docs/reviews/evidence/fix-tests-hermeticos/capturar-intento-4.py
+?? docs/reviews/evidence/fix-tests-hermeticos/focal-intento-4.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_checks_git-intento-4.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_suite_1-intento-4.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_suite_2-intento-4.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/mandato-intento-4.md
+?? docs/reviews/evidence/fix-tests-hermeticos/mutantes-intento-4.txt
+== líneas de los archivos tocados ==
+     678 tests/hermetic_fixture.py
+     206 tests/test_hermetic_fixture.py
+     657 tests/test_piloto_live_i2.py
+     252 tests/test_ciclo_arranque.py
+     152 tests/test_engine_probe.py
+      55 tests/engine_probe.py
+    2000 total

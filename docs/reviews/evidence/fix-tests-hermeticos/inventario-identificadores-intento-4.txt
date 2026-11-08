@@ -1,0 +1,238 @@
+== 1. El centinela NO lo lee stop.sh/serve.sh: es interno del fixture ==
+-- grep -rn 'apagar' run/ --
+(sin coincidencias: stop.sh/serve.sh no leen ningún centinela)
+-- grep -rn 'shutdown' run/ --
+(sin coincidencias)
+
+== 2. Inventario PRE-corrección (identificadores definidos en líneas
+      añadidas del rango 60c6568..HEAD, commit) — sólo los renombrados ==
+tests/hermetic_fixture.py | asignación | apagar | NUEVO
+tests/hermetic_fixture.py | asignación | duplicado | NUEVO
+tests/hermetic_fixture.py | for | visto | NUEVO
+tests/hermetic_fixture.py | asignación | vivo | NUEVO
+tests/hermetic_fixture.py | asignación | vivos | NUEVO
+tests/test_ciclo_arranque.py | asignación | adverso | NUEVO
+tests/test_ciclo_arranque.py | def/class | assertArriba | NUEVO
+tests/test_ciclo_arranque.py | def/class | esperar_invocaciones | NUEVO
+tests/test_ciclo_arranque.py | asignación | parada | NUEVO
+tests/test_engine_probe.py | asignación | RAIZ | NUEVO
+tests/test_hermetic_fixture.py | asignación | RAIZ | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_kill_niega_pid_no_inscrito | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_kill_niega_pid_reciclado | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_kill_permite_proceso_inscrito | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_kill_vigilado_definido_por_el_fixture | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_minimal_env_sin_herencia_del_host | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_precedencia_del_lsof_del_fixture | NUEVO
+tests/test_piloto_live_i2.py | asignación | RAIZ | NUEVO
+-- nota: modelo/lineas/minimo/mensaje viven dentro de def/const/let que el
+   extractor no alcanza; constatados a mano en el diff y renombrados.
+
+== 3. Inventario POST-corrección (base -> árbol de trabajo; estado final) ==
+# inventario de identificadores nuevos 60c6568..HEAD
+# formato: archivo | tipo | identificador | procedencia
+tests/engine_probe.py | asignación | body | NUEVO
+tests/engine_probe.py | asignación | data | NUEVO
+tests/engine_probe.py | def/class | probe_engine | NUEVO
+tests/engine_probe.py | asignación | up | NUEVO
+tests/hermetic_fixture.py | asignación | FIXTURE_ENV | NUEVO
+tests/hermetic_fixture.py | def/class | HermeticFixture | NUEVO
+tests/hermetic_fixture.py | asignación | _CURL_SUBSTITUTE | NUEVO
+tests/hermetic_fixture.py | asignación | _ENGINE_WRAPPER | NUEVO
+tests/hermetic_fixture.py | asignación | _FOREIGN_ENGINE | NUEVO
+tests/hermetic_fixture.py | asignación | _FOREIGN_ENGINE_JS | NUEVO
+tests/hermetic_fixture.py | asignación | _LISTENER_SUBSTITUTE | NUEVO
+tests/hermetic_fixture.py | asignación | _LSOF_SUBSTITUTE | NUEVO
+tests/hermetic_fixture.py | asignación | _STUB_ENGINE | NUEVO
+tests/hermetic_fixture.py | asignación | _STUB_ENGINE_JS | NUEVO
+tests/hermetic_fixture.py | def/class | __init__ | NUEVO
+tests/hermetic_fixture.py | def/class | _survivors | NUEVO
+tests/hermetic_fixture.py | def/class | _write_substitutes | NUEVO
+tests/hermetic_fixture.py | asignación | alive | NUEVO
+tests/hermetic_fixture.py | def/class | append_listener | NUEVO
+tests/hermetic_fixture.py | for | arg | NUEVO
+tests/hermetic_fixture.py | def/class | bash_argv | NUEVO
+tests/hermetic_fixture.py | asignación | capture_output | NUEVO
+tests/hermetic_fixture.py | asignación | code | NUEVO
+tests/hermetic_fixture.py | asignación | command | NUEVO
+tests/hermetic_fixture.py | def/class | command_of | NUEVO
+tests/hermetic_fixture.py | asignación | deadline | NUEVO
+tests/hermetic_fixture.py | def/class | denials | NUEVO
+tests/hermetic_fixture.py | def/class | deregister_listener | NUEVO
+tests/hermetic_fixture.py | for | directory | NUEVO
+tests/hermetic_fixture.py | asignación | duplicate | NUEVO
+tests/hermetic_fixture.py | asignación | encoding | NUEVO
+tests/hermetic_fixture.py | asignación | engine_target | NUEVO
+tests/hermetic_fixture.py | asignación | env | NUEVO
+tests/hermetic_fixture.py | def/class | env | NUEVO
+tests/hermetic_fixture.py | asignación | environment | NUEVO
+tests/hermetic_fixture.py | asignación | extra | NUEVO
+tests/hermetic_fixture.py | asignación | fields | NUEVO
+tests/hermetic_fixture.py | def/class | final_cleanup | NUEVO
+tests/hermetic_fixture.py | asignación | host_port | NUEVO
+tests/hermetic_fixture.py | asignación | http | NUEVO
+tests/hermetic_fixture.py | def/class | invocations | NUEVO
+tests/hermetic_fixture.py | asignación | kept | NUEVO
+tests/hermetic_fixture.py | def/class | launch_foreign | NUEVO
+tests/hermetic_fixture.py | for | line | NUEVO
+tests/hermetic_fixture.py | asignación | lines | NUEVO
+tests/hermetic_fixture.py | asignación | listener | NUEVO
+tests/hermetic_fixture.py | def/class | listener_alive | NUEVO
+tests/hermetic_fixture.py | def/class | listener_file | NUEVO
+tests/hermetic_fixture.py | asignación | lstart | NUEVO
+tests/hermetic_fixture.py | asignación | model_id | NUEVO
+tests/hermetic_fixture.py | for | name | NUEVO
+tests/hermetic_fixture.py | asignación | out | NUEVO
+tests/hermetic_fixture.py | def/class | own | NUEVO
+tests/hermetic_fixture.py | def/class | owned | NUEVO
+tests/hermetic_fixture.py | asignación | path | NUEVO
+tests/hermetic_fixture.py | asignación | pid | NUEVO
+tests/hermetic_fixture.py | for | pid | NUEVO
+tests/hermetic_fixture.py | def/class | pid_alive | NUEVO
+tests/hermetic_fixture.py | asignación | pids | NUEVO
+tests/hermetic_fixture.py | asignación | pids_only | NUEVO
+tests/hermetic_fixture.py | def/class | popen_script | NUEVO
+tests/hermetic_fixture.py | asignación | port | NUEVO
+tests/hermetic_fixture.py | def/class | process_state | NUEVO
+tests/hermetic_fixture.py | asignación | rc | NUEVO
+tests/hermetic_fixture.py | def/class | read_start_time | NUEVO
+tests/hermetic_fixture.py | asignación | reg | NUEVO
+tests/hermetic_fixture.py | def/class | register_cleanup | NUEVO
+tests/hermetic_fixture.py | asignación | registry | NUEVO
+tests/hermetic_fixture.py | asignación | rest | NUEVO
+tests/hermetic_fixture.py | def/class | run_script | NUEVO
+tests/hermetic_fixture.py | asignación | script | NUEVO
+tests/hermetic_fixture.py | for | seen | NUEVO
+tests/hermetic_fixture.py | asignación | sentinel | NUEVO
+tests/hermetic_fixture.py | asignación | service | NUEVO
+tests/hermetic_fixture.py | asignación | start | NUEVO
+tests/hermetic_fixture.py | asignación | start_new_session | NUEVO
+tests/hermetic_fixture.py | asignación | start_time | NUEVO
+tests/hermetic_fixture.py | asignación | state | NUEVO
+tests/hermetic_fixture.py | asignación | stdout | NUEVO
+tests/hermetic_fixture.py | def/class | stop_and_verify | NUEVO
+tests/hermetic_fixture.py | for | stream | NUEVO
+tests/hermetic_fixture.py | asignación | stub_dir | NUEVO
+tests/hermetic_fixture.py | asignación | survivors | NUEVO
+tests/hermetic_fixture.py | def/class | terminate_handle | NUEVO
+tests/hermetic_fixture.py | asignación | url | NUEVO
+tests/hermetic_fixture.py | asignación | verify_timeout | NUEVO
+tests/hermetic_fixture.py | def/class | wait_identity | NUEVO
+tests/hermetic_fixture.py | def/class | write_listener_substitute | NUEVO
+tests/test_ciclo_arranque.py | asignación | STUB_LOAD_SECS | preexistente
+tests/test_ciclo_arranque.py | asignación | adversarial_path | NUEVO
+tests/test_ciclo_arranque.py | asignación | ajeno | preexistente
+tests/test_ciclo_arranque.py | def/class | assert_serve_up | NUEVO
+tests/test_ciclo_arranque.py | asignación | capture_output | preexistente
+tests/test_ciclo_arranque.py | asignación | comando | preexistente
+tests/test_ciclo_arranque.py | asignación | deadline | NUEVO
+tests/test_ciclo_arranque.py | asignación | engine1 | NUEVO
+tests/test_ciclo_arranque.py | asignación | inv | preexistente
+tests/test_ciclo_arranque.py | asignación | models_id | NUEVO
+tests/test_ciclo_arranque.py | asignación | ocupante | preexistente
+tests/test_ciclo_arranque.py | asignación | p | preexistente
+tests/test_ciclo_arranque.py | asignación | p2 | NUEVO
+tests/test_ciclo_arranque.py | asignación | primero | preexistente
+tests/test_ciclo_arranque.py | asignación | process | NUEVO
+tests/test_ciclo_arranque.py | asignación | rc | preexistente
+tests/test_ciclo_arranque.py | asignación | rc1 | preexistente
+tests/test_ciclo_arranque.py | asignación | segundo | preexistente
+tests/test_ciclo_arranque.py | asignación | stderr | NUEVO
+tests/test_ciclo_arranque.py | asignación | stdout | preexistente
+tests/test_ciclo_arranque.py | asignación | stop_run | NUEVO
+tests/test_ciclo_arranque.py | asignación | veneno | preexistente
+tests/test_ciclo_arranque.py | asignación | victima | preexistente
+tests/test_ciclo_arranque.py | def/class | wait_for_invocations | NUEVO
+tests/test_engine_probe.py | def/class | DeterministicEngineProbe | NUEVO
+tests/test_engine_probe.py | asignación | ROOT | NUEVO
+tests/test_engine_probe.py | def/class | _Canned | NUEVO
+tests/test_engine_probe.py | def/class | _Error5xx | NUEVO
+tests/test_engine_probe.py | def/class | _Hanging | NUEVO
+tests/test_engine_probe.py | def/class | _Malformed | NUEVO
+tests/test_engine_probe.py | def/class | _StatusDown | NUEVO
+tests/test_engine_probe.py | def/class | _serving | NUEVO
+tests/test_engine_probe.py | asignación | body | NUEVO
+tests/test_engine_probe.py | def/class | do_GET | NUEVO
+tests/test_engine_probe.py | def/class | log_message | NUEVO
+tests/test_engine_probe.py | asignación | server | NUEVO
+tests/test_engine_probe.py | asignación | side_effect | NUEVO
+tests/test_engine_probe.py | asignación | status | NUEVO
+tests/test_engine_probe.py | def/class | test_engine_up | NUEVO
+tests/test_engine_probe.py | def/class | test_error_5xx | NUEVO
+tests/test_engine_probe.py | def/class | test_malformed_response | NUEVO
+tests/test_engine_probe.py | def/class | test_probe_timeout | NUEVO
+tests/test_engine_probe.py | def/class | test_status_not_ok | NUEVO
+tests/test_engine_probe.py | def/class | test_transport_error_is_not_absence | NUEVO
+tests/test_engine_probe.py | def/class | test_verified_absence | NUEVO
+tests/test_engine_probe.py | asignación | thread | NUEVO
+tests/test_hermetic_fixture.py | def/class | CleanupKeepsSceneForSurvivors | NUEVO
+tests/test_hermetic_fixture.py | def/class | HermeticEnvironment | NUEVO
+tests/test_hermetic_fixture.py | def/class | KillGuard | NUEVO
+tests/test_hermetic_fixture.py | asignación | ROOT | NUEVO
+tests/test_hermetic_fixture.py | def/class | _IgnoringSubstituteCase | NUEVO
+tests/test_hermetic_fixture.py | def/class | assert_denial | NUEVO
+tests/test_hermetic_fixture.py | def/class | bash | NUEVO
+tests/test_hermetic_fixture.py | asignación | case | NUEVO
+tests/test_hermetic_fixture.py | asignación | deadline | NUEVO
+tests/test_hermetic_fixture.py | asignación | env | NUEVO
+tests/test_hermetic_fixture.py | asignación | expected | NUEVO
+tests/test_hermetic_fixture.py | asignación | extra | NUEVO
+tests/test_hermetic_fixture.py | asignación | failure_text | NUEVO
+tests/test_hermetic_fixture.py | def/class | guarded_kill | NUEVO
+tests/test_hermetic_fixture.py | asignación | inherited | NUEVO
+tests/test_hermetic_fixture.py | for | line | NUEVO
+tests/test_hermetic_fixture.py | asignación | out | NUEVO
+tests/test_hermetic_fixture.py | asignación | process | NUEVO
+tests/test_hermetic_fixture.py | asignación | result | NUEVO
+tests/test_hermetic_fixture.py | asignación | seen | NUEVO
+tests/test_hermetic_fixture.py | def/class | setUp | NUEVO
+tests/test_hermetic_fixture.py | def/class | sleeper | NUEVO
+tests/test_hermetic_fixture.py | asignación | stderr | NUEVO
+tests/test_hermetic_fixture.py | asignación | stdout | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_fixture_lsof_precedence | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_guarded_kill_defined_by_fixture | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_ignores_sentinel | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_kill_allows_registered_process | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_kill_denies_recycled_pid | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_kill_denies_unregistered_pid | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_minimal_env_without_host_inheritance | NUEVO
+tests/test_hermetic_fixture.py | def/class | test_survivor_keeps_tmp_and_sentinel | NUEVO
+tests/test_hermetic_fixture.py | asignación | verify_timeout | NUEVO
+tests/test_mcp_server.py | def/class | setUpClass | NUEVO
+tests/test_piloto_live_i2.py | asignación | ROOT | NUEVO
+tests/test_piloto_live_i2.py | def/class | _close_server | NUEVO
+tests/test_piloto_live_i2.py | asignación | cmdline | NUEVO
+tests/test_piloto_live_i2.py | asignación | deadline | NUEVO
+tests/test_piloto_live_i2.py | asignación | engine_pid | NUEVO
+tests/test_piloto_live_i2.py | asignación | env | NUEVO
+tests/test_piloto_live_i2.py | asignación | first | NUEVO
+tests/test_piloto_live_i2.py | asignación | foreign | NUEVO
+tests/test_piloto_live_i2.py | asignación | foreign_cmd | NUEVO
+tests/test_piloto_live_i2.py | asignación | fx | NUEVO
+tests/test_piloto_live_i2.py | asignación | gateway | NUEVO
+tests/test_piloto_live_i2.py | for | leftover | NUEVO
+tests/test_piloto_live_i2.py | for | line | NUEVO
+tests/test_piloto_live_i2.py | asignación | node_bin | NUEVO
+tests/test_piloto_live_i2.py | for | port | NUEVO
+tests/test_piloto_live_i2.py | asignación | serve | NUEVO
+tests/test_piloto_live_i2.py | asignación | startup | NUEVO
+tests/test_piloto_live_i2.py | asignación | stderr | NUEVO
+tests/test_piloto_live_i2.py | asignación | stop | NUEVO
+tests/test_piloto_live_i2.py | asignación | stop_control | NUEVO
+tests/test_piloto_live_i2.py | asignación | stop_run | NUEVO
+tests/test_piloto_live_i2.py | def/class | test_11b_second_popen_failure_collects_first_child | NUEVO
+tests/test_piloto_live_i2.py | asignación | tls | NUEVO
+tests/test_piloto_live_i2.py | asignación | tmp | NUEVO
+
+== 4. Identificadores en español CONSERVADOS: preexistentes en main ==
+RAIZ           -> main: 2
+lanzar_serve   -> main: 10
+assertLimpio   -> main: 2
+muerto         -> main: 4
+ajeno          -> main: 11
+ocupante       -> main: 6
+veneno         -> main: 6
+victima        -> main: 8
+comando        -> main: 5
+inv            -> main: 8
+primero        -> main: 2
+segundo        -> main: 6
