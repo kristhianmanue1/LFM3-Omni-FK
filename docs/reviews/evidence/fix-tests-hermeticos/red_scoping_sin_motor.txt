@@ -1,0 +1,75 @@
+    (pid 4242: RSS 1024 MiB bajo mmap; artefactos ~1144 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: listeners en 8091: ['4242', '4242']; sin pid atribuible no hay pass)
+    (B-T10: pid 4242 no es del motor: '/bin/sh -c sleep 60 # llama-server --port 8091')
+    (pid 4242: RSS 5120 MiB bajo mmap; artefactos ~2613 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: sin RSS atribuible al pid 4242; el proceso desapareció entre lsof y ps)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+Voz detectada.
+Voz detectada.
+======================================================================
+FAIL: test_09_post_jobs_http_flujo_completo (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_09_post_jobs_http_flujo_completo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_jobs_i5.py", line 309, in test_09_post_jobs_http_flujo_completo
+    self.assertIn(data_del["cancellation_status"], ("accepted", "pending"))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'already_terminal' not found in ('accepted', 'pending')
+
+======================================================================
+FAIL: test_health_up (tests.test_mcp_server.ToolsConMotor.test_health_up)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 310, in test_health_up
+    self.assertEqual(datos["state"], "up")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'down' != 'up'
+- down
++ up
+
+
+======================================================================
+FAIL: test_infer_text_con_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_con_schema)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 317, in test_infer_text_con_schema
+    datos = contenido_json(requerir("tools/call", {"name": "infer_text", "arguments": args}))
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 61] Connection refused>'}], 'isError': True}
+
+======================================================================
+FAIL: test_infer_text_sin_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_sin_schema)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 323, in test_infer_text_sin_schema
+    datos = contenido_json(requerir("tools/call", {"name": "infer_text", "arguments": args}))
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 61] Connection refused>'}], 'isError': True}
+
+======================================================================
+FAIL: test_infer_vision_png_rojo (tests.test_mcp_server.ToolsConMotor.test_infer_vision_png_rojo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 331, in test_infer_vision_png_rojo
+    datos = contenido_json(requerir("tools/call", {"name": "infer_vision", "arguments": args}))
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 61] Connection refused>'}], 'isError': True}
+
+----------------------------------------------------------------------
+Ran 296 tests in 108.201s
+
+FAILED (failures=5)
+FALLAS:
+  FAIL: test_09_post_jobs_http_flujo_completo (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_09_post_jobs_http_flujo_completo)
+  FAIL: test_health_up (tests.test_mcp_server.ToolsConMotor.test_health_up)
+  FAIL: test_infer_text_con_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_con_schema)
+  FAIL: test_infer_text_sin_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_sin_schema)
+  FAIL: test_infer_vision_png_rojo (tests.test_mcp_server.ToolsConMotor.test_infer_vision_png_rojo)
+
+EXCLUIDO: test_piloto_live_i2 | tests: 296 | failures: 5 | errors: 0 | skipped: 0

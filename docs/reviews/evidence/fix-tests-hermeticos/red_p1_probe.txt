@@ -1,0 +1,16 @@
+test_11_rollback_parada_limpia (test_piloto_live_i2.TestPilotoPrivadoLive.test_11_rollback_parada_limpia)
+Verifica que run/stop.sh detenga listeners y limpie PIDs y cerrojos. ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.508s
+
+OK
+== P1 RED: test_11 con subprocess.run grabado (nada se ejecuta) ==
+
+== invocaciones subprocess.run registradas ==
+   ['/opt/homebrew/bin/openssl', 'req', '-x509', '-nodes', '-days', '365', '-newkey', 'rsa:2048', '-keyout', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmpk9r5thtp/certs/key.pem', '-out', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmpk9r5thtp/certs/cert.pem', '-config', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmpg5v3p4wu.cnf']
+   ['bash', '/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/run/stop.sh']
+    -> VIOLA P1: /Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/run/stop.sh está dentro de run/ del checkout
+   ['bash', '/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/run/serve.sh']
+    -> VIOLA P1: /Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/run/serve.sh está dentro de run/ del checkout
+RESULTADO P1: VIOLADA

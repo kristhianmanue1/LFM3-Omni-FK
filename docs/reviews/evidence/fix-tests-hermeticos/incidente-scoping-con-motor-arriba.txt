@@ -1,0 +1,17 @@
+.............................ssssssss..................................................................................................................................................................................................................................................................    (pid 4242: RSS 1024 MiB bajo mmap; artefactos ~1144 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: listeners en 8091: ['4242', '4242']; sin pid atribuible no hay pass)
+    (B-T10: pid 4242 no es del motor: '/bin/sh -c sleep 60 # llama-server --port 8091')
+    (pid 4242: RSS 5120 MiB bajo mmap; artefactos ~2613 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: sin RSS atribuible al pid 4242; el proceso desapareció entre lsof y ps)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+Voz detectada.
+Voz detectada.
+.
+----------------------------------------------------------------------
+Ran 296 tests in 72.196s
+
+OK (skipped=8)
+
+EXCLUIDO: test_piloto_live_i2 (test_11 ejecutaría run/ real)
+MODULOS: 22 | tests: 296 | failures: 0 | errors: 0 | skipped: 8

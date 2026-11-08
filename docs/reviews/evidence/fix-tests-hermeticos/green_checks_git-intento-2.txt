@@ -1,0 +1,13 @@
+OK — 333 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc_sizes=0
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc_plans=0
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc_reports=0
+rc_diffcheck=0
+ M tests/test_jobs_i5.py
+ M tests/test_mcp_server.py
+ M tests/test_piloto_live_i2.py
+?? docs/reviews/evidence/fix-tests-hermeticos/
+?? tests/engine_probe.py
+?? tests/test_sonda_motor.py

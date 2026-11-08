@@ -3,8 +3,8 @@
 
 Cada test ejecuta un caso DADO/CUANDO/ENTONCES de SPEC-2 o un caso
 borde de la ronda adversarial F3. Los tests de tools requieren el motor
-vivo (bash run/serve.sh); los de validación y errores sustituyen _http,
-así que corren sin motor.
+vivo (bash run/serve.sh) y se saltan con motivo explícito si no lo hay;
+los de validación y errores sustituyen _http, así que corren sin motor.
 
 Uso: python3 -m unittest tests.test_mcp_server -v
 """
@@ -22,8 +22,18 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ / "src"))
+sys.path.insert(0, str(RAIZ))
 
 import mcp_server as mcp  # noqa: E402
+from tests.engine_probe import probe_engine  # noqa: E402
+
+# fix-tests-hermeticos P2 (intento 2): el estado del motor se sondea una
+# sola vez al importar con una sonda que distingue la ausencia
+# verificada (nada escucha: conexión rehusada) del error de sonda
+# (respuesta malformada, timeout, 5xx). La ausencia salta los tests que
+# requieren motor; el error de sonda hace FALLAR la guarda con su
+# motivo. Nada se salta en silencio.
+ENGINE_UP, PROBE_ERROR = probe_engine()
 
 
 def requerir(metodo, params=None, id_=1):
@@ -300,7 +310,22 @@ class ClasificacionHTTP(unittest.TestCase):
 
 
 class ToolsConMotor(unittest.TestCase):
-    """Requiere motor vivo (bash run/serve.sh)."""
+    """Requiere motor vivo (bash run/serve.sh).
+
+    Sin motor con ausencia verificada (conexión rehusada) la clase se
+    salta con motivo; si la sonda falló (respuesta malformada, timeout,
+    5xx), la guarda FALLA con su motivo en vez de saltar en silencio.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        if PROBE_ERROR:
+            raise AssertionError(f"sonda de motor: {PROBE_ERROR}")
+        if not ENGINE_UP:
+            raise unittest.SkipTest(
+                "requiere motor vivo en 127.0.0.1:8091 "
+                "(bash run/serve.sh); sonda: conexión rehusada, "
+                "nada escucha")
 
     def setUp(self):
         inicializar()

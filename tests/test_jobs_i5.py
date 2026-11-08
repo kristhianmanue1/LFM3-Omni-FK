@@ -31,16 +31,25 @@ import uuid
 
 import sys
 RAIZ = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(RAIZ))
 sys.path.insert(0, str(RAIZ / "src"))
 sys.path.insert(0, str(RAIZ / "examples"))
 
 from gateway_auth import FairQueueDispatcher, TokenRegistry
 from gateway_http import build_server
 from jobs_manager import JobsManager, canonical_json_rfc8785
+from tests.engine_probe import probe_engine  # noqa: E402
 
 
 TOKEN_A = "alpha-test-token-for-pilot-i5-32chars"
 TOKEN_B = "beta-test-token-for-pilot-i5-32chars"
+
+# fix-tests-hermeticos P2 (intento 2): el flujo HTTP completo de /jobs
+# necesita el motor vivo porque sin él el job muere al instante y la
+# cancelación llega como already_terminal. La ausencia verificada
+# (conexión rehusada) salta el test con motivo; un error de sonda hace
+# fallar la guarda con su motivo.
+ENGINE_UP, PROBE_ERROR = probe_engine()
 
 
 class CanonicalJsonRFC8785Tests(unittest.TestCase):
@@ -257,6 +266,13 @@ class JobsGatewayIntegrationTests(unittest.TestCase):
         shutil.rmtree(cls.temp_dir, ignore_errors=True)
 
     def test_09_post_jobs_http_flujo_completo(self):
+        if PROBE_ERROR:
+            self.fail(f"sonda de motor: {PROBE_ERROR}")
+        if not ENGINE_UP:
+            self.skipTest(
+                "requiere motor vivo en 127.0.0.1:8091 (backend del "
+                "gateway); sonda: conexión rehusada, nada escucha. Sin "
+                "motor la cancelación del job llega already_terminal")
         url = f"http://127.0.0.1:{self.puerto}/jobs"
         payload = {
             "operation": "infer_text",

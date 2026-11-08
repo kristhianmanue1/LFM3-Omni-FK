@@ -1,0 +1,70 @@
+== estado 2026-11-07T22:30:42 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)
+
+== corrida: python3 docs/reviews/evidence/fix-tests-hermeticos/probe_limpieza_intento2.py ==
+== línea base: dirs=0 procs=0 ==
+== caso A node ausente == skipped=1 errors=0 failures=0 | restos: dirs=0 procs=0
+== caso B error de preparación == skipped=0 errors=1 failures=0 | restos: dirs=0 procs=0
+== caso C timeout de arranque == skipped=0 errors=1 failures=0 | restos: dirs=0 procs=0
+RESULTADO LIMPIEZA: OK
+----------------------------------------------------------------------
+Ran 1 test in 1.518s
+
+OK (skipped=1)
+======================================================================
+ERROR: test_11_rollback_parada_limpia (test_piloto_live_i2.TestPilotoPrivadoLive.test_11_rollback_parada_limpia)
+Verifica que stop.sh pare listeners y limpie PIDs y cerrojos.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_piloto_live_i2.py", line 648, in test_11_rollback_parada_limpia
+    shutil.copy2(RAIZ / "run" / "stop.sh", stop)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/docs/reviews/evidence/fix-tests-hermeticos/probe_limpieza_intento2.py", line 62, in copy2_roto
+    raise OSError("control B: fallo de preparación deliberado")
+OSError: control B: fallo de preparación deliberado
+
+----------------------------------------------------------------------
+Ran 1 test in 1.509s
+
+FAILED (errors=1)
+======================================================================
+ERROR: test_11_rollback_parada_limpia (test_piloto_live_i2.TestPilotoPrivadoLive.test_11_rollback_parada_limpia)
+Verifica que stop.sh pare listeners y limpie PIDs y cerrojos.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_piloto_live_i2.py", line 688, in test_11_rollback_parada_limpia
+    startup = subprocess.run(
+        ["/bin/bash", str(serve)], env=env, capture_output=True,
+        text=True, timeout=120)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/docs/reviews/evidence/fix-tests-hermeticos/probe_limpieza_intento2.py", line 80, in run_con_timeout
+    return run_real(*args, **kwargs)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 671, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1395, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 2424, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        skip_check_and_raise=True)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 1434, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['/bin/bash', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/i2-parada-51ohxpbw/serve.sh']' timed out after 8 seconds
+
+----------------------------------------------------------------------
+Ran 1 test in 9.547s
+
+FAILED (errors=1)
+== rc=0 ==
+== estado 2026-11-07T22:30:58 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)

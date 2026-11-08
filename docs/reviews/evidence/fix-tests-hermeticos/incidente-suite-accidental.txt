@@ -1,0 +1,441 @@
+test_deriva_reloj_mayor_2s_descartada_drift_clock (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_deriva_reloj_mayor_2s_descartada_drift_clock) ... ok
+test_expirada_post_inferencia_descartada (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_expirada_post_inferencia_descartada) ... ok
+test_expirada_pre_inferencia_descartada (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_expirada_pre_inferencia_descartada) ... ok
+test_finish_reason_distinto_stop_descartado_incomplete_output (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_finish_reason_distinto_stop_descartado_incomplete_output) ... ok
+test_observacion_reordenada_descartada (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_observacion_reordenada_descartada) ... ok
+test_observacion_valida_aceptada (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_observacion_valida_aceptada) ... ok
+test_observation_id_duplicado_descartado (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_observation_id_duplicado_descartado) ... ok
+test_payload_propuesta_no_dict_descartado (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_payload_propuesta_no_dict_descartado) ... ok
+test_propuesta_kind_no_autorizado_descartado (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_propuesta_kind_no_autorizado_descartado) ... ok
+test_salida_modelo_no_dict_descartada_fail_closed (tests.test_adaptador_perfil_d.AdaptadorPerfilDTests.test_salida_modelo_no_dict_descartada_fail_closed) ... ok
+ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r10b_backend_ilegible (tests.test_adapter_v2.PoliticaAdapter.test_r10b_backend_ilegible) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r11_passthrough_valido (tests.test_adapter_v2.PoliticaAdapter.test_r11_passthrough_valido) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r12_salida_estructurada_valida (tests.test_adapter_v2.PoliticaAdapter.test_r12_salida_estructurada_valida) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r21_entrada_nan_rechazada_sin_backend (tests.test_adapter_v2.PoliticaAdapter.test_r21_entrada_nan_rechazada_sin_backend) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r2_schema_anidado (tests.test_adapter_v2.PoliticaAdapter.test_r2_schema_anidado) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r3_tipo_no_string_y_bool_como_number (tests.test_adapter_v2.PoliticaAdapter.test_r3_tipo_no_string_y_bool_como_number) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r3c_salida_nan_no_es_valida (tests.test_adapter_v2.PoliticaAdapter.test_r3c_salida_nan_no_es_valida) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r4_additional_properties (tests.test_adapter_v2.PoliticaAdapter.test_r4_additional_properties) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r5_url_externa (tests.test_adapter_v2.PoliticaAdapter.test_r5_url_externa) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r5b_image_url_con_clave_extra (tests.test_adapter_v2.PoliticaAdapter.test_r5b_image_url_con_clave_extra) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r6_imagenes_truncadas (tests.test_adapter_v2.PoliticaAdapter.test_r6_imagenes_truncadas) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r6c_png_con_basura_tras_iend (tests.test_adapter_v2.PoliticaAdapter.test_r6c_png_con_basura_tras_iend) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r7_firma_falsa (tests.test_adapter_v2.PoliticaAdapter.test_r7_firma_falsa) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r8_exceso_de_pixeles (tests.test_adapter_v2.PoliticaAdapter.test_r8_exceso_de_pixeles) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r9_json_malformado_y_sin_messages (tests.test_adapter_v2.PoliticaAdapter.test_r9_json_malformado_y_sin_messages) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+test_r9b_cl_no_ascii (tests.test_adapter_v2.PoliticaAdapter.test_r9b_cl_no_ascii) ... ok
+  for index, test in enumerate(self):
+  for index, test in enumerate(self):
+ok
+  return self.run(*args, **kwds)
+  return self.run(*args, **kwds)
+test_r14_huerfano_y_pid_reciclado_se_recuperan (tests.test_ciclo_arranque.Cerrojo.test_r14_huerfano_y_pid_reciclado_se_recuperan) ... ok
+test_r13_segundo_arranque_bloquea_con_un_solo_motor (tests.test_ciclo_arranque.DobleArranque.test_r13_segundo_arranque_bloquea_con_un_solo_motor) ... ok
+test_r16_env_neutralizado_y_host_explicito (tests.test_ciclo_arranque.EntornoAdverso.test_r16_env_neutralizado_y_host_explicito) ... ok
+test_r16b_path_fijado_al_lanzar_el_motor (tests.test_ciclo_arranque.EntornoAdverso.test_r16b_path_fijado_al_lanzar_el_motor) ... ok
+test_r18_stop_no_mata_ajenos (tests.test_ciclo_arranque.Parada.test_r18_stop_no_mata_ajenos) ... ok
+test_r15_puerto_ocupado_por_ajeno_bloquea_limpio (tests.test_ciclo_arranque.PuertoAjeno.test_r15_puerto_ocupado_por_ajeno_bloquea_limpio) ... ok
+test_r17_readiness_exige_modelo_efectivo (tests.test_ciclo_arranque.Readiness.test_r17_readiness_exige_modelo_efectivo) ... ok
+test_r17b_atajo_idempotente_exige_modelo (tests.test_ciclo_arranque.Readiness.test_r17b_atajo_idempotente_exige_modelo) ... ok
+  _warn("subprocess %s is still running" % self.pid,
+test_cli_audio_y_video_subcomandos (tests.test_cli_vc.CliUnificadoTests.test_cli_audio_y_video_subcomandos) ... ok
+test_cli_error_string_y_no_dict (tests.test_cli_vc.CliUnificadoTests.test_cli_error_string_y_no_dict) ... ok
+test_cli_health_humano_y_json (tests.test_cli_vc.CliUnificadoTests.test_cli_health_humano_y_json) ... ok
+test_cli_peticion_http_json_invalido (tests.test_cli_vc.CliUnificadoTests.test_cli_peticion_http_json_invalido) ... ok
+test_cli_speech_con_output_y_503 (tests.test_cli_vc.CliUnificadoTests.test_cli_speech_con_output_y_503) ... ok
+test_cli_text_con_prompt_y_schema (tests.test_cli_vc.CliUnificadoTests.test_cli_text_con_prompt_y_schema) ... ok
+test_cli_text_desde_stdin_pipe (tests.test_cli_vc.CliUnificadoTests.test_cli_text_desde_stdin_pipe) ... ok
+test_cli_vision_y_video_con_base64 (tests.test_cli_vc.CliUnificadoTests.test_cli_vision_y_video_con_base64) ... ok
+test_01_rechazo_temprano_licencia_incompatible (tests.test_evaluacion_i6.EvaluadorModelosTests.test_01_rechazo_temprano_licencia_incompatible) ... ok
+test_02_rechazo_temprano_arquitectura_incompatible (tests.test_evaluacion_i6.EvaluadorModelosTests.test_02_rechazo_temprano_arquitectura_incompatible) ... ok
+test_03_rechazo_temprano_memoria_excesiva (tests.test_evaluacion_i6.EvaluadorModelosTests.test_03_rechazo_temprano_memoria_excesiva) ... ok
+test_04_rechazo_temprano_perdida_omnimodal (tests.test_evaluacion_i6.EvaluadorModelosTests.test_04_rechazo_temprano_perdida_omnimodal) ... ok
+test_05_bloqueo_sin_autorizacion_operador (tests.test_evaluacion_i6.EvaluadorModelosTests.test_05_bloqueo_sin_autorizacion_operador) ... ok
+test_06_evaluacion_degrada_calidad_esquema (tests.test_evaluacion_i6.EvaluadorModelosTests.test_06_evaluacion_degrada_calidad_esquema) ... ok
+test_07_evaluacion_degrada_latencia_p95 (tests.test_evaluacion_i6.EvaluadorModelosTests.test_07_evaluacion_degrada_latencia_p95) ... ok
+test_08_candidato_promocion_y_plan_rollback (tests.test_evaluacion_i6.EvaluadorModelosTests.test_08_candidato_promocion_y_plan_rollback) ... ok
+test_09_verificacion_integridad_baseline_intacto (tests.test_evaluacion_i6.EvaluadorModelosTests.test_09_verificacion_integridad_baseline_intacto) ... ok
+ok
+test_g1_capaabilities_sin_lo_no_activo (tests.test_gateway_i1.Capabilities.test_g1_capaabilities_sin_lo_no_activo) ... ok
+test_g5_puerto_ocupado_falla_cerrado (tests.test_gateway_i1.Colision.test_g5_puerto_ocupado_falla_cerrado) ... ok
+test_g6_core_sin_transporte (tests.test_gateway_i1.FronteraInterna.test_g6_core_sin_transporte) ... ok
+test_g2_chunked_sin_content_length (tests.test_gateway_i1.Transporte.test_g2_chunked_sin_content_length) ... ok
+test_g3_compresion_rechazada_antes_de_leer (tests.test_gateway_i1.Transporte.test_g3_compresion_rechazada_antes_de_leer) ... ok
+test_cola_llena_503 (tests.test_gateway_i2.TestFairQueuing.test_cola_llena_503) ... ok
+test_queue_timeout_504 (tests.test_gateway_i2.TestFairQueuing.test_queue_timeout_504) ... ok
+test_timeout_no_libera_motor_si_otra_peticion_sigue_activa (tests.test_gateway_i2.TestFairQueuing.test_timeout_no_libera_motor_si_otra_peticion_sigue_activa) ... ok
+ok
+test_anti_ssrf_video_ftp_rechazado (tests.test_gateway_i2.TestGatewayE2EConAuth.test_anti_ssrf_video_ftp_rechazado) ... ok
+ok
+test_chat_completions_auth_exitosa (tests.test_gateway_i2.TestGatewayE2EConAuth.test_chat_completions_auth_exitosa) ... ok
+ok
+test_chat_scope_insuficiente_audio_en_proyecto_beta (tests.test_gateway_i2.TestGatewayE2EConAuth.test_chat_scope_insuficiente_audio_en_proyecto_beta) ... ok
+test_do_post_rechaza_no_autenticado_antes_de_leer_cuerpo (tests.test_gateway_i2.TestGatewayE2EConAuth.test_do_post_rechaza_no_autenticado_antes_de_leer_cuerpo) ... ok
+test_healthz_es_publico_sin_auth (tests.test_gateway_i2.TestGatewayE2EConAuth.test_healthz_es_publico_sin_auth) ... ok
+ok
+test_https_get_healthz_con_cert_verificado (tests.test_gateway_i2.TestGatewayTLS.test_https_get_healthz_con_cert_verificado) ... ok
+ok
+test_burst_y_agotamiento (tests.test_gateway_i2.TestTokenBucket.test_burst_y_agotamiento) ... ok
+test_project_id_ausente_400 (tests.test_gateway_i2.TestTokenRegistry.test_project_id_ausente_400) ... ok
+test_project_id_caracteres_invalidos_400 (tests.test_gateway_i2.TestTokenRegistry.test_project_id_caracteres_invalidos_400) ... ok
+test_project_mismatch_403 (tests.test_gateway_i2.TestTokenRegistry.test_project_mismatch_403) ... ok
+test_recarga_en_caliente_revocacion (tests.test_gateway_i2.TestTokenRegistry.test_recarga_en_caliente_revocacion) ... ok
+test_scope_insuficiente_403 (tests.test_gateway_i2.TestTokenRegistry.test_scope_insuficiente_403) ... ok
+test_token_ausente_401 (tests.test_gateway_i2.TestTokenRegistry.test_token_ausente_401) ... ok
+test_token_invalido_formato_401 (tests.test_gateway_i2.TestTokenRegistry.test_token_invalido_formato_401) ... ok
+test_token_longitud_erronea_401 (tests.test_gateway_i2.TestTokenRegistry.test_token_longitud_erronea_401) ... ok
+test_verificacion_exitosa (tests.test_gateway_i2.TestTokenRegistry.test_verificacion_exitosa) ... ok
+test_va2_wav_corrupto_o_truncado (tests.test_gateway_va.AudioInvalido.test_va2_wav_corrupto_o_truncado) ... ok
+test_va2b_base64_invalido (tests.test_gateway_va.AudioInvalido.test_va2b_base64_invalido) ... ok
+test_va2c_chunks_duplicados_o_tamano_inconsistente (tests.test_gateway_va.AudioInvalido.test_va2c_chunks_duplicados_o_tamano_inconsistente) ... ok
+test_va3_presupuesto_de_bytes_y_duracion (tests.test_gateway_va.AudioInvalido.test_va3_presupuesto_de_bytes_y_duracion) ... ok
+test_va4_formas_no_admitidas (tests.test_gateway_va.AudioInvalido.test_va4_formas_no_admitidas) ... ok
+test_va5_capabilities_anuncia_transcripcion_sin_lo_demas (tests.test_gateway_va.AudioInvalido.test_va5_capabilities_anuncia_transcripcion_sin_lo_demas) ... ok
+test_cer_casos_conocidos (tests.test_gateway_va.CerPorUnidad.test_cer_casos_conocidos) ... ok
+test_criterio_pass_declarado_en_corpus (tests.test_gateway_va.CerPorUnidad.test_criterio_pass_declarado_en_corpus) ... ok
+test_normaliza_minusculas_sin_puntuacion (tests.test_gateway_va.CerPorUnidad.test_normaliza_minusculas_sin_puntuacion) ... ok
+test_va1_audio_valido_atraviesa_y_llega_al_motor (tests.test_gateway_va.EntradaValida.test_va1_audio_valido_atraviesa_y_llega_al_motor) ... ok
+test_vr4_dos_sesiones_d10_no_se_cruzan (tests.test_gateway_vr.SesionesYAislamiento.test_vr4_dos_sesiones_d10_no_se_cruzan) ... ok
+test_vr5_capabilities_anuncia_streaming_y_video_activos (tests.test_gateway_vr.SesionesYAislamiento.test_vr5_capabilities_anuncia_streaming_y_video_activos) ... ok
+test_vr1_sse_entrega_eventos_y_stream_false_conserva_json (tests.test_gateway_vr.StreamingSSE.test_vr1_sse_entrega_eventos_y_stream_false_conserva_json) ... ok
+test_vr2_stream_invalido_o_con_schema_rechaza_antes_del_motor (tests.test_gateway_vr.StreamingSSE.test_vr2_stream_invalido_o_con_schema_rechaza_antes_del_motor) ... ok
+test_vr3_desconexion_cancela_backend_y_confirma_slot_libre (tests.test_gateway_vr.StreamingSSE.test_vr3_desconexion_cancela_backend_y_confirma_slot_libre) ... ok
+test_vr3b_error_backend_en_stream_da_502_json (tests.test_gateway_vr.StreamingSSE.test_vr3b_error_backend_en_stream_da_502_json) ... ok
+ok
+test_vr3d_linea_sse_excesiva_corta_y_verifica_slots (tests.test_gateway_vr.StreamingSSE.test_vr3d_linea_sse_excesiva_corta_y_verifica_slots) ... ok
+test_vs5_capabilities_anuncia_voz_y_audio_salida (tests.test_gateway_vs.CapabilitiesSpeech.test_vs5_capabilities_anuncia_voz_y_audio_salida) ... ok
+test_vs3_ocupado_responde_503_overloaded_sin_cola (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs3_ocupado_responde_503_overloaded_sin_cola) ... ok
+test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs4_fallo_subproceso_o_wav_corrupto_da_502_y_limpia) ... ok
+test_vs4b_resolver_entorno_tts_verifica_hash_y_limpia_env (tests.test_gateway_vs.ExclusionMutuaYErrores.test_vs4b_resolver_entorno_tts_verifica_hash_y_limpia_env) ... ok
+test_vs2_entradas_invalidas_rechazadas_con_contador_cero (tests.test_gateway_vs.RechazosFronteraSpeech.test_vs2_entradas_invalidas_rechazadas_con_contador_cero) ... ok
+test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia (tests.test_gateway_vs.SintesisValida.test_vs1_speech_valido_entrega_wav_por_archivo_0600_y_limpia) ... ok
+test_vv6_capabilities_anuncia_video_y_todas_las_modalidades (tests.test_gateway_vv.CapabilitiesVideo.test_vv6_capabilities_anuncia_video_y_todas_las_modalidades) ... ok
+test_vv2_mp4_corrupto_truncado_o_sin_ftyp (tests.test_gateway_vv.VideoInvalido.test_vv2_mp4_corrupto_truncado_o_sin_ftyp) ... ok
+test_vv2b_base64_invalido (tests.test_gateway_vv.VideoInvalido.test_vv2b_base64_invalido) ... ok
+ok
+ok
+ok
+ok
+test_vv1_video_valido_atraviesa_y_llega_al_motor (tests.test_gateway_vv.VideoValido.test_vv1_video_valido_atraviesa_y_llega_al_motor) ... ok
+test_vx7_payload_con_schema_v2_ext_atraviesa (tests.test_gateway_vx.GatewayHttpVx.test_vx7_payload_con_schema_v2_ext_atraviesa) ... ok
+test_vx8_multimodal_audio_con_schema_atraviesa (tests.test_gateway_vx.GatewayHttpVx.test_vx8_multimodal_audio_con_schema_atraviesa) ... ok
+test_vx1_salida_enum (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx1_salida_enum) ... ok
+test_vx1c_salida_enum_number_equivalente (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx1c_salida_enum_number_equivalente) ... ok
+test_vx2_salida_min_max (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx2_salida_min_max) ... ok
+test_vx3_salida_array_escalar (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx3_salida_array_escalar) ... ok
+test_vx3b_salida_array_sin_maxitems_supera_64_falla_502 (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx3b_salida_array_sin_maxitems_supera_64_falla_502) ... ok
+test_vx4_salida_object_anidado_estricto (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx4_salida_object_anidado_estricto) ... ok
+test_vx5_salida_array_objetos_planos (tests.test_gateway_vx.SalidaV2ExtUnidad.test_vx5_salida_array_objetos_planos) ... ok
+test_vx1_enum_escalar_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx1_enum_escalar_valido) ... ok
+test_vx1b_enum_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx1b_enum_invalido_rechaza_400) ... ok
+test_vx2_min_max_numerico_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx2_min_max_numerico_valido) ... ok
+test_vx2b_min_max_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx2b_min_max_invalido_rechaza_400) ... ok
+test_vx3_array_escalares_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx3_array_escalares_valido) ... ok
+test_vx3b_array_invalido_rechaza_400 (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx3b_array_invalido_rechaza_400) ... ok
+test_vx4_array_objetos_planos_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx4_array_objetos_planos_valido) ... ok
+test_vx5_object_anidado_nivel_1_valido (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx5_object_anidado_nivel_1_valido) ... ok
+test_vx6_rechazo_profundidad_mayor_1_y_ref (tests.test_gateway_vx.SchemaV2ExtUnidad.test_vx6_rechazo_profundidad_mayor_1_y_ref) ... ok
+test_cached_corrupt_not_reused (tests.test_install_wsl.InstallationIntegrity.test_cached_corrupt_not_reused) ... ok
+test_download_corrupt_never_published (tests.test_install_wsl.InstallationIntegrity.test_download_corrupt_never_published) ... ok
+test_installation_lock_rejects_second_writer (tests.test_install_wsl.InstallationIntegrity.test_installation_lock_rejects_second_writer) ... ok
+test_runtime_tampering_and_added_files_rejected (tests.test_install_wsl.InstallationIntegrity.test_runtime_tampering_and_added_files_rejected) ... ok
+test_tar_traversal_and_symlink_escape_rejected (tests.test_install_wsl.InstallationIntegrity.test_tar_traversal_and_symlink_escape_rejected) ... ok
+test_valid_download_then_offline_reuse (tests.test_install_wsl.InstallationIntegrity.test_valid_download_then_offline_reuse) ... ok
+test_01_orden_lexicografico_de_claves (tests.test_jobs_i5.CanonicalJsonRFC8785Tests.test_01_orden_lexicografico_de_claves) ... ok
+test_02_rechazo_valores_no_finitos (tests.test_jobs_i5.CanonicalJsonRFC8785Tests.test_02_rechazo_valores_no_finitos) ... ok
+test_09_post_jobs_http_flujo_completo (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_09_post_jobs_http_flujo_completo) ... FAIL
+ok
+test_11_cliente_jobs_script (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_11_cliente_jobs_script) ... ok
+test_03_crear_job_e_idempotencia_coincidente (tests.test_jobs_i5.JobsManagerDirectTests.test_03_crear_job_e_idempotencia_coincidente) ... ok
+test_04_conflicto_idempotencia_payload_distinto (tests.test_jobs_i5.JobsManagerDirectTests.test_04_conflicto_idempotencia_payload_distinto) ... ok
+test_05_aislamiento_multi_inquilino (tests.test_jobs_i5.JobsManagerDirectTests.test_05_aislamiento_multi_inquilino) ... ok
+test_06_limite_de_cola_por_proyecto (tests.test_jobs_i5.JobsManagerDirectTests.test_06_limite_de_cola_por_proyecto) ... ok
+test_07_cancelacion_de_job_en_cola (tests.test_jobs_i5.JobsManagerDirectTests.test_07_cancelacion_de_job_en_cola) ... ok
+test_08_recuperacion_reinicio_running_pasa_a_failed (tests.test_jobs_i5.JobsManagerDirectTests.test_08_recuperacion_reinicio_running_pasa_a_failed) ... ok
+test_01_mcp_get_sse_channel (tests.test_mcp_remote.TestMCPRemote.test_01_mcp_get_sse_channel)
+ok
+test_02_mcp_initialize_and_session (tests.test_mcp_remote.TestMCPRemote.test_02_mcp_initialize_and_session)
+Verifica negociación de protocolo initialize y emisión de Mcp-Session-Id. ... ok
+test_03_mcp_tools_list_omnimodal (tests.test_mcp_remote.TestMCPRemote.test_03_mcp_tools_list_omnimodal)
+Verifica catálogo completo de 8 herramientas omnimodales en tools/list. ... ok
+test_04_mcp_tools_call_health_and_capabilities (tests.test_mcp_remote.TestMCPRemote.test_04_mcp_tools_call_health_and_capabilities)
+Verifica invocación a health y capabilities. ... ok
+test_05_mcp_tools_call_infer_text_plain_and_schema (tests.test_mcp_remote.TestMCPRemote.test_05_mcp_tools_call_infer_text_plain_and_schema)
+Verifica infer_text con texto plano y con validación de schema v2-ext. ... ok
+test_06_mcp_tools_call_infer_vision_and_anti_ssrf (tests.test_mcp_remote.TestMCPRemote.test_06_mcp_tools_call_infer_vision_and_anti_ssrf)
+Verifica infer_vision y contención estricta de egreso anti-SSRF. ... ok
+test_07_mcp_tools_call_infer_audio (tests.test_mcp_remote.TestMCPRemote.test_07_mcp_tools_call_infer_audio)
+Verifica infer_audio con WAV válido y rechazo de audio inválido. ... ok
+test_08_mcp_tools_call_synthesize_speech_and_tts_busy (tests.test_mcp_remote.TestMCPRemote.test_08_mcp_tools_call_synthesize_speech_and_tts_busy)
+Verifica synthesize_speech y exclusión mutua 503/tts_busy. ... ok
+test_09_mcp_tools_call_infer_video (tests.test_mcp_remote.TestMCPRemote.test_09_mcp_tools_call_infer_video)
+Verifica infer_video con MP4 sintético y comprobación de ftyp. ... ok
+test_10_mcp_tools_call_conversational_turn (tests.test_mcp_remote.TestMCPRemote.test_10_mcp_tools_call_conversational_turn)
+Verifica conversational_turn con historial multi-turno y síntesis de voz. ... ok
+test_11_mcp_auth_and_scope_failures (tests.test_mcp_remote.TestMCPRemote.test_11_mcp_auth_and_scope_failures)
+ok
+test_12_mcp_session_isolation (tests.test_mcp_remote.TestMCPRemote.test_12_mcp_session_isolation)
+Verifica que una sesión creada por proyecto-alpha es rechazada si la usa proyecto-beta. ... ok
+test_200_no_parseable_es_salida_invalida (tests.test_mcp_server.ClasificacionHTTP.test_200_no_parseable_es_salida_invalida) ... ok
+test_400_con_detalle_estructurado (tests.test_mcp_server.ClasificacionHTTP.test_400_con_detalle_estructurado) ... ok
+test_400_con_error_no_dict_y_no_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_no_dict_y_no_string) ... ok
+test_400_con_error_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_string) ... ok
+test_500_generico (tests.test_mcp_server.ClasificacionHTTP.test_500_generico) ... ok
+test_503_es_reintentable (tests.test_mcp_server.ClasificacionHTTP.test_503_es_reintentable) ... ok
+test_main_sobrevive_surrogate_e2e (tests.test_mcp_server.ClasificacionHTTP.test_main_sobrevive_surrogate_e2e) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_mensaje_no_objeto_32600) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server.ClasificacionHTTP.test_parse_error_32700) ... ok
+test_schema_profundo_no_mata (tests.test_mcp_server.ClasificacionHTTP.test_schema_profundo_no_mata) ... ok
+test_initialize (tests.test_mcp_server.Handshake.test_initialize) ... ok
+test_metodo_desconocido (tests.test_mcp_server.Handshake.test_metodo_desconocido) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server.Handshake.test_notificacion_sin_respuesta) ... ok
+test_tools_antes_de_initialize (tests.test_mcp_server.Handshake.test_tools_antes_de_initialize) ... ok
+test_tools_list_tres (tests.test_mcp_server.Handshake.test_tools_list_tres) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server.Handshake.test_version_no_soportada_negocia_default) ... ok
+test_health_reporta_down (tests.test_mcp_server.MotorCaido.test_health_reporta_down) ... ok
+test_infer_text_motor_caido (tests.test_mcp_server.MotorCaido.test_infer_text_motor_caido) ... ok
+test_health_up (tests.test_mcp_server.ToolsConMotor.test_health_up) ... FAIL
+test_infer_text_con_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_con_schema) ... FAIL
+test_infer_text_sin_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_sin_schema) ... FAIL
+test_infer_vision_png_rojo (tests.test_mcp_server.ToolsConMotor.test_infer_vision_png_rojo) ... FAIL
+test_campo_no_declarado_rechazado_por_nombre (tests.test_mcp_server.Validacion.test_campo_no_declarado_rechazado_por_nombre) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server.Validacion.test_choices_vacio_es_salida_invalida) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server.Validacion.test_health_con_arguments_rechazado) ... ok
+test_imagen_basura_rechazada_en_frontera (tests.test_mcp_server.Validacion.test_imagen_basura_rechazada_en_frontera) ... ok
+test_imagen_no_base64_rechazada (tests.test_mcp_server.Validacion.test_imagen_no_base64_rechazada) ... ok
+test_max_tokens_booleano_cero_y_4097 (tests.test_mcp_server.Validacion.test_max_tokens_booleano_cero_y_4097) ... ok
+test_prompt_8000_aceptado (tests.test_mcp_server.Validacion.test_prompt_8000_aceptado) ... ok
+test_prompt_8001_rechazado (tests.test_mcp_server.Validacion.test_prompt_8001_rechazado) ... ok
+test_salida_json_valido_pero_no_conforme (tests.test_mcp_server.Validacion.test_salida_json_valido_pero_no_conforme) ... ok
+test_schema_con_claves_no_soportadas_rechazado (tests.test_mcp_server.Validacion.test_schema_con_claves_no_soportadas_rechazado) ... ok
+test_schema_null_rechazado (tests.test_mcp_server.Validacion.test_schema_null_rechazado) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server.Validacion.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_es_error_de_protocolo (tests.test_mcp_server.Validacion.test_tool_desconocida_es_error_de_protocolo) ... ok
+test_usage_ausente_o_nulo_es_salida_invalida (tests.test_mcp_server.Validacion.test_usage_ausente_o_nulo_es_salida_invalida) ... ok
+test_initialize_valido (tests.test_mcp_server_v2.HandshakeV2.test_initialize_valido) ... ok
+test_metodo_antes_de_initialize_rechazado_32002 (tests.test_mcp_server_v2.HandshakeV2.test_metodo_antes_de_initialize_rechazado_32002) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server_v2.HandshakeV2.test_notificacion_sin_respuesta) ... ok
+test_tools_list_seis_herramientas (tests.test_mcp_server_v2.HandshakeV2.test_tools_list_seis_herramientas) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server_v2.HandshakeV2.test_version_no_soportada_negocia_default) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server_v2.HealthV2.test_health_con_arguments_rechazado) ... ok
+test_health_gateway_down (tests.test_mcp_server_v2.HealthV2.test_health_gateway_down) ... ok
+test_health_gateway_up (tests.test_mcp_server_v2.HealthV2.test_health_gateway_up) ... ok
+test_infer_audio_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_invalido_rechazado_en_frontera) ... ok
+test_infer_audio_wav_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_wav_valido) ... ok
+test_infer_video_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_invalido_rechazado_en_frontera) ... ok
+test_infer_video_mp4_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_mp4_valido) ... ok
+test_infer_vision_imagen_invalida_rechazada_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_imagen_invalida_rechazada_en_frontera) ... ok
+test_infer_vision_png_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_png_valido) ... ok
+test_max_tokens_default_1024_en_vision (tests.test_mcp_server_v2.InferMultimodalV2.test_max_tokens_default_1024_en_vision) ... ok
+test_campos_extra_rechazados (tests.test_mcp_server_v2.InferTextV2.test_campos_extra_rechazados) ... ok
+test_infer_text_con_schema_v2_ext_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_con_schema_v2_ext_exitoso) ... ok
+test_infer_text_salida_que_viola_schema_es_salida_invalida (tests.test_mcp_server_v2.InferTextV2.test_infer_text_salida_que_viola_schema_es_salida_invalida) ... ok
+test_infer_text_sin_schema_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_sin_schema_exitoso) ... ok
+test_max_tokens_booleano_cero_y_4097_rechazados (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_booleano_cero_y_4097_rechazados) ... ok
+test_max_tokens_default_512 (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_default_512) ... ok
+test_prompt_invalido_rechazado (tests.test_mcp_server_v2.InferTextV2.test_prompt_invalido_rechazado) ... ok
+test_schema_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferTextV2.test_schema_invalido_rechazado_en_frontera) ... ok
+test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo) ... ok
+test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo) ... ok
+test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo) ... ok
+ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_choices_vacio_es_salida_invalida) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_mensaje_no_objeto_32600) ... ok
+test_metodo_desconocido_32601 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_metodo_desconocido_32601) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_parse_error_32700) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_32602 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_tool_desconocida_32602) ... ok
+test_usage_ausente_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_usage_ausente_es_salida_invalida) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+ok
+test_09_observacion_multimodal_autenticada_aceptada (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_09_observacion_multimodal_autenticada_aceptada) ... ok
+test_10_descarte_por_accion_fuera_de_catalogo (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_10_descarte_por_accion_fuera_de_catalogo) ... ok
+test_01_headers_autenticacion_y_correlacion (tests.test_perfiles_i4.PerfilWClientTests.test_01_headers_autenticacion_y_correlacion) ... ok
+test_02_chat_text_payload_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_02_chat_text_payload_conforme) ... ok
+test_03_chat_structured_schema_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_03_chat_structured_schema_conforme) ... ok
+test_04_chat_vision_payload (tests.test_perfiles_i4.PerfilWClientTests.test_04_chat_vision_payload) ... ok
+test_05_audio_transcription_payload (tests.test_perfiles_i4.PerfilWClientTests.test_05_audio_transcription_payload) ... ok
+test_06_speech_synthesis_tts_payload (tests.test_perfiles_i4.PerfilWClientTests.test_06_speech_synthesis_tts_payload) ... ok
+test_07_streaming_sse_recepcion_continua (tests.test_perfiles_i4.PerfilWClientTests.test_07_streaming_sse_recepcion_continua) ... ok
+test_08_saneamiento_seguridad_xss (tests.test_perfiles_i4.PerfilWClientTests.test_08_saneamiento_seguridad_xss) ... ok
+test_11_simulador_robot_perfil_d_ejecutable (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_11_simulador_robot_perfil_d_ejecutable) ... ok
+test_12_cliente_perfil_w_python_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_12_cliente_perfil_w_python_demo) ... ok
+test_13_cliente_perfil_w_node_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_13_cliente_perfil_w_node_demo) ... ok
+test_01_healthz_publico_tls (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_01_healthz_publico_tls)
+Verifica que /healthz responda por HTTPS sin exigir autenticacion. ... ok
+test_02_rechazo_sin_autenticacion (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_02_rechazo_sin_autenticacion)
+ok
+test_03_proyecto_alpha_consumo_texto (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_03_proyecto_alpha_consumo_texto)
+Verifica consumo exitoso de inferencia por proyecto-alpha. ... ok
+test_04_proyecto_beta_consumo_perfil_d (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_04_proyecto_beta_consumo_perfil_d)
+Verifica que proyecto-beta pueda generar propuestas bajo perfil D. ... ok
+test_04b_proyecto_alpha_rechazo_perfil_d_sin_scope (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_04b_proyecto_alpha_rechazo_perfil_d_sin_scope)
+ok
+test_05_proyecto_beta_rechazo_por_scope_insuficiente (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_05_proyecto_beta_rechazo_por_scope_insuficiente)
+Verifica que proyecto-beta no pueda acceder a sintesis de voz (TTS). ... ok
+test_06_aislamiento_de_cuotas_y_rate_limiting (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_06_aislamiento_de_cuotas_y_rate_limiting)
+ok
+test_07_rechazo_credencial_revocada (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_07_rechazo_credencial_revocada)
+Verifica revocacion inmediata en caliente modificando el archivo. ... ok
+test_08_rechazo_cuerpo_sobredimensionado (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_08_rechazo_cuerpo_sobredimensionado)
+ok
+test_09_anti_ssrf_video_externo_rechazado (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_09_anti_ssrf_video_externo_rechazado)
+ok
+test_10_proyecto_mismatched_header_rechazado (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_10_proyecto_mismatched_header_rechazado)
+Verifica rechazo con 403 si el token pertenece a alpha pero se declara beta. ... ok
+test_11_rollback_parada_limpia (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_11_rollback_parada_limpia)
+Verifica que run/stop.sh detenga listeners y limpie PIDs y cerrojos. ... ok
+test_r19_condicion_sana_pasa_y_reporta (tests.test_recursos_bt10.Bt10.test_r19_condicion_sana_pasa_y_reporta) ... ok
+test_r19_dos_listeners_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_dos_listeners_no_hay_pass) ... ok
+test_r19_pid_reciclado_o_ajeno_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_pid_reciclado_o_ajeno_no_hay_pass) ... ok
+test_r19_rss_sobre_umbral_falla (tests.test_recursos_bt10.Bt10.test_r19_rss_sobre_umbral_falla) ... ok
+test_r19_rss_vacio_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_rss_vacio_no_hay_pass) ... ok
+test_r19_sin_pid_de_listener_no_hay_pass (tests.test_recursos_bt10.Bt10.test_r19_sin_pid_de_listener_no_hay_pass) ... ok
+test_r19_swap_se_reporta_sin_atribuir_ni_umbral (tests.test_recursos_bt10.Bt10.test_r19_swap_se_reporta_sin_atribuir_ni_umbral)
+El swap es global del host: se reporta, no revierte el pass ... ok
+test_red_comportamiento_actual_con_pgrep_vacio (tests.test_recursos_bt10.Bt10.test_red_comportamiento_actual_con_pgrep_vacio)
+Regresión del defecto original (RED de I0): el runner viejo ... ok
+test_synthetic_session_complete_and_ignored_by_git (tests.test_transcripciones.SyntheticSession.test_synthetic_session_complete_and_ignored_by_git) ... ok
+test_empty_or_invalid_text_writes_nothing (tests.test_transcripciones.TurnRetention.test_empty_or_invalid_text_writes_nothing) ... ok
+test_full_turn_leaves_0600_jsonl_with_both_texts (tests.test_transcripciones.TurnRetention.test_full_turn_leaves_0600_jsonl_with_both_texts) ... ok
+test_invalid_or_unconfined_session_is_rejected (tests.test_transcripciones.TurnRetention.test_invalid_or_unconfined_session_is_rejected) ... ok
+test_sessions_do_not_collide_within_the_same_second (tests.test_transcripciones.TurnRetention.test_sessions_do_not_collide_within_the_same_second) ... ok
+test_several_turns_append_in_order (tests.test_transcripciones.TurnRetention.test_several_turns_append_in_order) ... ok
+test_examples_with_native_text_retain_turns (tests.test_transcripciones.Wiring.test_examples_with_native_text_retain_turns) ... ok
+test_realtime_flows_declare_d10_pending (tests.test_transcripciones.Wiring.test_realtime_flows_declare_d10_pending) ... ok
+test_allowlist_hosts_en_fuentes_canonicas (tests.test_vigilancia.TestVigilanciaCicloVida.test_allowlist_hosts_en_fuentes_canonicas) ... ok
+test_baseline_integridad_archivo_corrupto (tests.test_vigilancia.TestVigilanciaCicloVida.test_baseline_integridad_archivo_corrupto) ... ok
+test_baseline_integridad_archivo_inexistente (tests.test_vigilancia.TestVigilanciaCicloVida.test_baseline_integridad_archivo_inexistente) ... ok
+test_baseline_integridad_valido (tests.test_vigilancia.TestVigilanciaCicloVida.test_baseline_integridad_valido) ... ok
+test_candidato_bloqueo_y_desbloqueo (tests.test_vigilancia.TestVigilanciaCicloVida.test_candidato_bloqueo_y_desbloqueo) ... ok
+test_candidato_rechazo_directo_durante_bloqueo (tests.test_vigilancia.TestVigilanciaCicloVida.test_candidato_rechazo_directo_durante_bloqueo) ... ok
+test_candidato_triaje_temprano_coste_inaceptable (tests.test_vigilancia.TestVigilanciaCicloVida.test_candidato_triaje_temprano_coste_inaceptable) ... ok
+test_candidato_triaje_temprano_hardware_incompatible (tests.test_vigilancia.TestVigilanciaCicloVida.test_candidato_triaje_temprano_hardware_incompatible) ... ok
+test_candidato_triaje_temprano_licencia_incompatible (tests.test_vigilancia.TestVigilanciaCicloVida.test_candidato_triaje_temprano_licencia_incompatible) ... ok
+test_ejecutar_ensayo_completo_todos_los_escenarios (tests.test_vigilancia.TestVigilanciaCicloVida.test_ejecutar_ensayo_completo_todos_los_escenarios) ... ok
+test_es_licencia_aceptable_flexibilidad (tests.test_vigilancia.TestVigilanciaCicloVida.test_es_licencia_aceptable_flexibilidad) ... ok
+test_presupuesto_red_limite_bytes (tests.test_vigilancia.TestVigilanciaCicloVida.test_presupuesto_red_limite_bytes) ... ok
+test_presupuesto_red_limite_peticiones (tests.test_vigilancia.TestVigilanciaCicloVida.test_presupuesto_red_limite_peticiones) ... ok
+test_presupuesto_red_limite_tiempo (tests.test_vigilancia.TestVigilanciaCicloVida.test_presupuesto_red_limite_tiempo) ... ok
+test_responsables_operativos_en_dossier (tests.test_vigilancia.TestVigilanciaCicloVida.test_responsables_operativos_en_dossier) ... ok
+test_safe_redirect_handler_rechaza_esquema_http (tests.test_vigilancia.TestVigilanciaCicloVida.test_safe_redirect_handler_rechaza_esquema_http) ... ok
+test_safe_redirect_handler_rechaza_esquema_no_http (tests.test_vigilancia.TestVigilanciaCicloVida.test_safe_redirect_handler_rechaza_esquema_no_http) ... ok
+test_safe_redirect_handler_rechaza_host_no_permitido (tests.test_vigilancia.TestVigilanciaCicloVida.test_safe_redirect_handler_rechaza_host_no_permitido) ... ok
+test_sanitizar_metadato_inyeccion_prompt (tests.test_vigilancia.TestVigilanciaCicloVida.test_sanitizar_metadato_inyeccion_prompt) ... ok
+test_goodbye_detection_uses_local_asr_without_files (tests.test_wsl_examples.WslExamples.test_goodbye_detection_uses_local_asr_without_files) ... ok
+test_imports_resolve_without_tmp_or_user_home (tests.test_wsl_examples.WslExamples.test_imports_resolve_without_tmp_or_user_home) ... ok
+test_interruption_closes_microphone (tests.test_wsl_examples.WslExamples.test_interruption_closes_microphone) ... ok
+test_missing_consent_never_opens_devices (tests.test_wsl_examples.WslExamples.test_missing_consent_never_opens_devices) ... ok
+test_oversized_ws_frame_rejected_before_payload_read (tests.test_wsl_examples.WslExamples.test_oversized_ws_frame_rejected_before_payload_read) ... ok
+test_ping_pong_preserves_payload_and_next_event (tests.test_wsl_examples.WslExamples.test_ping_pong_preserves_payload_and_next_event) ... ok
+test_reader_handles_heartbeat_and_stops_on_close (tests.test_wsl_examples.WslExamples.test_reader_handles_heartbeat_and_stops_on_close) ... ok
+test_voice_end_and_duration_cap_close_microphone (tests.test_wsl_examples.WslExamples.test_voice_end_and_duration_cap_close_microphone) ...     (pid 4242: RSS 1024 MiB bajo mmap; artefactos ~1144 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: listeners en 8091: ['4242', '4242']; sin pid atribuible no hay pass)
+    (B-T10: pid 4242 no es del motor: '/bin/sh -c sleep 60 # llama-server --port 8091')
+    (pid 4242: RSS 5120 MiB bajo mmap; artefactos ~2613 MiB; swap del HOST 128 MiB — global, no atribuible al motor)
+    (B-T10: sin RSS atribuible al pid 4242; el proceso desapareció entre lsof y ps)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+    (B-T10: listeners en 8091: ninguno; sin pid atribuible no hay pass)
+Voz detectada.
+Voz detectada.
+ok
+
+======================================================================
+FAIL: test_09_post_jobs_http_flujo_completo (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_09_post_jobs_http_flujo_completo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_jobs_i5.py", line 309, in test_09_post_jobs_http_flujo_completo
+    self.assertIn(data_del["cancellation_status"], ("accepted", "pending"))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'already_terminal' not found in ('accepted', 'pending')
+
+======================================================================
+FAIL: test_health_up (tests.test_mcp_server.ToolsConMotor.test_health_up)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 310, in test_health_up
+    self.assertEqual(datos["state"], "up")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'down' != 'up'
+- down
++ up
+
+
+======================================================================
+FAIL: test_infer_text_con_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_con_schema)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 317, in test_infer_text_con_schema
+    datos = contenido_json(requerir("tools/call", {"name": "infer_text", "arguments": args}))
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 61] Connection refused>'}], 'isError': True}
+
+======================================================================
+FAIL: test_infer_text_sin_schema (tests.test_mcp_server.ToolsConMotor.test_infer_text_sin_schema)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 323, in test_infer_text_sin_schema
+    datos = contenido_json(requerir("tools/call", {"name": "infer_text", "arguments": args}))
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 61] Connection refused>'}], 'isError': True}
+
+======================================================================
+FAIL: test_infer_vision_png_rojo (tests.test_mcp_server.ToolsConMotor.test_infer_vision_png_rojo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 331, in test_infer_vision_png_rojo
+    datos = contenido_json(requerir("tools/call", {"name": "infer_vision", "arguments": args}))
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_mcp_server.py", line 42, in contenido_json
+    assert not cuerpo.get("isError"), cuerpo
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'content': [{'type': 'text', 'text': 'motor no disponible: <urlopen error [Errno 61] Connection refused>'}], 'isError': True}
+
+----------------------------------------------------------------------
+Ran 308 tests in 115.282s
+
+FAILED (failures=5)

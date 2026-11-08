@@ -1,0 +1,85 @@
+############################ GREEN — fix-tests-hermeticos, intento 1
+## Fecha: 2026-11-07. Motor PRESENTE: PID 25659 (llama-server real, arrancado
+## 21:33:49 desde el checkout principal por el Operador/capitán; NO por esta
+## tarea). Restricción del capitán vigente: no parar/matar nada en 8091/8092/8443.
+
+================ [0] Estado ANTES de las corridas (lsof/ps/health)
+== ANTES: lsof 8091/8092/8443 ==
+llama-ser 25659 krisnova   10u  IPv4 0x4073492942ba8c6b      0t0  TCP 127.0.0.1:8091 (LISTEN)
+== ANTES: ps llama-server/gateway ==
+krisnova         25659   0.4 17.8 493818336 2982400   ??  S     9:33p.m.   0:03.97 /opt/homebrew/bin/llama-server -hf LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M --reasoning off --temp 0 --host 127.0.0.1 --port 8091
+== ANTES: estado motor ==
+{"status":"ok"}
+================ [1] Sonda P1 sobre código corregido: sin invocaciones a run/ del checkout
+$ python3 docs/reviews/evidence/fix-tests-hermeticos/probe_p1_red.py   (post-fix)
+test_11_rollback_parada_limpia (test_piloto_live_i2.TestPilotoPrivadoLive.test_11_rollback_parada_limpia)
+Verifica que stop.sh pare listeners y limpie PIDs y cerrojos. ... skipped 'puerto 8091 ocupado; el fixture no toca procesos reales del servicio'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.510s
+
+OK (skipped=1)
+== P1 RED: test_11 con subprocess.run grabado (nada se ejecuta) ==
+
+== invocaciones subprocess.run registradas ==
+   ['/opt/homebrew/bin/openssl', 'req', '-x509', '-nodes', '-days', '365', '-newkey', 'rsa:2048', '-keyout', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmpiwgjpip4/certs/key.pem', '-out', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmpiwgjpip4/certs/cert.pem', '-config', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmp_lfgf_xc.cnf']
+RESULTADO P1: no violada
+
+================ [2] Suite completa, corrida 1
+$ python3 -m unittest discover -s tests -t .
+----------------------------------------------------------------------
+Ran 308 tests in 74.647s
+
+OK (skipped=9)
+
+================ [3] Suite completa, corrida 2 (inmediatamente después; sin
+comandos intermedios entre [2] y [3] — misma invocación shell encadenada)
+$ python3 -m unittest discover -s tests -t .
+----------------------------------------------------------------------
+Ran 308 tests in 73.275s
+
+OK (skipped=9)
+
+================ [4] Estado DESPUÉS de las corridas + verificación P3 (PID)
+== DESPUÉS: lsof 8091/8092/8443 ==
+llama-ser 25659 krisnova   10u  IPv4 0x4073492942ba8c6b      0t0  TCP 127.0.0.1:8091 (LISTEN)
+== DESPUÉS: ps llama-server/gateway ==
+krisnova         25659   0.5 17.7 493732512 2976352   ??  S     9:33p.m.   0:10.27 /opt/homebrew/bin/llama-server -hf LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M --reasoning off --temp 0 --host 127.0.0.1 --port 8091
+== DESPUÉS: identidad PID 25659 ==
+  PID STARTED
+25659 sáb.  7 nov 21:33:49 2026   /opt/homebrew/bin/llama-server -hf LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M --reasoning off --temp 0 --host 127.0.0.1 --port 8091
+== DESPUÉS: health motor ==
+{"status":"ok"}
+## Registro P3 (criterio capitán): PID 25659 idéntico antes y después de las
+## corridas (mismo PID, mismo comando, mismo arranque 21:33:49; únicos deltas:
+## contadores de CPU 0:03.97->0:10.27 y RSS por las peticiones servidas).
+## Sin procesos nuevos en 8091/8092/8443; sin gateway_http.py/gateway_tls.py.
+## Snapshot intermedio entre corrida 1 y 2: no capturado (corridas encadenadas
+## en un solo comando; sin comandos de por medio — secuencia arriba).
+
+================ [5] Focal CON motor: los tests vivos CORREN (no se saltan)
+$ python3 -m unittest tests.test_mcp_server -v   -> ToolsConMotor 4/4 'ok'; Ran 37, OK
+$ python3 -m unittest tests.test_jobs_i5          -> Ran 11, OK (test_09 corre y pasa)
+
+================ [6] Gates del proyecto y Git
+== python3 scripts/check_sizes.py ==
+OK — 315 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc=0
+== python3 scripts/check_plans.py ==
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc=0
+== python3 scripts/check_reports.py ==
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc=0
+== git diff --check ==
+rc=0
+== git status --porcelain ==
+ M tests/test_jobs_i5.py
+ M tests/test_mcp_server.py
+ M tests/test_piloto_live_i2.py
+?? docs/reviews/evidence/fix-tests-hermeticos/
+== git diff --stat ==
+ tests/test_jobs_i5.py        |  21 +++++++
+ tests/test_mcp_server.py     |  13 +++-
+ tests/test_piloto_live_i2.py | 142 +++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 162 insertions(+), 14 deletions(-)

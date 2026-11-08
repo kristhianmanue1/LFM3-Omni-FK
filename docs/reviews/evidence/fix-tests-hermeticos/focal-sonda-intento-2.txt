@@ -1,0 +1,25 @@
+== estado 2026-11-07T22:29:29 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)
+
+== corrida: python3 -m unittest tests.test_sonda_motor -v ==
+
+test_ausencia_verificada (tests.test_sonda_motor.SondaMotorDeterminista.test_ausencia_verificada) ... ok
+test_error_5xx (tests.test_sonda_motor.SondaMotorDeterminista.test_error_5xx) ... ok
+test_motor_arriba (tests.test_sonda_motor.SondaMotorDeterminista.test_motor_arriba) ... ok
+test_respuesta_malformada (tests.test_sonda_motor.SondaMotorDeterminista.test_respuesta_malformada) ... ok
+test_status_distinto_de_ok (tests.test_sonda_motor.SondaMotorDeterminista.test_status_distinto_de_ok) ... ok
+test_timeout_de_sonda (tests.test_sonda_motor.SondaMotorDeterminista.test_timeout_de_sonda) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.535s
+
+OK
+== rc=0 ==
+== estado 2026-11-07T22:29:32 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)

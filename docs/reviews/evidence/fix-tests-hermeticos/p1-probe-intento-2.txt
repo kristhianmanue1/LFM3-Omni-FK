@@ -1,0 +1,34 @@
+== estado 2026-11-07T22:30:58 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)
+
+== corrida: python3 docs/reviews/evidence/fix-tests-hermeticos/probe_p1_intento2.py ==
+== P1 intento 2: test_11 con subprocess.run grabado ==
+
+== invocaciones subprocess.run registradas ==
+   ['/opt/homebrew/bin/openssl', 'req', '-x509', '-nodes', '-days', '365', '-newkey', 'rsa:2048', '-keyout', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmp63i2hfqz/certs/key.pem', '-out', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmp63i2hfqz/certs/cert.pem', '-config', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmp44x0vc_s.cnf']
+   ['/bin/bash', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/i2-parada-2uxbqx26/serve.sh']
+   ['ps', '-p', '34537', '-o', 'command=']
+   ['ps', '-p', '34557', '-o', 'command=']
+   ['/bin/bash', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/i2-parada-2uxbqx26/stop.sh']
+   ['ps', '-p', '34537', '-o', 'pid=']
+   ['ps', '-p', '34537', '-o', 'pid=']
+   ['ps', '-p', '34537', '-o', 'pid=']
+serve.sh temporal registrada: True
+stop.sh temporal registrada: True
+RESULTADO P1: no violada (cuerpo ejecutado, copias temporales)
+test_11_rollback_parada_limpia (test_piloto_live_i2.TestPilotoPrivadoLive.test_11_rollback_parada_limpia)
+Verifica que stop.sh pare listeners y limpie PIDs y cerrojos. ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 6.526s
+
+OK
+== rc=0 ==
+== estado 2026-11-07T22:31:05 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)

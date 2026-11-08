@@ -1,0 +1,53 @@
+== estado 2026-11-07T22:25:05 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)
+
+== corrida: python3 -m unittest tests.test_piloto_live_i2 -v ==
+
+test_01_healthz_publico_tls (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_01_healthz_publico_tls)
+Verifica que /healthz responda por HTTPS sin exigir autenticacion. ... ok
+test_02_rechazo_sin_autenticacion (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_02_rechazo_sin_autenticacion)
+Verifica que rutas protegidas rechacen peticiones anonimas con 401. ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 401: 'Unauthorized'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_03_proyecto_alpha_consumo_texto (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_03_proyecto_alpha_consumo_texto)
+Verifica consumo exitoso de inferencia por proyecto-alpha. ... ok
+test_04_proyecto_beta_consumo_perfil_d (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_04_proyecto_beta_consumo_perfil_d)
+Verifica que proyecto-beta pueda generar propuestas bajo perfil D. ... ok
+test_04b_proyecto_alpha_rechazo_perfil_d_sin_scope (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_04b_proyecto_alpha_rechazo_perfil_d_sin_scope)
+Verifica que proyecto-alpha sea rechazado con 403 ante esquemas de Perfil D. ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 403: 'Forbidden'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_05_proyecto_beta_rechazo_por_scope_insuficiente (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_05_proyecto_beta_rechazo_por_scope_insuficiente)
+Verifica que proyecto-beta no pueda acceder a sintesis de voz (TTS). ... ok
+test_06_aislamiento_de_cuotas_y_rate_limiting (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_06_aislamiento_de_cuotas_y_rate_limiting)
+Verifica que agotar cuota en proyecto-alpha no afecte a proyecto-beta. ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 429: 'Too Many Requests'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_07_rechazo_credencial_revocada (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_07_rechazo_credencial_revocada)
+Verifica revocacion inmediata en caliente modificando el archivo. ... ok
+test_08_rechazo_cuerpo_sobredimensionado (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_08_rechazo_cuerpo_sobredimensionado)
+Verifica que el terminador TLS rechace cuerpos > 32 MiB con 413. ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 413: 'Content Too Large'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_09_anti_ssrf_video_externo_rechazado (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_09_anti_ssrf_video_externo_rechazado)
+Verifica que URLs de video externas (no data URI) se rechacen fail-closed. ... /opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/tempfile.py:538: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_10_proyecto_mismatched_header_rechazado (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_10_proyecto_mismatched_header_rechazado)
+Verifica rechazo con 403 si el token pertenece a alpha pero se declara beta. ... ok
+test_11_rollback_parada_limpia (tests.test_piloto_live_i2.TestPilotoPrivadoLive.test_11_rollback_parada_limpia)
+Verifica que stop.sh pare listeners y limpie PIDs y cerrojos. ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 6.615s
+
+OK
+== rc=0 ==
+== estado 2026-11-07T22:25:12 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)

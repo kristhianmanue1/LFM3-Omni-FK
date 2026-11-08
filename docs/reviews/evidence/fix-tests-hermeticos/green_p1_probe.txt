@@ -1,0 +1,12 @@
+test_11_rollback_parada_limpia (test_piloto_live_i2.TestPilotoPrivadoLive.test_11_rollback_parada_limpia)
+Verifica que stop.sh pare listeners y limpie PIDs y cerrojos. ... skipped 'puerto 8091 ocupado; el fixture no toca procesos reales del servicio'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.510s
+
+OK (skipped=1)
+== P1 RED: test_11 con subprocess.run grabado (nada se ejecuta) ==
+
+== invocaciones subprocess.run registradas ==
+   ['/opt/homebrew/bin/openssl', 'req', '-x509', '-nodes', '-days', '365', '-newkey', 'rsa:2048', '-keyout', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmpiwgjpip4/certs/key.pem', '-out', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmpiwgjpip4/certs/cert.pem', '-config', '/var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/tmp_lfgf_xc.cnf']
+RESULTADO P1: no violada

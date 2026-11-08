@@ -1,0 +1,21 @@
+== python3 scripts/check_sizes.py ==
+OK — 315 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc=0
+== python3 scripts/check_plans.py ==
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc=0
+== python3 scripts/check_reports.py ==
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc=0
+== git diff --check ==
+rc=0
+== git status --porcelain ==
+ M tests/test_jobs_i5.py
+ M tests/test_mcp_server.py
+ M tests/test_piloto_live_i2.py
+?? docs/reviews/evidence/fix-tests-hermeticos/
+== git diff --stat ==
+ tests/test_jobs_i5.py        |  21 +++++++
+ tests/test_mcp_server.py     |  13 +++-
+ tests/test_piloto_live_i2.py | 142 +++++++++++++++++++++++++++++++++++++++----
+ 3 files changed, 162 insertions(+), 14 deletions(-)
