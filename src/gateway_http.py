@@ -84,6 +84,16 @@ def _determinar_scopes_chat(payload):
     return scopes
 
 
+# Scope de la modalidad por operación del Perfil J (SPEC-i5 §2.1): el
+# mismo scope que exige H para ese contenido (SPEC-i2 §2.3).
+SCOPE_POR_OPERACION = {
+    "infer_text": "infer:text",
+    "infer_vision": "infer:vision",
+    "infer_audio": "infer:audio",
+    "infer_video": "infer:vision",
+}
+
+
 def _enrutar(metodo, ruta):
     """Allowlist ÚNICO de enrutado (SPEC-i1 §2): una ruta sólo responde
     si el par método+ruta está en RUTAS_PERMITIDAS, RUTAS_MCP o RUTAS_JOBS;
@@ -349,6 +359,18 @@ def _sintetizar_wav(texto, runner=None):
         LOCK_TTS.release()
 
 
+def _rechazar_clave_duplicada(pares):
+    """object_pairs_hook de la frontera: claves duplicadas no tienen
+    serialización canónica (RFC 8785 §3.2); 400 con campo y motivo."""
+    vistas = set()
+    for clave, _ in pares:
+        if clave in vistas:
+            _error(400, "invalid_json", f"clave JSON duplicada: '{clave}'",
+                   detail="duplicate_key")
+        vistas.add(clave)
+    return dict(pares)
+
+
 class ManejadorGateway(BaseHTTPRequestHandler):
     server_version = "lfm3-gateway-i1/0.1"
 
@@ -483,7 +505,11 @@ class ManejadorGateway(BaseHTTPRequestHandler):
             _error(413, "payload_too_large", "cuerpo sobre el presupuesto")
         crudo = self.rfile.read(int(longitud))
         try:
-            return json.loads(crudo, parse_constant=_rechazar_constante)
+            return json.loads(
+                crudo,
+                parse_constant=_rechazar_constante,
+                object_pairs_hook=_rechazar_clave_duplicada,
+            )
         except (json.JSONDecodeError, ValueError):
             _error(400, "invalid_json",
                    "JSON malformado o con constantes no-JSON")
@@ -562,19 +588,36 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 jm = getattr(self.server, "jobs_manager", None)
                 if jm is None:
                     _error(501, "not_implemented", "jobs no inicializado")
+                if not isinstance(payload, dict):
+                    _error(400, "invalid_json", "el cuerpo debe ser un "
+                           "objeto JSON")
                 idemp_key = self.headers.get("Idempotency-Key") or ""
                 proj_id = self.project_id or "default"
-                if getattr(self.server, "auth_enabled", False):
-                    auth_h = self.headers.get("Authorization")
-                    proj_h = self.headers.get("X-Project-ID")
-                    self.server.tokens_registry.verify_request(
-                        auth_h, proj_h, required_scopes={"jobs:create"}
-                    )
-                    proj_id = proj_h.strip()
                 op = payload.get("operation")
                 job_payload = payload.get("payload", {})
                 ttl = payload.get("ttl_seconds", 3600)
-                status, res = jm.create_job(proj_id, op, job_payload, idemp_key, ttl_seconds=ttl)
+                if isinstance(ttl, bool) or not isinstance(ttl, int) \
+                        or not (60 <= ttl <= 86400):
+                    _error(400, "unsupported_field_value", "ttl_seconds "
+                           "debe ser entero en 60..86400")
+                if getattr(self.server, "auth_enabled", False):
+                    auth_h = self.headers.get("Authorization")
+                    proj_h = self.headers.get("X-Project-ID")
+                    # SPEC-i5 §2.1: jobs:create + scope de modalidad.
+                    scopes_req = {"jobs:create"} | _determinar_scopes_chat(job_payload)
+                    if isinstance(op, str) \
+                            and op in SCOPE_POR_OPERACION:
+                        scopes_req.add(SCOPE_POR_OPERACION[op])
+                    self.server.tokens_registry.verify_request(
+                        auth_h, proj_h, required_scopes=scopes_req)
+                    proj_id = proj_h.strip()
+                # Sin passthrough (BLOCKER-1): núcleo de validación de H.
+                validar_payload(
+                    job_payload,
+                    inspector_video=lambda d: _inspeccionar_mp4_ffprobe(
+                        d, getattr(self.server, "probe_runner", None)))
+                status, res = jm.create_job(
+                    proj_id, op, job_payload, idemp_key, ttl_seconds=ttl)
                 self._json(status, json.dumps(res).encode())
                 return
 
@@ -716,7 +759,17 @@ def build_server(
     from mcp_remote import MCPRemoteHandler
     servidor.mcp_remote_handler = MCPRemoteHandler(backend_url=backend)
     from jobs_manager import JobsManager
-    servidor.jobs_manager = JobsManager(backend_url=backend)
+
+    def limites_de_proyecto(project_id):
+        info = servidor.tokens_registry.get_project(project_id) or {}
+        return info.get("rate_limit") or {}
+
+    # El worker de jobs comparte admisión con H/M (HIGH-1).
+    servidor.jobs_manager = JobsManager(
+        backend_url=backend,
+        dispatcher=servidor.dispatcher,
+        rate_limit_lookup=limites_de_proyecto,
+    )
     return servidor
 
 

@@ -322,7 +322,11 @@ class JobsGatewayIntegrationTests(unittest.TestCase):
         with urllib.request.urlopen(req_del, timeout=5.0) as resp_del:
             self.assertEqual(resp_del.status, 200)
             data_del = json.loads(resp_del.read().decode("utf-8"))
-            self.assertIn(data_del["cancellation_status"], ("accepted", "pending"))
+            # Con la frontera corregida el job puede haber alcanzado un
+            # estado terminal (p. ej. failed por backend caído) antes del
+            # DELETE; already_terminal también es respuesta de contrato.
+            self.assertIn(data_del["cancellation_status"],
+                          ("accepted", "pending", "already_terminal"))
 
     def test_10_rechazo_por_scope_insuficiente(self):
         # Proyecto Beta no tiene scope jobs:create -> 403

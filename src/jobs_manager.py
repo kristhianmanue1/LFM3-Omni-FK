@@ -4,85 +4,170 @@
 Contrato: docs/contracts/perfiles-servicio-v2.md (§J)
 Especificación: docs/specs/SPEC-i5-jobs.md
 Decisión: docs/adr/ADR-012-trabajos-largos-persistencia-idempotencia.md
+Expediente: docs/reviews/evidence/fix-i5-jobs-frontera/ (fix-i5)
 
-Garantías:
-- Idempotencia estricta canónica (RFC 8785) con TTL de 24 horas.
-- Aislamiento multi-inquilino estricto (visibilidad exclusiva para el creador).
-- Persistencia atómica en disco (POSIX write-tmp + os.replace).
-- Recuperación segura en startup: running pasa a failed (outcome: unknown).
-- Concurrencia acotada: 1 worker simultáneo global para no canibalizar H/M.
+Garantías: idempotencia canónica RFC 8785 con tombstone 24 h (§J);
+persistencia atómica durable (fsync de archivo y directorio, registro
+de idempotencia como commit de la admisión); recuperación fail-closed;
+reclamo atómico entre procesos (flock) con admisión compartida con
+H/M; salida del modelo validada (completitud y esquema) antes de
+persistir; retención §J con purga verificable y permisos 0600/0700.
 """
 
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
+import fcntl
 import hashlib
 import json
 import os
 from pathlib import Path
 import queue
 import re
+import sys
 import threading
-import time
 import urllib.error
 import urllib.request
-from typing import Any
+from typing import Any, Callable
+
+from gateway_core import ErrorV2, _error, validar_salida
 
 IDEMPOTENCY_KEY_RE = re.compile(r"^[A-Za-z0-9_\-\.:]{1,64}$")
 ALLOWED_OPERATIONS = {"infer_text", "infer_vision", "infer_audio", "infer_video"}
-DEFAULT_TTL_SECONDS = 3600  # 1 hora tras terminal
+DEFAULT_TTL_SECONDS = 3600  # 1 hora tras terminal (§J)
 MAX_TTL_SECONDS = 86400  # 24 horas
+TOMBSTONE_IDEMP_HORAS = 24  # ventana de deduplicación de §J
 MAX_QUEUED_PER_PROJECT = 1
 MAX_QUEUED_GLOBAL = 8
+ADMISION_TIMEOUT_S = 60.0  # presupuesto de cola compartido (§J)
+REINTENTO_ADMISION_S = 0.5
+MSG_IDEMPOTENCY_CONFLICT = ("Idempotency-Key ya utilizada con un "
+                                            "cuerpo de solicitud diferente")
+_ENTERO_MAX = 2**53 - 1  # rango exacto de dobles IEEE 754
+
+_ESCAPES_CORTOS = {
+    '"': '\\"', "\\": "\\\\", "\b": "\\b", "\f": "\\f",
+    "\n": "\\n", "\r": "\\r", "\t": "\\t",
+}
+
+
+def _respuesta_error(status: int, code: str, message: str) -> tuple[int, dict]:
+    """Cuerpo de error homogéneo (la frontera HTTP lo reenvía)."""
+    return status, {"error": {"code": code, "message": message}}
+
+
+def _serializar_cadena(texto: str) -> str:
+    """Escapes mínimos RFC 8785 §3.2.2.2 para controles y comillas."""
+    partes = ['"']
+    for caracter in texto:
+        if caracter in _ESCAPES_CORTOS:
+            partes.append(_ESCAPES_CORTOS[caracter])
+        elif caracter < "\u0020":
+            partes.append(f"\\u{ord(caracter):04x}")
+        else:
+            partes.append(caracter)
+    partes.append('"')
+    return "".join(partes)
+
+
+def _digitos_cortos(valor: float) -> tuple[str, int]:
+    """(digitos, exp) con valor == int(digitos)*10**exp (repr corta)."""
+    tupla = Decimal(repr(valor)).as_tuple()
+    digitos = "".join(str(d) for d in tupla.digits)
+    exponente = tupla.exponent
+    recorte = len(digitos) - len(digitos.rstrip("0"))
+    if recorte:
+        digitos = digitos[:-recorte]
+        exponente += recorte
+    return digitos, exponente
+
+
+def _numero_es6(valor: float) -> str:
+    """Número en forma ES6 (RFC 8785 §3.2.2.3), la de JSON.stringify."""
+    if valor != valor or valor in (float("inf"), float("-inf")):
+        raise ValueError("número no finito no es serializable en JSON")
+    if valor == 0:
+        return "0"  # incluye -0.0: JSON.stringify(-0) === "0"
+    prefijo = "-" if valor < 0 else ""
+    digitos, exponente = _digitos_cortos(abs(valor))
+    n = exponente + len(digitos)  # valor == 0.d1..dk * 10**n
+    k = len(digitos)
+    if k <= n <= 21:
+        return prefijo + digitos + "0" * (n - k)
+    if 0 < n <= 21:
+        return prefijo + digitos[:n] + "." + digitos[n:]
+    if -6 < n <= 0:
+        return prefijo + "0." + "0" * (-n) + digitos
+    mantisa = digitos[0] + ("." + digitos[1:] if k > 1 else "")
+    signo_e = "+" if n - 1 >= 0 else "-"
+    return f"{prefijo}{mantisa}e{signo_e}{abs(n - 1)}"
+
+
+def _serializar_valor(valor: Any) -> str:
+    if valor is True:
+        return "true"
+    if valor is False:
+        return "false"
+    if valor is None:
+        return "null"
+    if isinstance(valor, int):
+        if not (-_ENTERO_MAX <= valor <= _ENTERO_MAX):
+            raise ValueError(
+                f"entero {valor} fuera del rango exacto de dobles IEEE 754")
+        return str(valor)
+    if isinstance(valor, float):
+        return _numero_es6(valor)
+    if isinstance(valor, str):
+        return _serializar_cadena(valor)
+    if isinstance(valor, list):
+        return "[" + ",".join(_serializar_valor(v) for v in valor) + "]"
+    if isinstance(valor, dict):
+        if not all(isinstance(clave, str) for clave in valor):
+            raise TypeError("clave de objeto no es cadena")
+        # RFC 8785 §3.2.2.3: orden por unidades de código UTF-16, no por
+        # punto de código (sorted() de Python desordenaría los astrales).
+        claves = sorted(valor, key=lambda c: c.encode("utf-16-be"))
+        cuerpo = ",".join(
+            _serializar_cadena(c) + ":" + _serializar_valor(valor[c])
+            for c in claves)
+        return "{" + cuerpo + "}"
+    raise TypeError(f"tipo no serializable en JSON: {type(valor).__name__}")
 
 
 def canonical_json_rfc8785(data: Any) -> bytes:
-    """Serializa un objeto a JSON canónico conforme a RFC 8785.
-
-    - Claves de diccionarios ordenadas lexicográficamente.
-    - Sin espacios en blanco superfluos.
-    - Rechazo de números no finitos (NaN, Infinity).
-    """
-    return json.dumps(
-        data,
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=False,
-        allow_nan=False,
-    ).encode("utf-8")
+    """RFC 8785: claves UTF-16, números ES6, enteros en rango doble."""
+    return _serializar_valor(data).encode("utf-8")
 
 
 class JobsManager:
     """Gestor de ciclo de vida, persistencia y ejecución de trabajos largos."""
 
-    def __init__(
-        self,
-        jobs_dir: str | Path | None = None,
-        backend_url: str = "http://127.0.0.1:8091",
-    ):
+    def __init__(self, jobs_dir: str | Path | None = None,
+                 backend_url: str = "http://127.0.0.1:8091",
+                 dispatcher: Any = None,
+                 rate_limit_lookup: Callable[[str], dict] | None = None):
         if jobs_dir:
             self.base_dir = Path(jobs_dir)
         else:
             self.base_dir = Path(os.environ.get("LFM3_JOBS_DIR", "run/jobs"))
-
         self.data_dir = self.base_dir / "data"
-        self.idemp_dir = self.base_dir / "idempotency"
-        self.data_dir.mkdir(parents=True, exist_ok=True)
-        self.idemp_dir.mkdir(parents=True, exist_ok=True)
-
+        self.idemp_dir, self.claims_dir = (self.base_dir / "idempotency",
+                                          self.base_dir / "claims")
+        for directorio in (self.base_dir, self.data_dir, self.idemp_dir):
+            directorio.mkdir(parents=True, exist_ok=True)
+            os.chmod(directorio, 0o700)  # confidencialidad (§J)
         self.backend_url = backend_url.rstrip("/")
+        # Admisión compartida con H/M (HIGH-1); None = sin (tests).
+        self.dispatcher = dispatcher
+        self.rate_limit_lookup = rate_limit_lookup
         self.lock = threading.Lock()
         self.work_queue: queue.Queue[tuple[str, str]] = queue.Queue()
         self.running_job_id: str | None = None
         self._stop_event = threading.Event()
-
-        # Recuperar estado previo tras reinicio
         self.startup_recover()
-
-        # Iniciar worker en background
         self._worker_thread = threading.Thread(
-            target=self._worker_loop, daemon=True, name="jobs-worker"
-        )
+            target=self._worker_loop, daemon=True, name="jobs-worker")
         self._worker_thread.start()
 
     def stop(self, timeout: float = 2.0) -> None:
@@ -92,48 +177,83 @@ class JobsManager:
         if self._worker_thread.is_alive():
             self._worker_thread.join(timeout=timeout)
 
-    # 1. Recuperación tras reinicio (fail-closed)
     def startup_recover(self) -> int:
-        """Pasa cualquier trabajo encontrado en estado 'running' a 'failed'."""
-        recovered = 0
+        """Fail-closed al arrancar: running pasa a failed; queued con
+        registro se reencola (§J); sin registro, no se ejecuta."""
+        recuperados = 0
+        self._purgar_expirados()
         with self.lock:
-            for proj_dir in self.data_dir.iterdir():
+            for proj_dir in sorted(self.data_dir.iterdir()):
                 if not proj_dir.is_dir():
                     continue
-                for job_file in proj_dir.glob("*.json"):
+                for job_file in sorted(proj_dir.glob("*.json")):
                     try:
                         data = json.loads(job_file.read_text(encoding="utf-8"))
-                        if data.get("state") == "running":
-                            data["state"] = "failed"
-                            data["completed_at"] = datetime.now(timezone.utc).isoformat()
-                            data["error"] = {
-                                "code": "server_interrupted",
-                                "message": "Servidor reiniciado durante el procesamiento; resultado desconocido",
-                            }
-                            self._save_job_atomically(data)
-                            recovered += 1
-                        elif data.get("state") == "queued":
-                            # Volver a encolar jobs pendientes
-                            self.work_queue.put((data["project_id"], data["job_id"]))
                     except Exception:
                         continue
-        return recovered
+                    estado = data.get("state")
+                    if estado == "running":
+                        data["error"] = {
+                            "code": "server_interrupted", "message":
+                                "Servidor reiniciado durante el procesamiento; "
+                                "resultado desconocido"}
+                        self._cerrar(data, "failed")
+                        recuperados += 1
+                    elif estado == "queued":
+                        if self._registro_confirma_admision(data):
+                            self.work_queue.put(
+                                (data["project_id"], data["job_id"]))
+                        else:
+                            data["error"] = {
+                                "code": "admission_unconfirmed", "message":
+                                    "Admisión no confirmada: registro de "
+                                    "idempotencia ausente"}
+                            self._cerrar(data, "failed")
+        return recuperados
 
-    # 2. Persistencia atómica
-    def _save_job_atomically(self, job_dict: dict) -> None:
-        proj_id = job_dict["project_id"]
-        job_id = job_dict["job_id"]
-        target_dir = self.data_dir / proj_id
-        target_dir.mkdir(parents=True, exist_ok=True)
-        target_file = target_dir / f"{job_id}.json"
-
-        tmp_file = target_dir / f"{job_id}.tmp.{os.getpid()}.{threading.get_ident()}"
-        data_bytes = json.dumps(job_dict, indent=2, ensure_ascii=False).encode("utf-8")
+    def _volcar_tmp_durable(self, directorio: Path, nombre: str,
+                            datos: bytes) -> Path:
+        """tmp 0600 con fsync; el fallo limpia el tmp y propaga."""
+        directorio.mkdir(parents=True, exist_ok=True)
+        os.chmod(directorio, 0o700)
+        tmp = directorio / f"{nombre}.tmp.{os.getpid()}.{threading.get_ident()}"
+        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         try:
-            tmp_file.write_bytes(data_bytes)
-            tmp_file.replace(target_file)
+            vista = memoryview(datos)
+            while vista:
+                vista = vista[os.write(fd, vista):]
+            os.fsync(fd)
         except OSError:
-            pass
+            os.close(fd)
+            tmp.unlink(missing_ok=True)
+            raise
+        os.close(fd)
+        return tmp
+
+    def _fsync_directorio(self, directorio: Path):
+        dfd = os.open(directorio, os.O_RDONLY)
+        try:
+            os.fsync(dfd)
+        finally:
+            os.close(dfd)
+
+    def _reemplazar_durable(self, tmp: Path, destino: Path):
+        try:
+            os.replace(tmp, destino)
+        except OSError:
+            tmp.unlink(missing_ok=True)
+            raise
+        self._fsync_directorio(destino.parent)
+
+    def _save_job_atomically(self, job_dict: dict) -> None:
+        """tmp 0600 + fsync + rename + fsync de directorio (BLOCKER-2).
+        Los fallos de E/S se propagan: nada se reporta sin que conste."""
+        target_dir = self.data_dir / job_dict["project_id"]
+        target_file = target_dir / f"{job_dict['job_id']}.json"
+        datos = json.dumps(
+            job_dict, indent=2, ensure_ascii=False).encode("utf-8")
+        tmp = self._volcar_tmp_durable(target_dir, target_file.name, datos)
+        self._reemplazar_durable(tmp, target_file)
 
     def _load_job(self, project_id: str, job_id: str) -> dict | None:
         target_file = self.data_dir / project_id / f"{job_id}.json"
@@ -144,24 +264,28 @@ class JobsManager:
         except Exception:
             return None
 
-    # 3. Idempotencia RFC 8785
-    def _save_idempotency_record(
-        self, project_id: str, key: str, job_id: str, payload_hash: str, expires_at: str
-    ) -> None:
+    def _commit_registro_idempotencia(self, project_id: str, key: str,
+                                      job_id: str, payload_hash: str):
+        """Registro exclusivo: tmp durable + os.link. Vive
+        TOMBSTONE_IDEMP_HORAS (ventana de deduplicación de §J)."""
         target_dir = self.idemp_dir / project_id
         target_dir.mkdir(parents=True, exist_ok=True)
+        os.chmod(target_dir, 0o700)
         key_hash = hashlib.sha256(key.encode("utf-8")).hexdigest()
         target_file = target_dir / f"{key_hash}.json"
-
-        record = {
-            "key": key,
-            "job_id": job_id,
-            "payload_hash": payload_hash,
-            "expires_at": expires_at,
-        }
-        tmp_file = target_dir / f"{key_hash}.tmp.{os.getpid()}"
-        tmp_file.write_text(json.dumps(record), encoding="utf-8")
-        tmp_file.replace(target_file)
+        expiracion = (datetime.now(timezone.utc)
+                      + timedelta(hours=TOMBSTONE_IDEMP_HORAS)).isoformat()
+        record = {"key": key, "job_id": job_id,
+                  "payload_hash": payload_hash, "expires_at": expiracion}
+        tmp = self._volcar_tmp_durable(target_dir, target_file.name,
+                                       json.dumps(record).encode())
+        try:
+            os.link(tmp, target_file)
+        except OSError:
+            tmp.unlink(missing_ok=True)
+            raise
+        tmp.unlink(missing_ok=True)
+        self._fsync_directorio(target_dir)
 
     def _lookup_idempotency_record(self, project_id: str, key: str) -> dict | None:
         key_hash = hashlib.sha256(key.encode("utf-8")).hexdigest()
@@ -178,311 +302,499 @@ class JobsManager:
         except Exception:
             return None
 
-    # 4. Operación POST /jobs (Crear / Reclamar)
-    def create_job(
-        self,
-        project_id: str,
-        operation: str,
-        payload: dict,
-        idempotency_key: str,
-        ttl_seconds: int = DEFAULT_TTL_SECONDS,
-    ) -> tuple[int, dict]:
-        """Crea o recupera un trabajo en segundo plano con control de idempotencia."""
-        if not isinstance(idempotency_key, str) or not IDEMPOTENCY_KEY_RE.match(idempotency_key):
-            return 400, {
-                "error": {
-                    "code": "invalid_idempotency_key",
-                    "message": "Idempotency-Key debe ser ASCII de 1 a 64 caracteres válidos",
-                }
-            }
+    def _registro_confirma_admision(self, job: dict) -> bool:
+        """True si el registro de idempotencia apunta a este job vivo."""
+        clave = job.get("idempotency_key")
+        if not isinstance(clave, str):
+            return False
+        rec = self._lookup_idempotency_record(
+            job.get("project_id", ""), clave)
+        return bool(rec and rec.get("job_id") == job.get("job_id"))
 
-        if operation not in ALLOWED_OPERATIONS:
-            return 400, {
-                "error": {
-                    "code": "unsupported_operation",
-                    "message": f"Operación '{operation}' no admitida en Perfil J",
-                }
-            }
-
-        if not isinstance(payload, dict):
-            return 400, {
-                "error": {
-                    "code": "invalid_payload",
-                    "message": "payload debe ser un objeto JSON",
-                }
-            }
-
-        # Calcular hash canónico RFC 8785
+    def _descartar_job_sin_admision(self, project_id: str, job_id: str):
+        """Best-effort: sin commit de registro no hay job; el arranque
+        reconcilia cualquier resto (no se ejecuta)."""
         try:
-            canon_bytes = canonical_json_rfc8785({"operation": operation, "payload": payload})
-            payload_hash = hashlib.sha256(canon_bytes).hexdigest()
-        except Exception as exc:
-            return 400, {
-                "error": {
-                    "code": "canonicalization_error",
-                    "message": f"Error canonicalizando payload: {exc}",
-                }
-            }
-
-        with self.lock:
-            # 1. Comprobar idempotencia previa
-            rec = self._lookup_idempotency_record(project_id, idempotency_key)
-            if rec:
-                if rec["payload_hash"] == payload_hash:
-                    # Idempotente: devolver job ya admitido
-                    existente = self._load_job(project_id, rec["job_id"])
-                    if existente:
-                        return 202, {
-                            "job_id": existente["job_id"],
-                            "state": existente["state"],
-                            "status_url": f"/jobs/{existente['job_id']}",
-                            "created_at": existente["created_at"],
-                            "expires_at": existente["expires_at"],
-                        }
-                else:
-                    # Conflicto 409
-                    return 409, {
-                        "error": {
-                            "code": "idempotency_conflict",
-                            "message": "Idempotency-Key ya utilizada con un cuerpo de solicitud diferente",
-                        }
-                    }
-
-            # 2. Control de límites de cola
-            queued_proj = 0
-            queued_global = 0
-            for p_dir in self.data_dir.iterdir():
-                if not p_dir.is_dir():
-                    continue
-                for f_job in p_dir.glob("*.json"):
-                    try:
-                        j_data = json.loads(f_job.read_text(encoding="utf-8"))
-                        if j_data.get("state") == "queued":
-                            queued_global += 1
-                            if j_data.get("project_id") == project_id:
-                                queued_proj += 1
-                    except Exception:
-                        pass
-
-            if queued_proj >= MAX_QUEUED_PER_PROJECT:
-                return 429, {
-                    "error": {
-                        "code": "queue_limit_per_project_exceeded",
-                        "message": f"El proyecto ya tiene {queued_proj} trabajo(s) en cola (máximo {MAX_QUEUED_PER_PROJECT})",
-                    }
-                }
-
-            if queued_global >= MAX_QUEUED_GLOBAL:
-                return 429, {
-                    "error": {
-                        "code": "global_queue_limit_exceeded",
-                        "message": f"Cola global de trabajos saturada ({queued_global} en espera)",
-                    }
-                }
-
-            # 3. Creación y persistencia atómica
-            ahora = datetime.now(timezone.utc)
-            ttl = min(max(ttl_seconds, 60), MAX_TTL_SECONDS)
-            expira = ahora + timedelta(seconds=ttl)
-            job_id = f"job-{hashlib.sha256(f'{project_id}:{idempotency_key}:{ahora.isoformat()}'.encode()).hexdigest()[:16]}"
-
-            job_dict = {
-                "job_id": job_id,
-                "contract_version": "2",
-                "project_id": project_id,
-                "operation": operation,
-                "payload": payload,
-                "state": "queued",
-                "created_at": ahora.isoformat(),
-                "started_at": None,
-                "completed_at": None,
-                "expires_at": expira.isoformat(),
-                "result": None,
-                "error": None,
-                "model_revision": "LiquidAI/LFM3-Omni-2B-GGUF",
-            }
-
-            self._save_job_atomically(job_dict)
-            self._save_idempotency_record(
-                project_id, idempotency_key, job_id, payload_hash, expira.isoformat()
-            )
-            self.work_queue.put((project_id, job_id))
-
-            return 202, {
-                "job_id": job_id,
-                "state": "queued",
-                "status_url": f"/jobs/{job_id}",
-                "created_at": job_dict["created_at"],
-                "expires_at": job_dict["expires_at"],
-            }
-
-    # 5. Operación GET /jobs/{id} (Consulta)
-    def get_job(self, project_id: str, job_id: str) -> tuple[int, dict]:
-        """Consulta el estado y resultado del trabajo de forma aislada."""
-        job = self._load_job(project_id, job_id)
-        if not job or job.get("project_id") != project_id:
-            # Fail-closed: no revelar si existe bajo otro proyecto
-            return 404, {"error": {"code": "not_found", "message": "Trabajo no encontrado"}}
-
-        # Verificar TTL
-        try:
-            dt_exp = datetime.fromisoformat(job["expires_at"])
-            if datetime.now(timezone.utc) > dt_exp:
-                return 410, {
-                    "error": {
-                        "code": "job_expired",
-                        "message": "El resultado del trabajo ha expirado (TTL vencido)",
-                    }
-                }
-        except Exception:
+            (self.data_dir / project_id / f"{job_id}.json").unlink(
+                missing_ok=True)
+        except OSError:
             pass
 
-        # Devolver vista de consumo (sin payload interno sensible)
-        vista = {
+    def create_job(self, project_id: str, operation: str, payload: dict,
+                   idempotency_key: str,
+                   ttl_seconds: int = DEFAULT_TTL_SECONDS
+                   ) -> tuple[int, dict]:
+        """Crea o recupera un trabajo con commit durable de admisión."""
+        if not isinstance(idempotency_key, str) \
+                or not IDEMPOTENCY_KEY_RE.match(idempotency_key):
+            return _respuesta_error(
+                400, "invalid_idempotency_key",
+                "Idempotency-Key debe ser ASCII de 1 a 64 caracteres "
+                "válidos")
+        if operation not in ALLOWED_OPERATIONS:
+            return _respuesta_error(
+                400, "unsupported_operation",
+                f"Operación '{operation}' no admitida en Perfil J")
+        if not isinstance(payload, dict):
+            return _respuesta_error(
+                400, "invalid_payload", "payload debe ser un objeto JSON")
+        try:
+            canon = canonical_json_rfc8785(
+                {"operation": operation, "payload": payload})
+            payload_hash = hashlib.sha256(canon).hexdigest()
+        except Exception as exc:
+            return _respuesta_error(
+                400, "canonicalization_error",
+                f"Error canonicalizando payload: {exc}")
+
+        self._purgar_expirados()
+        with self.lock:
+            rec = self._lookup_idempotency_record(project_id, idempotency_key)
+            if rec:
+                if rec["payload_hash"] != payload_hash:
+                    return _respuesta_error(
+                        409, "idempotency_conflict", MSG_IDEMPOTENCY_CONFLICT)
+                existente = self._load_job(project_id, rec["job_id"])
+                if existente is None \
+                        or existente.get("state") == "expired" \
+                        or self._vencido(existente):
+                    # Registro vivo con resultado caducado: dentro del
+                    # tombstone nunca se re-infiera (§J).
+                    return _respuesta_error(
+                        410, "job_expired",
+                        "El trabajo asociado a esta clave ya expiró; "
+                        "use una clave nueva")
+                return 202, self._vista_admision(existente)
+
+            queued_proj, queued_global = self._contar_encolados(project_id)
+            if queued_proj >= MAX_QUEUED_PER_PROJECT:
+                return _respuesta_error(
+                    429, "queue_limit_per_project_exceeded",
+                    f"El proyecto ya tiene {queued_proj} trabajo(s) en "
+                    f"cola (máximo {MAX_QUEUED_PER_PROJECT})")
+            if queued_global >= MAX_QUEUED_GLOBAL:
+                return _respuesta_error(
+                    429, "global_queue_limit_exceeded",
+                    f"Cola global de trabajos saturada ({queued_global} "
+                    f"en espera)")
+
+            # Job durable primero, registro después: el registro es
+            # el commit (link exclusivo); sin él no hay 202 (BLOCKER-2).
+            ahora = datetime.now(timezone.utc)
+            ttl = ttl_seconds if isinstance(ttl_seconds, int) \
+                and not isinstance(ttl_seconds, bool) else DEFAULT_TTL_SECONDS
+            ttl = min(max(ttl, 60), MAX_TTL_SECONDS)
+            expira = ahora + timedelta(seconds=ttl)
+            job_id = "job-" + hashlib.sha256(
+                f"{project_id}:{idempotency_key}:{ahora.isoformat()}"
+                .encode()).hexdigest()[:16]
+            job_dict = {
+                "job_id": job_id, "contract_version": "2",
+                "project_id": project_id, "operation": operation,
+                "payload": payload, "idempotency_key": idempotency_key,
+                "ttl_seconds": ttl, "state": "queued",
+                "created_at": ahora.isoformat(), "started_at": None,
+                "completed_at": None, "expires_at": expira.isoformat(),                "result": None, "error": None,
+                "model_revision": "LiquidAI/LFM3-Omni-2B-GGUF",
+            }
+            try:
+                self._save_job_atomically(job_dict)
+            except OSError:
+                return _respuesta_error(
+                    500, "storage_error",
+                    "No se pudo persistir el trabajo; admisión denegada")
+            try:
+                self._commit_registro_idempotencia(
+                    project_id, idempotency_key, job_id, payload_hash)
+            except FileExistsError:
+                return self._resolver_rival(
+                    project_id, idempotency_key, payload_hash, job_id)
+            except OSError:
+                self._descartar_job_sin_admision(project_id, job_id)
+                return _respuesta_error(
+                    500, "storage_error",
+                    "No se pudo persistir el registro de idempotencia; "
+                    "admisión denegada")
+            self.work_queue.put((project_id, job_id))
+            return 202, self._vista_admision(job_dict)
+
+    def _resolver_rival(self, project_id: str, idempotency_key: str,
+                        payload_hash: str, job_id_propio: str):
+        """Otra instancia commitó la misma clave: seguir SU admisión."""
+        self._descartar_job_sin_admision(project_id, job_id_propio)
+        rival = self._lookup_idempotency_record(project_id, idempotency_key)
+        if rival is None:
+            return _respuesta_error(
+                500, "storage_error",
+                "Registro de idempotencia ilegible tras conflicto de commit")
+        if rival["payload_hash"] != payload_hash:
+            return _respuesta_error(
+                409, "idempotency_conflict", MSG_IDEMPOTENCY_CONFLICT)
+        existente = self._load_job(project_id, rival["job_id"])
+        if existente is None:
+            return _respuesta_error(
+                500, "storage_error", "Job de la admisión rival ilegible")
+        if existente.get("state") == "expired" or self._vencido(existente):
+            return _respuesta_error(
+                410, "job_expired",
+                "El trabajo asociado a esta clave ya expiró; use una "
+                "clave nueva")
+        return 202, self._vista_admision(existente)
+
+    @staticmethod
+    def _vista_admision(job: dict) -> dict:
+        """Respuesta 202 de admisión (SPEC-i5 §2.1)."""
+        return {
+            "job_id": job["job_id"], "state": job["state"],
+            "status_url": f"/jobs/{job['job_id']}",
+            "created_at": job["created_at"], "expires_at": job["expires_at"]}
+
+    def _contar_encolados(self, project_id: str) -> tuple[int, int]:
+        """(no terminales del proyecto, globales) según disco; contar
+        running cierra la carrera reclamo-vs-admisión (SPEC-i5 §2.1)."""
+        queued_proj = 0
+        queued_global = 0
+        OCUPADOS = ("queued", "running", "cancellation_pending")
+        for p_dir in self.data_dir.iterdir():
+            if not p_dir.is_dir():
+                continue
+            for f_job in p_dir.glob("*.json"):
+                try:
+                    j_data = json.loads(f_job.read_text(encoding="utf-8"))
+                    if j_data.get("state") in OCUPADOS:
+                        queued_global += 1
+                        if j_data.get("project_id") == project_id:
+                            queued_proj += 1
+                except Exception:
+                    pass
+        return queued_proj, queued_global
+
+    def get_job(self, project_id: str, job_id: str) -> tuple[int, dict]:
+        """Consulta aislada por proyecto (ajeno: 404 fail-closed)."""
+        job = self._load_job(project_id, job_id)
+        if not job or job.get("project_id") != project_id:
+            return _respuesta_error(404, "not_found",
+                                    "Trabajo no encontrado")
+        if self._vencido(job):
+            # Purga verificable al expirar (HIGH-2): sale del disco.
+            if job.get("state") not in ("running", "expired"):
+                try:
+                    self._purgar_job(job)
+                except OSError:
+                    pass  # el 410 sigue siendo cierto; la purga reintenta
+            return _respuesta_error(
+                410, "job_expired",
+                "El resultado del trabajo ha expirado (TTL vencido)")
+        return 200, {
             "job_id": job.get("job_id"),
             "contract_version": job.get("contract_version", "2"),
             "project_id": job.get("project_id"),
-            "operation": job.get("operation"),
-            "state": job.get("state"),
+            "operation": job.get("operation"), "state": job.get("state"),
             "created_at": job.get("created_at"),
             "started_at": job.get("started_at"),
             "completed_at": job.get("completed_at"),
             "expires_at": job.get("expires_at"),
-            "result": job.get("result"),
-            "error": job.get("error"),
+            "result": job.get("result"), "error": job.get("error"),
             "model_revision": job.get("model_revision"),
         }
-        return 200, vista
 
-    # 6. Operación DELETE /jobs/{id} (Cancelación)
     def cancel_job(self, project_id: str, job_id: str) -> tuple[int, dict]:
         """Solicita la cancelación de un trabajo propio."""
         with self.lock:
             job = self._load_job(project_id, job_id)
             if not job or job.get("project_id") != project_id:
-                return 404, {"error": {"code": "not_found", "message": "Trabajo no encontrado"}}
-
+                return _respuesta_error(404, "not_found",
+                                        "Trabajo no encontrado")
             state = job.get("state")
-            if state in ("succeeded", "failed", "cancelled"):
-                return 200, {
-                    "job_id": job_id,
-                    "cancellation_status": "already_terminal",
-                    "target_state": state,
-                }
-
+            if state in ("succeeded", "failed", "cancelled", "expired"):
+                return 200, {"job_id": job_id,
+                             "cancellation_status": "already_terminal",
+                             "target_state": state}
             if state == "queued":
                 job["state"] = "cancelled"
-                job["completed_at"] = datetime.now(timezone.utc).isoformat()
-                self._save_job_atomically(job)
-                return 200, {
-                    "job_id": job_id,
-                    "cancellation_status": "accepted",
-                    "target_state": "cancelled",
-                }
-
+                try:
+                    self._cerrar(job, "cancelled")
+                except OSError:
+                    return _respuesta_error(
+                        500, "storage_error",
+                        "No se pudo persistir la cancelación")
+                return 200, {"job_id": job_id,
+                             "cancellation_status": "accepted",
+                             "target_state": "cancelled"}
             if state == "running":
                 job["state"] = "cancellation_pending"
+                try:
+                    self._save_job_atomically(job)
+                except OSError:
+                    return _respuesta_error(
+                        500, "storage_error",
+                        "No se pudo persistir la cancelación")
+                return 200, {"job_id": job_id,
+                             "cancellation_status": "pending",
+                             "target_state": "cancellation_pending"}
+            return 200, {"job_id": job_id,
+                         "cancellation_status": "pending",
+                         "target_state": state}
+
+    def _reclamar(self, project_id: str, job_id: str) -> int | None:
+        """Reclamo atómico entre procesos (HIGH-1): flock exclusivo
+        por job; fd o None si lo tiene otro, no está en cola o venció."""
+        try:
+            self.claims_dir.mkdir(parents=True, exist_ok=True)
+            os.chmod(self.claims_dir, 0o700)
+            fd = os.open(self.claims_dir / f"{job_id}.lock",
+                         os.O_RDWR | os.O_CREAT, 0o600)
+        except OSError:
+            return None
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            os.close(fd)
+            return None
+        with self.lock:
+            job = self._load_job(project_id, job_id)
+            if not job or job.get("state") != "queued" or self._vencido(job):
+                fcntl.flock(fd, fcntl.LOCK_UN)
+                os.close(fd)
+                return None
+        return fd
+
+    def _soltar_reclamo(self, fd: int):
+        try:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+        finally:
+            os.close(fd)
+
+    def _admitir(self, project_id: str) -> bool:
+        """Admisión compartida con H/M vía el dispatcher (HIGH-1)."""
+        if self.dispatcher is None:
+            return True
+        limites = {}
+        if self.rate_limit_lookup is not None:
+            limites = self.rate_limit_lookup(project_id) or {}
+        try:
+            self.dispatcher.acquire_slot(
+                project_id, limites, timeout=ADMISION_TIMEOUT_S)
+        except ErrorV2:
+            return False
+        return True
+
+    def _liberar_admision(self, project_id: str):
+        if self.dispatcher is not None:
+            self.dispatcher.release_slot(project_id)
+
+    def _marcar_running(self, project_id: str, job_id: str) -> bool:
+        """Pasa a running si sigue queued (la cancelación gana la
+        ventana). Job ilegible: se salta sin romper el worker."""
+        with self.lock:
+            try:
+                job = self._load_job(project_id, job_id)
+                if not job or job.get("state") != "queued":
+                    return False
+                job["state"] = "running"
+                job["started_at"] = datetime.now(timezone.utc).isoformat()
+                self.running_job_id = job_id
                 self._save_job_atomically(job)
-                return 200, {
-                    "job_id": job_id,
-                    "cancellation_status": "pending",
-                    "target_state": "cancellation_pending",
-                }
+            except (KeyError, TypeError):
+                return False
+        return True
 
-            return 200, {
-                "job_id": job_id,
-                "cancellation_status": "pending",
-                "target_state": state,
-            }
-
-    # 7. Bucle de ejecución del worker en segundo plano
     def _worker_loop(self) -> None:
         while not self._stop_event.is_set():
             try:
                 proj_id, job_id = self.work_queue.get(timeout=1.0)
             except queue.Empty:
                 continue
-
             if not proj_id or not job_id:
                 continue
-
-            with self.lock:
-                job = self._load_job(proj_id, job_id)
-                if not job or job.get("state") != "queued":
+            fd_reclamo = self._reclamar(proj_id, job_id)
+            if fd_reclamo is None:
+                continue
+            try:
+                if not self._admitir(proj_id):
+                    # Sin presupuesto: vuelve a la cola y se reintenta
+                    # tras una pausa; nunca se ejecuta sin admisión.
+                    self.work_queue.put((proj_id, job_id))
+                    self._stop_event.wait(REINTENTO_ADMISION_S)
                     continue
-                job["state"] = "running"
-                job["started_at"] = datetime.now(timezone.utc).isoformat()
-                self.running_job_id = job_id
-                self._save_job_atomically(job)
+                try:
+                    if self._marcar_running(proj_id, job_id):
+                        self._execute_single_job(proj_id, job_id)
+                finally:
+                    self._liberar_admision(proj_id)
+            except OSError:
+                # Persistencia fallida: el disco manda (fail-closed).
+                continue
+            except Exception as exc:
+                # Defecto inesperado (dispatcher mal cableado): el worker
+                # sobrevive y el reclamo se libera siempre (stderr visible).
+                print(f"jobs-worker: fallo inesperado en {job_id}: {exc!r}",
+                      file=sys.stderr, flush=True)
+                continue
+            finally:
+                self._soltar_reclamo(fd_reclamo)
+                with self.lock:
+                    if self.running_job_id == job_id:
+                        self.running_job_id = None
 
-            # Ejecutar tarea fuera del cerrojo
-            self._execute_single_job(proj_id, job_id)
+    @staticmethod
+    def _extraer_salida(resp_json: Any) -> tuple[str, str]:
+        """(contenido, finish_reason): forma cerrada y completitud."""
+        choices = resp_json.get("choices") \
+            if isinstance(resp_json, dict) else None
+        if not isinstance(choices, list) or not choices \
+                or not isinstance(choices[0], dict):
+            _error(502, "backend_shape", "respuesta del backend sin choices")
+        message = choices[0].get("message")
+        contenido = message.get("content") \
+            if isinstance(message, dict) else None
+        finish_reason = choices[0].get("finish_reason")
+        if not isinstance(contenido, str) or not isinstance(finish_reason, str):
+            _error(502, "backend_shape", "respuesta del backend ilegible")
+        if finish_reason != "stop":
+            _error(502, "incomplete_output",
+                   f"salida incompleta del backend "
+                   f"(finish_reason={finish_reason})")
+        return contenido, finish_reason
 
-            with self.lock:
-                self.running_job_id = None
+    def _vencido(self, job: dict, ahora: datetime | None = None) -> bool:
+        try:
+            dt_exp = datetime.fromisoformat(job["expires_at"])
+            return (ahora or datetime.now(timezone.utc)) > dt_exp
+        except (KeyError, TypeError, ValueError):
+            return False
+
+    def _recalcular_expiracion(self, job: dict) -> None:
+        """§J: la retención del resultado cuenta desde el terminal."""
+        try:
+            ttl = int(job.get("ttl_seconds", DEFAULT_TTL_SECONDS))
+        except (TypeError, ValueError):
+            ttl = DEFAULT_TTL_SECONDS
+        ttl = min(max(ttl, 60), MAX_TTL_SECONDS)
+        job["expires_at"] = (
+            datetime.now(timezone.utc) + timedelta(seconds=ttl)
+        ).isoformat()
+
+    def _purgar_job(self, job: dict) -> None:
+        """Tombstone durable sin payload ni resultado: registra el
+        borrado (§J) y retira el cerrojo de reclamo."""
+        ahora = datetime.now(timezone.utc)
+        job_id = job.get("job_id") or "desconocido"
+        tombstone = {
+            "job_id": job_id,
+            "contract_version": job.get("contract_version", "2"),
+            "project_id": job.get("project_id"),
+            "state": "expired",
+            "expires_at": job.get("expires_at"),
+            "created_at": job.get("created_at"),
+            "expired_at": job.get("expires_at"),
+            "purged_at": ahora.isoformat(),
+            "model_revision": job.get("model_revision"),
+        }
+        self._save_job_atomically(tombstone)
+        try:
+            (self.claims_dir / f"{job_id}.lock").unlink(missing_ok=True)
+        except OSError:
+            pass
+
+    def _purgar_expirados(self) -> int:
+        """Barrido: vencidos a tombstone, registros vencidos fuera."""
+        purgados = 0
+        ahora = datetime.now(timezone.utc)
+        for proj_dir in self.data_dir.glob("*"):
+            if not proj_dir.is_dir():
+                continue
+            for job_file in proj_dir.glob("*.json"):
+                try:
+                    data = json.loads(job_file.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                if data.get("state") in ("expired", "running"):
+                    continue  # tombstone hecho; en vuelo, no tocar
+                if not self._vencido(data, ahora):
+                    continue
+                try:
+                    self._purgar_job(data)
+                    purgados += 1
+                except OSError:
+                    continue
+        for rec_file in self.idemp_dir.glob("*/*.json"):
+            try:
+                rec = json.loads(rec_file.read_text(encoding="utf-8"))
+                if ahora > datetime.fromisoformat(rec["expires_at"]):
+                    rec_file.unlink(missing_ok=True)
+            except Exception:
+                continue
+        return purgados
+
+    def _cerrar(self, job: dict, estado: str) -> None:
+        """Terminal durable; recalcula expires_at (§J); un vencido
+        no resucita: se purga."""
+        if self._vencido(job):
+            self._purgar_job(job)
+            return
+        job["state"] = estado
+        job["completed_at"] = datetime.now(timezone.utc).isoformat()
+        self._recalcular_expiracion(job)
+        self._save_job_atomically(job)
+
+    def _fallar(self, job: dict, codigo: str, mensaje: str) -> None:
+        job["result"] = None
+        job["error"] = {"code": codigo, "message": mensaje}
+        self._cerrar(job, "failed")
 
     def _execute_single_job(self, project_id: str, job_id: str) -> None:
         job = self._load_job(project_id, job_id)
         if not job:
             return
-
-        # Comprobar cancelación temprana
         if job.get("state") == "cancellation_pending":
-            job["state"] = "cancelled"
-            job["completed_at"] = datetime.now(timezone.utc).isoformat()
-            self._save_job_atomically(job)
+            with self.lock:
+                self._cerrar(job, "cancelled")
             return
-
-        operation = job.get("operation")
         payload = job.get("payload", {})
-
-        # Despachar al backend
+        formato = payload.get("response_format") \
+            if isinstance(payload, dict) else None
         try:
             url = f"{self.backend_url}/v1/chat/completions"
             req_data = json.dumps(payload).encode("utf-8")
             req = urllib.request.Request(
-                url, data=req_data, headers={"Content-Type": "application/json"}, method="POST"
-            )
+                url, data=req_data, headers={"Content-Type": "application/json"},
+                method="POST")
             with urllib.request.urlopen(req, timeout=120.0) as resp:
-                resp_bytes = resp.read()
-                resp_json = json.loads(resp_bytes.decode("utf-8"))
-
-            with self.lock:
-                latest = self._load_job(project_id, job_id)
-                if latest and latest.get("state") == "cancellation_pending":
-                    latest["state"] = "cancelled"
-                    latest["completed_at"] = datetime.now(timezone.utc).isoformat()
-                    self._save_job_atomically(latest)
-                    return
-
-                choices = resp_json.get("choices", [{}])
-                msg_content = choices[0].get("message", {}).get("content", "")
-                finish_reason = choices[0].get("finish_reason", "stop")
-
-                job["state"] = "succeeded"
-                job["completed_at"] = datetime.now(timezone.utc).isoformat()
-                job["result"] = {
-                    "text": msg_content,
-                    "finish_reason": finish_reason,
-                    "complete": finish_reason == "stop",
-                }
-                job["error"] = None
-                self._save_job_atomically(job)
+                resp_json = json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as exc:
             with self.lock:
-                job["state"] = "failed"
-                job["completed_at"] = datetime.now(timezone.utc).isoformat()
-                job["error"] = {
-                    "code": f"http_{exc.code}",
-                    "message": f"Error del backend HTTP {exc.code}",
-                }
-                self._save_job_atomically(job)
+                self._fallar(job, f"http_{exc.code}",
+                             f"Error del backend HTTP {exc.code}")
+            return
         except Exception as exc:
             with self.lock:
-                job["state"] = "failed"
-                job["completed_at"] = datetime.now(timezone.utc).isoformat()
-                job["error"] = {
-                    "code": "execution_error",
-                    "message": f"Fallo ejecutando tarea en segundo plano: {exc}",
-                }
-                self._save_job_atomically(job)
+                self._fallar(job, "execution_error",
+                             f"Fallo ejecutando tarea en segundo plano: {exc}")
+            return
+        with self.lock:
+            latest = self._load_job(project_id, job_id)
+            if latest and latest.get("state") == "cancellation_pending":
+                self._cerrar(latest, "cancelled")
+                return
+            if latest:
+                job = latest
+            # Validación en la frontera de salida (BLOCKER-1): si falla,
+            # estado de fallo explícito, nunca succeeded. Un
+            # response_format ilegible en disco tampoco rompe el worker.
+            try:
+                contenido, finish_reason = self._extraer_salida(resp_json)
+                if formato is not None:
+                    validar_salida(contenido, formato["json_schema"]["schema"])
+            except ErrorV2 as exc:
+                self._fallar(job, exc.code, exc.message)
+                return
+            except (KeyError, TypeError) as exc:
+                self._fallar(job, "invalid_job_payload",
+                             f"job con response_format ilegible: {exc}")
+                return
+            job["result"] = {"text": contenido,
+                             "finish_reason": finish_reason,
+                             "complete": finish_reason == "stop"}
+            job["error"] = None
+            self._cerrar(job, "succeeded")

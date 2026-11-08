@@ -1,0 +1,243 @@
+test_01_forma_es6_de_numeros (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_01_forma_es6_de_numeros) ... FAIL
+test_02_enteros_fuera_del_rango_doble (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_02_enteros_fuera_del_rango_doble) ... FAIL
+test_03_orden_de_claves_por_utf16 (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_03_orden_de_claves_por_utf16) ... FAIL
+test_04_escapes_minimos_de_cadena (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_04_escapes_minimos_de_cadena) ... ok
+test_05_no_finitos_rechazados (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_05_no_finitos_rechazados) ... ok
+test_16_oserror_al_escribir_job_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_16_oserror_al_escribir_job_sin_202) ... FAIL
+test_17_oserror_al_escribir_registro_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_17_oserror_al_escribir_registro_sin_202) ... FAIL
+test_18_job_en_cola_sin_registro_jamais_se_ejecuta (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_18_job_en_cola_sin_registro_jamais_se_ejecuta) ... FAIL
+test_06_scope_de_modalidad_exigido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_06_scope_de_modalidad_exigido) ... FAIL
+test_07_scope_de_modalidad_de_vision (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_07_scope_de_modalidad_de_vision) ... FAIL
+test_08_payload_fuera_de_dialecto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_08_payload_fuera_de_dialecto_rechazado) ... FAIL
+test_09_clave_duplicada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_09_clave_duplicada_rechazada) ... FAIL
+test_10_clave_duplicada_anidada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_10_clave_duplicada_anidada_rechazada) ... FAIL
+test_11_control_positivo_flujo_valido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_11_control_positivo_flujo_valido) ... ok
+test_19_dos_instancias_no_ejecutan_dos_veces (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_19_dos_instancias_no_ejecutan_dos_veces) ... FAIL
+test_20_worker_pasa_por_dispatcher_compartido (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_20_worker_pasa_por_dispatcher_compartido) ... FAIL
+test_21_purga_y_tombstone_al_expirar (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_21_purga_y_tombstone_al_expirar) ... FAIL
+test_22_permisos_restringidos (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_22_permisos_restringidos) ... FAIL
+test_12_finish_reason_no_stop_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_12_finish_reason_no_stop_es_fallo) ... FAIL
+test_13_salida_fuera_de_esquema_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_13_salida_fuera_de_esquema_es_fallo) ... FAIL
+test_14_control_positivo_salida_valida (tests.test_jobs_boundary_i5.SalidaBackendTests.test_14_control_positivo_salida_valida) ... ok
+test_15_expires_recalculada_tras_terminal (tests.test_jobs_boundary_i5.SalidaBackendTests.test_15_expires_recalculada_tras_terminal) ... FAIL
+
+======================================================================
+FAIL: test_01_forma_es6_de_numeros (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_01_forma_es6_de_numeros)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 201, in test_01_forma_es6_de_numeros
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        con_solo, f'{{"n":{esperado}}}'.encode("utf-8"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"forma canónica de {valor!r}",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: b'{"n":0.0}' != b'{"n":0}' : forma canónica de 0.0
+
+======================================================================
+FAIL: test_02_enteros_fuera_del_rango_doble (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_02_enteros_fuera_del_rango_doble)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 209, in test_02_enteros_fuera_del_rango_doble
+    with self.assertRaises(ValueError):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_03_orden_de_claves_por_utf16 (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_03_orden_de_claves_por_utf16)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 234, in test_03_orden_de_claves_por_utf16
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        canonical_json_rfc8785(objeto), esperado.encode("utf-8"))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: b'{"\[141 chars]","\xef\xac\xb3":"Hebrew Letter Dalet With Dag[43 chars]ce"}' != b'{"\[141 chars]","\xf0\x9f\x98\x80":"Emoji: Grinning Face","\[43 chars]sh"}'
+
+======================================================================
+FAIL: test_16_oserror_al_escribir_job_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_16_oserror_al_escribir_job_sin_202)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 541, in test_16_oserror_al_escribir_job_sin_202
+    self.assertEqual(status, 500,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+                     f"202 emitido sin escritura constatada: {res}")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 202 != 500 : 202 emitido sin escritura constatada: {'job_id': 'job-892c2d1507e7227a', 'state': 'queued', 'status_url': '/jobs/job-892c2d1507e7227a', 'created_at': '2026-11-08T05:23:47.688930+00:00', 'expires_at': '2026-11-08T06:23:47.688930+00:00'}
+
+======================================================================
+FAIL: test_17_oserror_al_escribir_registro_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_17_oserror_al_escribir_registro_sin_202)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 557, in test_17_oserror_al_escribir_registro_sin_202
+    self.assertEqual(status, 500,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+                     f"202 emitido con registro no escrito: {res}")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 202 != 500 : 202 emitido con registro no escrito: {'job_id': 'job-7c8f364da2cb819a', 'state': 'queued', 'status_url': '/jobs/job-7c8f364da2cb819a', 'created_at': '2026-11-08T05:23:47.692094+00:00', 'expires_at': '2026-11-08T06:23:47.692094+00:00'}
+
+======================================================================
+FAIL: test_18_job_en_cola_sin_registro_jamais_se_ejecuta (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_18_job_en_cola_sin_registro_jamais_se_ejecuta)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 584, in test_18_job_en_cola_sin_registro_jamais_se_ejecuta
+    self.assertEqual(final["state"], "failed")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'succeeded' != 'failed'
+- succeeded
++ failed
+
+
+======================================================================
+FAIL: test_06_scope_de_modalidad_exigido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_06_scope_de_modalidad_exigido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 354, in test_06_scope_de_modalidad_exigido
+    self.assertEqual(status, 403)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: 202 != 403
+
+======================================================================
+FAIL: test_07_scope_de_modalidad_de_vision (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_07_scope_de_modalidad_de_vision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 367, in test_07_scope_de_modalidad_de_vision
+    self.assertEqual(status, 403)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: 202 != 403
+
+======================================================================
+FAIL: test_08_payload_fuera_de_dialecto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_08_payload_fuera_de_dialecto_rechazado)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 376, in test_08_payload_fuera_de_dialecto_rechazado
+    self.assertEqual(status, 400, f"se admitió payload fuera del "
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                 f"dialecto: {res}")
+                                 ^^^^^^^^^^^^^^^^^^^
+AssertionError: 202 != 400 : se admitió payload fuera del dialecto: {'job_id': 'job-43ae7c9cca8954e1', 'state': 'queued', 'status_url': '/jobs/job-43ae7c9cca8954e1', 'created_at': '2026-11-08T05:23:47.782998+00:00', 'expires_at': '2026-11-08T06:23:47.782998+00:00'}
+
+======================================================================
+FAIL: test_09_clave_duplicada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_09_clave_duplicada_rechazada)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 387, in test_09_clave_duplicada_rechazada
+    self.assertEqual(status, 400)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: 202 != 400
+
+======================================================================
+FAIL: test_10_clave_duplicada_anidada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_10_clave_duplicada_anidada_rechazada)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 397, in test_10_clave_duplicada_anidada_rechazada
+    self.assertEqual(status, 400)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+AssertionError: 202 != 400
+
+======================================================================
+FAIL: test_19_dos_instancias_no_ejecutan_dos_veces (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_19_dos_instancias_no_ejecutan_dos_veces)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 643, in test_19_dos_instancias_no_ejecutan_dos_veces
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        backend.cuenta_por_marcador(marcador), 1,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"ejecuciones de {marcador}: "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"{backend.cuenta_por_marcador(marcador)}")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 1 : ejecuciones de marcador-doble-0: 2
+
+======================================================================
+FAIL: test_20_worker_pasa_por_dispatcher_compartido (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_20_worker_pasa_por_dispatcher_compartido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 670, in test_20_worker_pasa_por_dispatcher_compartido
+    manager = JobsManager(
+        jobs_dir=self.jobs_dir, backend_url=backend.url,
+    ...<2 lines>...
+            "requests_per_minute": 600, "burst": 50,
+            "max_queue": 10, "queue_timeout_seconds": 5.0})
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'dispatcher'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 678, in test_20_worker_pasa_por_dispatcher_compartido
+    self.fail("JobsManager no admite dispatcher compartido "
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              "(HIGH-1: presupuesto compartido con H/M)")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: JobsManager no admite dispatcher compartido (HIGH-1: presupuesto compartido con H/M)
+
+======================================================================
+FAIL: test_21_purga_y_tombstone_al_expirar (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_21_purga_y_tombstone_al_expirar)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 726, in test_21_purga_y_tombstone_al_expirar
+    self.assertNotIn("payload", en_disco,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+                     "la purga dejó el prompt del cliente en disco")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'payload' unexpectedly found in {'job_id': 'job-c50450fc332a32f5', 'contract_version': '2', 'project_id': 'proyecto-alpha', 'operation': 'infer_text', 'payload': {'messages': [{'role': 'user', 'content': 'dato-privado-purga'}]}, 'state': 'queued', 'created_at': '2026-11-08T05:23:49.278496+00:00', 'started_at': None, 'completed_at': None, 'expires_at': '2026-11-08T04:23:49.279761+00:00', 'result': None, 'error': None, 'model_revision': 'LiquidAI/LFM3-Omni-2B-GGUF'} : la purga dejó el prompt del cliente en disco
+
+======================================================================
+FAIL: test_22_permisos_restringidos (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_22_permisos_restringidos)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 736, in test_22_permisos_restringidos
+    self.assertEqual(archivo.stat().st_mode & 0o777, 0o600,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     "job JSON sin permisos 0600")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 420 != 384 : job JSON sin permisos 0600
+
+======================================================================
+FAIL: test_12_finish_reason_no_stop_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_12_finish_reason_no_stop_es_fallo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 447, in test_12_finish_reason_no_stop_es_fallo
+    self.assertEqual(final["state"], "failed",
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"salida truncada persistió como éxito: {final}")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'succeeded' != 'failed'
+- succeeded
++ failed
+ : salida truncada persistió como éxito: {'job_id': 'job-e6a1e36eb3b9c2fe', 'contract_version': '2', 'project_id': 'proyecto-alpha', 'operation': 'infer_text', 'state': 'succeeded', 'created_at': '2026-11-08T05:23:49.292991+00:00', 'started_at': '2026-11-08T05:23:49.294096+00:00', 'completed_at': '2026-11-08T05:23:49.295225+00:00', 'expires_at': '2026-11-08T06:23:49.292991+00:00', 'result': {'text': 'parcial', 'finish_reason': 'length', 'complete': False}, 'error': None, 'model_revision': 'LiquidAI/LFM3-Omni-2B-GGUF'}
+
+======================================================================
+FAIL: test_13_salida_fuera_de_esquema_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_13_salida_fuera_de_esquema_es_fallo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 463, in test_13_salida_fuera_de_esquema_es_fallo
+    self.assertEqual(final["state"], "failed",
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"salida fuera de esquema persistió: {final}")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'succeeded' != 'failed'
+- succeeded
++ failed
+ : salida fuera de esquema persistió: {'job_id': 'job-5cf13744252c3a2c', 'contract_version': '2', 'project_id': 'proyecto-alpha', 'operation': 'infer_text', 'state': 'succeeded', 'created_at': '2026-11-08T05:23:49.356461+00:00', 'started_at': '2026-11-08T05:23:49.357978+00:00', 'completed_at': '2026-11-08T05:23:49.359843+00:00', 'expires_at': '2026-11-08T06:23:49.356461+00:00', 'result': {'text': '{"otra": 1}', 'finish_reason': 'stop', 'complete': True}, 'error': None, 'model_revision': 'LiquidAI/LFM3-Omni-2B-GGUF'}
+
+======================================================================
+FAIL: test_15_expires_recalculada_tras_terminal (tests.test_jobs_boundary_i5.SalidaBackendTests.test_15_expires_recalculada_tras_terminal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 496, in test_15_expires_recalculada_tras_terminal
+    self.assertGreaterEqual(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        delta, 59.0,
+        ^^^^^^^^^^^^
+        f"expires_at no cuenta desde el terminal (delta={delta})")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 57.489019 not greater than or equal to 59.0 : expires_at no cuenta desde el terminal (delta=57.489019)
+
+----------------------------------------------------------------------
+Ran 22 tests in 4.353s
+
+FAILED (failures=18)

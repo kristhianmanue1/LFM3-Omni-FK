@@ -1,0 +1,31 @@
+== python3 scripts/check_sizes.py ==
+OK — 307 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+exit=0
+== python3 scripts/check_plans.py ==
+OK — 2 plan(es) verificados (estructura E1-E6)
+exit=0
+== python3 scripts/check_reports.py ==
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+exit=0
+== git diff --check ==
+exit=0
+== git status --porcelain ==
+ M src/gateway_http.py
+ M src/jobs_manager.py
+ M tests/test_jobs_i5.py
+?? docs/reviews/evidence/fix-i5-jobs-frontera/
+?? tests/test_jobs_boundary_i5.py
+OK — 308 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+OK — 2 plan(es) verificados (estructura E1-E6)
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+== drift (post-cierre) ==
+OK — al día: versión vigente corpus/v10
+OK — al día: versión vigente gate/v14
+== git diff --check ==
+exit=0
+== git status --porcelain ==
+ M src/gateway_http.py
+ M src/jobs_manager.py
+ M tests/test_jobs_i5.py
+?? docs/reviews/evidence/fix-i5-jobs-frontera/
+?? tests/test_jobs_boundary_i5.py
