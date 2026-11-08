@@ -1,0 +1,49 @@
+== Gates intento 4 — fix-i5-jobs-frontera ==
+HEAD: 50f9a5bf8848fe1105c03791f86aba69c15ffb35 (fixes sin commit)
+
+== gate 1: check_sizes ==
+OK — 412 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc_sizes=0
+== gate 2: check_plans ==
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc_plans=0
+== gate 3: check_reports ==
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc_reports=0
+== gate 4: drift corpus ==
+OK — al día: versión vigente corpus/v10
+rc_corpus=0
+== gate 5: drift scripts ==
+OK — al día: versión vigente gate/v14
+rc_scripts=0
+
+== git diff --check ==
+rc_diffcheck=0
+
+== git status --porcelain ==
+ M src/jobs_manager.py
+ M src/jobs_recovery.py
+?? docs/reviews/evidence/fix-i5-jobs-frontera/gates-intento-4.txt
+?? docs/reviews/evidence/fix-i5-jobs-frontera/green-intento-4.txt
+?? docs/reviews/evidence/fix-i5-jobs-frontera/informe-intento-4.md
+?? docs/reviews/evidence/fix-i5-jobs-frontera/red-intento-4.txt
+?? tests/test_jobs_intento4_i5.py
+
+== forma de los archivos tocados (limite 800 lineas, ~88 col) ==
+src/jobs_manager.py: 760 lineas, columna max 81
+src/jobs_recovery.py: 139 lineas, columna max 80
+tests/test_jobs_intento4_i5.py: 309 lineas, columna max 74
+
+== sentencias con ';' en src tocado (solo comentarios/cadenas) ==
+(sin codigo con ;)
+
+== fotos en green-intento-4.txt ==
+8:lsof: sin listeners en 8091/8092/8443
+9:ps motor/gateway: (sin procesos)
+10:run/jobs: (no existe)
+204:lsof: sin listeners en 8091/8092/8443
+205:ps motor/gateway: (sin procesos)
+206:run/jobs: (no existe)
+400:lsof: sin listeners en 8091/8092/8443
+401:ps motor/gateway: (sin procesos)
+402:run/jobs: (no existe)

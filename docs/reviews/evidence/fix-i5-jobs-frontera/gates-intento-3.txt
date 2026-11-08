@@ -1,0 +1,53 @@
+== Gates intento 3 — fix-i5-jobs-frontera ==
+HEAD: 151176437833d70bad062717c521fe6565230d16
+
+== gate 1: check_sizes ==
+OK — 398 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc=0
+
+== gate 2: check_plans ==
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc=0
+
+== gate 3: check_reports ==
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc=0
+
+== gate 4: drift corpus ==
+OK — al día: versión vigente corpus/v10
+rc=0
+
+== gate 5: drift scripts ==
+OK — al día: versión vigente gate/v14
+rc=0
+
+== git diff --check ==
+rc=0
+
+== git status --porcelain ==
+ M src/jobs_manager.py
+ M src/jobs_storage.py
+?? docs/reviews/evidence/fix-i5-jobs-frontera/gates-intento-3.txt
+?? docs/reviews/evidence/fix-i5-jobs-frontera/green-intento-3.txt
+?? docs/reviews/evidence/fix-i5-jobs-frontera/mandato-intento-3.md
+?? docs/reviews/evidence/fix-i5-jobs-frontera/red-intento-3.txt
+?? tests/test_jobs_intento3_i5.py
+
+== forma de los archivos tocados (limite 800 lineas, ~88 col) ==
+src/jobs_manager.py: 796 lineas, columna max 81
+src/jobs_storage.py: 313 lineas, columna max 80
+tests/test_jobs_intento3_i5.py: 341 lineas, columna max 76
+
+== sentencias unidas con ";" en src tocado ==
+src/jobs_manager.py:110:        # Admisión compartida con H/M (HIGH-1); None = sin (tests).
+OK — 399 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc_sizes=0
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc_plans=0
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc_reports=0
+OK — al día: versión vigente corpus/v10
+rc_corpus=0
+OK — al día: versión vigente gate/v14
+rc_scripts=0
+rc_diffcheck=0

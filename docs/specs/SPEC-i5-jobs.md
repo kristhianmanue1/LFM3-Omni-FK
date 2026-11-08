@@ -159,7 +159,9 @@ plano con las siguientes garantías:
 
 - Directorio base: `run/jobs/` (o configurado vía `LFM3_JOBS_DIR`).
 - Estructura:
-  * `run/jobs/data/<project_id>/<job_id>.json`: Datos y resultado cifrado/aislado.
+  * `run/jobs/data/<project_id>/<job_id>.json`: Datos y resultado en
+    claro con permisos 0600 (archivos) y 0700 (directorios); ver la
+    desviación declarada más abajo.
   * `run/jobs/idempotency/<project_id>/<key_sha256>.json`: Registro de idempotencia
     con `{job_id, payload_hash, expires_at}`.
 - Procedimiento de escritura segura:
@@ -169,6 +171,17 @@ plano con las siguientes garantías:
 - Al inicializar el servicio (`startup`):
   * Escaneo de `run/jobs/data/*/*.json`: cualquier job en estado `running` se
     actualiza a `failed` con mensaje `"Servidor reiniciado durante el procesamiento; resultado desconocido"`.
+
+**DESVIACIÓN DECLARADA (D3, Operador 2026-11-08):** el contrato
+`docs/contracts/perfiles-servicio-v2.md` §J («Persistencia cifra
+resultados y controla accesos») NO se cumple: la persistencia de esta
+iteración protege con permisos 0600/0700, sin cifrado en reposo. Los
+permisos no protegen frente al operador del host ni frente a copias
+del volumen. El cifrado queda fijado como **requisito bloqueante para
+exponer `/jobs`** más allá del modo de prueba; su implementación es
+una decisión y una tarea separadas (no se improvisa aquí). Procedencia:
+decisión D3 del Operador, sesión 2026-11-08, expediente
+`docs/reviews/evidence/fix-i5-jobs-frontera/` (intento 2).
 
 ---
 

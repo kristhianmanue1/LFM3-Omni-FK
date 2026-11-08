@@ -37,6 +37,12 @@ from gateway_core import (
 from gateway_auth import (
     GLOBAL_DISPATCHER, GLOBAL_REGISTRY, FairQueueDispatcher, TokenRegistry,
 )
+# La frontera del Perfil J (rutas /jobs) vive en gateway_jobs y se
+# delega desde aquí (reorganización del expediente, §3.3 del estándar).
+from gateway_jobs import (
+    construir_jobs_manager, manejar_delete_job, manejar_get_job,
+    manejar_post_job,
+)
 
 LOCK_TTS = threading.Lock()
 LOCK_STREAM_SLOT = threading.Lock()
@@ -349,6 +355,18 @@ def _sintetizar_wav(texto, runner=None):
         LOCK_TTS.release()
 
 
+def _rechazar_clave_duplicada(pares):
+    """object_pairs_hook de la frontera: claves duplicadas no tienen
+    serialización canónica (RFC 8785 §3.2); 400 con campo y motivo."""
+    vistas = set()
+    for clave, _ in pares:
+        if clave in vistas:
+            _error(400, "invalid_json", f"clave JSON duplicada: '{clave}'",
+                   detail="duplicate_key")
+        vistas.add(clave)
+    return dict(pares)
+
+
 class ManejadorGateway(BaseHTTPRequestHandler):
     server_version = "lfm3-gateway-i1/0.1"
 
@@ -483,7 +501,11 @@ class ManejadorGateway(BaseHTTPRequestHandler):
             _error(413, "payload_too_large", "cuerpo sobre el presupuesto")
         crudo = self.rfile.read(int(longitud))
         try:
-            return json.loads(crudo, parse_constant=_rechazar_constante)
+            return json.loads(
+                crudo,
+                parse_constant=_rechazar_constante,
+                object_pairs_hook=_rechazar_clave_duplicada,
+            )
         except (json.JSONDecodeError, ValueError):
             _error(400, "invalid_json",
                    "JSON malformado o con constantes no-JSON")
@@ -496,7 +518,8 @@ class ManejadorGateway(BaseHTTPRequestHandler):
             if getattr(self.server, "auth_enabled", False) and self.path != "/healthz":
                 auth_h = self.headers.get("Authorization")
                 proj_h = self.headers.get("X-Project-ID")
-                self.server.tokens_registry.verify_request(auth_h, proj_h, required_scope=None)
+                self.server.tokens_registry.verify_request(
+                    auth_h, proj_h, required_scope=None)
                 self.project_id = proj_h.strip()
             if self.path == "/healthz":
                 self._json(200, b'{"status": "ok", "mode": "gateway-i1"}')
@@ -513,20 +536,7 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 handler.handle_get(self)
                 return
             elif self.path.startswith("/jobs/"):
-                jm = getattr(self.server, "jobs_manager", None)
-                if jm is None:
-                    _error(501, "not_implemented", "jobs no inicializado")
-                proj_id = self.project_id or "default"
-                if getattr(self.server, "auth_enabled", False):
-                    auth_h = self.headers.get("Authorization")
-                    proj_h = self.headers.get("X-Project-ID")
-                    self.server.tokens_registry.verify_request(
-                        auth_h, proj_h, required_scopes={"jobs:read"}
-                    )
-                    proj_id = proj_h.strip()
-                job_id = self.path[len("/jobs/"):]
-                status, res = jm.get_job(proj_id, job_id)
-                self._json(status, json.dumps(res).encode())
+                manejar_get_job(self)
                 return
             else:
                 _error(404, "not_found", "ruta fuera del allowlist")
@@ -559,23 +569,7 @@ class ManejadorGateway(BaseHTTPRequestHandler):
                 return
 
             if self.path == "/jobs":
-                jm = getattr(self.server, "jobs_manager", None)
-                if jm is None:
-                    _error(501, "not_implemented", "jobs no inicializado")
-                idemp_key = self.headers.get("Idempotency-Key") or ""
-                proj_id = self.project_id or "default"
-                if getattr(self.server, "auth_enabled", False):
-                    auth_h = self.headers.get("Authorization")
-                    proj_h = self.headers.get("X-Project-ID")
-                    self.server.tokens_registry.verify_request(
-                        auth_h, proj_h, required_scopes={"jobs:create"}
-                    )
-                    proj_id = proj_h.strip()
-                op = payload.get("operation")
-                job_payload = payload.get("payload", {})
-                ttl = payload.get("ttl_seconds", 3600)
-                status, res = jm.create_job(proj_id, op, job_payload, idemp_key, ttl_seconds=ttl)
-                self._json(status, json.dumps(res).encode())
+                manejar_post_job(self, payload)
                 return
 
             if getattr(self.server, "auth_enabled", False) and proj_info is not None:
@@ -656,20 +650,7 @@ class ManejadorGateway(BaseHTTPRequestHandler):
         try:
             _enrutar("DELETE", self.path)
             if self.path.startswith("/jobs/"):
-                jm = getattr(self.server, "jobs_manager", None)
-                if jm is None:
-                    _error(501, "not_implemented", "jobs no inicializado")
-                proj_id = "default"
-                if getattr(self.server, "auth_enabled", False):
-                    auth_h = self.headers.get("Authorization")
-                    proj_h = self.headers.get("X-Project-ID")
-                    self.server.tokens_registry.verify_request(
-                        auth_h, proj_h, required_scopes={"jobs:cancel"}
-                    )
-                    proj_id = proj_h.strip()
-                job_id = self.path[len("/jobs/"):]
-                status, res = jm.cancel_job(proj_id, job_id)
-                self._json(status, json.dumps(res).encode())
+                manejar_delete_job(self)
                 return
             _error(404, "not_found", "ruta fuera del allowlist")
         except ErrorV2 as exc:
@@ -700,7 +681,11 @@ def build_server(
     auth_enabled=None,
     tokens_registry=None,
     dispatcher=None,
+    jobs_dir=None,
 ):
+    """Construye el servidor. Sin jobs_dir no se construye JobsManager
+    (MED-9: los tests no tocan run/jobs): /jobs responde 501 hasta
+    que se asigne uno; la producción lo pasa explícito desde main()."""
     global _SLOT_PENDIENTE
     _SLOT_PENDIENTE = False
     servidor = ServidorGateway(direccion, ManejadorGateway)
@@ -715,8 +700,12 @@ def build_server(
     servidor.dispatcher = dispatcher or GLOBAL_DISPATCHER
     from mcp_remote import MCPRemoteHandler
     servidor.mcp_remote_handler = MCPRemoteHandler(backend_url=backend)
-    from jobs_manager import JobsManager
-    servidor.jobs_manager = JobsManager(backend_url=backend)
+    # El worker de jobs comparte admisión con H/M (HIGH-1); la
+    # construcción vive en gateway_jobs con la frontera del Perfil J.
+    if jobs_dir is None:
+        servidor.jobs_manager = None
+    else:
+        servidor.jobs_manager = construir_jobs_manager(servidor, jobs_dir)
     return servidor
 
 
@@ -727,9 +716,15 @@ def main():
              or os.environ.get("LFM3_ADAPTER_PORT")
              or str(DEFAULT_PORT))
     backend = os.environ.get("LFM3_BACKEND", DEFAULT_BACKEND)
+    from jobs_manager import JobsDirOcupado
     try:
         puerto = int(bruto)
-        servidor = build_server(("127.0.0.1", puerto), backend)
+        servidor = build_server(
+            ("127.0.0.1", puerto), backend,
+            jobs_dir=os.environ.get("LFM3_JOBS_DIR", "run/jobs"))
+    except JobsDirOcupado as exc:
+        print(f"BLOQ: {exc}", file=sys.stderr)
+        sys.exit(1)
     except (OSError, ValueError, OverflowError) as exc:
         print(f"BLOQ: puerto {bruto!r} no disponible ({exc}); "
               f"no se asume puerto libre", file=sys.stderr)

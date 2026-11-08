@@ -1,0 +1,12 @@
+== lsof antes ==
+sin listeners
+== ps antes ==
+krisnova           934   0.0  0.1 490259040  24496   ??  S     3:22p.m.   0:42.65 /Applications/Ollama.app/Contents/Resources/ollama serve
+krisnova           915   0.0  0.1 490401792  19008   ??  S     3:22p.m.   0:04.46 /Applications/Ollama.app/Contents/MacOS/Ollama hidden
+== suite base ==
+Voz detectada.
+.
+----------------------------------------------------------------------
+Ran 348 tests in 133.730s
+
+OK (skipped=2)

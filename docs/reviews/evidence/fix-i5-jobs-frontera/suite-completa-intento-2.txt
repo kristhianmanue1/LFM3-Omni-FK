@@ -1,0 +1,26 @@
+== lsof antes ==
+sin listeners
+== ps antes ==
+sin procesos motor/gateway
+
+== suite corrida 1 ==
+----------------------------------------------------------------------
+Ran 361 tests in 131.777s
+
+OK (skipped=1)
+
+== lsof entre ==
+sin listeners
+== ps entre ==
+sin procesos motor/gateway
+
+== suite corrida 2 ==
+----------------------------------------------------------------------
+Ran 361 tests in 131.913s
+
+OK (skipped=1)
+
+== lsof después ==
+sin listeners
+== ps después ==
+sin procesos motor/gateway

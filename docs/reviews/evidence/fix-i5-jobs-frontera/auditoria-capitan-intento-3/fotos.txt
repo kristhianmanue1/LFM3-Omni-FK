@@ -1,0 +1,12 @@
+== antes 14:12:27
+puertos: vacio
+procesos: ninguno
+run/jobs: no existe
+== entre 14:14:50
+puertos: vacio
+procesos: ninguno
+run/jobs: no existe
+== despues 14:17:08
+puertos: vacio
+procesos: ninguno
+run/jobs: no existe

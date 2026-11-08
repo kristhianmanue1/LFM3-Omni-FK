@@ -1,0 +1,68 @@
+== RED intento 4 — fix-i5-jobs-frontera ==
+HEAD: 50f9a5bf8848fe1105c03791f86aba69c15ffb35
+comando: PYTHONDONTWRITEBYTECODE=1 python3 -B -m unittest tests.test_jobs_intento4_i5 -v
+
+test_52_barrido_no_purga_running_intercalado (tests.test_jobs_intento4_i5.BarridoRecargaBajoLockTests.test_52_barrido_no_purga_running_intercalado) ... FAIL
+test_53_get_no_tombstonea_running_nuevo (tests.test_jobs_intento4_i5.GetJobNoTombstoneaRunningTests.test_53_get_no_tombstonea_running_nuevo) ... FAIL
+test_50_reintento_tras_doble_fallo_despacha_y_termina (tests.test_jobs_intento4_i5.ReintentoReconciliadoTests.test_50_reintento_tras_doble_fallo_despacha_y_termina) ... FAIL
+test_51_reintento_sobre_despachado_no_duplica_encolado (tests.test_jobs_intento4_i5.ReintentoReconciliadoTests.test_51_reintento_sobre_despachado_no_duplica_encolado) ... ok
+
+======================================================================
+FAIL: test_52_barrido_no_purga_running_intercalado (tests.test_jobs_intento4_i5.BarridoRecargaBajoLockTests.test_52_barrido_no_purga_running_intercalado)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento4_i5.py", line 236, in test_52_barrido_no_purga_running_intercalado
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        en_disco["state"], "running",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"el barrido purgó con un snapshot viejo y sobrescribió "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"el running: quedó {en_disco.get('state')!r}")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'expired' != 'running'
+- expired
++ running
+ : el barrido purgó con un snapshot viejo y sobrescribió el running: quedó 'expired'
+
+======================================================================
+FAIL: test_53_get_no_tombstonea_running_nuevo (tests.test_jobs_intento4_i5.GetJobNoTombstoneaRunningTests.test_53_get_no_tombstonea_running_nuevo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento4_i5.py", line 301, in test_53_get_no_tombstonea_running_nuevo
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        en_disco["state"], "running",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"un GET con snapshot viejo reemplazó el running del "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"job: quedó {en_disco.get('state')!r}")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'expired' != 'running'
+- expired
++ running
+ : un GET con snapshot viejo reemplazó el running del job: quedó 'expired'
+
+======================================================================
+FAIL: test_50_reintento_tras_doble_fallo_despacha_y_termina (tests.test_jobs_intento4_i5.ReintentoReconciliadoTests.test_50_reintento_tras_doble_fallo_despacha_y_termina)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento4_i5.py", line 122, in test_50_reintento_tras_doble_fallo_despacha_y_termina
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        estado, "failed",
+        ^^^^^^^^^^^^^^^^^
+        f"el 202 de reintento dejó el job en {estado!r}: solicitud "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"aceptada sin avance, sin despacho del worker")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'queued' != 'failed'
+- queued
++ failed
+ : el 202 de reintento dejó el job en 'queued': solicitud aceptada sin avance, sin despacho del worker
+
+----------------------------------------------------------------------
+Ran 4 tests in 5.129s
+
+FAILED (failures=3)
+rc=1
