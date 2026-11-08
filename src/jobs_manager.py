@@ -43,6 +43,10 @@ from gateway_core import ErrorV2, _error, validar_salida
 # estándar: mover sin cambiar comportamiento). El serializador se
 # re-exporta porque la frontera pública del módulo lo prometía.
 from canonical_json import canonical_json_rfc8785
+# La recuperación al arranque y el barrido de vencidos (purga) viven
+# en jobs_recovery como mixin (reorganización pura del intento 4,
+# §3.3 del estándar: mismos métodos, mismo comportamiento).
+from jobs_recovery import JobsRecoveryMixin
 from jobs_storage import (
     CommitTrasLinkError, JobsDirOcupado, JobsStorage,
 )
@@ -71,7 +75,7 @@ def _respuesta_error(status: int, code: str, message: str) -> tuple[int, dict]:
     return status, {"error": {"code": code, "message": message}}
 
 
-class JobsManager:
+class JobsManager(JobsRecoveryMixin):
     """Gestor de ciclo de vida, persistencia y ejecución de trabajos largos."""
 
     def __init__(self, jobs_dir: str | Path | None = None,
@@ -144,42 +148,6 @@ class JobsManager:
         if self._fd_instancia is not None:
             os.close(self._fd_instancia)
             self._fd_instancia = None
-
-    def startup_recover(self) -> int:
-        """Fail-closed al arrancar: running y cancellation_pending
-        pasan a failed (MED-1, ronda 2: un crash en la ventana de
-        cancelación no puede dejar el job abierto); queued con registro
-        se reencola (§J); sin registro, no se ejecuta."""
-        recuperados = 0
-        self._purgar_expirados()
-        with self.lock:
-            for proj_dir in sorted(self.data_dir.iterdir()):
-                if not proj_dir.is_dir():
-                    continue
-                for job_file in sorted(proj_dir.glob("*.json")):
-                    try:
-                        data = json.loads(job_file.read_text(encoding="utf-8"))
-                    except Exception:
-                        continue
-                    estado = data.get("state")
-                    if estado in ("running", "cancellation_pending"):
-                        data["error"] = {
-                            "code": "server_interrupted", "message":
-                                "Servidor reiniciado durante el procesamiento; "
-                                "resultado desconocido"}
-                        self._cerrar(data, "failed")
-                        recuperados += 1
-                    elif estado == "queued":
-                        if self._registro_confirma_admision(data):
-                            self.work_queue.put(
-                                (data["project_id"], data["job_id"]))
-                        else:
-                            data["error"] = {
-                                "code": "admission_unconfirmed", "message":
-                                    "Admisión no confirmada: registro de "
-                                    "idempotencia ausente"}
-                            self._cerrar(data, "failed")
-        return recuperados
 
     def _save_job_atomically(self, job_dict: dict) -> None:
         """Delega la escritura durable en el almacenamiento; los fallos
@@ -629,17 +597,6 @@ class JobsManager:
             print(f"jobs-worker: no se pudo cerrar {job_id}: "
                   f"{exc_disco!r}", file=sys.stderr, flush=True)
 
-    def _barrido_si_toca(self) -> None:
-        """D4: barrido periódico dentro del bucle del worker, sin
-        hilo nuevo: vencidos a tombstone, temporales huérfanos y
-        claims sin dueño, bajo el cerrojo de instancia."""
-        if time.monotonic() - self._ultimo_barrido < self.intervalo_barrido_s:
-            return
-        self._ultimo_barrido = time.monotonic()
-        self._purgar_expirados()
-        self.storage.limpiar_temporales(self.tmp_edad_s)
-        self.storage.limpiar_claims_huerfanos()
-
     @staticmethod
     def _extraer_salida(resp_json: Any) -> tuple[str, str]:
         """(contenido, finish_reason): forma cerrada y completitud."""
@@ -677,51 +634,6 @@ class JobsManager:
         job["expires_at"] = (
             datetime.now(timezone.utc) + timedelta(seconds=ttl)
         ).isoformat()
-
-    def _purgar_job(self, job: dict) -> None:
-        """Tombstone durable sin payload (§J); la E/S vive en storage
-        (reorganización pura del intento 3, §3.3 del estándar)."""
-        self.storage.purgar_a_tombstone(job)
-
-    def _purgar_expirados(self) -> int:
-        """Barrido: vencidos a tombstone, registros vencidos fuera.
-        Los fallos de disco del barrido también se cuentan y hacen
-        rastro: es la vía principal de purga (D4, ronda adversarial)."""
-        purgados = 0
-        ahora = datetime.now(timezone.utc)
-        for proj_dir in self.data_dir.glob("*"):
-            if not proj_dir.is_dir():
-                continue
-            for job_file in proj_dir.glob("*.json"):
-                try:
-                    data = json.loads(job_file.read_text(encoding="utf-8"))
-                except Exception:
-                    continue
-                if data.get("state") in ("expired", "running"):
-                    continue  # tombstone hecho; en vuelo, no tocar
-                if not self._vencido(data, ahora):
-                    continue
-                try:
-                    self._purgar_job(data)
-                    purgados += 1
-                except OSError as exc:
-                    self.fallos_purga += 1
-                    print(f"jobs: purga fallida de "
-                          f"{data.get('job_id')}: {exc!r}",
-                          file=sys.stderr, flush=True)
-        for rec_file in self.idemp_dir.glob("*/*.json"):
-            try:
-                rec = json.loads(rec_file.read_text(encoding="utf-8"))
-                if ahora > datetime.fromisoformat(rec["expires_at"]):
-                    rec_file.unlink(missing_ok=True)
-            except OSError as exc:
-                self.fallos_purga += 1
-                print(f"jobs: retiro fallido del registro "
-                      f"{rec_file.name}: {exc!r}",
-                      file=sys.stderr, flush=True)
-            except Exception:
-                continue
-        return purgados
 
     def _cerrar(self, job: dict, estado: str) -> None:
         """Terminal durable; recalcula expires_at (§J); un vencido
