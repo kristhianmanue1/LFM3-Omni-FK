@@ -108,9 +108,11 @@ def manejar_delete_job(handler) -> None:
     handler._json(status, json.dumps(res).encode())
 
 
-def construir_jobs_manager(servidor):
+def construir_jobs_manager(servidor, jobs_dir=None):
     """Cablea el JobsManager del servidor: el worker comparte admisión
-    con H/M vía el dispatcher y los límites por proyecto (HIGH-1)."""
+    con H/M vía el dispatcher y los límites por proyecto (HIGH-1).
+    jobs_dir inyectable (MED-9): los tests pasan uno temporal; la
+    producción lo declara explícito en main()."""
     from jobs_manager import JobsManager
 
     def limites_de_proyecto(project_id):
@@ -118,6 +120,7 @@ def construir_jobs_manager(servidor):
         return info.get("rate_limit") or {}
 
     return JobsManager(
+        jobs_dir=jobs_dir,
         backend_url=servidor.backend,
         dispatcher=servidor.dispatcher,
         rate_limit_lookup=limites_de_proyecto,

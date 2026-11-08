@@ -1,0 +1,229 @@
+test_34_barrido_sin_trafico (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_34_barrido_sin_trafico) ... ERROR
+test_35_temporales_huerfanos_barridos (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_35_temporales_huerfanos_barridos) ... ERROR
+test_36_claims_huerfanos_barridos (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_36_claims_huerfanos_barridos) ... ERROR
+test_37_purga_fallida_observable_y_reintenta (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_37_purga_fallida_observable_y_reintenta) ... ERROR
+test_29_fsync_post_link_no_bloquea_reintento (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_29_fsync_post_link_no_bloquea_reintento) ... FAIL
+test_30_registro_huerfano_reintento_funciona (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_30_registro_huerfano_reintento_funciona) ... FAIL
+test_31_inyeccion_de_fallo_en_cada_paso (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_31_inyeccion_de_fallo_en_cada_paso) ...
+  test_31_inyeccion_de_fallo_en_cada_paso (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_31_inyeccion_de_fallo_en_cada_paso) (paso='fsync#4') ... FAIL
+test_33_deadline_persistido_y_agotado (tests.test_jobs_intento2_i5.DeadlineAdmisionTests.test_33_deadline_persistido_y_agotado) ...
+  test_33_deadline_persistido_y_agotado (tests.test_jobs_intento2_i5.DeadlineAdmisionTests.test_33_deadline_persistido_y_agotado) (proyecto='proyecto-alpha') ... FAIL
+  test_33_deadline_persistido_y_agotado (tests.test_jobs_intento2_i5.DeadlineAdmisionTests.test_33_deadline_persistido_y_agotado) (proyecto='proyecto-beta') ... FAIL
+test_38_operation_no_cadena_400_controlado (tests.test_jobs_intento2_i5.FronteraIntento2Tests.test_38_operation_no_cadena_400_controlado) ... ----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 57601)
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socketserver.py", line 694, in process_request_thread
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socketserver.py", line 359, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/socketserver.py", line 763, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/http/server.py", line 474, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/http/server.py", line 462, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/src/gateway_http.py", line 572, in do_POST
+    manejar_post_job(self, payload)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/src/gateway_jobs.py", line 88, in manejar_post_job
+    status, res = jm.create_job(
+                  ~~~~~~~~~~~~~^
+        proj_id, op, job_payload, idemp_key, ttl_seconds=ttl)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/src/jobs_manager.py", line 159, in create_job
+    if operation not in ALLOWED_OPERATIONS:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: cannot use 'list' as a set element (unhashable type: 'list')
+----------------------------------------
+ERROR
+test_39_build_server_sin_jobs_dir_no_toca_run (tests.test_jobs_intento2_i5.FronteraIntento2Tests.test_39_build_server_sin_jobs_dir_no_toca_run) ... FAIL
+test_27_segunda_instancia_falla_cerrada (tests.test_jobs_intento2_i5.InstanciaUnicaTests.test_27_segunda_instancia_falla_cerrada) ... FAIL
+test_28_admisiones_concurrentes_un_solo_202 (tests.test_jobs_intento2_i5.InstanciaUnicaTests.test_28_admisiones_concurrentes_un_solo_202) ... ok
+test_32_runtimeerror_deja_job_failed_durable (tests.test_jobs_intento2_i5.WorkerRobustoTests.test_32_runtimeerror_deja_job_failed_durable) ... jobs-worker: fallo inesperado en job-hostil-2: RuntimeError('config de rate_limit corrupta')
+FAIL
+
+======================================================================
+ERROR: test_34_barrido_sin_trafico (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_34_barrido_sin_trafico)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 384, in test_34_barrido_sin_trafico
+    manager = self._manager(intervalo_barrido_s=0.2)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 368, in _manager
+    manager = JobsManager(jobs_dir=self.jobs_dir,
+                          backend_url=self.backend.url, **kwargs)
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'intervalo_barrido_s'
+
+======================================================================
+ERROR: test_35_temporales_huerfanos_barridos (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_35_temporales_huerfanos_barridos)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 404, in test_35_temporales_huerfanos_barridos
+    manager = self._manager(intervalo_barrido_s=0.2,
+                            tmp_edad_s=60.0)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 368, in _manager
+    manager = JobsManager(jobs_dir=self.jobs_dir,
+                          backend_url=self.backend.url, **kwargs)
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'intervalo_barrido_s'
+
+======================================================================
+ERROR: test_36_claims_huerfanos_barridos (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_36_claims_huerfanos_barridos)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 424, in test_36_claims_huerfanos_barridos
+    manager = self._manager(intervalo_barrido_s=0.2)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 368, in _manager
+    manager = JobsManager(jobs_dir=self.jobs_dir,
+                          backend_url=self.backend.url, **kwargs)
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'intervalo_barrido_s'
+
+======================================================================
+ERROR: test_37_purga_fallida_observable_y_reintenta (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_37_purga_fallida_observable_y_reintenta)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 457, in test_37_purga_fallida_observable_y_reintenta
+    manager = self._manager(intervalo_barrido_s=999.0)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 368, in _manager
+    manager = JobsManager(jobs_dir=self.jobs_dir,
+                          backend_url=self.backend.url, **kwargs)
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'intervalo_barrido_s'
+
+======================================================================
+ERROR: test_38_operation_no_cadena_400_controlado (tests.test_jobs_intento2_i5.FronteraIntento2Tests.test_38_operation_no_cadena_400_controlado)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 581, in test_38_operation_no_cadena_400_controlado
+    status, res = self._post_crudo(cuerpo)
+                  ~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 569, in _post_crudo
+    with urllib.request.urlopen(req, timeout=10.0) as resp:
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 489, in open
+    response = self._open(req, data)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 506, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 466, in _call_chain
+    result = func(*args)
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 1364, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/urllib/request.py", line 1339, in do_open
+    r = h.getresponse()
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/http/client.py", line 1490, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/http/client.py", line 350, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/http/client.py", line 314, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+======================================================================
+FAIL: test_29_fsync_post_link_no_bloquea_reintento (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_29_fsync_post_link_no_bloquea_reintento)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 210, in test_29_fsync_post_link_no_bloquea_reintento
+    self.assertEqual(status2, 202,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+                     f"reintento bloqueado tras fallo post-link: "
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"{status2} {res2}")
+                     ^^^^^^^^^^^^^^^^^^^^
+AssertionError: 410 != 202 : reintento bloqueado tras fallo post-link: 410 {'error': {'code': 'job_expired', 'message': 'El trabajo asociado a esta clave ya expiró; use una clave nueva'}}
+
+======================================================================
+FAIL: test_30_registro_huerfano_reintento_funciona (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_30_registro_huerfano_reintento_funciona)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 231, in test_30_registro_huerfano_reintento_funciona
+    self.assertEqual(status, 202,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+                     f"registro huérfano bloqueó la admisión: "
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"{status} {res}")
+                     ^^^^^^^^^^^^^^^^^^
+AssertionError: 410 != 202 : registro huérfano bloqueó la admisión: 410 {'error': {'code': 'job_expired', 'message': 'El trabajo asociado a esta clave ya expiró; use una clave nueva'}}
+
+======================================================================
+FAIL: test_31_inyeccion_de_fallo_en_cada_paso (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_31_inyeccion_de_fallo_en_cada_paso) (paso='fsync#4')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 268, in test_31_inyeccion_de_fallo_en_cada_paso
+    self.assertEqual(status2, 202,
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+                     f"reintento roto tras {tipo}#{indice}: "
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                     f"{status2} {res2}")
+                     ^^^^^^^^^^^^^^^^^^^^
+AssertionError: 429 != 202 : reintento roto tras fsync#4: 429 {'error': {'code': 'queue_limit_per_project_exceeded', 'message': 'El proyecto ya tiene 1 trabajo(s) en cola (máximo 1)'}}
+
+======================================================================
+FAIL: test_33_deadline_persistido_y_agotado (tests.test_jobs_intento2_i5.DeadlineAdmisionTests.test_33_deadline_persistido_y_agotado) (proyecto='proyecto-alpha')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 340, in test_33_deadline_persistido_y_agotado
+    self.assertIn("admission_deadline", job,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  "el deadline de admisión no se persistió")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'admission_deadline' not found in {'job_id': 'job-eac20cb49d2999aa', 'contract_version': '2', 'project_id': 'proyecto-alpha', 'operation': 'infer_text', 'payload': {'messages': [{'role': 'user', 'content': 'satura-proyecto-alpha'}]}, 'idempotency_key': 'i2-ded-proyecto-alpha', 'ttl_seconds': 3600, 'state': 'queued', 'created_at': '2026-11-08T13:04:21.814848+00:00', 'started_at': None, 'completed_at': None, 'expires_at': '2026-11-08T14:04:21.814848+00:00', 'result': None, 'error': None, 'model_revision': 'LiquidAI/LFM3-Omni-2B-GGUF'} : el deadline de admisión no se persistió
+
+======================================================================
+FAIL: test_33_deadline_persistido_y_agotado (tests.test_jobs_intento2_i5.DeadlineAdmisionTests.test_33_deadline_persistido_y_agotado) (proyecto='proyecto-beta')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 340, in test_33_deadline_persistido_y_agotado
+    self.assertIn("admission_deadline", job,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  "el deadline de admisión no se persistió")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'admission_deadline' not found in {'job_id': 'job-8d2f873ea0df0797', 'contract_version': '2', 'project_id': 'proyecto-beta', 'operation': 'infer_text', 'payload': {'messages': [{'role': 'user', 'content': 'satura-proyecto-beta'}]}, 'idempotency_key': 'i2-ded-proyecto-beta', 'ttl_seconds': 3600, 'state': 'queued', 'created_at': '2026-11-08T13:04:21.816326+00:00', 'started_at': None, 'completed_at': None, 'expires_at': '2026-11-08T14:04:21.816326+00:00', 'result': None, 'error': None, 'model_revision': 'LiquidAI/LFM3-Omni-2B-GGUF'} : el deadline de admisión no se persistió
+
+======================================================================
+FAIL: test_39_build_server_sin_jobs_dir_no_toca_run (tests.test_jobs_intento2_i5.FronteraIntento2Tests.test_39_build_server_sin_jobs_dir_no_toca_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 600, in test_39_build_server_sin_jobs_dir_no_toca_run
+    self.assertIsNone(
+    ~~~~~~~~~~~~~~~~~^
+        getattr(servidor, "jobs_manager", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "build_server construyó un JobsManager sin jobs_dir")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: <jobs_manager.JobsManager object at 0x10ace7650> is not None : build_server construyó un JobsManager sin jobs_dir
+
+======================================================================
+FAIL: test_27_segunda_instancia_falla_cerrada (tests.test_jobs_intento2_i5.InstanciaUnicaTests.test_27_segunda_instancia_falla_cerrada)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 98, in test_27_segunda_instancia_falla_cerrada
+    with self.assertRaises(RuntimeError) as ctx:
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_32_runtimeerror_deja_job_failed_durable (tests.test_jobs_intento2_i5.WorkerRobustoTests.test_32_runtimeerror_deja_job_failed_durable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento2_i5.py", line 302, in test_32_runtimeerror_deja_job_failed_durable
+    final = _esperar_terminal(manager, "proyecto-alpha",
+                              "job-hostil-2", plazo=10.0)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_boundary_i5.py", line 115, in _esperar_terminal
+    raise AssertionError(
+        f"job {job_id} no terminal: {status} {res}")
+AssertionError: job job-hostil-2 no terminal: 200 {'job_id': 'job-hostil-2', 'contract_version': '2', 'project_id': 'proyecto-alpha', 'operation': 'infer_text', 'state': 'queued', 'created_at': '2026-11-08T13:04:22.861339+00:00', 'started_at': None, 'completed_at': None, 'expires_at': '2026-11-08T14:04:22.861339+00:00', 'result': None, 'error': None, 'model_revision': 'LiquidAI/LFM3-Omni-2B-GGUF'}
+
+----------------------------------------------------------------------
+Ran 13 tests in 11.110s
+
+FAILED (failures=8, errors=5)

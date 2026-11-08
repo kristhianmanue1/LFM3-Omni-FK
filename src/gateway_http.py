@@ -681,7 +681,11 @@ def build_server(
     auth_enabled=None,
     tokens_registry=None,
     dispatcher=None,
+    jobs_dir=None,
 ):
+    """Construye el servidor. Sin jobs_dir no se construye JobsManager
+    (MED-9: los tests no tocan run/jobs): /jobs responde 501 hasta
+    que se asigne uno; la producción lo pasa explícito desde main()."""
     global _SLOT_PENDIENTE
     _SLOT_PENDIENTE = False
     servidor = ServidorGateway(direccion, ManejadorGateway)
@@ -698,7 +702,10 @@ def build_server(
     servidor.mcp_remote_handler = MCPRemoteHandler(backend_url=backend)
     # El worker de jobs comparte admisión con H/M (HIGH-1); la
     # construcción vive en gateway_jobs con la frontera del Perfil J.
-    servidor.jobs_manager = construir_jobs_manager(servidor)
+    if jobs_dir is None:
+        servidor.jobs_manager = None
+    else:
+        servidor.jobs_manager = construir_jobs_manager(servidor, jobs_dir)
     return servidor
 
 
@@ -709,9 +716,15 @@ def main():
              or os.environ.get("LFM3_ADAPTER_PORT")
              or str(DEFAULT_PORT))
     backend = os.environ.get("LFM3_BACKEND", DEFAULT_BACKEND)
+    from jobs_manager import JobsDirOcupado
     try:
         puerto = int(bruto)
-        servidor = build_server(("127.0.0.1", puerto), backend)
+        servidor = build_server(
+            ("127.0.0.1", puerto), backend,
+            jobs_dir=os.environ.get("LFM3_JOBS_DIR", "run/jobs"))
+    except JobsDirOcupado as exc:
+        print(f"BLOQ: {exc}", file=sys.stderr)
+        sys.exit(1)
     except (OSError, ValueError, OverflowError) as exc:
         print(f"BLOQ: puerto {bruto!r} no disponible ({exc}); "
               f"no se asume puerto libre", file=sys.stderr)

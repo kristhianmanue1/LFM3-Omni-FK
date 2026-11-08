@@ -38,18 +38,49 @@ sys.path.insert(0, str(RAIZ / "examples"))
 from gateway_auth import FairQueueDispatcher, TokenRegistry
 from gateway_http import build_server
 from jobs_manager import JobsManager, canonical_json_rfc8785
-from tests.engine_probe import probe_engine  # noqa: E402
 
 
 TOKEN_A = "alpha-test-token-for-pilot-i5-32chars"
 TOKEN_B = "beta-test-token-for-pilot-i5-32chars"
+TOKEN_E = "epsilon-test-token-for-pilot-i5-32chars"
 
-# fix-tests-hermeticos P2 (intento 2): el flujo HTTP completo de /jobs
-# necesita el motor vivo porque sin él el job muere al instante y la
-# cancelación llega como already_terminal. La ausencia verificada
-# (conexión rehusada) salta el test con motivo; un error de sonda hace
-# fallar la guarda con su motivo.
-ENGINE_UP, PROBE_ERROR = probe_engine()
+# fix-i5 intento 2 (MED-9/MED-10): backend falso local en puerto
+# efímero; los tests ya no dependen del 8091 ni de la guarda de sonda.
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+
+class _ManejadorBackendFalso(BaseHTTPRequestHandler):
+    RESPUESTA = {"choices": [{"message": {"content": "ok"},
+                              "finish_reason": "stop"}]}
+
+    def do_POST(self):
+        longitud = int(self.headers.get("Content-Length", "0"))
+        self.rfile.read(longitud)
+        cuerpo = json.dumps(self.RESPUESTA).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(cuerpo)))
+        self.end_headers()
+        self.wfile.write(cuerpo)
+
+    def log_message(self, formato, *args):
+        pass
+
+
+class BackendJobsFalso(ThreadingHTTPServer):
+    """Backend /v1/chat/completions falso en puerto efímero."""
+
+    daemon_threads = True
+
+    def __init__(self):
+        super().__init__(("127.0.0.1", 0), _ManejadorBackendFalso)
+        self.hilo = threading.Thread(target=self.serve_forever,
+                                     daemon=True)
+        self.hilo.start()
+
+    @property
+    def url(self) -> str:
+        return f"http://127.0.0.1:{self.server_address[1]}"
 
 
 class CanonicalJsonRFC8785Tests(unittest.TestCase):
@@ -75,14 +106,24 @@ class JobsManagerDirectTests(unittest.TestCase):
 
     def setUp(self):
         self.temp_dir = Path(tempfile.mkdtemp(prefix="lfm3_test_jobs_"))
-        self.manager = JobsManager(jobs_dir=self.temp_dir)
+        # fix-i5 intento 2: dispatcher sin presupuesto (token bucket
+        # que nunca concede) para que los jobs creados por estos tests
+        # permanezcan queued — ni tocan un backend real ni abren la
+        # carrera del conteo literal de SPEC-i5 §2.1 (D2).
+        self.manager = JobsManager(
+            jobs_dir=self.temp_dir,
+            dispatcher=FairQueueDispatcher(),
+            rate_limit_lookup=lambda pid: {
+                "requests_per_minute": 0, "burst": 0, "max_queue": 10,
+                "queue_timeout_seconds": 5.0})
 
     def tearDown(self):
         self.manager.stop()
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_03_crear_job_e_idempotencia_coincidente(self):
-        payload = {"messages": [{"role": "user", "content": "Analizar"}], "max_tokens": 128}
+        payload = {"messages": [{"role": "user", "content": "Analizar"}],
+                   "max_tokens": 128}
         status, res = self.manager.create_job(
             project_id="proyecto-alpha",
             operation="infer_text",
@@ -202,10 +243,18 @@ class JobsManagerDirectTests(unittest.TestCase):
             "created_at": datetime.now(timezone.utc).isoformat(),
             "expires_at": (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat(),
         }
-        (proj_dir / "job-crashed-123.json").write_text(json.dumps(job_crashed), encoding="utf-8")
+        (proj_dir / "job-crashed-123.json").write_text(
+            json.dumps(job_crashed), encoding="utf-8")
 
-        # Arrancar un nuevo JobsManager sobre el mismo directorio
-        nuevo_manager = JobsManager(jobs_dir=self.temp_dir)
+        # Arrancar un nuevo JobsManager sobre el mismo directorio;
+        # con D1 la primera instancia debe soltar el cerrojo antes.
+        self.manager.stop()
+        nuevo_manager = JobsManager(
+            jobs_dir=self.temp_dir,
+            dispatcher=FairQueueDispatcher(),
+            rate_limit_lookup=lambda pid: {
+                "requests_per_minute": 0, "burst": 0, "max_queue": 10,
+                "queue_timeout_seconds": 5.0})
         try:
             status, res = nuevo_manager.get_job("proyecto-alpha", "job-crashed-123")
             self.assertEqual(status, 200)
@@ -216,12 +265,25 @@ class JobsManagerDirectTests(unittest.TestCase):
 
 
 class JobsGatewayIntegrationTests(unittest.TestCase):
-    """Pruebas integradas de endpoints /jobs sobre servidor HTTP."""
+    """Pruebas integradas de endpoints /jobs sobre servidor HTTP.
+
+    fix-i5 intento 2 (MED-9/MED-10): backend falso en puerto efímero,
+    jobs_dir temporal inyectado en la construcción y sin guarda de
+    motor (ya no se usa 8091)."""
 
     @classmethod
     def setUpClass(cls):
         cls.temp_dir = Path(tempfile.mkdtemp(prefix="lfm3_gw_jobs_"))
         cls.tokens_path = cls.temp_dir / "tokens.json"
+        rl_normal = {"requests_per_minute": 100, "burst": 10,
+                     "max_concurrent": 2, "max_queue": 4,
+                     "queue_timeout_seconds": 5.0}
+        # epsilon: token bucket que nunca concede; sus jobs quedan
+        # queued reintentando, lo que hace determinista la cancelación
+        # de SPEC-i5 §2.3 en la rama queued.
+        rl_saturado = {"requests_per_minute": 0, "burst": 0,
+                       "max_concurrent": 2, "max_queue": 10,
+                       "queue_timeout_seconds": 5.0}
         config_tokens = {
             "version": 1,
             "projects": {
@@ -229,31 +291,34 @@ class JobsGatewayIntegrationTests(unittest.TestCase):
                     "token_sha256": hashlib.sha256(TOKEN_A.encode("utf-8")).hexdigest(),
                     "revoked": False,
                     "scopes": ["jobs:create", "jobs:read", "jobs:cancel", "infer:text"],
-                    "rate_limit": {"requests_per_minute": 100, "burst": 10, "max_concurrent": 2, "max_queue": 4, "queue_timeout_seconds": 5.0},
+                    "rate_limit": rl_normal,
                 },
                 "proyecto-beta": {
                     "token_sha256": hashlib.sha256(TOKEN_B.encode("utf-8")).hexdigest(),
                     "revoked": False,
                     "scopes": ["infer:text", "jobs:read"],  # Sin jobs:create
-                    "rate_limit": {"requests_per_minute": 100, "burst": 10, "max_concurrent": 2, "max_queue": 4, "queue_timeout_seconds": 5.0},
+                    "rate_limit": rl_normal,
+                },
+                "proyecto-epsilon": {
+                    "token_sha256": hashlib.sha256(TOKEN_E.encode("utf-8")).hexdigest(),
+                    "revoked": False,
+                    "scopes": ["jobs:create", "jobs:read", "jobs:cancel", "infer:text"],
+                    "rate_limit": rl_saturado,
                 },
             },
         }
         cls.tokens_path.write_text(json.dumps(config_tokens), encoding="utf-8")
-
+        cls.backend_falso = BackendJobsFalso()
         cls.registry = TokenRegistry(cls.tokens_path)
         cls.dispatcher = FairQueueDispatcher()
         cls.server = build_server(
             ("127.0.0.1", 0),
-            backend="http://127.0.0.1:8091",
+            backend=cls.backend_falso.url,
             auth_enabled=True,
             tokens_registry=cls.registry,
             dispatcher=cls.dispatcher,
+            jobs_dir=cls.temp_dir / "jobs",
         )
-        # Apuntar jobs_manager a directorio temporal
-        cls.server.jobs_manager.stop()
-        cls.server.jobs_manager = JobsManager(jobs_dir=cls.temp_dir)
-
         cls.puerto = cls.server.server_address[1]
         cls.hilo = threading.Thread(target=cls.server.serve_forever, daemon=True)
         cls.hilo.start()
@@ -263,70 +328,99 @@ class JobsGatewayIntegrationTests(unittest.TestCase):
         cls.server.jobs_manager.stop()
         cls.server.shutdown()
         cls.server.server_close()
+        cls.backend_falso.server_close()
         shutil.rmtree(cls.temp_dir, ignore_errors=True)
 
-    def test_09_post_jobs_http_flujo_completo(self):
-        if PROBE_ERROR:
-            self.fail(f"sonda de motor: {PROBE_ERROR}")
-        if not ENGINE_UP:
-            self.skipTest(
-                "requiere motor vivo en 127.0.0.1:8091 (backend del "
-                "gateway); sonda: conexión rehusada, nada escucha. Sin "
-                "motor la cancelación del job llega already_terminal")
-        url = f"http://127.0.0.1:{self.puerto}/jobs"
-        payload = {
-            "operation": "infer_text",
-            "payload": {"messages": [{"role": "user", "content": "Hola jobs"}]},
-        }
+    def _post_job(self, token, proyecto, clave, contenido="x"):
         req = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
+            f"http://127.0.0.1:{self.puerto}/jobs",
+            data=json.dumps({
+                "operation": "infer_text",
+                "payload": {"messages": [
+                    {"role": "user", "content": contenido}]},
+            }).encode("utf-8"),
             headers={
                 "Content-Type": "application/json",
-                "Authorization": f"Bearer {TOKEN_A}",
-                "X-Project-ID": "proyecto-alpha",
-                "Idempotency-Key": "idemp-http-01",
+                "Authorization": f"Bearer {token}",
+                "X-Project-ID": proyecto,
+                "Idempotency-Key": clave,
             },
             method="POST",
         )
         with urllib.request.urlopen(req, timeout=5.0) as resp:
-            self.assertEqual(resp.status, 202)
-            data = json.loads(resp.read().decode("utf-8"))
-            job_id = data["job_id"]
-            self.assertEqual(data["state"], "queued")
+            return resp.status, json.loads(resp.read().decode("utf-8"))
 
-        # GET /jobs/{id}
-        url_get = f"http://127.0.0.1:{self.puerto}/jobs/{job_id}"
-        req_get = urllib.request.Request(
-            url_get,
+    def _get_job(self, token, proyecto, job_id):
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{self.puerto}/jobs/{job_id}",
             headers={
-                "Authorization": f"Bearer {TOKEN_A}",
-                "X-Project-ID": "proyecto-alpha",
+                "Authorization": f"Bearer {token}",
+                "X-Project-ID": proyecto,
             },
             method="GET",
         )
-        with urllib.request.urlopen(req_get, timeout=5.0) as resp_get:
-            self.assertEqual(resp_get.status, 200)
-            data_get = json.loads(resp_get.read().decode("utf-8"))
-            self.assertEqual(data_get["job_id"], job_id)
+        with urllib.request.urlopen(req, timeout=5.0) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
 
-        # DELETE /jobs/{id}
-        req_del = urllib.request.Request(
-            url_get,
+    def _delete_job(self, token, proyecto, job_id):
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{self.puerto}/jobs/{job_id}",
             headers={
-                "Authorization": f"Bearer {TOKEN_A}",
-                "X-Project-ID": "proyecto-alpha",
+                "Authorization": f"Bearer {token}",
+                "X-Project-ID": proyecto,
             },
             method="DELETE",
         )
-        with urllib.request.urlopen(req_del, timeout=5.0) as resp_del:
-            self.assertEqual(resp_del.status, 200)
-            data_del = json.loads(resp_del.read().decode("utf-8"))
-            # Con la frontera corregida el job puede haber alcanzado un
-            # estado terminal (p. ej. failed por backend caído) antes del
-            # DELETE; already_terminal también es respuesta de contrato.
-            self.assertIn(data_del["cancellation_status"],
-                          ("accepted", "pending", "already_terminal"))
+        with urllib.request.urlopen(req, timeout=5.0) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+
+    def _esperar_estado(self, token, proyecto, job_id, estados, plazo=15.0):
+        limite = time.monotonic() + plazo
+        while True:
+            _, res = self._get_job(token, proyecto, job_id)
+            if res.get("state") in estados:
+                return res
+            if time.monotonic() >= limite:
+                self.fail(f"job {job_id} no alcanzó {estados}: {res}")
+            time.sleep(0.1)
+
+    def test_09_post_jobs_http_flujo_completo(self):
+        # MED-10: backend falso controlado, estado sincronizado y las
+        # transiciones de SPEC-i5 §2.3 afirmadas sin comodines.
+        # Rama terminal: con presupuesto, el job llega a succeeded y
+        # DELETE responde already_terminal con SU estado real.
+        status, res = self._post_job(TOKEN_A, "proyecto-alpha",
+                                     "idemp-http-01-a", "Hola jobs")
+        self.assertEqual(status, 202)
+        job_id = res["job_id"]
+        final = self._esperar_estado(TOKEN_A, "proyecto-alpha", job_id,
+                                     {"succeeded", "failed"})
+        self.assertEqual(final["state"], "succeeded")
+        self.assertEqual(final["result"]["text"], "ok")
+        self.assertTrue(final["result"]["complete"])
+        status_del, res_del = self._delete_job(
+            TOKEN_A, "proyecto-alpha", job_id)
+        self.assertEqual(status_del, 200)
+        self.assertEqual(res_del["cancellation_status"],
+                         "already_terminal")
+        self.assertEqual(res_del["target_state"], "succeeded")
+
+        # Rama queued: epsilon no consigue admisión; DELETE lo retira
+        # de inmediato como cancelled (§2.3 primera rama).
+        status_e, res_e = self._post_job(TOKEN_E, "proyecto-epsilon",
+                                         "idemp-http-01-e", "en cola")
+        self.assertEqual(status_e, 202)
+        job_e = res_e["job_id"]
+        _, res_get_e = self._get_job(TOKEN_E, "proyecto-epsilon", job_e)
+        self.assertEqual(res_get_e["state"], "queued")
+        status_del_e, res_del_e = self._delete_job(
+            TOKEN_E, "proyecto-epsilon", job_e)
+        self.assertEqual(status_del_e, 200)
+        self.assertEqual(res_del_e["cancellation_status"], "accepted")
+        self.assertEqual(res_del_e["target_state"], "cancelled")
+        final_e = self._esperar_estado(TOKEN_E, "proyecto-epsilon",
+                                       job_e, {"cancelled"})
+        self.assertEqual(final_e["state"], "cancelled")
 
     def test_10_rechazo_por_scope_insuficiente(self):
         # Proyecto Beta no tiene scope jobs:create -> 403

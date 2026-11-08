@@ -281,16 +281,16 @@ class FronteraJobsHTTPTests(unittest.TestCase):
         cls.backend = BackendFalso()
         cls.registry = TokenRegistry(cls.tokens_path)
         cls.dispatcher = FairQueueDispatcher()
+        # jobs_dir inyectado en la construcción (MED-9): build_server
+        # ya no crea un JobsManager con run/jobs por defecto.
         cls.server = build_server(
             ("127.0.0.1", 0),
             backend=cls.backend.url,
             auth_enabled=True,
             tokens_registry=cls.registry,
             dispatcher=cls.dispatcher,
+            jobs_dir=cls.temp_dir / "jobs",
         )
-        cls.server.jobs_manager.stop()
-        cls.server.jobs_manager = JobsManager(
-            jobs_dir=cls.temp_dir / "jobs", backend_url=cls.backend.url)
         cls.puerto = cls.server.server_address[1]
         cls.hilo = threading.Thread(
             target=cls.server.serve_forever, daemon=True)
@@ -596,7 +596,14 @@ class ReclamoEntreInstanciasTests(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.temp_dir, ignore_errors=True)
         self.jobs_dir = self.temp_dir / "jobs"
 
-    def test_19_dos_instancias_no_ejecutan_dos_veces(self):
+    def test_19_segunda_instancia_falla_y_no_ejecuta_dos_veces(self):
+        # D1 (Operador, 2026-11-08): una sola instancia por jobs_dir.
+        # La premisa anterior (dos instancias conviviendo) quedó
+        # prohibida: la segunda falla cerrada con el directorio en el
+        # error y sin tocar los jobs; la primera ejecuta cada job
+        # exactamente una vez.
+        from jobs_manager import JobsDirOcupado
+
         marcadores = [f"marcador-doble-{i}" for i in range(3)]
         for i, marcador in enumerate(marcadores):
             _escribir_job_en_disco(
@@ -605,39 +612,15 @@ class ReclamoEntreInstanciasTests(unittest.TestCase):
                 clave=f"bnd-doble-{i}")
         backend = BackendFalso(retardo_s=0.3)
         self.addCleanup(backend.server_close)
-
-        # Ensancha la ventana real de carrera del worker actual: la
-        # primera persistencia 'running' de cada job espera a que la
-        # otra instancia también haya pasado su verificación de estado.
-        guardas: dict[str, threading.Barrier] = {}
-        cerrojo_g = threading.Lock()
-        original = JobsManager._save_job_atomically
-
-        def save_sincronizado(self, job_dict):
-            jid = job_dict.get("job_id")
-            if jid in {f"job-doble-{i}" for i in range(3)} \
-                    and job_dict.get("state") == "running":
-                with cerrojo_g:
-                    barrera = guardas.setdefault(
-                        jid, threading.Barrier(2))
-                try:
-                    barrera.wait(timeout=3.0)
-                except threading.BrokenBarrierError:
-                    pass
-            return original(self, job_dict)
-
-        with mock.patch.object(JobsManager, "_save_job_atomically",
-                               save_sincronizado):
-            instancias = []
-            for _ in range(2):
-                m = JobsManager(jobs_dir=self.jobs_dir,
-                                backend_url=backend.url)
-                instancias.append(m)
-                self.addCleanup(m.stop)
-            for marcador in marcadores:
-                jid = f"job-doble-{marcadores.index(marcador)}"
-                _esperar_terminal(instancias[0], "proyecto-alpha", jid,
-                                  plazo=40.0)
+        primera = JobsManager(jobs_dir=self.jobs_dir,
+                              backend_url=backend.url)
+        self.addCleanup(primera.stop)
+        with self.assertRaises(JobsDirOcupado) as ctx:
+            JobsManager(jobs_dir=self.jobs_dir, backend_url=backend.url)
+        self.assertIn(str(self.jobs_dir), str(ctx.exception))
+        for i, marcador in enumerate(marcadores):
+            _esperar_terminal(primera, "proyecto-alpha",
+                              f"job-doble-{i}", plazo=40.0)
         for marcador in marcadores:
             self.assertEqual(
                 backend.cuenta_por_marcador(marcador), 1,
@@ -689,6 +672,11 @@ class ReclamoEntreInstanciasTests(unittest.TestCase):
     def test_26_worker_sobrevive_dispatcher_hostil(self):
         # regresión de la ronda adversarial: una excepción inesperada
         # del dispatcher no mata el worker ni fuga el flock del job.
+        # Desde HIGH-4 el job además cierra failed durable (afirmado
+        # en tests.test_jobs_intento2_i5.test_32); aquí se comprueba
+        # que el flock quedó libre tomándolo directamente.
+        import fcntl as _fcntl
+
         class DispatcherHostil:
             def acquire_slot(self, project_id, rl_config, timeout=None):
                 raise RuntimeError("config de rate_limit corrupta")
@@ -706,14 +694,21 @@ class ReclamoEntreInstanciasTests(unittest.TestCase):
             jobs_dir=self.jobs_dir, backend_url=backend.url,
             dispatcher=DispatcherHostil(), rate_limit_lookup=lambda pid: {})
         self.addCleanup(manager.stop)
-        time.sleep(1.5)  # dejar que el worker intente, falle y siga
+        _esperar_terminal(manager, "proyecto-alpha", "job-hostil-1",
+                          plazo=10.0)
         self.assertTrue(manager._worker_thread.is_alive(),
                         "el worker murió por una excepción del dispatcher")
         self.assertEqual(backend.cuenta_por_marcador("marcador-hostil"), 0,
                          "se ejecutó un job sin admisión")
-        fd = manager._reclamar("proyecto-alpha", "job-hostil-1")
-        self.assertIsNotNone(fd, "el flock del job quedó fugado")
-        manager._soltar_reclamo(fd)
+        lock_path = self.jobs_dir / "claims" / "job-hostil-1.lock"
+        fd = os.open(lock_path, os.O_RDWR | os.O_CREAT, 0o600)
+        try:
+            _fcntl.flock(fd, _fcntl.LOCK_EX | _fcntl.LOCK_NB)
+        except OSError:
+            os.close(fd)
+            self.fail("el flock del job quedó fugado")
+        _fcntl.flock(fd, _fcntl.LOCK_UN)
+        os.close(fd)
 
 
 # -------------------------------------- retención y confidencialidad (HIGH-2)

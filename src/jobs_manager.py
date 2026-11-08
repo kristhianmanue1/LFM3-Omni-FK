@@ -8,10 +8,15 @@ Expediente: docs/reviews/evidence/fix-i5-jobs-frontera/ (fix-i5)
 
 Garantías: idempotencia canónica RFC 8785 con tombstone 24 h (§J);
 persistencia atómica durable en jobs_storage (el registro de
-idempotencia es el commit de la admisión); recuperación fail-closed;
-reclamo atómico entre procesos (flock) con admisión compartida con
-H/M; salida del modelo validada (completitud y esquema) antes de
-persistir; retención §J con purga verificable y permisos 0600/0700.
+idempotencia es el commit de la admisión, recuperable ante fallos
+posteriores al link); una sola instancia por jobs_dir con cerrojo
+flock (D1) que además sostiene el barrido periódico de vencidos,
+temporales huérfanos y claims (D4); recuperación fail-closed;
+admisión compartida con H/M con deadline por job (§J: la espera
+tiene fin); salida del modelo validada (completitud y esquema) antes
+de persistir; retención §J con purga verificable y permisos
+0600/0700. El cifrado en reposo queda como desviación declarada y
+requisito bloqueante para exponer /jobs (D3).
 """
 
 from __future__ import annotations
@@ -26,6 +31,7 @@ import queue
 import re
 import sys
 import threading
+import time
 import urllib.error
 import urllib.request
 from typing import Any, Callable
@@ -37,7 +43,13 @@ from gateway_core import ErrorV2, _error, validar_salida
 # estándar: mover sin cambiar comportamiento). El serializador se
 # re-exporta porque la frontera pública del módulo lo prometía.
 from canonical_json import canonical_json_rfc8785
-from jobs_storage import JobsStorage
+from jobs_storage import (
+    CommitTrasLinkError, JobsDirOcupado, JobsStorage,
+)
+
+# JobsDirOcupado vive en jobs_storage (es E/S del árbol run/jobs);
+# se re-exporta porque la frontera pública de este módulo la prometía.
+__all__ = ["JobsDirOcupado", "JobsManager", "canonical_json_rfc8785"]
 
 IDEMPOTENCY_KEY_RE = re.compile(r"^[A-Za-z0-9_\-\.:]{1,64}$")
 ALLOWED_OPERATIONS = {"infer_text", "infer_vision", "infer_audio", "infer_video"}
@@ -47,6 +59,9 @@ MAX_QUEUED_PER_PROJECT = 1
 MAX_QUEUED_GLOBAL = 8
 ADMISION_TIMEOUT_S = 60.0  # presupuesto de cola compartido (§J)
 REINTENTO_ADMISION_S = 0.5
+ESPERA_ADMISION_S = 60.0  # deadline total de admisión por job (§J)
+INTERVALO_BARRIDO_S = 30.0  # barrido periódico dentro del worker (D4)
+TMP_EDAD_S = 300.0  # un tmp legítimo vive milisegundos (D4)
 MSG_IDEMPOTENCY_CONFLICT = (
     "Idempotency-Key ya utilizada con un cuerpo de solicitud diferente")
 
@@ -62,7 +77,9 @@ class JobsManager:
     def __init__(self, jobs_dir: str | Path | None = None,
                  backend_url: str = "http://127.0.0.1:8091",
                  dispatcher: Any = None,
-                 rate_limit_lookup: Callable[[str], dict] | None = None):
+                 rate_limit_lookup: Callable[[str], dict] | None = None,
+                 intervalo_barrido_s: float = INTERVALO_BARRIDO_S,
+                 tmp_edad_s: float = TMP_EDAD_S):
         if jobs_dir:
             base_dir = Path(jobs_dir)
         else:
@@ -71,6 +88,24 @@ class JobsManager:
         self.data_dir = self.storage.data_dir
         self.idemp_dir = self.storage.idemp_dir
         self.claims_dir = self.storage.claims_dir
+        # D1: una sola instancia por jobs_dir. El cerrojo se toma
+        # ANTES de cualquier recuperación: una segunda instancia
+        # falla cerrada sin worker ni startup_recover. Si el arranque
+        # posterior falla, el cerrojo se libera (ronda adversarial:
+        # un fd huérfano bloquearía el jobs_dir para siempre).
+        self._fd_instancia = self.storage.tomar_cerrojo_instancia()
+        try:
+            self._arrancar(backend_url, dispatcher, rate_limit_lookup,
+                           intervalo_barrido_s, tmp_edad_s)
+        except BaseException:
+            os.close(self._fd_instancia)
+            self._fd_instancia = None
+            raise
+
+    def _arrancar(self, backend_url: str, dispatcher: Any,
+                  rate_limit_lookup: Callable[[str], dict] | None,
+                  intervalo_barrido_s: float, tmp_edad_s: float) -> None:
+        """Resto del arranque; se ejecuta con el cerrojo tomado."""
         self.backend_url = backend_url.rstrip("/")
         # Admisión compartida con H/M (HIGH-1); None = sin (tests).
         self.dispatcher = dispatcher
@@ -79,17 +114,26 @@ class JobsManager:
         self.work_queue: queue.Queue[tuple[str, str]] = queue.Queue()
         self.running_job_id: str | None = None
         self._stop_event = threading.Event()
+        # D4: barrido periódico dentro del bucle del worker; el fallo
+        # de una purga queda contado y visible (HIGH-6).
+        self.intervalo_barrido_s = intervalo_barrido_s
+        self.tmp_edad_s = tmp_edad_s
+        self.fallos_purga = 0
+        self._ultimo_barrido = time.monotonic()
         self.startup_recover()
         self._worker_thread = threading.Thread(
             target=self._worker_loop, daemon=True, name="jobs-worker")
         self._worker_thread.start()
 
     def stop(self, timeout: float = 2.0) -> None:
-        """Detiene limpiamente el worker."""
+        """Detiene limpiamente el worker y libera el jobs_dir (D1)."""
         self._stop_event.set()
         self.work_queue.put(("", ""))  # Despertar thread
         if self._worker_thread.is_alive():
             self._worker_thread.join(timeout=timeout)
+        if self._fd_instancia is not None:
+            os.close(self._fd_instancia)
+            self._fd_instancia = None
 
     def startup_recover(self) -> int:
         """Fail-closed al arrancar: running pasa a failed; queued con
@@ -156,7 +200,8 @@ class JobsManager:
                 400, "invalid_idempotency_key",
                 "Idempotency-Key debe ser ASCII de 1 a 64 caracteres "
                 "válidos")
-        if operation not in ALLOWED_OPERATIONS:
+        if not isinstance(operation, str) \
+                or operation not in ALLOWED_OPERATIONS:
             return _respuesta_error(
                 400, "unsupported_operation",
                 f"Operación '{operation}' no admitida en Perfil J")
@@ -182,8 +227,18 @@ class JobsManager:
                         409, "idempotency_conflict",
                         MSG_IDEMPOTENCY_CONFLICT)
                 existente = self._load_job(project_id, rec["job_id"])
-                if existente is None \
-                        or existente.get("state") == "expired" \
+                if existente is None:
+                    # Registro huérfano (crash entre link y
+                    # reconciliación): retirarlo y readmitir; la clave
+                    # no queda bloqueada (BLOCKER-1). Si ni siquiera
+                    # se puede retirar, fail-closed explícito.
+                    if not self.storage.retirar_registro(
+                            project_id, idempotency_key):
+                        return _respuesta_error(
+                            500, "storage_error",
+                            "Registro de idempotencia huérfano "
+                            "irretirable; admisión denegada")
+                elif existente.get("state") == "expired" \
                         or self._vencido(existente):
                     # Registro vivo con resultado caducado: dentro del
                     # tombstone nunca se re-infiera (§J).
@@ -191,7 +246,8 @@ class JobsManager:
                         410, "job_expired",
                         "El trabajo asociado a esta clave ya expiró; "
                         "use una clave nueva")
-                return 202, self._vista_admision(existente)
+                else:
+                    return 202, self._vista_admision(existente)
 
             queued_proj, queued_global = self._contar_encolados(project_id)
             if queued_proj >= MAX_QUEUED_PER_PROJECT:
@@ -212,6 +268,10 @@ class JobsManager:
                 and not isinstance(ttl_seconds, bool) else DEFAULT_TTL_SECONDS
             ttl = min(max(ttl, 60), MAX_TTL_SECONDS)
             expira = ahora + timedelta(seconds=ttl)
+            # HIGH-5: la espera por admisión tiene fin; el deadline
+            # viaja con el job (persistido) y su agotamiento cierra
+            # el job en failed (admission_timeout).
+            deadline_admision = ahora + timedelta(seconds=ESPERA_ADMISION_S)
             job_id = "job-" + hashlib.sha256(
                 f"{project_id}:{idempotency_key}:{ahora.isoformat()}"
                 .encode()).hexdigest()[:16]
@@ -228,6 +288,7 @@ class JobsManager:
                 "started_at": None,
                 "completed_at": None,
                 "expires_at": expira.isoformat(),
+                "admission_deadline": deadline_admision.isoformat(),
                 "result": None,
                 "error": None,
                 "model_revision": "LiquidAI/LFM3-Omni-2B-GGUF",
@@ -235,6 +296,12 @@ class JobsManager:
             try:
                 self._save_job_atomically(job_dict)
             except OSError:
+                # Sin registro no hay admisión: retirar el job también
+                # aquí (el fallo puede ser posterior al replace) o el
+                # huérfano queued bloquearía el reintento con 429
+                # (BLOCKER-1). Si el retiro falla, el arranque
+                # reconcilia (admission_unconfirmed).
+                self._descartar_job_sin_admision(project_id, job_id)
                 return _respuesta_error(
                     500, "storage_error",
                     "No se pudo persistir el trabajo; admisión denegada")
@@ -244,6 +311,21 @@ class JobsManager:
             except FileExistsError:
                 return self._resolver_rival(
                     project_id, idempotency_key, payload_hash, job_id)
+            except CommitTrasLinkError:
+                # BLOCKER-1: el registro quedó enlazado con durabilidad
+                # incierta. Se retira registro y job si el disco lo
+                # permite (reintento limpio); si el registro no se
+                # puede retirar, la pareja registro+job constante EN
+                # disco es la admisión: se responde 202 con ella.
+                if self.storage.retirar_registro(
+                        project_id, idempotency_key):
+                    self._descartar_job_sin_admision(project_id, job_id)
+                    return _respuesta_error(
+                        500, "storage_error",
+                        "No se pudo confirmar el registro de "
+                        "idempotencia; admisión denegada")
+                self.work_queue.put((project_id, job_id))
+                return 202, self._vista_admision(job_dict)
             except OSError:
                 self._descartar_job_sin_admision(project_id, job_id)
                 return _respuesta_error(
@@ -286,18 +368,19 @@ class JobsManager:
             "created_at": job["created_at"], "expires_at": job["expires_at"]}
 
     def _contar_encolados(self, project_id: str) -> tuple[int, int]:
-        """(no terminales del proyecto, globales) según disco; contar
-        running cierra la carrera reclamo-vs-admisión (SPEC-i5 §2.1)."""
+        """(queued del proyecto, queued globales) según disco. Contar
+        sólo `queued` es el contrato literal de SPEC-i5 §2.1 (D2); con
+        una instancia por jobs_dir (D1) y contar+commit bajo
+        self.lock, el conteo no tiene carrera con el worker."""
         queued_proj = 0
         queued_global = 0
-        OCUPADOS = ("queued", "running", "cancellation_pending")
         for p_dir in self.data_dir.iterdir():
             if not p_dir.is_dir():
                 continue
             for f_job in p_dir.glob("*.json"):
                 try:
                     j_data = json.loads(f_job.read_text(encoding="utf-8"))
-                    if j_data.get("state") in OCUPADOS:
+                    if j_data.get("state") == "queued":
                         queued_global += 1
                         if j_data.get("project_id") == project_id:
                             queued_proj += 1
@@ -313,11 +396,16 @@ class JobsManager:
                                     "Trabajo no encontrado")
         if self._vencido(job):
             # Purga verificable al expirar (HIGH-2): sale del disco.
+            # Si la purga falla, el 410 sigue siendo cierto (el
+            # resultado no se entrega tras el TTL) pero el fallo
+            # queda contado y visible; el barrido reintenta (HIGH-6).
             if job.get("state") not in ("running", "expired"):
                 try:
                     self._purgar_job(job)
-                except OSError:
-                    pass  # el 410 sigue siendo cierto; la purga reintenta
+                except OSError as exc:
+                    self.fallos_purga += 1
+                    print(f"jobs: purga fallida de {job.get('job_id')}: "
+                          f"{exc!r}", file=sys.stderr, flush=True)
             return _respuesta_error(
                 410, "job_expired",
                 "El resultado del trabajo ha expirado (TTL vencido)")
@@ -439,6 +527,7 @@ class JobsManager:
             try:
                 proj_id, job_id = self.work_queue.get(timeout=1.0)
             except queue.Empty:
+                self._barrido_si_toca()
                 continue
             if not proj_id or not job_id:
                 continue
@@ -446,11 +535,20 @@ class JobsManager:
             if fd_reclamo is None:
                 continue
             try:
+                if self._deadline_admision_vencido(proj_id, job_id):
+                    # HIGH-5: la espera por admisión tiene fin.
+                    continue
                 if not self._admitir(proj_id):
                     # Sin presupuesto: vuelve a la cola y se reintenta
                     # tras una pausa; nunca se ejecuta sin admisión.
                     self.work_queue.put((proj_id, job_id))
                     self._stop_event.wait(REINTENTO_ADMISION_S)
+                    continue
+                if self._deadline_admision_vencido(proj_id, job_id):
+                    # El deadline venció DURANTE la espera de admisión
+                    # (ronda adversarial): liberar el slot concedido
+                    # y no ejecutar tarde.
+                    self._liberar_admision(proj_id)
                     continue
                 try:
                     if self._marcar_running(proj_id, job_id):
@@ -461,16 +559,69 @@ class JobsManager:
                 # Persistencia fallida: el disco manda (fail-closed).
                 continue
             except Exception as exc:
-                # Defecto inesperado (dispatcher mal cableado): el worker
-                # sobrevive y el reclamo se libera siempre (stderr visible).
+                # Defecto inesperado (dispatcher mal cableado): el
+                # worker sobrevive y el job no queda admitido sin
+                # cierre — transición durable a failed con motivo
+                # (HIGH-4); el arranque reconcilia si el disco falla.
                 print(f"jobs-worker: fallo inesperado en {job_id}: {exc!r}",
                       file=sys.stderr, flush=True)
+                self._cerrar_por_defecto(proj_id, job_id, exc)
                 continue
             finally:
                 self._soltar_reclamo(fd_reclamo)
                 with self.lock:
                     if self.running_job_id == job_id:
                         self.running_job_id = None
+                self._barrido_si_toca()
+
+    def _deadline_admision_vencido(self, project_id: str,
+                                   job_id: str) -> bool:
+        """HIGH-5: deadline de admisión agotado → failed durable."""
+        try:
+            with self.lock:
+                job = self._load_job(project_id, job_id)
+                if not job or job.get("state") != "queued":
+                    return False
+                deadline = job.get("admission_deadline")
+                if not isinstance(deadline, str):
+                    return False  # legado sin deadline: sin límite
+                vencido = datetime.now(timezone.utc) \
+                    > datetime.fromisoformat(deadline)
+                if vencido:
+                    self._fallar(job, "admission_timeout",
+                                 f"Plazo de admisión agotado "
+                                 f"({ESPERA_ADMISION_S:.0f} s de cola, §J)")
+                return vencido
+        except (OSError, ValueError):
+            return False
+
+    def _cerrar_por_defecto(self, project_id: str, job_id: str,
+                            exc: Exception) -> None:
+        """HIGH-4: cierre durable del job no terminal que el defecto
+        dejó colgado (queued, running o cancellation_pending — ronda
+        adversarial); si el disco también falla, el arranque
+        siguiente reconcilia (queued con registro se reencola)."""
+        try:
+            with self.lock:
+                job = self._load_job(project_id, job_id)
+                if job and job.get("state") in (
+                        "queued", "running", "cancellation_pending"):
+                    self._fallar(job, "worker_internal_error",
+                                 f"Fallo inesperado del worker: {exc!r}")
+        except OSError as exc_disco:
+            print(f"jobs-worker: no se pudo cerrar {job_id}: "
+                  f"{exc_disco!r}", file=sys.stderr, flush=True)
+
+    def _barrido_si_toca(self) -> None:
+        """D4: barrido periódico dentro del bucle del worker, sin
+        hilo nuevo: vencidos a tombstone, temporales huérfanos y
+        claims sin dueño, bajo el cerrojo de instancia."""
+        if time.monotonic() - self._ultimo_barrido < self.intervalo_barrido_s:
+            return
+        self._ultimo_barrido = time.monotonic()
+        self._purgar_expirados()
+        self.storage.limpiar_temporales(self.tmp_edad_s)
+        self.storage.limpiar_claims_huerfanos()
 
     @staticmethod
     def _extraer_salida(resp_json: Any) -> tuple[str, str]:
@@ -530,7 +681,9 @@ class JobsManager:
         self.storage.eliminar_claim(job_id)
 
     def _purgar_expirados(self) -> int:
-        """Barrido: vencidos a tombstone, registros vencidos fuera."""
+        """Barrido: vencidos a tombstone, registros vencidos fuera.
+        Los fallos de disco del barrido también se cuentan y hacen
+        rastro: es la vía principal de purga (D4, ronda adversarial)."""
         purgados = 0
         ahora = datetime.now(timezone.utc)
         for proj_dir in self.data_dir.glob("*"):
@@ -548,13 +701,21 @@ class JobsManager:
                 try:
                     self._purgar_job(data)
                     purgados += 1
-                except OSError:
-                    continue
+                except OSError as exc:
+                    self.fallos_purga += 1
+                    print(f"jobs: purga fallida de "
+                          f"{data.get('job_id')}: {exc!r}",
+                          file=sys.stderr, flush=True)
         for rec_file in self.idemp_dir.glob("*/*.json"):
             try:
                 rec = json.loads(rec_file.read_text(encoding="utf-8"))
                 if ahora > datetime.fromisoformat(rec["expires_at"]):
                     rec_file.unlink(missing_ok=True)
+            except OSError as exc:
+                self.fallos_purga += 1
+                print(f"jobs: retiro fallido del registro "
+                      f"{rec_file.name}: {exc!r}",
+                      file=sys.stderr, flush=True)
             except Exception:
                 continue
         return purgados

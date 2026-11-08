@@ -1,0 +1,32 @@
+== lsof antes ==
+sin listeners
+== ps antes ==
+sin procesos motor/gateway
+
+== batería §3 corrida 1 ==
+Ran 158 tests in 53.514s
+
+OK
+
+== batería §3 corrida 2 ==
+Ran 158 tests in 54.356s
+
+OK
+
+== lsof/ps entre ==
+sin listeners
+sin procesos motor/gateway
+
+== suite completa corrida 1 ==
+Ran 365 tests in 131.705s
+
+OK (skipped=1)
+
+== suite completa corrida 2 ==
+Ran 365 tests in 133.037s
+
+OK (skipped=1)
+
+== lsof/ps después ==
+sin listeners
+sin procesos motor/gateway
