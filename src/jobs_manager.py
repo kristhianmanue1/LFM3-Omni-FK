@@ -117,6 +117,10 @@ class JobsManager(JobsRecoveryMixin):
         self.lock = threading.Lock()
         self.work_queue: queue.Queue[tuple[str, str]] = queue.Queue()
         self.running_job_id: str | None = None
+        # [HIGH ronda 3] Jobs puestos en la cola del worker: evita el
+        # doble encolado al reconciliar reintentos; se descarta al
+        # cerrar o purgar (ver _asegurar_despacho).
+        self._en_cola: set[str] = set()
         self._stop_event = threading.Event()
         # D4: barrido periódico dentro del bucle del worker; el fallo
         # de una purga queda contado y visible (HIGH-6).
@@ -168,6 +172,24 @@ class JobsManager(JobsRecoveryMixin):
 
     def _descartar_job_sin_admision(self, project_id: str, job_id: str):
         self.storage.eliminar_job(project_id, job_id)
+
+    def _asegurar_despacho(self, job: dict) -> bool:
+        """[HIGH, ronda 3] Reconciliación del reintento: un job
+        `queued` cuyo despacho no consta (doble fallo de retiro tras
+        CommitTrasLinkError) se encola UNA sola vez; si ya consta en
+        cola, no se toca (sin doble encolado ni doble ejecución).
+        False = despacho no comprobable: arriba responde fallo
+        explícito, jamás un 202 sin avance."""
+        job_id = job.get("job_id")
+        proyecto = job.get("project_id")
+        if job.get("state") != "queued":
+            return True  # en ejecución o terminal: nada que despachar
+        if not isinstance(job_id, str) or not isinstance(proyecto, str):
+            return False  # ilegible: no comprobable
+        if job_id not in self._en_cola:
+            self.work_queue.put((proyecto, job_id))
+            self._en_cola.add(job_id)
+        return True
 
     def create_job(self, project_id: str, operation: str, payload: dict,
                    idempotency_key: str,
@@ -227,6 +249,15 @@ class JobsManager(JobsRecoveryMixin):
                         "El trabajo asociado a esta clave ya expiró; "
                         "use una clave nueva")
                 else:
+                    # [HIGH ronda 3] El 202 de reintento debe avanzar:
+                    # si el job sigue queued y su despacho no consta,
+                    # encolarlo UNA sola vez; si no se puede comprobar,
+                    # fallo explícito, nunca un 202 sin avance.
+                    if not self._asegurar_despacho(existente):
+                        return _respuesta_error(
+                            500, "storage_error",
+                            "Job existente ilegible; no se puede "
+                            "comprobar su despacho (reintente)")
                     return 202, self._vista_admision(existente)
 
             queued_proj, queued_global = self._contar_encolados(project_id)
@@ -315,6 +346,7 @@ class JobsManager(JobsRecoveryMixin):
                     "No se pudo persistir el registro de idempotencia; "
                     "admisión denegada")
             self.work_queue.put((project_id, job_id))
+            self._en_cola.add(job_id)
             return 202, self._vista_admision(job_dict)
 
     def _resolver_rival(self, project_id: str, idempotency_key: str,
@@ -383,10 +415,18 @@ class JobsManager(JobsRecoveryMixin):
             # queda contado y visible; el barrido reintenta (HIGH-6).
             # LOW-6 (ronda 2): bajo self.lock, para que el tombstone
             # no se intercale con la transición running del worker.
+            # [MED ronda 3] El snapshot de arriba pudo quedar viejo:
+            # recargar estado y vencimiento BAJO el lock justo antes
+            # de purgar; un running jamás se purga con estado viejo.
             if job.get("state") not in ("running", "expired"):
                 try:
                     with self.lock:
-                        self._purgar_job(job)
+                        actual = self._load_job(project_id, job_id)
+                        if actual is not None \
+                                and actual.get("state") not in (
+                                    "running", "expired") \
+                                and self._vencido(actual):
+                            self._purgar_job(actual)
                 except OSError as exc:
                     self.fallos_purga += 1
                     print(f"jobs: purga fallida de {job.get('job_id')}: "
@@ -493,12 +533,22 @@ class JobsManager(JobsRecoveryMixin):
 
     def _marcar_running(self, project_id: str, job_id: str) -> bool:
         """Pasa a running si sigue queued (la cancelación gana la
-        ventana). Job ilegible: se salta sin romper el worker."""
+        ventana). El TTL se revalida bajo el lock: un vencido sólo
+        llega aquí con el reclamo tomado ANTES de vencer (_reclamar
+        rechaza los ya vencidos), así que la ejecución procede con
+        constancia y el cierre nunca entrega tras el TTL (§J). Job
+        ilegible: se salta sin romper el worker."""
         with self.lock:
             try:
                 job = self._load_job(project_id, job_id)
                 if not job or job.get("state") != "queued":
                     return False
+                if self._vencido(job):
+                    # [MED ronda 3] Ya estaba reclamado antes de
+                    # vencer: se ejecuta, sin entregar tras el TTL.
+                    print(f"jobs: {job_id} venció ya reclamado; se "
+                          f"ejecuta sin entregar tras el TTL (§J)",
+                          file=sys.stderr, flush=True)
                 job["state"] = "running"
                 job["started_at"] = datetime.now(timezone.utc).isoformat()
                 self.running_job_id = job_id
@@ -638,6 +688,8 @@ class JobsManager(JobsRecoveryMixin):
     def _cerrar(self, job: dict, estado: str) -> None:
         """Terminal durable; recalcula expires_at (§J); un vencido
         no resucita: se purga."""
+        # [HIGH ronda 3] Terminal: sale del registro de despachados.
+        self._en_cola.discard(job.get("job_id"))
         if self._vencido(job):
             self._purgar_job(job)
             return

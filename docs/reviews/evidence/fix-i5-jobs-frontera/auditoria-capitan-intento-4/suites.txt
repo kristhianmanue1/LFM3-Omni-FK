@@ -1,0 +1,7 @@
+Ran 376 tests in 137.998s
+
+OK (skipped=1)
+Ran 376 tests in 137.321s
+
+OK (skipped=1)
+controles revi5d sobre el código nuevo: Ran 2 tests OK

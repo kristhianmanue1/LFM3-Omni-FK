@@ -11,9 +11,9 @@ cambiar comportamiento): la recuperación al arranque y el barrido de
 vencidos vivían en JobsManager y pasan a este módulo como mixin, con
 los mismos nombres de método y los mismos cuerpos. JobsManager aporta
 los atributos que estos métodos usan — storage, lock, work_queue,
-data_dir, idemp_dir, fallos_purga, intervalo_barrido_s, tmp_edad_s y
-_ultimo_barrido — y los helpers _cerrar, _vencido y
-_registro_confirma_admision.
+_en_cola, data_dir, idemp_dir, fallos_purga, intervalo_barrido_s,
+tmp_edad_s y _ultimo_barrido — y los helpers _cerrar, _load_job,
+_vencido y _registro_confirma_admision.
 """
 
 from __future__ import annotations
@@ -55,6 +55,7 @@ class JobsRecoveryMixin:
                         if self._registro_confirma_admision(data):
                             self.work_queue.put(
                                 (data["project_id"], data["job_id"]))
+                            self._en_cola.add(data["job_id"])
                         else:
                             data["error"] = {
                                 "code": "admission_unconfirmed", "message":
@@ -76,7 +77,9 @@ class JobsRecoveryMixin:
 
     def _purgar_job(self, job: dict) -> None:
         """Tombstone durable sin payload (§J); la E/S vive en storage
-        (reorganización pura del intento 3, §3.3 del estándar)."""
+        (reorganización pura del intento 3, §3.3 del estándar). El
+        job sale del registro de despachados ([HIGH ronda 3])."""
+        self._en_cola.discard(job.get("job_id"))
         self.storage.purgar_a_tombstone(job)
 
     def _purgar_expirados(self) -> int:
@@ -97,8 +100,24 @@ class JobsRecoveryMixin:
                     continue  # tombstone hecho; en vuelo, no tocar
                 if not self._vencido(data, ahora):
                     continue
+                # [MED ronda 3] El snapshot del archivo pudo quedar
+                # viejo (un worker pasó el job a running tras la
+                # lectura): recargar estado y vencimiento bajo el
+                # lock antes de purgar; un running jamás se purga.
+                proj_id = data.get("project_id")
+                job_id = data.get("job_id")
+                if not isinstance(proj_id, str) \
+                        or not isinstance(job_id, str):
+                    continue
                 try:
-                    self._purgar_job(data)
+                    with self.lock:
+                        actual = self._load_job(proj_id, job_id)
+                        if actual is None \
+                                or actual.get("state") in (
+                                    "expired", "running") \
+                                or not self._vencido(actual, ahora):
+                            continue
+                        self._purgar_job(actual)
                     purgados += 1
                 except OSError as exc:
                     self.fallos_purga += 1
