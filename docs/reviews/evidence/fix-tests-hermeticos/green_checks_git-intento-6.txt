@@ -1,0 +1,36 @@
+== gates ==
+OK — 373 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+rc=0
+OK — 2 plan(es) verificados (estructura E1-E6)
+rc=0
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+rc=0
+== drift del kit ==
+OK — al día: versión vigente corpus/v10
+rc=0
+OK — al día: versión vigente gate/v14
+rc=0
+== git diff --check ==
+rc=0
+== rango del intento: git diff --check 5032fe9..HEAD + trabajo sin commit ==
+rc=0
+== git status --porcelain ==
+ M tests/hermetic_fixture.py
+ M tests/test_hermetic_fixture.py
+?? docs/reviews/evidence/fix-tests-hermeticos/capturar-intento-6.py
+?? docs/reviews/evidence/fix-tests-hermeticos/focal-intento-6.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_checks_git-intento-6.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_suite_1-intento-6.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/green_suite_2-intento-6.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/informe-intento-6.md
+?? docs/reviews/evidence/fix-tests-hermeticos/mandato-intento-6.md
+?? docs/reviews/evidence/fix-tests-hermeticos/mutantes-intento-6.txt
+?? docs/reviews/evidence/fix-tests-hermeticos/red-intento-6.txt
+rc=0
+== restos en ${TMPDIR} ==
+zsh:17: no matches found: /var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T//hermetic-*
+hermetic-*: (ninguno)
+zsh:18: no matches found: /var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T//mutacion-i5.*
+mutacion-i5.*: (ninguno)
+== procesos del fixture ==
+(ninguno)

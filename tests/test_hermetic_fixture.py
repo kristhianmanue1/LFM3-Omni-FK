@@ -11,6 +11,7 @@ recibe una negativa registrada y sobrevive.
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -226,6 +227,49 @@ class SelfCleaningConstructor(unittest.TestCase):
         self.assertEqual(
             leaked, set(),
             f"la preparación fallida filtró su tmp: {leaked}")
+
+    def test_prepare_and_rmtree_failure_keeps_both_reasons(self):
+        # Control del hallazgo MED de la ronda 5: si además de fallar la
+        # preparación falla el borrado de emergencia, el error principal
+        # sigue siendo EL MISMO de preparación (sin cambio de tipo ni de
+        # motivo) y el fallo de rmtree viaja adjunto con la ruta del tmp
+        # conservado. Al final, el control limpia el tmp real que dejó.
+        prefix = "hermetic-selfclean2-"
+        root = Path(tempfile.gettempdir())
+        before = set(root.glob(prefix + "*"))
+        preparation = OSError("fallo inducido en la preparación")
+        with mock.patch.object(
+                HermeticFixture, "_write_substitutes",
+                side_effect=preparation):
+            with mock.patch(
+                    "shutil.rmtree",
+                    side_effect=OSError("fallo inducido en rmtree")):
+                with self.assertRaises(OSError) as caught:
+                    HermeticFixture(prefix=prefix)
+        self.assertIs(caught.exception, preparation,
+                      "el error propagado no es el de preparación")
+        self.assertIn("fallo inducido en la preparación",
+                      str(caught.exception))
+        notes = getattr(caught.exception, "__notes__", [])
+        self.assertTrue(
+            any("fallo inducido en rmtree" in note for note in notes),
+            f"el fallo de rmtree no quedó adjunto: {notes}")
+        leaked = set(root.glob(prefix + "*")) - before
+        self.assertEqual(len(leaked), 1,
+                         f"se esperaba exactamente un tmp conservado: "
+                         f"{leaked}")
+        leaked_dir = leaked.pop()
+        # red de seguridad: si una aserción falla más abajo, el tmp del
+        # control no se filtra (con el mock ya inactivo, rmtree es real;
+        # no-op si el borrado explícito del final ya lo retiró)
+        self.addCleanup(shutil.rmtree, leaked_dir, ignore_errors=True)
+        self.assertTrue(
+            any(str(leaked_dir) in note for note in notes),
+            f"la nota no nombra la ruta conservada {leaked_dir}: {notes}")
+        # fin del control: limpiar el tmp real que dejó el borrado fallido
+        shutil.rmtree(leaked_dir)
+        self.assertFalse(leaked_dir.exists(),
+                         "el tmp del control no se limpió")
 
 
 if __name__ == "__main__":

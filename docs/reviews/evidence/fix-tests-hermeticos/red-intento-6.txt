@@ -1,0 +1,17 @@
+test_prepare_and_rmtree_failure_keeps_both_reasons (tests.test_hermetic_fixture.SelfCleaningConstructor.test_prepare_and_rmtree_failure_keeps_both_reasons) ... FAIL
+
+======================================================================
+FAIL: test_prepare_and_rmtree_failure_keeps_both_reasons (tests.test_hermetic_fixture.SelfCleaningConstructor.test_prepare_and_rmtree_failure_keeps_both_reasons)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-tests-hermeticos/tests/test_hermetic_fixture.py", line 249, in test_prepare_and_rmtree_failure_keeps_both_reasons
+    self.assertIs(caught.exception, preparation,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  "el error propagado no es el de preparación")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OSError('fallo inducido en rmtree') is not OSError('fallo inducido en la preparación') : el error propagado no es el de preparación
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=1)

@@ -1,0 +1,28 @@
+== estado 2026-11-08T01:10:35 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)
+
+== corrida: python3 -m unittest tests.test_hermetic_fixture -v ==
+
+test_survivor_keeps_tmp_and_sentinel (tests.test_hermetic_fixture.CleanupKeepsSceneForSurvivors.test_survivor_keeps_tmp_and_sentinel) ... ok
+test_fixture_lsof_precedence (tests.test_hermetic_fixture.HermeticEnvironment.test_fixture_lsof_precedence) ... ok
+test_guarded_kill_defined_by_fixture (tests.test_hermetic_fixture.HermeticEnvironment.test_guarded_kill_defined_by_fixture) ... ok
+test_minimal_env_without_host_inheritance (tests.test_hermetic_fixture.HermeticEnvironment.test_minimal_env_without_host_inheritance) ... ok
+test_kill_allows_registered_process (tests.test_hermetic_fixture.KillGuard.test_kill_allows_registered_process) ... ok
+test_kill_denies_recycled_pid (tests.test_hermetic_fixture.KillGuard.test_kill_denies_recycled_pid) ... ok
+test_kill_denies_unregistered_pid (tests.test_hermetic_fixture.KillGuard.test_kill_denies_unregistered_pid) ... ok
+test_prepare_and_rmtree_failure_keeps_both_reasons (tests.test_hermetic_fixture.SelfCleaningConstructor.test_prepare_and_rmtree_failure_keeps_both_reasons) ... ok
+test_prepare_failure_deletes_tmp_and_propagates (tests.test_hermetic_fixture.SelfCleaningConstructor.test_prepare_failure_deletes_tmp_and_propagates) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 1.230s
+
+OK
+== rc=0 ==
+== estado 2026-11-08T01:10:36 ==
+lsof listeners 8091/8092/8443:
+  (ninguno)
+ps procesos del servicio:
+  (ninguno)

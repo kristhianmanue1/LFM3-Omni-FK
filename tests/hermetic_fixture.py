@@ -366,14 +366,22 @@ class HermeticFixture:
         try:
             self._prepare()
             self._write_substitutes()
-        except BaseException:
+        except BaseException as preparation_error:
             # Autolimpieza de la preparación (hallazgo MED ronda 4): si
             # algo falla a mitad, ningún caller pudo aún registrar
             # final_cleanup y sólo existen directorios y archivos — sin
             # procesos que conservar —, así que el tmp se borra y el
-            # error original se propaga. El borrado es best-effort: no
-            # debe enmascarar ese error con uno propio de rmtree.
-            shutil.rmtree(self.tmp, ignore_errors=True)
+            # error original se propaga sin cambiar de tipo. Hallazgo MED
+            # ronda 5: si ese borrado falla, no se silencia ni sustituye
+            # al principal — viaja adjunto (add_note) con la ruta del tmp
+            # conservada para diagnóstico.
+            try:
+                shutil.rmtree(self.tmp)
+            except Exception as cleanup_error:
+                preparation_error.add_note(
+                    "falló el borrado de emergencia del tmp; ruta "
+                    f"conservada: {self.tmp}; error de borrado: "
+                    f"{cleanup_error}")
             raise
 
     def _prepare(self):
