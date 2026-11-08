@@ -1,0 +1,10 @@
+OK — 399 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+check_sizes rc=0
+OK — 2 plan(es) verificados (estructura E1-E6)
+check_plans rc=0
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+check_reports rc=0
+OK — al día: versión vigente corpus/v10
+tpl-docs rc=0
+OK — al día: versión vigente gate/v14
+tpl-scripts rc=0

@@ -1,0 +1,9 @@
+src/jobs_manager.py lines=796 maxcol=81
+src/jobs_storage.py lines=313 maxcol=80
+src/canonical_json.py lines=110 maxcol=76
+src/gateway_jobs.py lines=127 maxcol=79
+src/gateway_http.py lines=742 maxcol=87
+tests/test_jobs_i5.py lines=460 maxcol=88
+tests/test_jobs_boundary_i5.py lines=795 maxcol=81
+tests/test_jobs_intento2_i5.py lines=776 maxcol=77
+tests/test_jobs_intento3_i5.py lines=341 maxcol=76

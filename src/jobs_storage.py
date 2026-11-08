@@ -17,6 +17,7 @@ idempotencia por link exclusivo (el registro ES la admisión); permisos
 
 from __future__ import annotations
 
+import errno
 from datetime import datetime, timedelta, timezone
 import fcntl
 import hashlib
@@ -42,12 +43,14 @@ class CommitTrasLinkError(OSError):
 
 
 class JobsDirOcupado(RuntimeError):
-    """Otra instancia sostiene el cerrojo de este jobs_dir (D1).
+    """El jobs_dir no puede tomarse en exclusividad (D1).
 
     La topología autorizada es UNA instancia por jobs_dir: el cerrojo
     se toma con flock exclusivo y no bloqueante al arrancar y una
     segunda instancia falla cerrada sin arrancar worker ni
-    recuperación. El mensaje nombra el directorio y la causa.
+    recuperación. El mensaje nombra el directorio y la causa real del
+    flock: otra instancia (EWOULDBLOCK/EAGAIN) o un sistema de
+    archivos sin cerrojos (LOW-4, ronda 2).
     """
 
 
@@ -202,9 +205,12 @@ class JobsStorage:
     def tomar_cerrojo_instancia(self) -> int:
         """flock exclusivo y no bloqueante sobre el jobs_dir (D1).
 
-        Devuelve el fd que sostiene el cerrojo; lanza
-        JobsDirOcupado nombrando el directorio y la causa si otra
-        instancia lo tiene.
+        Devuelve el fd que sostiene el cerrojo; lanza JobsDirOcupado
+        nombrando el directorio y la causa, bifurcando por errno
+        (LOW-4, ronda 2): EWOULDBLOCK/EAGAIN es otra instancia; el
+        resto (p. ej. ENOLCK en exFAT/NFS sin lockd), un sistema de
+        archivos que no admite el cerrojo. Ambos fallan cerrados, sin
+        worker ni recuperación.
         """
         lock_path = self.base_dir / ".instance.lock"
         fd = os.open(lock_path, os.O_RDWR | os.O_CREAT, 0o600)
@@ -212,10 +218,14 @@ class JobsStorage:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except OSError as exc:
             os.close(fd)
+            if exc.errno in (errno.EWOULDBLOCK, errno.EAGAIN):
+                motivo = "ya está en uso por otra instancia"
+            else:
+                motivo = ("no admite el cerrojo de instancia en este "
+                          "sistema de archivos")
             raise JobsDirOcupado(
-                f"jobs_dir {self.base_dir} ya está en uso por otra "
-                f"instancia; no se arrancan worker ni recuperación "
-                f"(flock: {exc})") from exc
+                f"jobs_dir {self.base_dir} {motivo}; no se arrancan "
+                f"worker ni recuperación (flock: {exc})") from exc
         return fd
 
     def asegurar_claims_dir(self) -> Path:
@@ -230,6 +240,30 @@ class JobsStorage:
             (self.claims_dir / f"{job_id}.lock").unlink(missing_ok=True)
         except OSError:
             pass
+
+    def purgar_a_tombstone(self, job: dict) -> None:
+        """Tombstone durable sin payload ni resultado: registra el
+        borrado (§J) y retira el cerrojo de reclamo.
+
+        Movido tal cual de JobsManager (reorganización pura del
+        intento 3, §3.3 del estándar): misma construcción del
+        tombstone y mismo orden de escrituras.
+        """
+        ahora = datetime.now(timezone.utc)
+        job_id = job.get("job_id") or "desconocido"
+        tombstone = {
+            "job_id": job_id,
+            "contract_version": job.get("contract_version", "2"),
+            "project_id": job.get("project_id"),
+            "state": "expired",
+            "expires_at": job.get("expires_at"),
+            "created_at": job.get("created_at"),
+            "expired_at": job.get("expires_at"),
+            "purged_at": ahora.isoformat(),
+            "model_revision": job.get("model_revision"),
+        }
+        self.save_job(tombstone)
+        self.eliminar_claim(job_id)
 
     def limpiar_temporales(self, tmp_edad_s: float) -> None:
         """Temporales huérfanos (*.tmp.*) fuera tras tmp_edad_s: un

@@ -126,18 +126,30 @@ class JobsManager:
         self._worker_thread.start()
 
     def stop(self, timeout: float = 2.0) -> None:
-        """Detiene limpiamente el worker y libera el jobs_dir (D1)."""
+        """Detiene el worker y libera el jobs_dir (D1). El fd de
+        instancia sólo se cierra si el hilo terminó de verdad; vivo
+        tras el plazo, el directorio queda tomado (fail-closed, MED-3
+        ronda 2) con constancia en stderr; se puede volver a llamar
+        cuando el worker haya terminado."""
         self._stop_event.set()
         self.work_queue.put(("", ""))  # Despertar thread
         if self._worker_thread.is_alive():
             self._worker_thread.join(timeout=timeout)
+        if self._worker_thread.is_alive():
+            print(f"jobs: worker vivo tras stop(timeout={timeout}s); "
+                  f"no se libera el cerrojo de "
+                  f"{self.storage.base_dir} (fail-closed, D1)",
+                  file=sys.stderr, flush=True)
+            return
         if self._fd_instancia is not None:
             os.close(self._fd_instancia)
             self._fd_instancia = None
 
     def startup_recover(self) -> int:
-        """Fail-closed al arrancar: running pasa a failed; queued con
-        registro se reencola (§J); sin registro, no se ejecuta."""
+        """Fail-closed al arrancar: running y cancellation_pending
+        pasan a failed (MED-1, ronda 2: un crash en la ventana de
+        cancelación no puede dejar el job abierto); queued con registro
+        se reencola (§J); sin registro, no se ejecuta."""
         recuperados = 0
         self._purgar_expirados()
         with self.lock:
@@ -150,7 +162,7 @@ class JobsManager:
                     except Exception:
                         continue
                     estado = data.get("state")
-                    if estado == "running":
+                    if estado in ("running", "cancellation_pending"):
                         data["error"] = {
                             "code": "server_interrupted", "message":
                                 "Servidor reiniciado durante el procesamiento; "
@@ -312,20 +324,22 @@ class JobsManager:
                 return self._resolver_rival(
                     project_id, idempotency_key, payload_hash, job_id)
             except CommitTrasLinkError:
-                # BLOCKER-1: el registro quedó enlazado con durabilidad
-                # incierta. Se retira registro y job si el disco lo
-                # permite (reintento limpio); si el registro no se
-                # puede retirar, la pareja registro+job constante EN
-                # disco es la admisión: se responde 202 con ella.
-                if self.storage.retirar_registro(
-                        project_id, idempotency_key):
-                    self._descartar_job_sin_admision(project_id, job_id)
-                    return _respuesta_error(
-                        500, "storage_error",
-                        "No se pudo confirmar el registro de "
-                        "idempotencia; admisión denegada")
-                self.work_queue.put((project_id, job_id))
-                return 202, self._vista_admision(job_dict)
+                # BLOCKER-1 + LOW-5 (ronda 2): el registro quedó
+                # enlazado con durabilidad incierta y la admisión sólo
+                # constaría con fsync (§J: persistir… atómicamente).
+                # Nunca 202 sobre esa pareja: 500 fail-closed. El job
+                # se descarta siempre; el registro se retira si el
+                # disco lo permite (reintento limpio) y si no, el
+                # reintento reconcilia por la vía del huérfano. El
+                # retorno de retirar no decide aquí: el reintento
+                # lee el disco, no esta respuesta.
+                self.storage.retirar_registro(
+                    project_id, idempotency_key)
+                self._descartar_job_sin_admision(project_id, job_id)
+                return _respuesta_error(
+                    500, "storage_error",
+                    "Registro de idempotencia sin confirmación "
+                    "durable; admisión denegada (reintente)")
             except OSError:
                 self._descartar_job_sin_admision(project_id, job_id)
                 return _respuesta_error(
@@ -399,9 +413,12 @@ class JobsManager:
             # Si la purga falla, el 410 sigue siendo cierto (el
             # resultado no se entrega tras el TTL) pero el fallo
             # queda contado y visible; el barrido reintenta (HIGH-6).
+            # LOW-6 (ronda 2): bajo self.lock, para que el tombstone
+            # no se intercale con la transición running del worker.
             if job.get("state") not in ("running", "expired"):
                 try:
-                    self._purgar_job(job)
+                    with self.lock:
+                        self._purgar_job(job)
                 except OSError as exc:
                     self.fallos_purga += 1
                     print(f"jobs: purga fallida de {job.get('job_id')}: "
@@ -662,23 +679,9 @@ class JobsManager:
         ).isoformat()
 
     def _purgar_job(self, job: dict) -> None:
-        """Tombstone durable sin payload ni resultado: registra el
-        borrado (§J) y retira el cerrojo de reclamo."""
-        ahora = datetime.now(timezone.utc)
-        job_id = job.get("job_id") or "desconocido"
-        tombstone = {
-            "job_id": job_id,
-            "contract_version": job.get("contract_version", "2"),
-            "project_id": job.get("project_id"),
-            "state": "expired",
-            "expires_at": job.get("expires_at"),
-            "created_at": job.get("created_at"),
-            "expired_at": job.get("expires_at"),
-            "purged_at": ahora.isoformat(),
-            "model_revision": job.get("model_revision"),
-        }
-        self._save_job_atomically(tombstone)
-        self.storage.eliminar_claim(job_id)
+        """Tombstone durable sin payload (§J); la E/S vive en storage
+        (reorganización pura del intento 3, §3.3 del estándar)."""
+        self.storage.purgar_a_tombstone(job)
 
     def _purgar_expirados(self) -> int:
         """Barrido: vencidos a tombstone, registros vencidos fuera.

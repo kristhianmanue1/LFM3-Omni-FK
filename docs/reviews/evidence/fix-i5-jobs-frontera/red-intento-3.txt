@@ -1,0 +1,127 @@
+test_45_job_en_curso_no_bloquea_admision (tests.test_jobs_intento3_i5.AdmisionSoloCuentaQueuedTests.test_45_job_en_curso_no_bloquea_admision) ... ok
+test_47_errno_distingue_ocupado_de_no_soportado (tests.test_jobs_intento3_i5.DiagnosticoCerrojoInstanciaTests.test_47_errno_distingue_ocupado_de_no_soportado) ... FAIL
+test_47b_enolck_es_fail_closed_en_el_arranque (tests.test_jobs_intento3_i5.DiagnosticoCerrojoInstanciaTests.test_47b_enolck_es_fail_closed_en_el_arranque) ... ok
+test_49_purga_de_get_job_toma_self_lock (tests.test_jobs_intento3_i5.PurgaGetJobBajoLockTests.test_49_purga_de_get_job_toma_self_lock) ... FAIL
+test_48_irretirable_tras_link_es_500_y_reintenta (tests.test_jobs_intento3_i5.RamaIrretirableTests.test_48_irretirable_tras_link_es_500_y_reintenta) ... FAIL
+test_44_cancellation_pending_a_failed_en_arranque (tests.test_jobs_intento3_i5.RecuperacionArranqueTests.test_44_cancellation_pending_a_failed_en_arranque) ... FAIL
+test_46_segunda_instancia_bloqueada_mientras_vive_el_worker (tests.test_jobs_intento3_i5.StopConWorkerVivoTests.test_46_segunda_instancia_bloqueada_mientras_vive_el_worker) ... FAIL
+
+======================================================================
+FAIL: test_47_errno_distingue_ocupado_de_no_soportado (tests.test_jobs_intento3_i5.DiagnosticoCerrojoInstanciaTests.test_47_errno_distingue_ocupado_de_no_soportado)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento3_i5.py", line 210, in test_47_errno_distingue_ocupado_de_no_soportado
+    self.assertIn("sistema de archivos", mensaje,
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  f"ENOLCK no se diagnosticó como FS sin cerrojos: "
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                  f"{mensaje}")
+                  ^^^^^^^^^^^^^
+AssertionError: 'sistema de archivos' not found in 'jobs_dir /var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/lfm3_i3_lck_ppwu6o_v/jobs ya está en uso por otra instancia; no se arrancan worker ni recuperación (flock: [Errno 77] No locks available)' : ENOLCK no se diagnosticó como FS sin cerrojos: jobs_dir /var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/lfm3_i3_lck_ppwu6o_v/jobs ya está en uso por otra instancia; no se arrancan worker ni recuperación (flock: [Errno 77] No locks available)
+
+======================================================================
+FAIL: test_49_purga_de_get_job_toma_self_lock (tests.test_jobs_intento3_i5.PurgaGetJobBajoLockTests.test_49_purga_de_get_job_toma_self_lock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento3_i5.py", line 335, in test_49_purga_de_get_job_toma_self_lock
+    self.assertTrue(visto.get("locked"),
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+                    "la purga de get_job corre fuera de self.lock "
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    "(puede intercalarse con _marcar_running)")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : la purga de get_job corre fuera de self.lock (puede intercalarse con _marcar_running)
+
+======================================================================
+FAIL: test_48_irretirable_tras_link_es_500_y_reintenta (tests.test_jobs_intento3_i5.RamaIrretirableTests.test_48_irretirable_tras_link_es_500_y_reintenta)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento3_i5.py", line 278, in test_48_irretirable_tras_link_es_500_y_reintenta
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        status1, 500,
+        ^^^^^^^^^^^^^
+        f"202 apoyado en durabilidad no confirmada: {status1} "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"{res1}")
+        ^^^^^^^^^^
+AssertionError: 202 != 500 : 202 apoyado en durabilidad no confirmada: 202 {'job_id': 'job-d2f4550b841efa6c', 'state': 'queued', 'status_url': '/jobs/job-d2f4550b841efa6c', 'created_at': '2026-11-08T14:53:39.485183+00:00', 'expires_at': '2026-11-08T15:53:39.485183+00:00'}
+
+======================================================================
+FAIL: test_44_cancellation_pending_a_failed_en_arranque (tests.test_jobs_intento3_i5.RecuperacionArranqueTests.test_44_cancellation_pending_a_failed_en_arranque)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento3_i5.py", line 86, in test_44_cancellation_pending_a_failed_en_arranque
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        en_disco.get("state"), "failed",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "un crash durante la ventana de cancelación dejó el job "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "sin reconciliar al arrancar (§J: cancellation_pending -> "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "cancelled/failed)")
+        ^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'cancellation_pending' != 'failed'
+- cancellation_pending
++ failed
+ : un crash durante la ventana de cancelación dejó el job sin reconciliar al arrancar (§J: cancellation_pending -> cancelled/failed)
+
+======================================================================
+FAIL: test_46_segunda_instancia_bloqueada_mientras_vive_el_worker (tests.test_jobs_intento3_i5.StopConWorkerVivoTests.test_46_segunda_instancia_bloqueada_mientras_vive_el_worker)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento3_i5.py", line 171, in test_46_segunda_instancia_bloqueada_mientras_vive_el_worker
+    with self.assertRaises(JobsDirOcupado):
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: JobsDirOcupado not raised
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.559s
+
+FAILED (failures=5)
+rc=1
+--- sonda reversión D2 (esperada: FAIL del test_45 = control que muerde) ---
+test_45_job_en_curso_no_bloquea_admision (tests.test_jobs_intento3_i5.AdmisionSoloCuentaQueuedTests.test_45_job_en_curso_no_bloquea_admision) ...
+  test_45_job_en_curso_no_bloquea_admision (tests.test_jobs_intento3_i5.AdmisionSoloCuentaQueuedTests.test_45_job_en_curso_no_bloquea_admision) (estado='running') ... FAIL
+  test_45_job_en_curso_no_bloquea_admision (tests.test_jobs_intento3_i5.AdmisionSoloCuentaQueuedTests.test_45_job_en_curso_no_bloquea_admision) (estado='cancellation_pending') ... FAIL
+
+======================================================================
+FAIL: test_45_job_en_curso_no_bloquea_admision (tests.test_jobs_intento3_i5.AdmisionSoloCuentaQueuedTests.test_45_job_en_curso_no_bloquea_admision) (estado='running')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento3_i5.py", line 126, in test_45_job_en_curso_no_bloquea_admision
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        status, 202,
+        ^^^^^^^^^^^^
+        f"con un job {estado} del proyecto, el POST debía "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"admitirse (SPEC-i5:75 cuenta sólo queued): "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"{status} {res}")
+        ^^^^^^^^^^^^^^^^^^
+AssertionError: 429 != 202 : con un job running del proyecto, el POST debía admitirse (SPEC-i5:75 cuenta sólo queued): 429 {'error': {'code': 'queue_limit_per_project_exceeded', 'message': 'El proyecto ya tiene 1 trabajo(s) en cola (máximo 1)'}}
+
+======================================================================
+FAIL: test_45_job_en_curso_no_bloquea_admision (tests.test_jobs_intento3_i5.AdmisionSoloCuentaQueuedTests.test_45_job_en_curso_no_bloquea_admision) (estado='cancellation_pending')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-jobs-frontera/tests/test_jobs_intento3_i5.py", line 126, in test_45_job_en_curso_no_bloquea_admision
+    self.assertEqual(
+    ~~~~~~~~~~~~~~~~^
+        status, 202,
+        ^^^^^^^^^^^^
+        f"con un job {estado} del proyecto, el POST debía "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"admitirse (SPEC-i5:75 cuenta sólo queued): "
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        f"{status} {res}")
+        ^^^^^^^^^^^^^^^^^^
+AssertionError: 429 != 202 : con un job cancellation_pending del proyecto, el POST debía admitirse (SPEC-i5:75 cuenta sólo queued): 429 {'error': {'code': 'queue_limit_per_project_exceeded', 'message': 'El proyecto ya tiene 2 trabajo(s) en cola (máximo 1)'}}
+
+----------------------------------------------------------------------
+Ran 1 test in 0.010s
+
+FAILED (failures=2)
+rc_sonda=1
