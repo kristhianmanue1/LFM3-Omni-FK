@@ -41,9 +41,12 @@ Entradas:
       max_tokens: entero [opcional] (1..4096; defecto 1024)
     arguments para synthesize_speech:
       input: string [obligatorio] (1..600 caracteres)
-      voice: string [opcional] (defecto "es_ES-davefx-medium")
-      speed: number [opcional] (0.5..2.0; defecto 1.0)
       response_format: string [opcional] ("wav")
+      [voz fija desde issue #2 (decisión del Operador, 2026-11-07):
+       sin voice ni speed; los campos no declarados se rechazan en la
+       frontera MCP antes del gateway, la respuesta no atribuye voz ni
+       velocidad y format:"wav" describe el formato aplicado. Ver
+       docs/contracts/mcp-tools-v2.md, sección «Voz fija y migración»]
     arguments para infer_video: [activo sólo si video: true en gateway]
       video_base64: string [obligatorio] — MP4 en base64 (<= 16 MiB)
       prompt: string [obligatorio] (1..8000 caracteres)
@@ -57,7 +60,7 @@ Salidas:
   infer_text: {text:string, validated:boolean, usage:objeto}
   infer_vision: {description:string, validated:boolean, usage:objeto}
   infer_audio: {text:string, validated:boolean, usage:objeto}
-  synthesize_speech: {audio_base64:string, format:"wav", voice:string,
+  synthesize_speech: {audio_base64:string, format:"wav",
                       chars:int, duration_est_s:float}
   infer_video: {description:string, validated:boolean, usage:objeto}
 

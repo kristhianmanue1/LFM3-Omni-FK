@@ -1,0 +1,22 @@
+test_campo_desconocido_rechazado_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_campo_desconocido_rechazado_antes_gateway) ... ok
+test_gateway_tts_texto_fuera_argv_y_limpieza (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_gateway_tts_texto_fuera_argv_y_limpieza) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_proceso_rechaza_voice_y_speed_antes_backend) ... ok
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway) ... ok
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso) ... ok
+test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija) ... ok
+test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway) ... ok
+test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado) ... ok
+test_initialize_valido (tests.test_mcp_server_v2.HandshakeV2.test_initialize_valido) ... ok
+test_metodo_antes_de_initialize_rechazado_32002 (tests.test_mcp_server_v2.HandshakeV2.test_metodo_antes_de_initialize_rechazado_32002) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server_v2.HandshakeV2.test_notificacion_sin_respuesta) ... ok
+test_tools_list_seis_herramientas (tests.test_mcp_server_v2.HandshakeV2.test_tools_list_seis_herramientas) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server_v2.HandshakeV2.test_version_no_soportada_negocia_default) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.051s
+
+OK

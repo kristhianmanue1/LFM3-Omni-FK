@@ -99,13 +99,11 @@ TOOLS = [
     },
     {
         "name": "synthesize_speech",
-        "description": "Síntesis de voz en español con cerrojo de exclusión mutua",
+        "description": "Síntesis de voz fija en español con cerrojo de exclusión mutua",
         "inputSchema": {
             "type": "object",
             "properties": {
                 "input": {"type": "string", "minLength": 1, "maxLength": 600},
-                "voice": {"type": "string"},
-                "speed": {"type": "number", "minimum": 0.5, "maximum": 2.0},
                 "response_format": {"type": "string", "enum": ["wav"]},
             },
             "additionalProperties": False,
@@ -466,7 +464,7 @@ def handle_synthesize_speech(msg):
     args = (msg.get("params") or {}).get("arguments")
     if not isinstance(args, dict):
         return _tool_error("arguments inválidos: debe ser un objeto")
-    fallo = _campos_extra(args, {"input", "voice", "speed", "response_format"})
+    fallo = _campos_extra(args, {"input", "response_format"})
     if fallo:
         return _tool_error(fallo)
     resp_fmt = args.get("response_format", "wav")
@@ -482,14 +480,6 @@ def handle_synthesize_speech(msg):
         validar_payload_tts({"input": texto, "language": "es", "response_format": "wav"})
     except ErrorV2 as exc:
         return _tool_error(f"arguments inválidos: {exc.message}")
-
-    voice = args.get("voice", "es_ES-davefx-medium")
-    if not isinstance(voice, str):
-        return _tool_error("arguments inválidos: voice debe ser string")
-    speed = args.get("speed", 1.0)
-    if not isinstance(speed, (int, float)) or isinstance(speed, bool) \
-            or not 0.5 <= speed <= 2.0:
-        return _tool_error("arguments inválidos: speed debe ser número entre 0.5 y 2.0")
 
     payload = {
         "input": texto,
@@ -515,12 +505,16 @@ def handle_synthesize_speech(msg):
             detalle = str(status)
         return _tool_error(f"gateway respondió {status}: {detalle}")
 
+    try:
+        validar_wav(respuesta, exigir_muestras=True)
+    except ErrorV2 as exc:
+        return _tool_error(f"salida WAV inválida: {exc.message}")
+
     audio_b64 = base64.b64encode(respuesta).decode("ascii")
     duracion_est = round(len(texto) / 15.0, 2)
     return _tool_result({
         "audio_base64": audio_b64,
         "format": "wav",
-        "voice": voice,
         "chars": len(texto),
         "duration_est_s": duracion_est,
     })

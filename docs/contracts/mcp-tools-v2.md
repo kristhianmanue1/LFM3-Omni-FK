@@ -43,8 +43,6 @@ Entrada:
       max_tokens: entero [opcional] (1..4096; defecto 1024)
     arguments.synthesize_speech:
       input: string [obligatorio] (1..600 caracteres, sin control)
-      voice: string [opcional] (defecto "es_ES-davefx-medium")
-      speed: number [opcional] (0.5..2.0; defecto 1.0)
       response_format: string [opcional] ("wav"; defecto "wav")
     arguments.infer_video: [anunciado sólo si gateway tiene video: true]
       video_base64: string [obligatorio] — MP4 verificado por caja ftyp y
@@ -66,7 +64,7 @@ Salida:
     infer_text -> {text:string, validated:boolean, usage:objeto}
     infer_vision -> {description:string, validated:boolean, usage:objeto}
     infer_audio -> {text:string, validated:boolean, usage:objeto}
-    synthesize_speech -> {audio_base64:string, format:"wav", voice:string,
+    synthesize_speech -> {audio_base64:string, format:"wav",
                           chars:int, duration_est_s:float}
     infer_video -> {description:string, validated:boolean, usage:objeto}
 
@@ -86,3 +84,21 @@ Errores:
   JSON no parseable -> error JSON-RPC -32700
   notificación JSON-RPC (sin id) -> sin respuesta
 ```
+
+## Voz fija y migración de consumidores MCP v2
+
+Procedencia: issue #2, decisión del Operador del 2026-11-07. La síntesis
+actual usa voz fija: `voice` y `speed` no se aplican en el motor ni son
+parámetros del contrato. Cualquier presencia de esas claves, incluso con
+valores que antes eran predeterminados, produce `isError:true` en
+`tools/call`, con `arguments inválidos: campos no declarados en el contrato`
+y el nombre de cada campo, antes de llamar al gateway. La respuesta exitosa
+no atribuye voz ni velocidad. `format:"wav"` describe el formato aplicado.
+
+Esto rompe las llamadas de consumidores MCP v2 que envían `voice` o
+`speed`. Deben omitir ambas claves y tratar el error como permanente para
+esa petición; reintentarla sin modificar los argumentos repetirá el rechazo.
+La elección de otra voz requiere seleccionar otro motor fuera de este
+contrato. Una selección dentro de LFM3 requiere contrato nuevo y migración
+declarada; no se ha medido que el GGUF congelado la admita. El gateway HTTP
+ya rechaza estos campos (`SPEC-i1-vs-sintesis-voz.md` §1, ADR-007).

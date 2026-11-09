@@ -16,6 +16,7 @@ Uso: python3 -m unittest tests.test_mcp_server_v2 -v
 import base64
 import json
 import struct
+import subprocess
 import sys
 import unittest
 import zlib
@@ -444,10 +445,98 @@ class SynthesizeSpeechV2(unittest.TestCase):
         self.assertFalse(resp["result"]["isError"])
         dato = json.loads(resp["result"]["content"][0]["text"])
         self.assertEqual(dato["format"], "wav")
-        self.assertEqual(dato["voice"], "es_ES-davefx-medium")
+        self.assertNotIn("voice", dato)
+        self.assertNotIn("speed", dato)
         self.assertEqual(dato["chars"], 10)
         recuperado = base64.b64decode(dato["audio_base64"])
         self.assertEqual(recuperado, audio_wav)
+
+    @patch("mcp_server_v2._http_gateway")
+    def test_voice_rechazada_antes_gateway(self, mock_http):
+        resp = _req("tools/call", {"name": "synthesize_speech",
+                                   "arguments": {"input": "Hola", "voice": "otra"}})
+        self.assertTrue(resp["result"]["isError"])
+        self.assertIn("voice", resp["result"]["content"][0]["text"])
+        mock_http.assert_not_called()
+
+    @patch("mcp_server_v2._http_gateway")
+    def test_speed_rechazada_antes_gateway(self, mock_http):
+        resp = _req("tools/call", {"name": "synthesize_speech",
+                                   "arguments": {"input": "Hola", "speed": 1.5}})
+        self.assertTrue(resp["result"]["isError"])
+        self.assertIn("speed", resp["result"]["content"][0]["text"])
+        mock_http.assert_not_called()
+
+    @patch("mcp_server_v2._http_gateway")
+    def test_campo_desconocido_rechazado_antes_gateway(self, mock_http):
+        resp = _req("tools/call", {"name": "synthesize_speech",
+                                   "arguments": {"input": "Hola", "extra": 1}})
+        self.assertTrue(resp["result"]["isError"])
+        self.assertIn("extra", resp["result"]["content"][0]["text"])
+        mock_http.assert_not_called()
+
+    @patch("mcp_server_v2._http_gateway")
+    def test_wav_invalido_rechazado(self, mock_http):
+        mock_http.return_value = (200, b"no es wav")
+        resp = _req("tools/call", {"name": "synthesize_speech",
+                                   "arguments": {"input": "Hola"}})
+        self.assertTrue(resp["result"]["isError"])
+        self.assertIn("WAV", resp["result"]["content"][0]["text"])
+
+    def test_tools_list_voz_fija(self):
+        tool = next(t for t in _req("tools/list")["result"]["tools"]
+                    if t["name"] == "synthesize_speech")
+        self.assertNotIn("voice", tool["inputSchema"]["properties"])
+        self.assertNotIn("speed", tool["inputSchema"]["properties"])
+        self.assertFalse(tool["inputSchema"]["additionalProperties"])
+
+    def test_proceso_rechaza_voice_y_speed_antes_backend(self):
+        requests = [
+            {"jsonrpc": "2.0", "id": 1, "method": "initialize",
+             "params": {"protocolVersion": "2025-06-18"}},
+            *({"jsonrpc": "2.0", "id": index, "method": "tools/call",
+               "params": {"name": "synthesize_speech",
+                          "arguments": {"input": "Hola", field: value}}}
+              for index, field, value in ((2, "voice", "otra"),
+                                          (3, "speed", 1.5))),
+            {"jsonrpc": "2.0", "id": 4, "method": "tools/call",
+             "params": {"name": "synthesize_speech",
+                        "arguments": {"input": "Control"}}},
+        ]
+        code = (
+            "import sys; sys.path.insert(0, 'src'); import mcp_server_v2 as m; "
+            "m._http_gateway = lambda *a, **kw: "
+            "(sys.stderr.write('BACKEND_CALLED\\n'), (200, b''))[1]; m.main()"
+        )
+        proc = subprocess.run(
+            [sys.executable, "-c", code], cwd=RAIZ,
+            input="\n".join(json.dumps(req) for req in requests) + "\n",
+            text=True, capture_output=True, timeout=10, check=True,
+        )
+        responses = [json.loads(line) for line in proc.stdout.splitlines()]
+        self.assertEqual(len(responses), 4)
+        for response, field in zip(responses[1:3], ("voice", "speed")):
+            self.assertTrue(response["result"]["isError"])
+            self.assertIn(field, response["result"]["content"][0]["text"])
+        self.assertEqual(proc.stderr.count("BACKEND_CALLED"), 1)
+
+    def test_gateway_tts_texto_fuera_argv_y_limpieza(self):
+        from gateway_http import _sintetizar_wav
+        observed = {}
+
+        def runner(argv, prompt_path, wav_path, _env):
+            observed["argv"] = argv
+            observed["prompt_path"] = Path(prompt_path)
+            observed["text"] = Path(prompt_path).read_text(encoding="utf-8")
+            observed["mode"] = Path(prompt_path).stat().st_mode & 0o777
+            Path(wav_path).write_bytes(_wav_minimo())
+
+        result = _sintetizar_wav("Texto privado", runner=runner)
+        self.assertEqual(result, _wav_minimo())
+        self.assertEqual(observed["text"], "Texto privado")
+        self.assertNotIn("Texto privado", observed["argv"])
+        self.assertEqual(observed["mode"], 0o600)
+        self.assertFalse(observed["prompt_path"].exists())
 
     @patch("mcp_server_v2._http_gateway")
     def test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy(self, mock_http):

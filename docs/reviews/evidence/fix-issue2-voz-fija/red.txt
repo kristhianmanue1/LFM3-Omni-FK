@@ -1,0 +1,264 @@
+test_initialize_valido (tests.test_mcp_server_v2.HandshakeV2.test_initialize_valido) ... ok
+test_metodo_antes_de_initialize_rechazado_32002 (tests.test_mcp_server_v2.HandshakeV2.test_metodo_antes_de_initialize_rechazado_32002) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server_v2.HandshakeV2.test_notificacion_sin_respuesta) ... ok
+test_tools_list_seis_herramientas (tests.test_mcp_server_v2.HandshakeV2.test_tools_list_seis_herramientas) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server_v2.HandshakeV2.test_version_no_soportada_negocia_default) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server_v2.HealthV2.test_health_con_arguments_rechazado) ... ok
+test_health_gateway_down (tests.test_mcp_server_v2.HealthV2.test_health_gateway_down) ... ok
+test_health_gateway_up (tests.test_mcp_server_v2.HealthV2.test_health_gateway_up) ... ok
+test_infer_audio_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_invalido_rechazado_en_frontera) ... ok
+test_infer_audio_wav_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_wav_valido) ... ok
+test_infer_video_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_invalido_rechazado_en_frontera) ... ok
+test_infer_video_mp4_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_mp4_valido) ... ok
+test_infer_vision_imagen_invalida_rechazada_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_imagen_invalida_rechazada_en_frontera) ... ok
+test_infer_vision_png_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_png_valido) ... ok
+test_max_tokens_default_1024_en_vision (tests.test_mcp_server_v2.InferMultimodalV2.test_max_tokens_default_1024_en_vision) ... ok
+test_campos_extra_rechazados (tests.test_mcp_server_v2.InferTextV2.test_campos_extra_rechazados) ... ok
+test_infer_text_con_schema_v2_ext_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_con_schema_v2_ext_exitoso) ... ok
+test_infer_text_salida_que_viola_schema_es_salida_invalida (tests.test_mcp_server_v2.InferTextV2.test_infer_text_salida_que_viola_schema_es_salida_invalida) ... ok
+test_infer_text_sin_schema_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_sin_schema_exitoso) ... ok
+test_max_tokens_booleano_cero_y_4097_rechazados (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_booleano_cero_y_4097_rechazados) ... ok
+test_max_tokens_default_512 (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_default_512) ... ok
+test_prompt_invalido_rechazado (tests.test_mcp_server_v2.InferTextV2.test_prompt_invalido_rechazado) ... ok
+test_schema_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferTextV2.test_schema_invalido_rechazado_en_frontera) ... ok
+test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo) ... ERROR
+test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo) ... ERROR
+test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo) ... ERROR
+test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_proceso_rechaza_voice_y_speed_antes_backend) ... ERROR
+test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway) ... ERROR
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_choices_vacio_es_salida_invalida) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_mensaje_no_objeto_32600) ... ok
+test_metodo_desconocido_32601 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_metodo_desconocido_32601) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_parse_error_32700) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_32602 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_tool_desconocida_32602) ... ok
+test_usage_ausente_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_usage_ausente_es_salida_invalida) ... ok
+test_campo_desconocido_rechazado_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_campo_desconocido_rechazado_antes_gateway) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway) ... FAIL
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso) ... FAIL
+test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija) ... FAIL
+test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway) ... FAIL
+test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado) ... FAIL
+
+======================================================================
+ERROR: test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 560, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 560, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 560, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_proceso_rechaza_voice_y_speed_antes_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 560, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 560, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+FAIL: test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 468, in test_speed_rechazada_antes_gateway
+    self.assertIn("speed", resp["result"]["content"][0]["text"])
+AssertionError: 'speed' not found in 'error en síntesis de voz: not enough values to unpack (expected 2, got 0)'
+
+======================================================================
+FAIL: test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 449, in test_synthesize_speech_exitoso
+    self.assertNotIn("voice", dato)
+AssertionError: 'voice' unexpectedly found in {'audio_base64': 'UklGRuwAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YcgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==', 'format': 'wav', 'voice': 'es_ES-davefx-medium', 'chars': 10, 'duration_est_s': 0.67}
+
+======================================================================
+FAIL: test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 490, in test_tools_list_voz_fija
+    self.assertNotIn("voice", tool["inputSchema"]["properties"])
+AssertionError: 'voice' unexpectedly found in {'input': {'type': 'string', 'minLength': 1, 'maxLength': 600}, 'voice': {'type': 'string'}, 'speed': {'type': 'number', 'minimum': 0.5, 'maximum': 2.0}, 'response_format': {'type': 'string', 'enum': ['wav']}}
+
+======================================================================
+FAIL: test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 460, in test_voice_rechazada_antes_gateway
+    self.assertIn("voice", resp["result"]["content"][0]["text"])
+AssertionError: 'voice' not found in 'error en síntesis de voz: not enough values to unpack (expected 2, got 0)'
+
+======================================================================
+FAIL: test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 484, in test_wav_invalido_rechazado
+    self.assertTrue(resp["result"]["isError"])
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 46 tests in 0.008s
+
+FAILED (failures=5, errors=5)
+test_campo_desconocido_rechazado_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_campo_desconocido_rechazado_antes_gateway) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_proceso_rechaza_voice_y_speed_antes_backend) ... FAIL
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway) ... FAIL
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso) ... FAIL
+test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija) ... FAIL
+test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway) ... FAIL
+test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado) ... FAIL
+
+======================================================================
+FAIL: test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_proceso_rechaza_voice_y_speed_antes_backend)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 516, in test_proceso_rechaza_voice_y_speed_antes_backend
+    self.assertTrue(response["result"]["isError"])
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 467, in test_speed_rechazada_antes_gateway
+    self.assertIn("speed", resp["result"]["content"][0]["text"])
+AssertionError: 'speed' not found in 'error en síntesis de voz: not enough values to unpack (expected 2, got 0)'
+
+======================================================================
+FAIL: test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 448, in test_synthesize_speech_exitoso
+    self.assertNotIn("voice", dato)
+AssertionError: 'voice' unexpectedly found in {'audio_base64': 'UklGRuwAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YcgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==', 'format': 'wav', 'voice': 'es_ES-davefx-medium', 'chars': 10, 'duration_est_s': 0.67}
+
+======================================================================
+FAIL: test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 489, in test_tools_list_voz_fija
+    self.assertNotIn("voice", tool["inputSchema"]["properties"])
+AssertionError: 'voice' unexpectedly found in {'input': {'type': 'string', 'minLength': 1, 'maxLength': 600}, 'voice': {'type': 'string'}, 'speed': {'type': 'number', 'minimum': 0.5, 'maximum': 2.0}, 'response_format': {'type': 'string', 'enum': ['wav']}}
+
+======================================================================
+FAIL: test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 459, in test_voice_rechazada_antes_gateway
+    self.assertIn("voice", resp["result"]["content"][0]["text"])
+AssertionError: 'voice' not found in 'error en síntesis de voz: not enough values to unpack (expected 2, got 0)'
+
+======================================================================
+FAIL: test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/unittest/mock.py", line 1396, in patched
+    return func(*newargs, **newkeywargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 483, in test_wav_invalido_rechazado
+    self.assertTrue(resp["result"]["isError"])
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.050s
+
+FAILED (failures=6)

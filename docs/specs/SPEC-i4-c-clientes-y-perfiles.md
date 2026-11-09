@@ -98,7 +98,9 @@ plataforma desde dos clases de sistemas del ecosistema:
      estructurada con validación local previa y posterior.
   4. `chat_vision(prompt, image_bytes_or_b64, schema_dict=None)`: visión.
   5. `transcribe_audio(audio_bytes_or_b64, prompt=None)`: ASR sobre audio WAV.
-  6. `synthesize_speech(text, voice=None)`: TTS con manejo de 503 y reintentos.
+  6. `synthesize_speech(text)`: TTS con manejo de 503 y reintentos. Voz
+     fija, sin parámetro `voice` (issue #2, decisión del Operador del
+     2026-11-07; contrato `mcp-tools-v2.md`, «Voz fija y migración»).
   7. `chat_video(prompt, video_bytes_or_b64, max_duration_s=10)`: video corto.
   8. `chat_stream(messages, on_chunk_cb, client_request_id=None)`: streaming
      SSE con lectura continua de chunks y detección de `finish_reason`.

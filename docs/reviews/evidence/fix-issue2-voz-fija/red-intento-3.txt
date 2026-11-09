@@ -1,0 +1,18 @@
+== RED intento 3 — test_concordancia_documental_spec_contrato_catalogo (fortalecido, definitivo) ==
+== contra SPEC-i3-mcp-remote.md SIN enmendar ==
+
+test_concordancia_documental_spec_contrato_catalogo (tests.test_mcp_remote.VozFijaRemotoFrontera.test_concordancia_documental_spec_contrato_catalogo) ... FAIL
+
+======================================================================
+FAIL: test_concordancia_documental_spec_contrato_catalogo (tests.test_mcp_remote.VozFijaRemotoFrontera.test_concordancia_documental_spec_contrato_catalogo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 665, in test_concordancia_documental_spec_contrato_catalogo
+    self.assertNotRegex(seccion, r"`voice`")
+AssertionError: Regex matched: '`voice`' matches '`voice`' in '\n* **Propósito**: Síntesis de voz hablada en español neutro a partir de texto.\n* **Argumentos**:\n  * `input` (string, 1..600 caracteres legibles, obligatorio).\n  * `voice` (string, defecto `"es_ES-davefx-medium"`, opcional).\n  * `speed` (número, 0.5..2.0, defecto 1.0, opcional).\n* **Salida**:\n  ```json\n  {\n    "audio_base64": "<bytes WAV codificados en base64>",\n    "format": "wav",\n    "voice": "es_ES-davefx-medium",\n    "chars": 54,\n    "duration_est_s": 3.2\n  }\n  ```\n* **Contención de concurrencia**: Si el sintetizador `llama-tts` se encuentra ocupado\n  por otra petición concurrente, responde inmediatamente `isError: true` con código\n  `tts_busy` (sin colas infinitas ni retención de memoria).\n\n'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
+exit=1
