@@ -1,0 +1,270 @@
+test_01_mcp_get_sse_channel (tests.test_mcp_remote.TestMCPRemote.test_01_mcp_get_sse_channel)
+Verifica canal SSE en GET /mcp y rechazo sin cabecera Accept apropiada. ... ok
+test_02_mcp_initialize_and_session (tests.test_mcp_remote.TestMCPRemote.test_02_mcp_initialize_and_session)
+Verifica negociación de protocolo initialize y emisión de Mcp-Session-Id. ... ok
+test_03_mcp_tools_list_omnimodal (tests.test_mcp_remote.TestMCPRemote.test_03_mcp_tools_list_omnimodal)
+Verifica catálogo completo de 8 herramientas omnimodales en tools/list. ... ok
+test_04_mcp_tools_call_health_and_capabilities (tests.test_mcp_remote.TestMCPRemote.test_04_mcp_tools_call_health_and_capabilities)
+Verifica invocación a health y capabilities. ... ok
+test_05_mcp_tools_call_infer_text_plain_and_schema (tests.test_mcp_remote.TestMCPRemote.test_05_mcp_tools_call_infer_text_plain_and_schema)
+Verifica infer_text con texto plano y con validación de schema v2-ext. ... ok
+test_06_mcp_tools_call_infer_vision_and_anti_ssrf (tests.test_mcp_remote.TestMCPRemote.test_06_mcp_tools_call_infer_vision_and_anti_ssrf)
+Verifica infer_vision y contención estricta de egreso anti-SSRF. ... ok
+test_07_mcp_tools_call_infer_audio (tests.test_mcp_remote.TestMCPRemote.test_07_mcp_tools_call_infer_audio)
+Verifica infer_audio con WAV válido y rechazo de audio inválido. ... ok
+test_08_mcp_tools_call_synthesize_speech_and_tts_busy (tests.test_mcp_remote.TestMCPRemote.test_08_mcp_tools_call_synthesize_speech_and_tts_busy)
+Verifica synthesize_speech y exclusión mutua 503/tts_busy. ... ok
+test_09_mcp_tools_call_infer_video (tests.test_mcp_remote.TestMCPRemote.test_09_mcp_tools_call_infer_video)
+Verifica infer_video con MP4 sintético y comprobación de ftyp. ... ok
+test_10_mcp_tools_call_conversational_turn (tests.test_mcp_remote.TestMCPRemote.test_10_mcp_tools_call_conversational_turn)
+Verifica conversational_turn con historial multi-turno y síntesis de voz. ... ok
+test_11_mcp_auth_and_scope_failures (tests.test_mcp_remote.TestMCPRemote.test_11_mcp_auth_and_scope_failures)
+Verifica rechazos de autenticación y de scopes no autorizados. ... ok
+test_12_mcp_session_isolation (tests.test_mcp_remote.TestMCPRemote.test_12_mcp_session_isolation)
+Verifica que una sesión creada por proyecto-alpha es rechazada si la usa proyecto-beta. ... ok
+test_13_mcp_synthesize_voice_rechazada_en_frontera (tests.test_mcp_remote.TestMCPRemote.test_13_mcp_synthesize_voice_rechazada_en_frontera)
+Voz fija (issue #2): `voice` se rechaza antes del gateway. ... ok
+test_14_mcp_synthesize_speed_rechazado_en_frontera (tests.test_mcp_remote.TestMCPRemote.test_14_mcp_synthesize_speed_rechazado_en_frontera)
+Voz fija (issue #2): `speed` se rechaza antes del gateway. ... ok
+test_15_mcp_tools_list_catalogo_voz_fija (tests.test_mcp_remote.TestMCPRemote.test_15_mcp_tools_list_catalogo_voz_fija)
+Voz fija (issue #2): el catálogo remoto no anuncia voice ni speed. ... ok
+test_caso_valido_conservado_campos_exactos (tests.test_mcp_remote.VozFijaRemotoFrontera.test_caso_valido_conservado_campos_exactos) ... ok
+test_catalogo_cerrado_en_tools_list (tests.test_mcp_remote.VozFijaRemotoFrontera.test_catalogo_cerrado_en_tools_list) ... ok
+test_concordancia_documental_spec_contrato_catalogo (tests.test_mcp_remote.VozFijaRemotoFrontera.test_concordancia_documental_spec_contrato_catalogo) ... ok
+test_respuesta_exitosa_sin_atribucion (tests.test_mcp_remote.VozFijaRemotoFrontera.test_respuesta_exitosa_sin_atribucion) ... ok
+test_speed_rechazado_antes_del_gateway (tests.test_mcp_remote.VozFijaRemotoFrontera.test_speed_rechazado_antes_del_gateway) ... ok
+test_voice_rechazada_antes_del_gateway (tests.test_mcp_remote.VozFijaRemotoFrontera.test_voice_rechazada_antes_del_gateway) ... ok
+test_initialize_valido (tests.test_mcp_server_v2.HandshakeV2.test_initialize_valido) ... ok
+test_metodo_antes_de_initialize_rechazado_32002 (tests.test_mcp_server_v2.HandshakeV2.test_metodo_antes_de_initialize_rechazado_32002) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server_v2.HandshakeV2.test_notificacion_sin_respuesta) ... ok
+test_tools_list_seis_herramientas (tests.test_mcp_server_v2.HandshakeV2.test_tools_list_seis_herramientas) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server_v2.HandshakeV2.test_version_no_soportada_negocia_default) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server_v2.HealthV2.test_health_con_arguments_rechazado) ... ok
+test_health_gateway_down (tests.test_mcp_server_v2.HealthV2.test_health_gateway_down) ... ok
+test_health_gateway_up (tests.test_mcp_server_v2.HealthV2.test_health_gateway_up) ... ok
+test_infer_audio_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_invalido_rechazado_en_frontera) ... ok
+test_infer_audio_wav_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_wav_valido) ... ok
+test_infer_video_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_invalido_rechazado_en_frontera) ... ok
+test_infer_video_mp4_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_mp4_valido) ... ok
+test_infer_vision_imagen_invalida_rechazada_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_imagen_invalida_rechazada_en_frontera) ... ok
+test_infer_vision_png_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_png_valido) ... ok
+test_max_tokens_default_1024_en_vision (tests.test_mcp_server_v2.InferMultimodalV2.test_max_tokens_default_1024_en_vision) ... ok
+test_campos_extra_rechazados (tests.test_mcp_server_v2.InferTextV2.test_campos_extra_rechazados) ... ok
+test_infer_text_con_schema_v2_ext_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_con_schema_v2_ext_exitoso) ... ok
+test_infer_text_salida_que_viola_schema_es_salida_invalida (tests.test_mcp_server_v2.InferTextV2.test_infer_text_salida_que_viola_schema_es_salida_invalida) ... ok
+test_infer_text_sin_schema_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_sin_schema_exitoso) ... ok
+test_max_tokens_booleano_cero_y_4097_rechazados (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_booleano_cero_y_4097_rechazados) ... ok
+test_max_tokens_default_512 (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_default_512) ... ok
+test_prompt_invalido_rechazado (tests.test_mcp_server_v2.InferTextV2.test_prompt_invalido_rechazado) ... ok
+test_schema_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferTextV2.test_schema_invalido_rechazado_en_frontera) ... ok
+test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo) ... ok
+test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo) ... ok
+test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo) ... ok
+test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_choices_vacio_es_salida_invalida) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_mensaje_no_objeto_32600) ... ok
+test_metodo_desconocido_32601 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_metodo_desconocido_32601) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_parse_error_32700) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_32602 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_tool_desconocida_32602) ... ok
+test_usage_ausente_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_usage_ausente_es_salida_invalida) ... ok
+test_campo_desconocido_rechazado_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_campo_desconocido_rechazado_antes_gateway) ... ok
+test_gateway_tts_texto_fuera_argv_y_limpieza (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_gateway_tts_texto_fuera_argv_y_limpieza) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_proceso_rechaza_voice_y_speed_antes_backend) ... ok
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway) ... ok
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso) ... ok
+test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija) ... ok
+test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway) ... ok
+test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado) ... ok
+test_200_no_parseable_es_salida_invalida (tests.test_mcp_server.ClasificacionHTTP.test_200_no_parseable_es_salida_invalida) ... ok
+test_400_con_detalle_estructurado (tests.test_mcp_server.ClasificacionHTTP.test_400_con_detalle_estructurado) ... ok
+test_400_con_error_no_dict_y_no_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_no_dict_y_no_string) ... ok
+test_400_con_error_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_string) ... ok
+test_500_generico (tests.test_mcp_server.ClasificacionHTTP.test_500_generico) ... ok
+test_503_es_reintentable (tests.test_mcp_server.ClasificacionHTTP.test_503_es_reintentable) ... ok
+test_main_sobrevive_surrogate_e2e (tests.test_mcp_server.ClasificacionHTTP.test_main_sobrevive_surrogate_e2e) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_mensaje_no_objeto_32600) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server.ClasificacionHTTP.test_parse_error_32700) ... ok
+test_schema_profundo_no_mata (tests.test_mcp_server.ClasificacionHTTP.test_schema_profundo_no_mata) ... ok
+test_initialize (tests.test_mcp_server.Handshake.test_initialize) ... ok
+test_metodo_desconocido (tests.test_mcp_server.Handshake.test_metodo_desconocido) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server.Handshake.test_notificacion_sin_respuesta) ... ok
+test_tools_antes_de_initialize (tests.test_mcp_server.Handshake.test_tools_antes_de_initialize) ... ok
+test_tools_list_tres (tests.test_mcp_server.Handshake.test_tools_list_tres) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server.Handshake.test_version_no_soportada_negocia_default) ... ok
+test_health_reporta_down (tests.test_mcp_server.MotorCaido.test_health_reporta_down) ... ok
+test_infer_text_motor_caido (tests.test_mcp_server.MotorCaido.test_infer_text_motor_caido) ... ok
+setUpClass (tests.test_mcp_server.ToolsConMotor) ... skipped 'requiere motor vivo en 127.0.0.1:8091 (bash run/serve.sh); sonda: conexión rehusada, nada escucha'
+test_campo_no_declarado_rechazado_por_nombre (tests.test_mcp_server.Validacion.test_campo_no_declarado_rechazado_por_nombre) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server.Validacion.test_choices_vacio_es_salida_invalida) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server.Validacion.test_health_con_arguments_rechazado) ... ok
+test_imagen_basura_rechazada_en_frontera (tests.test_mcp_server.Validacion.test_imagen_basura_rechazada_en_frontera) ... ok
+test_imagen_no_base64_rechazada (tests.test_mcp_server.Validacion.test_imagen_no_base64_rechazada) ... ok
+test_max_tokens_booleano_cero_y_4097 (tests.test_mcp_server.Validacion.test_max_tokens_booleano_cero_y_4097) ... ok
+test_prompt_8000_aceptado (tests.test_mcp_server.Validacion.test_prompt_8000_aceptado) ... ok
+test_prompt_8001_rechazado (tests.test_mcp_server.Validacion.test_prompt_8001_rechazado) ... ok
+test_salida_json_valido_pero_no_conforme (tests.test_mcp_server.Validacion.test_salida_json_valido_pero_no_conforme) ... ok
+test_schema_con_claves_no_soportadas_rechazado (tests.test_mcp_server.Validacion.test_schema_con_claves_no_soportadas_rechazado) ... ok
+test_schema_null_rechazado (tests.test_mcp_server.Validacion.test_schema_null_rechazado) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server.Validacion.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_es_error_de_protocolo (tests.test_mcp_server.Validacion.test_tool_desconocida_es_error_de_protocolo) ... ok
+test_usage_ausente_o_nulo_es_salida_invalida (tests.test_mcp_server.Validacion.test_usage_ausente_o_nulo_es_salida_invalida) ... ok
+test_09_observacion_multimodal_autenticada_aceptada (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_09_observacion_multimodal_autenticada_aceptada) ... ok
+test_10_descarte_por_accion_fuera_de_catalogo (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_10_descarte_por_accion_fuera_de_catalogo) ... ok
+test_01_headers_autenticacion_y_correlacion (tests.test_perfiles_i4.PerfilWClientTests.test_01_headers_autenticacion_y_correlacion) ... ok
+test_02_chat_text_payload_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_02_chat_text_payload_conforme) ... ok
+test_03_chat_structured_schema_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_03_chat_structured_schema_conforme) ... ok
+test_04_chat_vision_payload (tests.test_perfiles_i4.PerfilWClientTests.test_04_chat_vision_payload) ... ok
+test_05_audio_transcription_payload (tests.test_perfiles_i4.PerfilWClientTests.test_05_audio_transcription_payload) ... ok
+test_06_speech_synthesis_tts_payload (tests.test_perfiles_i4.PerfilWClientTests.test_06_speech_synthesis_tts_payload) ... ok
+test_07_streaming_sse_recepcion_continua (tests.test_perfiles_i4.PerfilWClientTests.test_07_streaming_sse_recepcion_continua) ... ok
+test_08_saneamiento_seguridad_xss (tests.test_perfiles_i4.PerfilWClientTests.test_08_saneamiento_seguridad_xss) ... ok
+test_11_simulador_robot_perfil_d_ejecutable (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_11_simulador_robot_perfil_d_ejecutable) ... ok
+test_12_cliente_perfil_w_python_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_12_cliente_perfil_w_python_demo) ... ok
+test_13_cliente_perfil_w_node_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_13_cliente_perfil_w_node_demo) ... ok
+
+----------------------------------------------------------------------
+Ran 114 tests in 4.393s
+
+OK (skipped=1)
+test_01_mcp_get_sse_channel (tests.test_mcp_remote.TestMCPRemote.test_01_mcp_get_sse_channel)
+Verifica canal SSE en GET /mcp y rechazo sin cabecera Accept apropiada. ... ok
+test_02_mcp_initialize_and_session (tests.test_mcp_remote.TestMCPRemote.test_02_mcp_initialize_and_session)
+Verifica negociación de protocolo initialize y emisión de Mcp-Session-Id. ... ok
+test_03_mcp_tools_list_omnimodal (tests.test_mcp_remote.TestMCPRemote.test_03_mcp_tools_list_omnimodal)
+Verifica catálogo completo de 8 herramientas omnimodales en tools/list. ... ok
+test_04_mcp_tools_call_health_and_capabilities (tests.test_mcp_remote.TestMCPRemote.test_04_mcp_tools_call_health_and_capabilities)
+Verifica invocación a health y capabilities. ... ok
+test_05_mcp_tools_call_infer_text_plain_and_schema (tests.test_mcp_remote.TestMCPRemote.test_05_mcp_tools_call_infer_text_plain_and_schema)
+Verifica infer_text con texto plano y con validación de schema v2-ext. ... ok
+test_06_mcp_tools_call_infer_vision_and_anti_ssrf (tests.test_mcp_remote.TestMCPRemote.test_06_mcp_tools_call_infer_vision_and_anti_ssrf)
+Verifica infer_vision y contención estricta de egreso anti-SSRF. ... ok
+test_07_mcp_tools_call_infer_audio (tests.test_mcp_remote.TestMCPRemote.test_07_mcp_tools_call_infer_audio)
+Verifica infer_audio con WAV válido y rechazo de audio inválido. ... ok
+test_08_mcp_tools_call_synthesize_speech_and_tts_busy (tests.test_mcp_remote.TestMCPRemote.test_08_mcp_tools_call_synthesize_speech_and_tts_busy)
+Verifica synthesize_speech y exclusión mutua 503/tts_busy. ... ok
+test_09_mcp_tools_call_infer_video (tests.test_mcp_remote.TestMCPRemote.test_09_mcp_tools_call_infer_video)
+Verifica infer_video con MP4 sintético y comprobación de ftyp. ... ok
+test_10_mcp_tools_call_conversational_turn (tests.test_mcp_remote.TestMCPRemote.test_10_mcp_tools_call_conversational_turn)
+Verifica conversational_turn con historial multi-turno y síntesis de voz. ... ok
+test_11_mcp_auth_and_scope_failures (tests.test_mcp_remote.TestMCPRemote.test_11_mcp_auth_and_scope_failures)
+Verifica rechazos de autenticación y de scopes no autorizados. ... ok
+test_12_mcp_session_isolation (tests.test_mcp_remote.TestMCPRemote.test_12_mcp_session_isolation)
+Verifica que una sesión creada por proyecto-alpha es rechazada si la usa proyecto-beta. ... ok
+test_13_mcp_synthesize_voice_rechazada_en_frontera (tests.test_mcp_remote.TestMCPRemote.test_13_mcp_synthesize_voice_rechazada_en_frontera)
+Voz fija (issue #2): `voice` se rechaza antes del gateway. ... ok
+test_14_mcp_synthesize_speed_rechazado_en_frontera (tests.test_mcp_remote.TestMCPRemote.test_14_mcp_synthesize_speed_rechazado_en_frontera)
+Voz fija (issue #2): `speed` se rechaza antes del gateway. ... ok
+test_15_mcp_tools_list_catalogo_voz_fija (tests.test_mcp_remote.TestMCPRemote.test_15_mcp_tools_list_catalogo_voz_fija)
+Voz fija (issue #2): el catálogo remoto no anuncia voice ni speed. ... ok
+test_caso_valido_conservado_campos_exactos (tests.test_mcp_remote.VozFijaRemotoFrontera.test_caso_valido_conservado_campos_exactos) ... ok
+test_catalogo_cerrado_en_tools_list (tests.test_mcp_remote.VozFijaRemotoFrontera.test_catalogo_cerrado_en_tools_list) ... ok
+test_concordancia_documental_spec_contrato_catalogo (tests.test_mcp_remote.VozFijaRemotoFrontera.test_concordancia_documental_spec_contrato_catalogo) ... ok
+test_respuesta_exitosa_sin_atribucion (tests.test_mcp_remote.VozFijaRemotoFrontera.test_respuesta_exitosa_sin_atribucion) ... ok
+test_speed_rechazado_antes_del_gateway (tests.test_mcp_remote.VozFijaRemotoFrontera.test_speed_rechazado_antes_del_gateway) ... ok
+test_voice_rechazada_antes_del_gateway (tests.test_mcp_remote.VozFijaRemotoFrontera.test_voice_rechazada_antes_del_gateway) ... ok
+test_initialize_valido (tests.test_mcp_server_v2.HandshakeV2.test_initialize_valido) ... ok
+test_metodo_antes_de_initialize_rechazado_32002 (tests.test_mcp_server_v2.HandshakeV2.test_metodo_antes_de_initialize_rechazado_32002) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server_v2.HandshakeV2.test_notificacion_sin_respuesta) ... ok
+test_tools_list_seis_herramientas (tests.test_mcp_server_v2.HandshakeV2.test_tools_list_seis_herramientas) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server_v2.HandshakeV2.test_version_no_soportada_negocia_default) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server_v2.HealthV2.test_health_con_arguments_rechazado) ... ok
+test_health_gateway_down (tests.test_mcp_server_v2.HealthV2.test_health_gateway_down) ... ok
+test_health_gateway_up (tests.test_mcp_server_v2.HealthV2.test_health_gateway_up) ... ok
+test_infer_audio_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_invalido_rechazado_en_frontera) ... ok
+test_infer_audio_wav_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_wav_valido) ... ok
+test_infer_video_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_invalido_rechazado_en_frontera) ... ok
+test_infer_video_mp4_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_mp4_valido) ... ok
+test_infer_vision_imagen_invalida_rechazada_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_imagen_invalida_rechazada_en_frontera) ... ok
+test_infer_vision_png_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_png_valido) ... ok
+test_max_tokens_default_1024_en_vision (tests.test_mcp_server_v2.InferMultimodalV2.test_max_tokens_default_1024_en_vision) ... ok
+test_campos_extra_rechazados (tests.test_mcp_server_v2.InferTextV2.test_campos_extra_rechazados) ... ok
+test_infer_text_con_schema_v2_ext_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_con_schema_v2_ext_exitoso) ... ok
+test_infer_text_salida_que_viola_schema_es_salida_invalida (tests.test_mcp_server_v2.InferTextV2.test_infer_text_salida_que_viola_schema_es_salida_invalida) ... ok
+test_infer_text_sin_schema_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_sin_schema_exitoso) ... ok
+test_max_tokens_booleano_cero_y_4097_rechazados (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_booleano_cero_y_4097_rechazados) ... ok
+test_max_tokens_default_512 (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_default_512) ... ok
+test_prompt_invalido_rechazado (tests.test_mcp_server_v2.InferTextV2.test_prompt_invalido_rechazado) ... ok
+test_schema_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferTextV2.test_schema_invalido_rechazado_en_frontera) ... ok
+test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo) ... ok
+test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo) ... ok
+test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo) ... ok
+test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_choices_vacio_es_salida_invalida) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_mensaje_no_objeto_32600) ... ok
+test_metodo_desconocido_32601 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_metodo_desconocido_32601) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_parse_error_32700) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_32602 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_tool_desconocida_32602) ... ok
+test_usage_ausente_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_usage_ausente_es_salida_invalida) ... ok
+test_campo_desconocido_rechazado_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_campo_desconocido_rechazado_antes_gateway) ... ok
+test_gateway_tts_texto_fuera_argv_y_limpieza (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_gateway_tts_texto_fuera_argv_y_limpieza) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_proceso_rechaza_voice_y_speed_antes_backend) ... ok
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway) ... ok
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso) ... ok
+test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija) ... ok
+test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway) ... ok
+test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado) ... ok
+test_200_no_parseable_es_salida_invalida (tests.test_mcp_server.ClasificacionHTTP.test_200_no_parseable_es_salida_invalida) ... ok
+test_400_con_detalle_estructurado (tests.test_mcp_server.ClasificacionHTTP.test_400_con_detalle_estructurado) ... ok
+test_400_con_error_no_dict_y_no_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_no_dict_y_no_string) ... ok
+test_400_con_error_string (tests.test_mcp_server.ClasificacionHTTP.test_400_con_error_string) ... ok
+test_500_generico (tests.test_mcp_server.ClasificacionHTTP.test_500_generico) ... ok
+test_503_es_reintentable (tests.test_mcp_server.ClasificacionHTTP.test_503_es_reintentable) ... ok
+test_main_sobrevive_surrogate_e2e (tests.test_mcp_server.ClasificacionHTTP.test_main_sobrevive_surrogate_e2e) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_mensaje_no_objeto_32600) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server.ClasificacionHTTP.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server.ClasificacionHTTP.test_parse_error_32700) ... ok
+test_schema_profundo_no_mata (tests.test_mcp_server.ClasificacionHTTP.test_schema_profundo_no_mata) ... ok
+test_initialize (tests.test_mcp_server.Handshake.test_initialize) ... ok
+test_metodo_desconocido (tests.test_mcp_server.Handshake.test_metodo_desconocido) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server.Handshake.test_notificacion_sin_respuesta) ... ok
+test_tools_antes_de_initialize (tests.test_mcp_server.Handshake.test_tools_antes_de_initialize) ... ok
+test_tools_list_tres (tests.test_mcp_server.Handshake.test_tools_list_tres) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server.Handshake.test_version_no_soportada_negocia_default) ... ok
+test_health_reporta_down (tests.test_mcp_server.MotorCaido.test_health_reporta_down) ... ok
+test_infer_text_motor_caido (tests.test_mcp_server.MotorCaido.test_infer_text_motor_caido) ... ok
+setUpClass (tests.test_mcp_server.ToolsConMotor) ... skipped 'requiere motor vivo en 127.0.0.1:8091 (bash run/serve.sh); sonda: conexión rehusada, nada escucha'
+test_campo_no_declarado_rechazado_por_nombre (tests.test_mcp_server.Validacion.test_campo_no_declarado_rechazado_por_nombre) ... ok
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server.Validacion.test_choices_vacio_es_salida_invalida) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server.Validacion.test_health_con_arguments_rechazado) ... ok
+test_imagen_basura_rechazada_en_frontera (tests.test_mcp_server.Validacion.test_imagen_basura_rechazada_en_frontera) ... ok
+test_imagen_no_base64_rechazada (tests.test_mcp_server.Validacion.test_imagen_no_base64_rechazada) ... ok
+test_max_tokens_booleano_cero_y_4097 (tests.test_mcp_server.Validacion.test_max_tokens_booleano_cero_y_4097) ... ok
+test_prompt_8000_aceptado (tests.test_mcp_server.Validacion.test_prompt_8000_aceptado) ... ok
+test_prompt_8001_rechazado (tests.test_mcp_server.Validacion.test_prompt_8001_rechazado) ... ok
+test_salida_json_valido_pero_no_conforme (tests.test_mcp_server.Validacion.test_salida_json_valido_pero_no_conforme) ... ok
+test_schema_con_claves_no_soportadas_rechazado (tests.test_mcp_server.Validacion.test_schema_con_claves_no_soportadas_rechazado) ... ok
+test_schema_null_rechazado (tests.test_mcp_server.Validacion.test_schema_null_rechazado) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server.Validacion.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_es_error_de_protocolo (tests.test_mcp_server.Validacion.test_tool_desconocida_es_error_de_protocolo) ... ok
+test_usage_ausente_o_nulo_es_salida_invalida (tests.test_mcp_server.Validacion.test_usage_ausente_o_nulo_es_salida_invalida) ... ok
+test_09_observacion_multimodal_autenticada_aceptada (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_09_observacion_multimodal_autenticada_aceptada) ... ok
+test_10_descarte_por_accion_fuera_de_catalogo (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_10_descarte_por_accion_fuera_de_catalogo) ... ok
+test_01_headers_autenticacion_y_correlacion (tests.test_perfiles_i4.PerfilWClientTests.test_01_headers_autenticacion_y_correlacion) ... ok
+test_02_chat_text_payload_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_02_chat_text_payload_conforme) ... ok
+test_03_chat_structured_schema_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_03_chat_structured_schema_conforme) ... ok
+test_04_chat_vision_payload (tests.test_perfiles_i4.PerfilWClientTests.test_04_chat_vision_payload) ... ok
+test_05_audio_transcription_payload (tests.test_perfiles_i4.PerfilWClientTests.test_05_audio_transcription_payload) ... ok
+test_06_speech_synthesis_tts_payload (tests.test_perfiles_i4.PerfilWClientTests.test_06_speech_synthesis_tts_payload) ... ok
+test_07_streaming_sse_recepcion_continua (tests.test_perfiles_i4.PerfilWClientTests.test_07_streaming_sse_recepcion_continua) ... ok
+test_08_saneamiento_seguridad_xss (tests.test_perfiles_i4.PerfilWClientTests.test_08_saneamiento_seguridad_xss) ... ok
+test_11_simulador_robot_perfil_d_ejecutable (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_11_simulador_robot_perfil_d_ejecutable) ... ok
+test_12_cliente_perfil_w_python_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_12_cliente_perfil_w_python_demo) ... ok
+test_13_cliente_perfil_w_node_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_13_cliente_perfil_w_node_demo) ... ok
+
+----------------------------------------------------------------------
+Ran 114 tests in 4.403s
+
+OK (skipped=1)

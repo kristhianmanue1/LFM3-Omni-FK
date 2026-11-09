@@ -1,0 +1,298 @@
+test_initialize_valido (tests.test_mcp_server_v2.HandshakeV2.test_initialize_valido) ... ok
+test_metodo_antes_de_initialize_rechazado_32002 (tests.test_mcp_server_v2.HandshakeV2.test_metodo_antes_de_initialize_rechazado_32002) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server_v2.HandshakeV2.test_notificacion_sin_respuesta) ... ok
+test_tools_list_seis_herramientas (tests.test_mcp_server_v2.HandshakeV2.test_tools_list_seis_herramientas) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server_v2.HandshakeV2.test_version_no_soportada_negocia_default) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server_v2.HealthV2.test_health_con_arguments_rechazado) ... ok
+test_health_gateway_down (tests.test_mcp_server_v2.HealthV2.test_health_gateway_down) ... ok
+test_health_gateway_up (tests.test_mcp_server_v2.HealthV2.test_health_gateway_up) ... ok
+test_infer_audio_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_invalido_rechazado_en_frontera) ... ok
+test_infer_audio_wav_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_wav_valido) ... ok
+test_infer_video_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_invalido_rechazado_en_frontera) ... ok
+test_infer_video_mp4_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_mp4_valido) ... ok
+test_infer_vision_imagen_invalida_rechazada_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_imagen_invalida_rechazada_en_frontera) ... ok
+test_infer_vision_png_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_png_valido) ... ok
+test_max_tokens_default_1024_en_vision (tests.test_mcp_server_v2.InferMultimodalV2.test_max_tokens_default_1024_en_vision) ... ok
+test_campos_extra_rechazados (tests.test_mcp_server_v2.InferTextV2.test_campos_extra_rechazados) ... ok
+test_infer_text_con_schema_v2_ext_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_con_schema_v2_ext_exitoso) ... ok
+test_infer_text_salida_que_viola_schema_es_salida_invalida (tests.test_mcp_server_v2.InferTextV2.test_infer_text_salida_que_viola_schema_es_salida_invalida) ... ok
+test_infer_text_sin_schema_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_sin_schema_exitoso) ... ok
+test_max_tokens_booleano_cero_y_4097_rechazados (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_booleano_cero_y_4097_rechazados) ... ok
+test_max_tokens_default_512 (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_default_512) ... ok
+test_prompt_invalido_rechazado (tests.test_mcp_server_v2.InferTextV2.test_prompt_invalido_rechazado) ... ok
+test_schema_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferTextV2.test_schema_invalido_rechazado_en_frontera) ... ok
+test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo) ... ERROR
+test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo) ... ERROR
+test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo) ... ERROR
+test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway) ... ERROR
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_choices_vacio_es_salida_invalida) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_mensaje_no_objeto_32600) ... ok
+test_metodo_desconocido_32601 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_metodo_desconocido_32601) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_parse_error_32700) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_32602 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_tool_desconocida_32602) ... ok
+test_usage_ausente_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_usage_ausente_es_salida_invalida) ... ok
+test_campo_desconocido_rechazado_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_campo_desconocido_rechazado_antes_gateway) ... ok
+test_gateway_tts_texto_fuera_argv_y_limpieza (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_gateway_tts_texto_fuera_argv_y_limpieza) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_proceso_rechaza_voice_y_speed_antes_backend) ... ok
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway) ... ok
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso) ... ok
+test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija) ... ok
+test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway) ... ok
+test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado) ... ok
+setUpClass (tests.test_mcp_remote.TestMCPRemote) ... ERROR
+test_09_observacion_multimodal_autenticada_aceptada (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_09_observacion_multimodal_autenticada_aceptada) ... ok
+test_10_descarte_por_accion_fuera_de_catalogo (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_10_descarte_por_accion_fuera_de_catalogo) ... ok
+test_01_headers_autenticacion_y_correlacion (tests.test_perfiles_i4.PerfilWClientTests.test_01_headers_autenticacion_y_correlacion) ... ok
+test_02_chat_text_payload_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_02_chat_text_payload_conforme) ... ok
+test_03_chat_structured_schema_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_03_chat_structured_schema_conforme) ... ok
+test_04_chat_vision_payload (tests.test_perfiles_i4.PerfilWClientTests.test_04_chat_vision_payload) ... ok
+test_05_audio_transcription_payload (tests.test_perfiles_i4.PerfilWClientTests.test_05_audio_transcription_payload) ... ok
+test_06_speech_synthesis_tts_payload (tests.test_perfiles_i4.PerfilWClientTests.test_06_speech_synthesis_tts_payload) ... ok
+test_07_streaming_sse_recepcion_continua (tests.test_perfiles_i4.PerfilWClientTests.test_07_streaming_sse_recepcion_continua) ... ok
+test_08_saneamiento_seguridad_xss (tests.test_perfiles_i4.PerfilWClientTests.test_08_saneamiento_seguridad_xss) ... ok
+test_11_simulador_robot_perfil_d_ejecutable (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_11_simulador_robot_perfil_d_ejecutable) ... ok
+test_12_cliente_perfil_w_python_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_12_cliente_perfil_w_python_demo) ... ok
+test_13_cliente_perfil_w_node_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_13_cliente_perfil_w_node_demo) ... ok
+
+======================================================================
+ERROR: test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 607, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 607, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 607, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 607, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: setUpClass (tests.test_mcp_remote.TestMCPRemote)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 103, in setUpClass
+    cls.backend_server = ThreadingHTTPServer(("127.0.0.1", 0), BackendFalsoMCP)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 60 tests in 0.228s
+
+FAILED (errors=5)
+test_initialize_valido (tests.test_mcp_server_v2.HandshakeV2.test_initialize_valido) ... ok
+test_metodo_antes_de_initialize_rechazado_32002 (tests.test_mcp_server_v2.HandshakeV2.test_metodo_antes_de_initialize_rechazado_32002) ... ok
+test_notificacion_sin_respuesta (tests.test_mcp_server_v2.HandshakeV2.test_notificacion_sin_respuesta) ... ok
+test_tools_list_seis_herramientas (tests.test_mcp_server_v2.HandshakeV2.test_tools_list_seis_herramientas) ... ok
+test_version_no_soportada_negocia_default (tests.test_mcp_server_v2.HandshakeV2.test_version_no_soportada_negocia_default) ... ok
+test_health_con_arguments_rechazado (tests.test_mcp_server_v2.HealthV2.test_health_con_arguments_rechazado) ... ok
+test_health_gateway_down (tests.test_mcp_server_v2.HealthV2.test_health_gateway_down) ... ok
+test_health_gateway_up (tests.test_mcp_server_v2.HealthV2.test_health_gateway_up) ... ok
+test_infer_audio_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_invalido_rechazado_en_frontera) ... ok
+test_infer_audio_wav_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_audio_wav_valido) ... ok
+test_infer_video_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_invalido_rechazado_en_frontera) ... ok
+test_infer_video_mp4_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_video_mp4_valido) ... ok
+test_infer_vision_imagen_invalida_rechazada_en_frontera (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_imagen_invalida_rechazada_en_frontera) ... ok
+test_infer_vision_png_valido (tests.test_mcp_server_v2.InferMultimodalV2.test_infer_vision_png_valido) ... ok
+test_max_tokens_default_1024_en_vision (tests.test_mcp_server_v2.InferMultimodalV2.test_max_tokens_default_1024_en_vision) ... ok
+test_campos_extra_rechazados (tests.test_mcp_server_v2.InferTextV2.test_campos_extra_rechazados) ... ok
+test_infer_text_con_schema_v2_ext_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_con_schema_v2_ext_exitoso) ... ok
+test_infer_text_salida_que_viola_schema_es_salida_invalida (tests.test_mcp_server_v2.InferTextV2.test_infer_text_salida_que_viola_schema_es_salida_invalida) ... ok
+test_infer_text_sin_schema_exitoso (tests.test_mcp_server_v2.InferTextV2.test_infer_text_sin_schema_exitoso) ... ok
+test_max_tokens_booleano_cero_y_4097_rechazados (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_booleano_cero_y_4097_rechazados) ... ok
+test_max_tokens_default_512 (tests.test_mcp_server_v2.InferTextV2.test_max_tokens_default_512) ... ok
+test_prompt_invalido_rechazado (tests.test_mcp_server_v2.InferTextV2.test_prompt_invalido_rechazado) ... ok
+test_schema_invalido_rechazado_en_frontera (tests.test_mcp_server_v2.InferTextV2.test_schema_invalido_rechazado_en_frontera) ... ok
+test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo) ... ERROR
+test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo) ... ERROR
+test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo) ... ERROR
+test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway) ... ERROR
+test_choices_vacio_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_choices_vacio_es_salida_invalida) ... ok
+test_mensaje_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_mensaje_no_objeto_32600) ... ok
+test_metodo_desconocido_32601 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_metodo_desconocido_32601) ... ok
+test_params_no_objeto_32600 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_params_no_objeto_32600) ... ok
+test_parse_error_32700 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_parse_error_32700) ... ok
+test_surrogate_no_mata_el_bucle (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_surrogate_no_mata_el_bucle) ... ok
+test_tool_desconocida_32602 (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_tool_desconocida_32602) ... ok
+test_usage_ausente_es_salida_invalida (tests.test_mcp_server_v2.ProtocoloRobustezV2.test_usage_ausente_es_salida_invalida) ... ok
+test_campo_desconocido_rechazado_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_campo_desconocido_rechazado_antes_gateway) ... ok
+test_gateway_tts_texto_fuera_argv_y_limpieza (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_gateway_tts_texto_fuera_argv_y_limpieza) ... ok
+test_input_con_caracteres_de_control_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_con_caracteres_de_control_rechazado) ... ok
+test_input_mas_de_600_caracteres_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_input_mas_de_600_caracteres_rechazado) ... ok
+test_proceso_rechaza_voice_y_speed_antes_backend (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_proceso_rechaza_voice_y_speed_antes_backend) ... ok
+test_response_format_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_response_format_invalido_rechazado) ... ok
+test_speed_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_speed_rechazada_antes_gateway) ... ok
+test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_cerrojo_ocupado_retorna_503_tts_busy) ... ok
+test_synthesize_speech_exitoso (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_synthesize_speech_exitoso) ... ok
+test_tools_list_voz_fija (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_tools_list_voz_fija) ... ok
+test_voice_rechazada_antes_gateway (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_voice_rechazada_antes_gateway) ... ok
+test_wav_invalido_rechazado (tests.test_mcp_server_v2.SynthesizeSpeechV2.test_wav_invalido_rechazado) ... ok
+setUpClass (tests.test_mcp_remote.TestMCPRemote) ... ERROR
+test_09_observacion_multimodal_autenticada_aceptada (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_09_observacion_multimodal_autenticada_aceptada) ... ok
+test_10_descarte_por_accion_fuera_de_catalogo (tests.test_perfiles_i4.AdaptadorPerfilDAuthTests.test_10_descarte_por_accion_fuera_de_catalogo) ... ok
+test_01_headers_autenticacion_y_correlacion (tests.test_perfiles_i4.PerfilWClientTests.test_01_headers_autenticacion_y_correlacion) ... ok
+test_02_chat_text_payload_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_02_chat_text_payload_conforme) ... ok
+test_03_chat_structured_schema_conforme (tests.test_perfiles_i4.PerfilWClientTests.test_03_chat_structured_schema_conforme) ... ok
+test_04_chat_vision_payload (tests.test_perfiles_i4.PerfilWClientTests.test_04_chat_vision_payload) ... ok
+test_05_audio_transcription_payload (tests.test_perfiles_i4.PerfilWClientTests.test_05_audio_transcription_payload) ... ok
+test_06_speech_synthesis_tts_payload (tests.test_perfiles_i4.PerfilWClientTests.test_06_speech_synthesis_tts_payload) ... ok
+test_07_streaming_sse_recepcion_continua (tests.test_perfiles_i4.PerfilWClientTests.test_07_streaming_sse_recepcion_continua) ... ok
+test_08_saneamiento_seguridad_xss (tests.test_perfiles_i4.PerfilWClientTests.test_08_saneamiento_seguridad_xss) ... ok
+test_11_simulador_robot_perfil_d_ejecutable (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_11_simulador_robot_perfil_d_ejecutable) ... ok
+test_12_cliente_perfil_w_python_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_12_cliente_perfil_w_python_demo) ... ok
+test_13_cliente_perfil_w_node_demo (tests.test_perfiles_i4.ScriptsEjecutablesTests.test_13_cliente_perfil_w_node_demo) ... ok
+
+======================================================================
+ERROR: test_health_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_health_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 607, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_infer_text_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_text_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 607, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_infer_vision_e2e_gateway_vivo (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_infer_vision_e2e_gateway_vivo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 607, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway (tests.test_mcp_server_v2.McpGatewayLiveIntegration.test_synthesize_speech_503_cerrojo_tts_compartido_con_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_server_v2.py", line 607, in setUp
+    super().setUp()
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_gateway_i1.py", line 56, in setUp
+    self.backend = ThreadingHTTPServer(("127.0.0.1", 0), _BackendFalso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: setUpClass (tests.test_mcp_remote.TestMCPRemote)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 103, in setUpClass
+    cls.backend_server = ThreadingHTTPServer(("127.0.0.1", 0), BackendFalsoMCP)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/opt/homebrew/Cellar/python@3.12/3.12.12/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 60 tests in 0.234s
+
+FAILED (errors=5)

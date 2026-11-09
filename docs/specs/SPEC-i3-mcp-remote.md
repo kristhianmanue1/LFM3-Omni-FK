@@ -189,17 +189,23 @@ El servidor anuncia el siguiente catálogo normativo en `tools/list`:
   ```
 
 ### 4.6 `synthesize_speech`
-* **Propósito**: Síntesis de voz hablada en español neutro a partir de texto.
+* **Propósito**: Síntesis de voz hablada en español neutro a partir de texto,
+  con voz fija: el motor no admite selección de voz ni de velocidad.
 * **Argumentos**:
   * `input` (string, 1..600 caracteres legibles, obligatorio).
-  * `voice` (string, defecto `"es_ES-davefx-medium"`, opcional).
-  * `speed` (número, 0.5..2.0, defecto 1.0, opcional).
-* **Salida**:
+  * `response_format` (string, `"wav"`, defecto `"wav"`, opcional).
+  * Voz fija desde issue #2 (decisión del Operador, 2026-11-07): sin voice
+    ni speed. Cualquier campo no declarado se rechaza en la frontera MCP
+    remota antes de llamar al gateway, con error estructurado
+    `invalid_payload` («arguments inválidos: campos no declarados en el
+    contrato», nombrando cada campo). Ver `docs/contracts/mcp-tools-v2.md`,
+    sección «Voz fija y migración».
+* **Salida** (sin atribución de voz ni velocidad; `format` describe el
+  formato aplicado):
   ```json
   {
     "audio_base64": "<bytes WAV codificados en base64>",
     "format": "wav",
-    "voice": "es_ES-davefx-medium",
     "chars": 54,
     "duration_est_s": 3.2
   }

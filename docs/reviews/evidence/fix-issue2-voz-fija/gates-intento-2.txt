@@ -1,0 +1,12 @@
+OK — 434 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1799/1800; gate/v14 (2026-11-07)
+OK — 2 plan(es) verificados (estructura E1-E6)
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+OK — al día: versión vigente corpus/v10
+OK — al día: versión vigente gate/v14
+ M docs/contracts/mcp-tools-v2.md
+ M docs/specs/SPEC-i1-vm-mcp-v2.md
+ M src/mcp_remote.py
+ M src/mcp_server_v2.py
+ M tests/test_mcp_remote.py
+ M tests/test_mcp_server_v2.py
+?? docs/reviews/evidence/fix-issue2-voz-fija/

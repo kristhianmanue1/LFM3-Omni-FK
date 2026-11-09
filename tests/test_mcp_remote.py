@@ -34,6 +34,8 @@ sys.path.insert(0, str(RAIZ / "src"))
 from gateway_auth import FairQueueDispatcher, TokenRegistry  # noqa: E402
 from gateway_core import CAPABILITIES  # noqa: E402
 from gateway_http import build_server, LOCK_TTS  # noqa: E402
+from mcp_remote import MCPRemoteHandler, TOOLS_REMOTE  # noqa: E402
+from mcp_server_v2 import TOOLS  # noqa: E402
 
 TOKEN_ALPHA = "alpha-test-token-for-pilot-i3-32chars"
 TOKEN_BETA = "beta-test-token-for-pilot-i3-32chars"
@@ -496,6 +498,196 @@ class TestMCPRemote(unittest.TestCase):
             body_list, token=TOKEN_BETA, project="proyecto-beta", extra_headers={"Mcp-Session-Id": sid}
         )
         self.assertEqual(status, 403)
+
+    def test_13_mcp_synthesize_voice_rechazada_en_frontera(self):
+        """Voz fija (issue #2): `voice` se rechaza antes del gateway."""
+        body = {
+            "jsonrpc": "2.0", "id": 19, "method": "tools/call",
+            "params": {"name": "synthesize_speech",
+                       "arguments": {"input": "Hola", "voice": "otra"}},
+        }
+        status, res, _ = self._peticion_post(body)
+        self.assertEqual(status, 200)
+        self.assertTrue(res["result"]["isError"])
+        err = json.loads(res["result"]["content"][0]["text"])
+        self.assertEqual(err.get("error"), "invalid_payload")
+        self.assertIn("voice", err.get("message", ""))
+        self.assertIn("campos no declarados", err.get("message", ""))
+
+    def test_14_mcp_synthesize_speed_rechazado_en_frontera(self):
+        """Voz fija (issue #2): `speed` se rechaza antes del gateway."""
+        body = {
+            "jsonrpc": "2.0", "id": 20, "method": "tools/call",
+            "params": {"name": "synthesize_speech",
+                       "arguments": {"input": "Hola", "speed": 1.5}},
+        }
+        status, res, _ = self._peticion_post(body)
+        self.assertEqual(status, 200)
+        self.assertTrue(res["result"]["isError"])
+        err = json.loads(res["result"]["content"][0]["text"])
+        self.assertEqual(err.get("error"), "invalid_payload")
+        self.assertIn("speed", err.get("message", ""))
+        self.assertIn("campos no declarados", err.get("message", ""))
+
+    def test_15_mcp_tools_list_catalogo_voz_fija(self):
+        """Voz fija (issue #2): el catálogo remoto no anuncia voice ni speed."""
+        body = {"jsonrpc": "2.0", "id": 21, "method": "tools/list", "params": {}}
+        status, res, _ = self._peticion_post(body)
+        self.assertEqual(status, 200)
+        tts = next(t for t in res["result"]["tools"]
+                   if t["name"] == "synthesize_speech")
+        self.assertNotIn("voice", tts["inputSchema"]["properties"])
+        self.assertNotIn("speed", tts["inputSchema"]["properties"])
+
+
+WAV_SINTETICO_VALIDO = (
+    b"RIFF\x2c\x00\x00\x00WAVEfmt \x10\x00\x00\x00"
+    b"\x01\x00\x01\x00\x80>\x00\x00\x00}\x00\x00\x02\x00\x10\x00"
+    b"data\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+)
+
+
+class RunnerTTSFalso:
+    """Runner de TTS que cuenta llamadas y produce un WAV sintético válido."""
+
+    def __init__(self):
+        self.llamadas = 0
+        self.ultimo_texto = None
+
+    def __call__(self, argv, prompt_path, wav_path, env):
+        self.llamadas += 1
+        self.ultimo_texto = Path(prompt_path).read_text(encoding="utf-8")
+        Path(wav_path).write_bytes(WAV_SINTETICO_VALIDO)
+
+
+class HttpHandlerFalso:
+    """Sustituto mínimo del http_handler para handle_post sin sockets."""
+
+    def __init__(self):
+        self.headers = {}
+        self.respuestas = []
+
+    def _json(self, status, cuerpo, extra=None):
+        self.respuestas.append((status, json.loads(cuerpo.decode("utf-8"))))
+
+
+class VozFijaRemotoFrontera(unittest.TestCase):
+    """Voz fija en MCP remoto (issue #2, decisión del Operador 2026-11-07).
+
+    Propiedades en frontera, sin sockets: rechazo de `voice` y `speed`
+    antes del gateway, respuesta sin atribución, caso válido conservado,
+    catálogo cerrado y concordancia documental SPEC↔contrato↔catálogo.
+    """
+
+    def setUp(self):
+        self.runner = RunnerTTSFalso()
+        self.handler = MCPRemoteHandler(
+            backend_url="http://127.0.0.1:9", tts_runner=self.runner
+        )
+
+    def test_voice_rechazada_antes_del_gateway(self):
+        res = self.handler._tool_synthesize_speech(
+            {"input": "Hola", "voice": "otra"})
+        self.assertTrue(res["isError"])
+        detalle = json.loads(res["content"][0]["text"])
+        self.assertEqual(detalle["error"], "invalid_payload")
+        self.assertIn("voice", detalle["message"])
+        self.assertIn("campos no declarados", detalle["message"])
+        self.assertEqual(self.runner.llamadas, 0)
+
+    def test_speed_rechazado_antes_del_gateway(self):
+        res = self.handler._tool_synthesize_speech(
+            {"input": "Hola", "speed": 1.5})
+        self.assertTrue(res["isError"])
+        detalle = json.loads(res["content"][0]["text"])
+        self.assertEqual(detalle["error"], "invalid_payload")
+        self.assertIn("speed", detalle["message"])
+        self.assertIn("campos no declarados", detalle["message"])
+        self.assertEqual(self.runner.llamadas, 0)
+
+    def test_respuesta_exitosa_sin_atribucion(self):
+        res = self.handler._tool_synthesize_speech({"input": "Hola mundo"})
+        self.assertFalse(res["isError"])
+        dato = json.loads(res["content"][0]["text"])
+        self.assertNotIn("voice", dato)
+        self.assertNotIn("speed", dato)
+        self.assertEqual(dato["format"], "wav")
+        self.assertEqual(dato["chars"], 10)
+        self.assertEqual(base64.b64decode(dato["audio_base64"]),
+                         WAV_SINTETICO_VALIDO)
+        self.assertEqual(self.runner.llamadas, 1)
+        self.assertEqual(self.runner.ultimo_texto, "Hola mundo")
+
+    def test_caso_valido_conservado_campos_exactos(self):
+        res = self.handler._tool_synthesize_speech({"input": "Hola"})
+        self.assertFalse(res["isError"])
+        dato = json.loads(res["content"][0]["text"])
+        self.assertEqual(
+            set(dato), {"audio_base64", "format", "chars", "duration_est_s"})
+
+    def test_catalogo_cerrado_en_tools_list(self):
+        fake = HttpHandlerFalso()
+        self.handler.handle_post(
+            fake, None,
+            {"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}},
+        )
+        status, resp = fake.respuestas[0]
+        self.assertEqual(status, 200)
+        tts = next(t for t in resp["result"]["tools"]
+                   if t["name"] == "synthesize_speech")
+        self.assertEqual(set(tts["inputSchema"]["properties"]),
+                         {"input", "response_format"})
+        self.assertFalse(tts["inputSchema"]["additionalProperties"])
+
+    def test_concordancia_documental_spec_contrato_catalogo(self):
+        spec = (RAIZ / "docs" / "specs" / "SPEC-i1-vm-mcp-v2.md").read_text(
+            encoding="utf-8")
+        spec3 = (RAIZ / "docs" / "specs" / "SPEC-i3-mcp-remote.md").read_text(
+            encoding="utf-8")
+        contrato = (RAIZ / "docs" / "contracts" / "mcp-tools-v2.md").read_text(
+            encoding="utf-8")
+        self.assertNotRegex(spec, r"voice: string")
+        self.assertNotRegex(spec, r"speed: number")
+        self.assertIn("voz fija", spec.lower())
+        self.assertIn("2026-11-07", spec)
+        self.assertIn("Voz fija y migración", contrato)
+        self.assertIn("2026-11-07", contrato)
+        tts = next(t for t in TOOLS_REMOTE
+                   if t["name"] == "synthesize_speech")
+        self.assertNotIn("voice", tts["inputSchema"]["properties"])
+        self.assertNotIn("speed", tts["inputSchema"]["properties"])
+        # SPEC-i3 §4.6: voz fija declarada con procedencia y remisión al
+        # contrato (issue #2, decisión del Operador 2026-11-07). Sin
+        # declaraciones de voice/speed: ni argumento (`voice`) ni campo de
+        # salida ("voice"); la prosa de rechazo sí puede nombrarlos.
+        seccion = spec3.split("### 4.6 `synthesize_speech`", 1)[1]
+        seccion = seccion.split("### 4.7", 1)[0]
+        self.assertNotRegex(seccion, r"`voice`")
+        self.assertNotRegex(seccion, r"`speed`")
+        self.assertNotRegex(seccion, r'"voice"')
+        self.assertNotRegex(seccion, r'"speed"')
+        self.assertIn("voz fija", seccion.lower())
+        self.assertIn("2026-11-07", seccion)
+        self.assertIn("Voz fija y migración", seccion)
+        # El contrato no declara voice/speed ni en argumentos ni en salida
+        # de synthesize_speech (sólo la sección de migración los menciona).
+        args_seg = contrato.split("arguments.synthesize_speech:", 1)[1]
+        args_seg = args_seg.split("arguments.", 1)[0]
+        salida_seg = contrato.split("synthesize_speech ->", 1)[1]
+        salida_seg = salida_seg.split("infer_video ->", 1)[0]
+        self.assertNotIn("voice", args_seg)
+        self.assertNotIn("speed", args_seg)
+        self.assertNotIn("voice", salida_seg)
+        self.assertNotIn("speed", salida_seg)
+        # Esquemas de synthesize_speech idénticos en ambos catálogos
+        # (stdio v2 y remoto), cerrados a los campos declarados.
+        tts_stdio = next(t for t in TOOLS
+                         if t["name"] == "synthesize_speech")
+        self.assertEqual(tts_stdio["inputSchema"], tts["inputSchema"])
+        for esquema in (tts["inputSchema"], tts_stdio["inputSchema"]):
+            self.assertEqual(set(esquema["properties"]),
+                             {"input", "response_format"})
+            self.assertFalse(esquema["additionalProperties"])
 
 
 if __name__ == "__main__":

@@ -8,6 +8,9 @@ Implementa la especificación SPEC-i3-mcp-remote y ADR-010:
 - Autenticación Bearer y verificación estricta de scopes por herramienta.
 - Catálogo omnimodal completo: health, capabilities, infer_text, infer_vision,
   infer_audio, synthesize_speech, infer_video, conversational_turn.
+- Voz fija en synthesize_speech (issue #2, decisión del Operador del
+  2026-11-07): sin voice ni speed; los campos no declarados se rechazan en
+  la frontera MCP antes del gateway y la respuesta no atribuye voz.
 - Exclusión mutua de TTS (503 tts_busy) y validación de salidas contra schema v2-ext.
 - Contención estricta de egreso (anti-SSRF): medios binarios siempre en base64.
 """
@@ -121,13 +124,12 @@ TOOLS_REMOTE: List[Dict[str, Any]] = [
     },
     {
         "name": "synthesize_speech",
-        "description": "Síntesis de voz hablada en español neutro (WAV) con exclusión mutua",
+        "description": "Síntesis de voz fija en español con cerrojo de exclusión mutua",
         "inputSchema": {
             "type": "object",
             "properties": {
                 "input": {"type": "string", "minLength": 1, "maxLength": 600},
-                "voice": {"type": "string"},
-                "speed": {"type": "number", "minimum": 0.5, "maximum": 2.0},
+                "response_format": {"type": "string", "enum": ["wav"]},
             },
             "additionalProperties": False,
             "required": ["input"],
@@ -575,14 +577,25 @@ class MCPRemoteHandler:
         return self._llamar_backend_chat(payload, schema)
 
     def _tool_synthesize_speech(self, args: Dict[str, Any]) -> Dict[str, Any]:
+        # Voz fija (issue #2, decisión del Operador del 2026-11-07): se
+        # rechazan los campos no declarados en la frontera MCP, antes de
+        # llamar al gateway (contrato mcp-tools-v2.md, «Voz fija y migración»).
+        extras = sorted(set(args) - {"input", "response_format"})
+        if extras:
+            return _tool_error(
+                "invalid_payload",
+                "arguments inválidos: campos no declarados en el contrato: "
+                f"{extras}",
+            )
+
         texto = args.get("input")
         if not isinstance(texto, str) or not 1 <= len(texto) <= 600:
             return _tool_error("invalid_payload", "input debe ser string de 1..600 caracteres")
 
-        voice = args.get("voice", "es_ES-davefx-medium")
-        speed = args.get("speed", 1.0)
-        if not isinstance(speed, (int, float)) or not 0.5 <= speed <= 2.0:
-            return _tool_error("invalid_payload", "speed debe ser número entre 0.5 y 2.0")
+        formato = args.get("response_format", "wav")
+        if formato != "wav":
+            return _tool_error("invalid_payload",
+                               "sólo response_format 'wav' admitido en el dialecto v2")
 
         # Importar dinámicamente _sintetizar_wav de gateway_http
         try:
@@ -599,7 +612,6 @@ class MCPRemoteHandler:
         return _tool_result({
             "audio_base64": wav_b64,
             "format": "wav",
-            "voice": voice,
             "chars": len(texto),
             "duration_est_s": round(len(texto) / 16.0, 2),
         })

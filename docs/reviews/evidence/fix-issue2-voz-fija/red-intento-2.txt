@@ -1,0 +1,119 @@
+test_01_mcp_get_sse_channel (tests.test_mcp_remote.TestMCPRemote.test_01_mcp_get_sse_channel)
+Verifica canal SSE en GET /mcp y rechazo sin cabecera Accept apropiada. ... ok
+test_02_mcp_initialize_and_session (tests.test_mcp_remote.TestMCPRemote.test_02_mcp_initialize_and_session)
+Verifica negociación de protocolo initialize y emisión de Mcp-Session-Id. ... ok
+test_03_mcp_tools_list_omnimodal (tests.test_mcp_remote.TestMCPRemote.test_03_mcp_tools_list_omnimodal)
+Verifica catálogo completo de 8 herramientas omnimodales en tools/list. ... ok
+test_04_mcp_tools_call_health_and_capabilities (tests.test_mcp_remote.TestMCPRemote.test_04_mcp_tools_call_health_and_capabilities)
+Verifica invocación a health y capabilities. ... ok
+test_05_mcp_tools_call_infer_text_plain_and_schema (tests.test_mcp_remote.TestMCPRemote.test_05_mcp_tools_call_infer_text_plain_and_schema)
+Verifica infer_text con texto plano y con validación de schema v2-ext. ... ok
+test_06_mcp_tools_call_infer_vision_and_anti_ssrf (tests.test_mcp_remote.TestMCPRemote.test_06_mcp_tools_call_infer_vision_and_anti_ssrf)
+Verifica infer_vision y contención estricta de egreso anti-SSRF. ... ok
+test_07_mcp_tools_call_infer_audio (tests.test_mcp_remote.TestMCPRemote.test_07_mcp_tools_call_infer_audio)
+Verifica infer_audio con WAV válido y rechazo de audio inválido. ... ok
+test_08_mcp_tools_call_synthesize_speech_and_tts_busy (tests.test_mcp_remote.TestMCPRemote.test_08_mcp_tools_call_synthesize_speech_and_tts_busy)
+Verifica synthesize_speech y exclusión mutua 503/tts_busy. ... ok
+test_09_mcp_tools_call_infer_video (tests.test_mcp_remote.TestMCPRemote.test_09_mcp_tools_call_infer_video)
+Verifica infer_video con MP4 sintético y comprobación de ftyp. ... ok
+test_10_mcp_tools_call_conversational_turn (tests.test_mcp_remote.TestMCPRemote.test_10_mcp_tools_call_conversational_turn)
+Verifica conversational_turn con historial multi-turno y síntesis de voz. ... ok
+test_11_mcp_auth_and_scope_failures (tests.test_mcp_remote.TestMCPRemote.test_11_mcp_auth_and_scope_failures)
+Verifica rechazos de autenticación y de scopes no autorizados. ... ok
+test_12_mcp_session_isolation (tests.test_mcp_remote.TestMCPRemote.test_12_mcp_session_isolation)
+Verifica que una sesión creada por proyecto-alpha es rechazada si la usa proyecto-beta. ... ok
+test_13_mcp_synthesize_voice_rechazada_en_frontera (tests.test_mcp_remote.TestMCPRemote.test_13_mcp_synthesize_voice_rechazada_en_frontera)
+Voz fija (issue #2): `voice` se rechaza antes del gateway. ... FAIL
+test_14_mcp_synthesize_speed_rechazado_en_frontera (tests.test_mcp_remote.TestMCPRemote.test_14_mcp_synthesize_speed_rechazado_en_frontera)
+Voz fija (issue #2): `speed` se rechaza antes del gateway. ... FAIL
+test_15_mcp_tools_list_catalogo_voz_fija (tests.test_mcp_remote.TestMCPRemote.test_15_mcp_tools_list_catalogo_voz_fija)
+Voz fija (issue #2): el catálogo remoto no anuncia voice ni speed. ... FAIL
+test_caso_valido_conservado_campos_exactos (tests.test_mcp_remote.VozFijaRemotoFrontera.test_caso_valido_conservado_campos_exactos) ... FAIL
+test_catalogo_cerrado_en_tools_list (tests.test_mcp_remote.VozFijaRemotoFrontera.test_catalogo_cerrado_en_tools_list) ... FAIL
+test_concordancia_documental_spec_contrato_catalogo (tests.test_mcp_remote.VozFijaRemotoFrontera.test_concordancia_documental_spec_contrato_catalogo) ... FAIL
+test_respuesta_exitosa_sin_atribucion (tests.test_mcp_remote.VozFijaRemotoFrontera.test_respuesta_exitosa_sin_atribucion) ... FAIL
+test_speed_rechazado_antes_del_gateway (tests.test_mcp_remote.VozFijaRemotoFrontera.test_speed_rechazado_antes_del_gateway) ... FAIL
+test_voice_rechazada_antes_del_gateway (tests.test_mcp_remote.VozFijaRemotoFrontera.test_voice_rechazada_antes_del_gateway) ... FAIL
+
+======================================================================
+FAIL: test_13_mcp_synthesize_voice_rechazada_en_frontera (tests.test_mcp_remote.TestMCPRemote.test_13_mcp_synthesize_voice_rechazada_en_frontera)
+Voz fija (issue #2): `voice` se rechaza antes del gateway.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 510, in test_13_mcp_synthesize_voice_rechazada_en_frontera
+    self.assertTrue(res["result"]["isError"])
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_14_mcp_synthesize_speed_rechazado_en_frontera (tests.test_mcp_remote.TestMCPRemote.test_14_mcp_synthesize_speed_rechazado_en_frontera)
+Voz fija (issue #2): `speed` se rechaza antes del gateway.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 525, in test_14_mcp_synthesize_speed_rechazado_en_frontera
+    self.assertTrue(res["result"]["isError"])
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_15_mcp_tools_list_catalogo_voz_fija (tests.test_mcp_remote.TestMCPRemote.test_15_mcp_tools_list_catalogo_voz_fija)
+Voz fija (issue #2): el catálogo remoto no anuncia voice ni speed.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 538, in test_15_mcp_tools_list_catalogo_voz_fija
+    self.assertNotIn("voice", tts["inputSchema"]["properties"])
+AssertionError: 'voice' unexpectedly found in {'input': {'type': 'string', 'minLength': 1, 'maxLength': 600}, 'voice': {'type': 'string'}, 'speed': {'type': 'number', 'minimum': 0.5, 'maximum': 2.0}}
+
+======================================================================
+FAIL: test_caso_valido_conservado_campos_exactos (tests.test_mcp_remote.VozFijaRemotoFrontera.test_caso_valido_conservado_campos_exactos)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 624, in test_caso_valido_conservado_campos_exactos
+    self.assertEqual(
+AssertionError: Items in the first set but not the second:
+'voice'
+
+======================================================================
+FAIL: test_catalogo_cerrado_en_tools_list (tests.test_mcp_remote.VozFijaRemotoFrontera.test_catalogo_cerrado_en_tools_list)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 637, in test_catalogo_cerrado_en_tools_list
+    self.assertEqual(set(tts["inputSchema"]["properties"]), {"input"})
+AssertionError: Items in the first set but not the second:
+'speed'
+'voice'
+
+======================================================================
+FAIL: test_concordancia_documental_spec_contrato_catalogo (tests.test_mcp_remote.VozFijaRemotoFrontera.test_concordancia_documental_spec_contrato_catalogo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 645, in test_concordancia_documental_spec_contrato_catalogo
+    self.assertNotRegex(spec, r"voice: string")
+AssertionError: Regex matched: 'voice: string' matches 'voice: string' in '# SPEC-i1-vm — Servidor MCP local v2 (stdio vía gateway 8092)\n\n> Cubre: TAREA I1-VM del PLAN LFM3-2. Formato: 02 §2.2. Transporte y\n> frontera decididos en ADR-002 y ADR-008 (stdio; sin red nueva; enrutamiento\n> por el gateway loopback 8092 con compartición de cerrojo TTS y límites de\n> seguridad). Preserva el contrato mcp-tools-v1 intacto en src/mcp_server.py.\n> Contrato formal en docs/contracts/mcp-tools-v2.md. Claves en inglés (ADR-029).\n\n```text\nSPEC-i1-vm [cubre: I1-VM, ADR-002, ADR-008]\nComportamiento: proceso hijo de transporte stdio conforme a especificación\n  MCP (JSON-RPC 2.0); expone herramientas omnimodales para agentes e IDEs:\n  salud unificada, inferencia de texto (con dialecto schema v2-ext),\n  visión sobre imagen (PNG/JPEG), audio/ASR (WAV), síntesis de voz\n  (TTS en español vía gateway 8092 con cerrojo mutex 503) y video corto MP4\n  (si la capacidad video está activa en capabilities).\n  Reutiliza gateway_core para prevalidación y delega en el gateway HTTP\n  loopback (127.0.0.1:8092). Stateless: no persiste conversaciones.\n\nEntradas:\n  initialize: handshake MCP estándar — obligatorio primer método;\n    negociación de versión contra las soportadas (2025-06-18, 2025-03-26)\n  tools/list: sin campos\n  tools/call:\n    name: "health" | "infer_text" | "infer_vision" | "infer_audio" |\n          "synthesize_speech" | "infer_video" [obligatorio]\n    arguments para health: ninguno ({} o ausente)\n    arguments para infer_text:\n      prompt: string [obligatorio] (1..8000 caracteres)\n      schema: objeto JSON Schema [opcional; dialecto v2-ext soportado]\n      max_tokens: entero [opcional] (1..4096; defecto 512)\n    arguments para infer_vision:\n      image_base64: string [obligatorio] — PNG o JPEG en base64\n      prompt: string [obligatorio] (1..8000 caracteres)\n      schema: objeto JSON Schema [opcional; dialecto v2-ext]\n      max_tokens: entero [opcional] (1..4096; defecto 1024)\n    arguments para infer_audio:\n      audio_base64: string [obligatorio] — WAV en base64\n      prompt: string [obligatorio] (1..8000 caracteres)\n      schema: objeto JSON Schema [opcional; dialecto v2-ext]\n      max_tokens: entero [opcional] (1..4096; defecto 1024)\n    arguments para synthesize_speech:\n      input: string [obligatorio] (1..600 caracteres)\n      voice: string [opcional] (defecto "es_ES-davefx-medium")\n      speed: number [opcional] (0.5..2.0; defecto 1.0)\n      response_format: string [opcional] ("wav")\n    arguments para infer_video: [activo sólo si video: true en gateway]\n      video_base64: string [obligatorio] — MP4 en base64 (<= 16 MiB)\n      prompt: string [obligatorio] (1..8000 caracteres)\n      schema: objeto JSON Schema [opcional; dialecto v2-ext]\n      max_tokens: entero [opcional] (1..4096; defecto 1024)\n    campos no declarados: rechazados con detalle del campo extra\n\nSalidas:\n  health: {state:"up"|"down", model:string, gateway_port:8092,\n           backend_port:8091, capabilities:objeto}\n  infer_text: {text:string, validated:boolean, usage:objeto}\n  infer_vision: {description:string, validated:boolean, usage:objeto}\n  infer_audio: {text:string, validated:boolean, usage:objeto}\n  synthesize_speech: {audio_base64:string, format:"wav", voice:string,\n                      chars:int, duration_est_s:float}\n  infer_video: {description:string, validated:boolean, usage:objeto}\n\nErrores:\n  gateway no disponible -> isError:true con mensaje explícito; reintentable\n  cerrojo TTS ocupado en gateway (503) -> isError:true mensaje "tts_busy"\n  arguments inválidos -> isError:true con mensaje claro; sin efecto lateral\n  salida del modelo que viola schema o forma inválida -> isError:true\n    "salida_invalida"; dato no confiable nunca se entrega como válido\n  tool no conocida -> error JSON-RPC -32602\n  método antes de initialize -> error JSON-RPC -32002\n\nCasos:\n  - DADO un agente MCP CUANDO envía initialize ENTONCES responde\n    capabilities y lista de herramientas v2 omnimodales.\n  - DADO una sesión MCP v2 CUANDO llama health ENTONCES responde state "up",\n    puertos 8092/8091 y capacidades activas del gateway.\n  - DADO infer_text con schema dialecto v2-ext (enum, min/max, array)\n    CUANDO se invoca ENTONCES texto cumple el esquema y validated es true.\n  - DADO infer_audio con audio WAV base64 ENTONCES devuelve texto\n    transcrito/analizado con validated y usage.\n  - DADO synthesize_speech con texto en español CUANDO gateway está libre\n    ENTONCES devuelve audio_base64 en formato WAV con cabecera RIFF.\n  - DADO synthesize_speech mientras el cerrojo TTS está retenido ENTONCES\n    devuelve isError:true con 503/tts_busy reintentable.\n  - DADO infer_video con MP4 sintético CUANDO video activo ENTONCES\n    devuelve description válida y usage.\n  - DADO el servidor MCP v1 (src/mcp_server.py) CUANDO se ejecutan sus\n    pruebas ENTONCES todas pasan sin regresión (mcp-tools-v1 intacto).\n\nInvariantes:\n  - Transporte stdio puro; sin apertura de sockets propios adicionales.\n  - Toda llamada de inferencia y síntesis pasa por el gateway 8092.\n  - Compartición estricta de exclusión mutua de TTS con clientes HTTP.\n  - Toda salida del modelo validada fail-closed contra esquema cerrado.\n```\n'
+
+======================================================================
+FAIL: test_respuesta_exitosa_sin_atribucion (tests.test_mcp_remote.VozFijaRemotoFrontera.test_respuesta_exitosa_sin_atribucion)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 611, in test_respuesta_exitosa_sin_atribucion
+    self.assertNotIn("voice", dato)
+AssertionError: 'voice' unexpectedly found in {'audio_base64': 'UklGRiwAAABXQVZFZm10IBAAAAABAAEAgD4AAAB9AAACABAAZGF0YQgAAAAAAAAAAAAAAA==', 'format': 'wav', 'voice': 'es_ES-davefx-medium', 'chars': 10, 'duration_est_s': 0.62}
+
+======================================================================
+FAIL: test_speed_rechazado_antes_del_gateway (tests.test_mcp_remote.VozFijaRemotoFrontera.test_speed_rechazado_antes_del_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 600, in test_speed_rechazado_antes_del_gateway
+    self.assertTrue(res["isError"])
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_voice_rechazada_antes_del_gateway (tests.test_mcp_remote.VozFijaRemotoFrontera.test_voice_rechazada_antes_del_gateway)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-issue2-voz-fija/tests/test_mcp_remote.py", line 590, in test_voice_rechazada_antes_del_gateway
+    self.assertTrue(res["isError"])
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 21 tests in 1.047s
+
+FAILED (failures=9)
