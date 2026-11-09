@@ -14,6 +14,10 @@ Clase de tarea: <Bounded | Architectural> — disparadores de 01 §2
 Restricciones globales (verbatim del artefacto que autoriza):
 - <línea copiada byte a byte, con su referencia de origen>
 
+Review Focus (opcional — ADR-051; sin él el plan sigue válido):
+- <clase de entrada o modo de fallo que el SPEC implica y ningún step
+  ejercita — hasta 5, cada una con el step que la fija>
+
 TAREAS:
 TAREA <id-1>
   Consumes: <CONTRATO/SPEC existente al que resuelve — o "crea CONTRATO <x>">
@@ -35,6 +39,10 @@ Reglas:
   el código ahora, no de memoria.
 - Cada step referencia un archivo, comando o test real del proyecto, con su
   criterio de paso. Un step sin verificación es prosa, no un step.
+- La sección opcional Review Focus lista clases de entrada o modos de fallo
+  que el SPEC implica y ningún step ejercita, cada una con el step que la
+  fija; la ronda adversarial la usa como lente (ADR-051). `check_plans` no
+  la exige ni la valida: opcional por diseño.
 - Prohibido: código de producción, placeholders (`TBD`, `TODO`), "similar a
   la TAREA N", prosa sin criterio de verificación.
 - En un plan, la TAREA que incluya `push` o `merge` declara `Lote:`. Si su

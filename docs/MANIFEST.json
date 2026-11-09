@@ -1,14 +1,14 @@
 {
   "schema": "skevi/corpus-manifest/v1",
-  "version": "corpus/v10",
-  "generated_at": "2026-11-07T13:50:10Z",
+  "version": "corpus/v11",
+  "generated_at": "2026-11-08T12:55:00Z",
   "files": {
     "estandar-diseno-software-github.md": "sha256:aa50be7544d59d07e7bd3f3c8aa50eb4b8c22f2eba95566ceaa1707394627e3e",
     "ai-agent-guide/00-INDICE.md": "sha256:0409a225db77ac52b0d08219cd124c5f214e7790587a3a2cc09c4e1aa9406bf7",
     "ai-agent-guide/01-analisis-y-requerimientos.md": "sha256:3e3766e6aae01d6e42ff88f6eb513db1abd40208df3a9b95e1e007c9ff9fe02a",
     "ai-agent-guide/02-specs-adr-contratos.md": "sha256:12a7c09d68b387e67df3b5e36974bdb842e8d789a11c6525c86b2246e0b31411",
     "ai-agent-guide/03-cascaron-proyecto.md": "sha256:4954784713c50f5a06777da364ce129a6a937fd9e36b4755833772670506089a",
-    "ai-agent-guide/04-ejecucion-y-verificacion.md": "sha256:3f52081e6de386cced8ef0f0a3f147c37063a3c59133d576a3f83dd896f1c7e9",
+    "ai-agent-guide/04-ejecucion-y-verificacion.md": "sha256:adcb2167d611fcfb0dca846960586e84f72a266f8c275b49263f2c1efb669c2e",
     "ai-agent-guide/05-memoria-del-agente.md": "sha256:d0bb016ae6d1da2492784dcad7ce99f8138a776e0d03c2016a7d1385cf4ae30d",
     "ai-agent-guide/06-componentes-con-llm.md": "sha256:4fb5926f31fdff7c3c50208a1c1c4c78403f4f4e23dc087f646f28924fb04fd2"
   },
@@ -91,6 +91,14 @@
       "breaking": false,
       "changes": {
         "ai-agent-guide/04-ejecucion-y-verificacion.md": "punteros al catalogo de defectos en §5.1 y §8 (PROP-010 T06; ADR-035)"
+      }
+    },
+    {
+      "from": "corpus/v10",
+      "to": "corpus/v11",
+      "breaking": false,
+      "changes": {
+        "ai-agent-guide/04-ejecucion-y-verificacion.md": "registro de decisiones intermedias en §2 (ADR-049) y taxonomía de disposiciones en §5.2 (ADR-050); PROP-013"
       }
     }
   ]

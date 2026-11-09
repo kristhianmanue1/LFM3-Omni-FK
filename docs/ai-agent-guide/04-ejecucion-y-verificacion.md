@@ -65,6 +65,16 @@ Reglas:
 - Comentarios y docstrings describen el comportamiento actual. Si cambias
   comportamiento, actualiza lo que lo describe; un comentario obsoleto es un
   bug de documentación.
+- En una TAREA con plan de varias tareas, el progreso intermedio y las
+  decisiones que ni el plan ni el SPEC contestan se registran en archivos
+  con la forma `Ruling: <qué decidí> — <por qué> — <qué coste si fallo>`;
+  una desviación sin registro es una decisión en secreto. Tras una
+  compactación o relevo de sesión manda el estado de Git y esos archivos,
+  no el recuerdo. Sin gate ni dependencia nueva: archivos y Git valen con
+  o sin memoria instalada (K4). Procedencia: ADR-049; razón: la
+  compactación borra decisiones ya tomadas y el re-despacho de trabajo ya
+  completado es el fallo más caro reportado por adoptantes del método
+  (Referencia: PROP-013 §2; superpowers executing-plans).
 
 ## 3. Tests
 
@@ -145,6 +155,16 @@ de trazabilidad de ADR-016 (ver `00-INDICE.md`, §Reporte en dos capas);
 la decisión `proceed | fix-and-retry | escalate` vive en ambas capas.
 El informe y la disposición de sus hallazgos viven juntos en `docs/reviews/`,
 nunca dentro del documento que la ronda revisa (ADR-037, `02` §3.3).
+
+La disposición de cada hallazgo nombra una de tres pilas: resuelto con
+una fuente ya existente (se cita), menor con decisión del ejecutor
+registrada, o del Operador (se formula la pregunta). La severidad se
+re-gradúa por el efecto real sobre el consumidor del artefacto, no por
+lo que el SPEC calló; los hallazgos informativos quedan registrados con
+su disposición y no abren pase de arreglos. El hogar de la disposición
+sigue siendo el registro (ADR-037): este complemento fija su
+vocabulario. Procedencia: ADR-050; razón: disposiciones comparables
+entre rondas (Referencia: PROP-013 §3).
 
 ### 5.3 Reglas de cierre
 

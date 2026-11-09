@@ -1,17 +1,22 @@
 {
   "schema": "skevi/template-install/v1",
-  "version": "plantillas/v22",
+  "version": "plantillas/v23",
   "files": {
     "architecture-overview.md": "sha256:c7a03679ec978ff609e6216cc63b5043eeb185424895083970b399ac9912b2d3",
-    "corpus-installed.json": "sha256:ef016335d9e06f5cfc6b02bb2724b13485104f20ccc25dcc08bed45fd76e0107",
-    "installed.json": "sha256:8ee78a6e1c553ef03747ccc4be3d642041609a6b48856c786e8d573256b6ab35",
-    "plan-de-implementacion.md": "sha256:c9e27a08666eb727d39e755ca4df1d72757bb2bc7cee76a281967738199c9717",
+    "corpus-installed.json": "sha256:de82a57ad4be763e6c6ad9b392678dc1e76b2b354a35f697c93da895582de635",
+    "installed.json": "sha256:bec59c102b545a754b13fa8ea697612ec932bc9d5d54080b38b7f61f53d85184",
+    "plan-de-implementacion.md": "sha256:d0c7a570c0fbfb9a5fb4e2145281262d9949bf09225b467ed43deff7f5514f87",
     "registro-contexto.md": "sha256:60c768b449a416fa8727b1bf2515caecab0e9962111cc97a2d203f922fdc3227",
-    "scripts-installed.json": "sha256:da535f99d86da8c5c47f28d95d6febff3b9c2aefde614f1de97b0af604de9765",
-    "usage-guide.md": "sha256:087e7a87cc24eec4dad97d08e429946d189b0b7d5b6bb33a16195bd6cd0ddd28",
+    "scripts-installed.json": "sha256:6bf9dbed8197704c5c78194b9d678335488be1bd573b6cbaae5841c217857978",
+    "usage-guide.md": "sha256:1d7ea3613611c80b95b47b0cd310f868393d97e883533abff6e8938f8753ad0c",
     "review-defect-catalog.md": "sha256:03feb4808acf54bb8a9e612638858d302f69e9a0a9ec1ebfd85bc343d76c1aaf"
   },
-  "installed_at": "2026-11-07T15:25:48Z",
-  "source": "/Users/krisnova/www/aria/skevi@6f6ff38",
-  "customized": []
+  "installed_at": "2026-11-09T23:00:09Z",
+  "source": "/Users/krisnova/www/aria/skevi@d6cb3066a269a24ac427580fd20cd521eb5c3d2c",
+  "customized": [
+    "usage-guide.md",
+    "scripts-installed.json",
+    "corpus-installed.json",
+    "installed.json"
+  ]
 }

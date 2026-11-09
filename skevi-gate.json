@@ -25,7 +25,7 @@
     "scripts/MANIFEST.json"
   ],
   "reading_path": {
-    "limit": 1800,
+    "limit": 2000,
     "files": [
       "AGENTS.md",
       "docs/ai-agent-guide/00-INDICE.md",

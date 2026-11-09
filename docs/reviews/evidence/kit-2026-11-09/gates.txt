@@ -1,0 +1,7 @@
+OK — 423 archivos de texto dentro de límites; estructura y hogares canónicos verificados; ruta de lectura 1819/2000; gate/v14 (2026-11-07)
+OK — 2 plan(es) verificados (estructura E1-E6)
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+OK — al día: versión vigente corpus/v11
+OK — al día: versión vigente gate/v14
+OK — al día: versión vigente plantillas/v23
+git diff --check: OK
