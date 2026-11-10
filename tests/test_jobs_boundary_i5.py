@@ -8,7 +8,9 @@ salida truncada o fuera de esquema termina en fallo explícito;
 durabilidad de la admisión (sin 202 sin escritura; sin registro, sin
 ejecución); reclamo atómico entre instancias y admisión compartida;
 retención (purga verificable, permisos 0600/0700, expires desde el
-terminal); RFC 8785 (números ES6, claves UTF-16).
+terminal); RFC 8785 (números ES6, claves UTF-16). Los tests del
+expediente fix-i5-despacho viven en tests/test_jobs_despacho_i5.py
+(contención de tamaño §3.4; referencia recíproca entre partes).
 
 Fixtures numéricos: generados contra Node.js v26.7.0 (V8), consistente
 con RFC 8785 §3.2.2.3 (forma ES6), verificados el 2026-11-07. El orden
@@ -478,23 +480,9 @@ class SalidaBackendTests(unittest.TestCase):
         self.assertEqual(final["state"], "succeeded")
         self.assertTrue(final["result"]["complete"])
 
-    def test_15_expires_recalculada_tras_terminal(self):
-        # §J: retención del resultado cuenta desde el terminal, no desde
-        # la admisión. Backend lento (2.5 s) separa created de completed.
-        manager = self._manager_con_backend(RESPUESTA_VALIDA,
-                                            retardo_s=2.5)
-        payload = {"messages": [{"role": "user", "content": "lento"}]}
-        status, res = self._crear(
-            manager, payload, "bnd-expira", ttl_seconds=60)
-        self.assertEqual(status, 202)
-        final = _esperar_terminal(manager, "proyecto-alpha", res["job_id"],
-                                  plazo=25.0)
-        dt_completado = datetime.fromisoformat(final["completed_at"])
-        dt_expira = datetime.fromisoformat(final["expires_at"])
-        delta = (dt_expira - dt_completado).total_seconds()
-        self.assertGreaterEqual(
-            delta, 59.0,
-            f"expires_at no cuenta desde el terminal (delta={delta})")
+    # test_15 (expires desde el terminal) se reescribió con reloj
+    # falso, sin pausas reales, y vive como test_35 en
+    # tests/test_jobs_despacho_i5.py (LOW-7; partida §3.4).
 
 
 # --------------------------------- durabilidad de la admisión (BLOCKER-2)

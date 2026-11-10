@@ -12,16 +12,15 @@ vencidos vivían en JobsManager y pasan a este módulo como mixin, con
 los mismos nombres de método y los mismos cuerpos. JobsManager aporta
 los atributos que estos métodos usan — storage, lock, work_queue,
 _en_cola, data_dir, idemp_dir, fallos_purga, intervalo_barrido_s,
-tmp_edad_s y _ultimo_barrido — y los helpers _cerrar, _load_job,
-_vencido y _registro_confirma_admision.
+tmp_edad_s, reloj (LOW-7, fix-i5-despacho) y _ultimo_barrido — y los
+helpers _cerrar, _load_job, _vencido y _registro_confirma_admision.
 """
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 import json
 import sys
-import time
 
 
 class JobsRecoveryMixin:
@@ -68,9 +67,11 @@ class JobsRecoveryMixin:
         """D4: barrido periódico dentro del bucle del worker, sin
         hilo nuevo: vencidos a tombstone, temporales huérfanos y
         claims sin dueño, bajo el cerrojo de instancia."""
-        if time.monotonic() - self._ultimo_barrido < self.intervalo_barrido_s:
+        transcurrido = (self.reloj()
+                        - self._ultimo_barrido).total_seconds()
+        if transcurrido < self.intervalo_barrido_s:
             return
-        self._ultimo_barrido = time.monotonic()
+        self._ultimo_barrido = self.reloj()
         self._purgar_expirados()
         self.storage.limpiar_temporales(self.tmp_edad_s)
         self.storage.limpiar_claims_huerfanos()
@@ -87,7 +88,7 @@ class JobsRecoveryMixin:
         Los fallos de disco del barrido también se cuentan y hacen
         rastro: es la vía principal de purga (D4, ronda adversarial)."""
         purgados = 0
-        ahora = datetime.now(timezone.utc)
+        ahora = self.reloj()
         for proj_dir in self.data_dir.glob("*"):
             if not proj_dir.is_dir():
                 continue

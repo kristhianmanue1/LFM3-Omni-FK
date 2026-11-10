@@ -4,7 +4,8 @@
 Contrato: docs/contracts/perfiles-servicio-v2.md (§J)
 Especificación: docs/specs/SPEC-i5-jobs.md
 Decisión: docs/adr/ADR-012-trabajos-largos-persistencia-idempotencia.md
-Expediente: docs/reviews/evidence/fix-i5-jobs-frontera/ (fix-i5)
+Expedientes: docs/reviews/evidence/fix-i5-jobs-frontera/ (fix-i5) y
+docs/reviews/evidence/fix-i5-despacho/ (RESIDUAL-MED, LOW-1, LOW-7).
 
 Garantías: idempotencia canónica RFC 8785 con tombstone 24 h (§J);
 persistencia atómica durable en jobs_storage (el registro de
@@ -22,6 +23,7 @@ requisito bloqueante para exponer /jobs (D3).
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+import errno
 import fcntl
 import hashlib
 import json
@@ -31,7 +33,6 @@ import queue
 import re
 import sys
 import threading
-import time
 import urllib.error
 import urllib.request
 from typing import Any, Callable
@@ -75,6 +76,11 @@ def _respuesta_error(status: int, code: str, message: str) -> tuple[int, dict]:
     return status, {"error": {"code": code, "message": message}}
 
 
+def _ahora_utc() -> datetime:
+    """Reloj de pared real (UTC): defecto del reloj inyectable (LOW-7)."""
+    return datetime.now(timezone.utc)
+
+
 class JobsManager(JobsRecoveryMixin):
     """Gestor de ciclo de vida, persistencia y ejecución de trabajos largos."""
 
@@ -83,7 +89,8 @@ class JobsManager(JobsRecoveryMixin):
                  dispatcher: Any = None,
                  rate_limit_lookup: Callable[[str], dict] | None = None,
                  intervalo_barrido_s: float = INTERVALO_BARRIDO_S,
-                 tmp_edad_s: float = TMP_EDAD_S):
+                 tmp_edad_s: float = TMP_EDAD_S,
+                 reloj: Callable[[], datetime] | None = None):
         if jobs_dir:
             base_dir = Path(jobs_dir)
         else:
@@ -100,7 +107,7 @@ class JobsManager(JobsRecoveryMixin):
         self._fd_instancia = self.storage.tomar_cerrojo_instancia()
         try:
             self._arrancar(backend_url, dispatcher, rate_limit_lookup,
-                           intervalo_barrido_s, tmp_edad_s)
+                           intervalo_barrido_s, tmp_edad_s, reloj)
         except BaseException:
             os.close(self._fd_instancia)
             self._fd_instancia = None
@@ -108,8 +115,12 @@ class JobsManager(JobsRecoveryMixin):
 
     def _arrancar(self, backend_url: str, dispatcher: Any,
                   rate_limit_lookup: Callable[[str], dict] | None,
-                  intervalo_barrido_s: float, tmp_edad_s: float) -> None:
+                  intervalo_barrido_s: float, tmp_edad_s: float,
+                  reloj: Callable[[], datetime] | None) -> None:
         """Resto del arranque; se ejecuta con el cerrojo tomado."""
+        # LOW-7: reloj inyectable (pared UTC); barrido, purga y
+        # deadlines dependen de él; tests de tiempo con reloj falso.
+        self.reloj = reloj if reloj is not None else _ahora_utc
         self.backend_url = backend_url.rstrip("/")
         # Admisión compartida con H/M (HIGH-1); None = sin (tests).
         self.dispatcher = dispatcher
@@ -127,7 +138,7 @@ class JobsManager(JobsRecoveryMixin):
         self.intervalo_barrido_s = intervalo_barrido_s
         self.tmp_edad_s = tmp_edad_s
         self.fallos_purga = 0
-        self._ultimo_barrido = time.monotonic()
+        self._ultimo_barrido = self.reloj()
         self.startup_recover()
         self._worker_thread = threading.Thread(
             target=self._worker_loop, daemon=True, name="jobs-worker")
@@ -190,6 +201,18 @@ class JobsManager(JobsRecoveryMixin):
             self.work_queue.put((proyecto, job_id))
             self._en_cola.add(job_id)
         return True
+
+    def _reconciliar_abandono(self, project_id: str, job_id: str) -> None:
+        """RESIDUAL-MED (seguimiento fix-i5-despacho): un job retirado
+        de la cola y abandonado sin running persistido queda queued en
+        disco, fuera de la cola y dentro de _en_cola; el reintento
+        respondería 202 sin avance. Relectura bajo el lock: si sigue
+        queued, sale de _en_cola y el reintento lo reencola vía
+        _asegurar_despacho. Relectura ilegible: fail-closed (punto 3)."""
+        with self.lock:
+            job = self._load_job(project_id, job_id)
+            if job is not None and job.get("state") == "queued":
+                self._en_cola.discard(job_id)
 
     def create_job(self, project_id: str, operation: str, payload: dict,
                    idempotency_key: str,
@@ -274,7 +297,7 @@ class JobsManager(JobsRecoveryMixin):
 
             # Job durable primero, registro después: el registro es
             # el commit (link exclusivo); sin él no hay 202 (BLOCKER-2).
-            ahora = datetime.now(timezone.utc)
+            ahora = self.reloj()
             ttl = ttl_seconds if isinstance(ttl_seconds, int) \
                 and not isinstance(ttl_seconds, bool) else DEFAULT_TTL_SECONDS
             ttl = min(max(ttl, 60), MAX_TTL_SECONDS)
@@ -371,6 +394,13 @@ class JobsManager(JobsRecoveryMixin):
                 410, "job_expired",
                 "El trabajo asociado a esta clave ya expiró; use una "
                 "clave nueva")
+        # LOW-1 (ronda 4): el 202 del rival pasa por la reconciliación
+        # del despacho; bajo D1 es rama defensiva, jamás 202 sin avance.
+        if not self._asegurar_despacho(existente):
+            return _respuesta_error(
+                500, "storage_error",
+                "Job de la admisión rival ilegible; no se puede "
+                "comprobar su despacho (reintente)")
         return 202, self._vista_admision(existente)
 
     @staticmethod
@@ -487,18 +517,19 @@ class JobsManager(JobsRecoveryMixin):
 
     def _reclamar(self, project_id: str, job_id: str) -> int | None:
         """Reclamo atómico entre procesos (HIGH-1): flock exclusivo
-        por job; fd o None si lo tiene otro, no está en cola o venció."""
-        try:
-            claims_dir = self.storage.asegurar_claims_dir()
-            fd = os.open(claims_dir / f"{job_id}.lock",
-                         os.O_RDWR | os.O_CREAT, 0o600)
-        except OSError:
-            return None
+        por job; fd o None si lo tiene otro, no está en cola o venció.
+        Un OSError real del claim se PROPAGA (RESIDUAL-MED): el worker
+        reconcilia; sólo la contención del flock es None."""
+        claims_dir = self.storage.asegurar_claims_dir()
+        fd = os.open(claims_dir / f"{job_id}.lock",
+                     os.O_RDWR | os.O_CREAT, 0o600)
         try:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except OSError:
+        except OSError as exc:
             os.close(fd)
-            return None
+            if exc.errno in (errno.EWOULDBLOCK, errno.EAGAIN):
+                return None
+            raise
         with self.lock:
             job = self._load_job(project_id, job_id)
             if not job or job.get("state") != "queued" or self._vencido(job):
@@ -550,7 +581,7 @@ class JobsManager(JobsRecoveryMixin):
                           f"ejecuta sin entregar tras el TTL (§J)",
                           file=sys.stderr, flush=True)
                 job["state"] = "running"
-                job["started_at"] = datetime.now(timezone.utc).isoformat()
+                job["started_at"] = self.reloj().isoformat()
                 self.running_job_id = job_id
                 self._save_job_atomically(job)
             except (KeyError, TypeError):
@@ -566,7 +597,13 @@ class JobsManager(JobsRecoveryMixin):
                 continue
             if not proj_id or not job_id:
                 continue
-            fd_reclamo = self._reclamar(proj_id, job_id)
+            try:
+                fd_reclamo = self._reclamar(proj_id, job_id)
+            except OSError:
+                # RESIDUAL-MED: el claim falló con el job fuera de la
+                # cola; reconciliar para que el reintento lo reencole.
+                self._reconciliar_abandono(proj_id, job_id)
+                continue
             if fd_reclamo is None:
                 continue
             try:
@@ -592,6 +629,9 @@ class JobsManager(JobsRecoveryMixin):
                     self._liberar_admision(proj_id)
             except OSError:
                 # Persistencia fallida: el disco manda (fail-closed).
+                # RESIDUAL-MED: si el job quedó queued sin running,
+                # sacarlo de _en_cola; el reintento lo reencola.
+                self._reconciliar_abandono(proj_id, job_id)
                 continue
             except Exception as exc:
                 # Defecto inesperado (dispatcher mal cableado): el
@@ -620,7 +660,7 @@ class JobsManager(JobsRecoveryMixin):
                 deadline = job.get("admission_deadline")
                 if not isinstance(deadline, str):
                     return False  # legado sin deadline: sin límite
-                vencido = datetime.now(timezone.utc) \
+                vencido = self.reloj() \
                     > datetime.fromisoformat(deadline)
                 if vencido:
                     self._fallar(job, "admission_timeout",
@@ -670,7 +710,7 @@ class JobsManager(JobsRecoveryMixin):
     def _vencido(self, job: dict, ahora: datetime | None = None) -> bool:
         try:
             dt_exp = datetime.fromisoformat(job["expires_at"])
-            return (ahora or datetime.now(timezone.utc)) > dt_exp
+            return (ahora or self.reloj()) > dt_exp
         except (KeyError, TypeError, ValueError):
             return False
 
@@ -682,7 +722,7 @@ class JobsManager(JobsRecoveryMixin):
             ttl = DEFAULT_TTL_SECONDS
         ttl = min(max(ttl, 60), MAX_TTL_SECONDS)
         job["expires_at"] = (
-            datetime.now(timezone.utc) + timedelta(seconds=ttl)
+            self.reloj() + timedelta(seconds=ttl)
         ).isoformat()
 
     def _cerrar(self, job: dict, estado: str) -> None:
@@ -694,7 +734,7 @@ class JobsManager(JobsRecoveryMixin):
             self._purgar_job(job)
             return
         job["state"] = estado
-        job["completed_at"] = datetime.now(timezone.utc).isoformat()
+        job["completed_at"] = self.reloj().isoformat()
         self._recalcular_expiracion(job)
         self._save_job_atomically(job)
 

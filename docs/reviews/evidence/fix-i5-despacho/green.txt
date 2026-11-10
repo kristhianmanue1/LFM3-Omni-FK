@@ -1,0 +1,174 @@
+=== lsof ANTES ===
+(sin escuchas en 8091/8092/8443)
+=== RUN 1 ===
+test_32_reloj_falso_gobierna_el_barrido (tests.test_jobs_despacho_i5.RelojInyectableTests.test_32_reloj_falso_gobierna_el_barrido) ... ok
+test_33_reloj_falso_gobierna_la_purga (tests.test_jobs_despacho_i5.RelojInyectableTests.test_33_reloj_falso_gobierna_la_purga) ... ok
+test_34_reloj_falso_gobierna_el_deadline_de_admision (tests.test_jobs_despacho_i5.RelojInyectableTests.test_34_reloj_falso_gobierna_el_deadline_de_admision) ... ok
+test_31_rival_queued_sin_despacho_reencola_y_ejecuta (tests.test_jobs_despacho_i5.RivalAlineadoTests.test_31_rival_queued_sin_despacho_reencola_y_ejecuta) ... ok
+test_35_expires_desde_el_terminal_con_reloj_falso (tests.test_jobs_despacho_i5.SalidaTerminalConRelojTests.test_35_expires_desde_el_terminal_con_reloj_falso) ... ok
+test_27_oserror_en_el_claim_el_reintento_reencola (tests.test_jobs_despacho_i5.VentanaDespachoOSErrorTests.test_27_oserror_en_el_claim_el_reintento_reencola) ... ok
+test_28_oserror_al_persistir_running_el_reintento_reencola (tests.test_jobs_despacho_i5.VentanaDespachoOSErrorTests.test_28_oserror_al_persistir_running_el_reintento_reencola) ... ok
+test_29_oserror_en_admision_el_reintento_reencola (tests.test_jobs_despacho_i5.VentanaDespachoOSErrorTests.test_29_oserror_en_admision_el_reintento_reencola) ... ok
+test_30_oserror_al_cerrar_por_deadline_sin_202_eterno (tests.test_jobs_despacho_i5.VentanaDespachoOSErrorTests.test_30_oserror_al_cerrar_por_deadline_sin_202_eterno) ... ok
+test_01_forma_es6_de_numeros (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_01_forma_es6_de_numeros) ... ok
+test_02_enteros_fuera_del_rango_doble (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_02_enteros_fuera_del_rango_doble) ... ok
+test_03_orden_de_claves_por_utf16 (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_03_orden_de_claves_por_utf16) ... ok
+test_04_escapes_minimos_de_cadena (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_04_escapes_minimos_de_cadena) ... ok
+test_05_no_finitos_rechazados (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_05_no_finitos_rechazados) ... ok
+test_16_oserror_al_escribir_job_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_16_oserror_al_escribir_job_sin_202) ... ok
+test_17_oserror_al_escribir_registro_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_17_oserror_al_escribir_registro_sin_202) ... ok
+test_18_job_en_cola_sin_registro_jamais_se_ejecuta (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_18_job_en_cola_sin_registro_jamais_se_ejecuta) ... ok
+test_06_scope_de_modalidad_exigido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_06_scope_de_modalidad_exigido) ... ok
+test_07_scope_de_modalidad_de_vision (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_07_scope_de_modalidad_de_vision) ... ok
+test_08_payload_fuera_de_dialecto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_08_payload_fuera_de_dialecto_rechazado) ... ok
+test_09_clave_duplicada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_09_clave_duplicada_rechazada) ... ok
+test_10_clave_duplicada_anidada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_10_clave_duplicada_anidada_rechazada) ... ok
+test_11_control_positivo_flujo_valido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_11_control_positivo_flujo_valido) ... ok
+test_23_sobre_no_objeto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_23_sobre_no_objeto_rechazado) ... ok
+test_24_ttl_invalido_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_24_ttl_invalido_rechazado) ... ok
+test_19_segunda_instancia_falla_y_no_ejecuta_dos_veces (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_19_segunda_instancia_falla_y_no_ejecuta_dos_veces) ... ok
+test_20_worker_pasa_por_dispatcher_compartido (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_20_worker_pasa_por_dispatcher_compartido) ... ok
+test_26_worker_sobrevive_dispatcher_hostil (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_26_worker_sobrevive_dispatcher_hostil) ... jobs-worker: fallo inesperado en job-hostil-1: RuntimeError('config de rate_limit corrupta')
+ok
+test_21_purga_y_tombstone_al_expirar (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_21_purga_y_tombstone_al_expirar) ... ok
+test_22_permisos_restringidos (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_22_permisos_restringidos) ... ok
+test_25_410_estable_y_delete_terminal_tras_purga (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_25_410_estable_y_delete_terminal_tras_purga) ... ok
+test_12_finish_reason_no_stop_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_12_finish_reason_no_stop_es_fallo) ... ok
+test_13_salida_fuera_de_esquema_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_13_salida_fuera_de_esquema_es_fallo) ... ok
+test_14_control_positivo_salida_valida (tests.test_jobs_boundary_i5.SalidaBackendTests.test_14_control_positivo_salida_valida) ... ok
+test_01_orden_lexicografico_de_claves (tests.test_jobs_i5.CanonicalJsonRFC8785Tests.test_01_orden_lexicografico_de_claves) ... ok
+test_02_rechazo_valores_no_finitos (tests.test_jobs_i5.CanonicalJsonRFC8785Tests.test_02_rechazo_valores_no_finitos) ... ok
+test_09_post_jobs_http_flujo_completo (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_09_post_jobs_http_flujo_completo) ... ok
+test_10_rechazo_por_scope_insuficiente (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_10_rechazo_por_scope_insuficiente) ... ok
+test_11_cliente_jobs_script (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_11_cliente_jobs_script) ... ok
+test_03_crear_job_e_idempotencia_coincidente (tests.test_jobs_i5.JobsManagerDirectTests.test_03_crear_job_e_idempotencia_coincidente) ... ok
+test_04_conflicto_idempotencia_payload_distinto (tests.test_jobs_i5.JobsManagerDirectTests.test_04_conflicto_idempotencia_payload_distinto) ... ok
+test_05_aislamiento_multi_inquilino (tests.test_jobs_i5.JobsManagerDirectTests.test_05_aislamiento_multi_inquilino) ... ok
+test_06_limite_de_cola_por_proyecto (tests.test_jobs_i5.JobsManagerDirectTests.test_06_limite_de_cola_por_proyecto) ... ok
+test_07_cancelacion_de_job_en_cola (tests.test_jobs_i5.JobsManagerDirectTests.test_07_cancelacion_de_job_en_cola) ... ok
+test_08_recuperacion_reinicio_running_pasa_a_failed (tests.test_jobs_i5.JobsManagerDirectTests.test_08_recuperacion_reinicio_running_pasa_a_failed) ... ok
+test_34_barrido_sin_trafico (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_34_barrido_sin_trafico) ... ok
+test_35_temporales_huerfanos_barridos (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_35_temporales_huerfanos_barridos) ... ok
+test_36_claims_huerfanos_barridos (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_36_claims_huerfanos_barridos) ... ok
+test_37_purga_fallida_observable_y_reintenta (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_37_purga_fallida_observable_y_reintenta) ... jobs: purga fallida de job-4a92e3763daa5ebf: OSError('disfo lleno')
+ok
+test_29_fsync_post_link_no_bloquea_reintento (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_29_fsync_post_link_no_bloquea_reintento) ... ok
+test_30_registro_huerfano_reintento_funciona (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_30_registro_huerfano_reintento_funciona) ... ok
+test_31_inyeccion_de_fallo_en_cada_paso (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_31_inyeccion_de_fallo_en_cada_paso) ... ok
+test_33_deadline_persistido_y_agotado (tests.test_jobs_intento2_i5.DeadlineAdmisionTests.test_33_deadline_persistido_y_agotado) ... ok
+test_38_operation_no_cadena_400_controlado (tests.test_jobs_intento2_i5.FronteraIntento2Tests.test_38_operation_no_cadena_400_controlado) ... ok
+test_39_build_server_sin_jobs_dir_no_toca_run (tests.test_jobs_intento2_i5.FronteraIntento2Tests.test_39_build_server_sin_jobs_dir_no_toca_run) ... ok
+test_27_segunda_instancia_falla_cerrada (tests.test_jobs_intento2_i5.InstanciaUnicaTests.test_27_segunda_instancia_falla_cerrada) ... ok
+test_28_admisiones_concurrentes_un_solo_202 (tests.test_jobs_intento2_i5.InstanciaUnicaTests.test_28_admisiones_concurrentes_un_solo_202) ... ok
+test_40_fsync_sostenido_no_duplica_ejecucion (tests.test_jobs_intento2_i5.RegresionesRondaAdversarialTests.test_40_fsync_sostenido_no_duplica_ejecucion) ... ok
+test_41_deadline_vencido_durante_la_espera (tests.test_jobs_intento2_i5.RegresionesRondaAdversarialTests.test_41_deadline_vencido_durante_la_espera) ... ok
+test_42_barrido_cuenta_fallos_de_purga (tests.test_jobs_intento2_i5.RegresionesRondaAdversarialTests.test_42_barrido_cuenta_fallos_de_purga) ... jobs: purga fallida de job-25d9f13432ad148e: OSError('disfo lleno')
+ok
+test_43_cierre_por_defecto_desde_running (tests.test_jobs_intento2_i5.RegresionesRondaAdversarialTests.test_43_cierre_por_defecto_desde_running) ... ok
+test_32_runtimeerror_deja_job_failed_durable (tests.test_jobs_intento2_i5.WorkerRobustoTests.test_32_runtimeerror_deja_job_failed_durable) ... jobs-worker: fallo inesperado en job-hostil-2: RuntimeError('config de rate_limit corrupta')
+ok
+test_45_job_en_curso_no_bloquea_admision (tests.test_jobs_intento3_i5.AdmisionSoloCuentaQueuedTests.test_45_job_en_curso_no_bloquea_admision) ... ok
+test_47_errno_distingue_ocupado_de_no_soportado (tests.test_jobs_intento3_i5.DiagnosticoCerrojoInstanciaTests.test_47_errno_distingue_ocupado_de_no_soportado) ... ok
+test_47b_enolck_es_fail_closed_en_el_arranque (tests.test_jobs_intento3_i5.DiagnosticoCerrojoInstanciaTests.test_47b_enolck_es_fail_closed_en_el_arranque) ... ok
+test_49_purga_de_get_job_toma_self_lock (tests.test_jobs_intento3_i5.PurgaGetJobBajoLockTests.test_49_purga_de_get_job_toma_self_lock) ... ok
+test_48_irretirable_tras_link_es_500_y_reintenta (tests.test_jobs_intento3_i5.RamaIrretirableTests.test_48_irretirable_tras_link_es_500_y_reintenta) ... ok
+test_44_cancellation_pending_a_failed_en_arranque (tests.test_jobs_intento3_i5.RecuperacionArranqueTests.test_44_cancellation_pending_a_failed_en_arranque) ... ok
+test_46_segunda_instancia_bloqueada_mientras_vive_el_worker (tests.test_jobs_intento3_i5.StopConWorkerVivoTests.test_46_segunda_instancia_bloqueada_mientras_vive_el_worker) ... jobs: worker vivo tras stop(timeout=0.3s); no se libera el cerrojo de /var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/lfm3_i3_stp_0_ga3eaa/jobs (fail-closed, D1)
+ok
+test_52_barrido_no_purga_running_intercalado (tests.test_jobs_intento4_i5.BarridoRecargaBajoLockTests.test_52_barrido_no_purga_running_intercalado) ... ok
+test_53_get_no_tombstonea_running_nuevo (tests.test_jobs_intento4_i5.GetJobNoTombstoneaRunningTests.test_53_get_no_tombstonea_running_nuevo) ... jobs: job-carrera venció ya reclamado; se ejecuta sin entregar tras el TTL (§J)
+ok
+test_50_reintento_tras_doble_fallo_despacha_y_termina (tests.test_jobs_intento4_i5.ReintentoReconciliadoTests.test_50_reintento_tras_doble_fallo_despacha_y_termina) ... ok
+test_51_reintento_sobre_despachado_no_duplica_encolado (tests.test_jobs_intento4_i5.ReintentoReconciliadoTests.test_51_reintento_sobre_despachado_no_duplica_encolado) ... ok
+
+----------------------------------------------------------------------
+Ran 73 tests in 15.370s
+
+OK
+=== RUN 2 ===
+test_32_reloj_falso_gobierna_el_barrido (tests.test_jobs_despacho_i5.RelojInyectableTests.test_32_reloj_falso_gobierna_el_barrido) ... ok
+test_33_reloj_falso_gobierna_la_purga (tests.test_jobs_despacho_i5.RelojInyectableTests.test_33_reloj_falso_gobierna_la_purga) ... ok
+test_34_reloj_falso_gobierna_el_deadline_de_admision (tests.test_jobs_despacho_i5.RelojInyectableTests.test_34_reloj_falso_gobierna_el_deadline_de_admision) ... ok
+test_31_rival_queued_sin_despacho_reencola_y_ejecuta (tests.test_jobs_despacho_i5.RivalAlineadoTests.test_31_rival_queued_sin_despacho_reencola_y_ejecuta) ... ok
+test_35_expires_desde_el_terminal_con_reloj_falso (tests.test_jobs_despacho_i5.SalidaTerminalConRelojTests.test_35_expires_desde_el_terminal_con_reloj_falso) ... ok
+test_27_oserror_en_el_claim_el_reintento_reencola (tests.test_jobs_despacho_i5.VentanaDespachoOSErrorTests.test_27_oserror_en_el_claim_el_reintento_reencola) ... ok
+test_28_oserror_al_persistir_running_el_reintento_reencola (tests.test_jobs_despacho_i5.VentanaDespachoOSErrorTests.test_28_oserror_al_persistir_running_el_reintento_reencola) ... ok
+test_29_oserror_en_admision_el_reintento_reencola (tests.test_jobs_despacho_i5.VentanaDespachoOSErrorTests.test_29_oserror_en_admision_el_reintento_reencola) ... ok
+test_30_oserror_al_cerrar_por_deadline_sin_202_eterno (tests.test_jobs_despacho_i5.VentanaDespachoOSErrorTests.test_30_oserror_al_cerrar_por_deadline_sin_202_eterno) ... ok
+test_01_forma_es6_de_numeros (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_01_forma_es6_de_numeros) ... ok
+test_02_enteros_fuera_del_rango_doble (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_02_enteros_fuera_del_rango_doble) ... ok
+test_03_orden_de_claves_por_utf16 (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_03_orden_de_claves_por_utf16) ... ok
+test_04_escapes_minimos_de_cadena (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_04_escapes_minimos_de_cadena) ... ok
+test_05_no_finitos_rechazados (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_05_no_finitos_rechazados) ... ok
+test_16_oserror_al_escribir_job_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_16_oserror_al_escribir_job_sin_202) ... ok
+test_17_oserror_al_escribir_registro_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_17_oserror_al_escribir_registro_sin_202) ... ok
+test_18_job_en_cola_sin_registro_jamais_se_ejecuta (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_18_job_en_cola_sin_registro_jamais_se_ejecuta) ... ok
+test_06_scope_de_modalidad_exigido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_06_scope_de_modalidad_exigido) ... ok
+test_07_scope_de_modalidad_de_vision (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_07_scope_de_modalidad_de_vision) ... ok
+test_08_payload_fuera_de_dialecto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_08_payload_fuera_de_dialecto_rechazado) ... ok
+test_09_clave_duplicada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_09_clave_duplicada_rechazada) ... ok
+test_10_clave_duplicada_anidada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_10_clave_duplicada_anidada_rechazada) ... ok
+test_11_control_positivo_flujo_valido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_11_control_positivo_flujo_valido) ... ok
+test_23_sobre_no_objeto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_23_sobre_no_objeto_rechazado) ... ok
+test_24_ttl_invalido_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_24_ttl_invalido_rechazado) ... ok
+test_19_segunda_instancia_falla_y_no_ejecuta_dos_veces (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_19_segunda_instancia_falla_y_no_ejecuta_dos_veces) ... ok
+test_20_worker_pasa_por_dispatcher_compartido (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_20_worker_pasa_por_dispatcher_compartido) ... ok
+test_26_worker_sobrevive_dispatcher_hostil (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_26_worker_sobrevive_dispatcher_hostil) ... jobs-worker: fallo inesperado en job-hostil-1: RuntimeError('config de rate_limit corrupta')
+ok
+test_21_purga_y_tombstone_al_expirar (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_21_purga_y_tombstone_al_expirar) ... ok
+test_22_permisos_restringidos (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_22_permisos_restringidos) ... ok
+test_25_410_estable_y_delete_terminal_tras_purga (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_25_410_estable_y_delete_terminal_tras_purga) ... ok
+test_12_finish_reason_no_stop_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_12_finish_reason_no_stop_es_fallo) ... ok
+test_13_salida_fuera_de_esquema_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_13_salida_fuera_de_esquema_es_fallo) ... ok
+test_14_control_positivo_salida_valida (tests.test_jobs_boundary_i5.SalidaBackendTests.test_14_control_positivo_salida_valida) ... ok
+test_01_orden_lexicografico_de_claves (tests.test_jobs_i5.CanonicalJsonRFC8785Tests.test_01_orden_lexicografico_de_claves) ... ok
+test_02_rechazo_valores_no_finitos (tests.test_jobs_i5.CanonicalJsonRFC8785Tests.test_02_rechazo_valores_no_finitos) ... ok
+test_09_post_jobs_http_flujo_completo (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_09_post_jobs_http_flujo_completo) ... ok
+test_10_rechazo_por_scope_insuficiente (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_10_rechazo_por_scope_insuficiente) ... ok
+test_11_cliente_jobs_script (tests.test_jobs_i5.JobsGatewayIntegrationTests.test_11_cliente_jobs_script) ... ok
+test_03_crear_job_e_idempotencia_coincidente (tests.test_jobs_i5.JobsManagerDirectTests.test_03_crear_job_e_idempotencia_coincidente) ... ok
+test_04_conflicto_idempotencia_payload_distinto (tests.test_jobs_i5.JobsManagerDirectTests.test_04_conflicto_idempotencia_payload_distinto) ... ok
+test_05_aislamiento_multi_inquilino (tests.test_jobs_i5.JobsManagerDirectTests.test_05_aislamiento_multi_inquilino) ... ok
+test_06_limite_de_cola_por_proyecto (tests.test_jobs_i5.JobsManagerDirectTests.test_06_limite_de_cola_por_proyecto) ... ok
+test_07_cancelacion_de_job_en_cola (tests.test_jobs_i5.JobsManagerDirectTests.test_07_cancelacion_de_job_en_cola) ... ok
+test_08_recuperacion_reinicio_running_pasa_a_failed (tests.test_jobs_i5.JobsManagerDirectTests.test_08_recuperacion_reinicio_running_pasa_a_failed) ... ok
+test_34_barrido_sin_trafico (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_34_barrido_sin_trafico) ... ok
+test_35_temporales_huerfanos_barridos (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_35_temporales_huerfanos_barridos) ... ok
+test_36_claims_huerfanos_barridos (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_36_claims_huerfanos_barridos) ... ok
+test_37_purga_fallida_observable_y_reintenta (tests.test_jobs_intento2_i5.BarridoPeriodicoTests.test_37_purga_fallida_observable_y_reintenta) ... jobs: purga fallida de job-4d6fd9dbe53fd0e4: OSError('disfo lleno')
+ok
+test_29_fsync_post_link_no_bloquea_reintento (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_29_fsync_post_link_no_bloquea_reintento) ... ok
+test_30_registro_huerfano_reintento_funciona (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_30_registro_huerfano_reintento_funciona) ... ok
+test_31_inyeccion_de_fallo_en_cada_paso (tests.test_jobs_intento2_i5.CommitRecuperableTests.test_31_inyeccion_de_fallo_en_cada_paso) ... ok
+test_33_deadline_persistido_y_agotado (tests.test_jobs_intento2_i5.DeadlineAdmisionTests.test_33_deadline_persistido_y_agotado) ... ok
+test_38_operation_no_cadena_400_controlado (tests.test_jobs_intento2_i5.FronteraIntento2Tests.test_38_operation_no_cadena_400_controlado) ... ok
+test_39_build_server_sin_jobs_dir_no_toca_run (tests.test_jobs_intento2_i5.FronteraIntento2Tests.test_39_build_server_sin_jobs_dir_no_toca_run) ... ok
+test_27_segunda_instancia_falla_cerrada (tests.test_jobs_intento2_i5.InstanciaUnicaTests.test_27_segunda_instancia_falla_cerrada) ... ok
+test_28_admisiones_concurrentes_un_solo_202 (tests.test_jobs_intento2_i5.InstanciaUnicaTests.test_28_admisiones_concurrentes_un_solo_202) ... ok
+test_40_fsync_sostenido_no_duplica_ejecucion (tests.test_jobs_intento2_i5.RegresionesRondaAdversarialTests.test_40_fsync_sostenido_no_duplica_ejecucion) ... ok
+test_41_deadline_vencido_durante_la_espera (tests.test_jobs_intento2_i5.RegresionesRondaAdversarialTests.test_41_deadline_vencido_durante_la_espera) ... ok
+test_42_barrido_cuenta_fallos_de_purga (tests.test_jobs_intento2_i5.RegresionesRondaAdversarialTests.test_42_barrido_cuenta_fallos_de_purga) ... jobs: purga fallida de job-10e273faeef97910: OSError('disfo lleno')
+ok
+test_43_cierre_por_defecto_desde_running (tests.test_jobs_intento2_i5.RegresionesRondaAdversarialTests.test_43_cierre_por_defecto_desde_running) ... ok
+test_32_runtimeerror_deja_job_failed_durable (tests.test_jobs_intento2_i5.WorkerRobustoTests.test_32_runtimeerror_deja_job_failed_durable) ... jobs-worker: fallo inesperado en job-hostil-2: RuntimeError('config de rate_limit corrupta')
+ok
+test_45_job_en_curso_no_bloquea_admision (tests.test_jobs_intento3_i5.AdmisionSoloCuentaQueuedTests.test_45_job_en_curso_no_bloquea_admision) ... ok
+test_47_errno_distingue_ocupado_de_no_soportado (tests.test_jobs_intento3_i5.DiagnosticoCerrojoInstanciaTests.test_47_errno_distingue_ocupado_de_no_soportado) ... ok
+test_47b_enolck_es_fail_closed_en_el_arranque (tests.test_jobs_intento3_i5.DiagnosticoCerrojoInstanciaTests.test_47b_enolck_es_fail_closed_en_el_arranque) ... ok
+test_49_purga_de_get_job_toma_self_lock (tests.test_jobs_intento3_i5.PurgaGetJobBajoLockTests.test_49_purga_de_get_job_toma_self_lock) ... ok
+test_48_irretirable_tras_link_es_500_y_reintenta (tests.test_jobs_intento3_i5.RamaIrretirableTests.test_48_irretirable_tras_link_es_500_y_reintenta) ... ok
+test_44_cancellation_pending_a_failed_en_arranque (tests.test_jobs_intento3_i5.RecuperacionArranqueTests.test_44_cancellation_pending_a_failed_en_arranque) ... ok
+test_46_segunda_instancia_bloqueada_mientras_vive_el_worker (tests.test_jobs_intento3_i5.StopConWorkerVivoTests.test_46_segunda_instancia_bloqueada_mientras_vive_el_worker) ... jobs: worker vivo tras stop(timeout=0.3s); no se libera el cerrojo de /var/folders/q1/k3y040sd0rv9cbxcdskwr_zw0000gp/T/lfm3_i3_stp_s_7q1a9d/jobs (fail-closed, D1)
+ok
+test_52_barrido_no_purga_running_intercalado (tests.test_jobs_intento4_i5.BarridoRecargaBajoLockTests.test_52_barrido_no_purga_running_intercalado) ... ok
+test_53_get_no_tombstonea_running_nuevo (tests.test_jobs_intento4_i5.GetJobNoTombstoneaRunningTests.test_53_get_no_tombstonea_running_nuevo) ... jobs: job-carrera venció ya reclamado; se ejecuta sin entregar tras el TTL (§J)
+ok
+test_50_reintento_tras_doble_fallo_despacha_y_termina (tests.test_jobs_intento4_i5.ReintentoReconciliadoTests.test_50_reintento_tras_doble_fallo_despacha_y_termina) ... ok
+test_51_reintento_sobre_despachado_no_duplica_encolado (tests.test_jobs_intento4_i5.ReintentoReconciliadoTests.test_51_reintento_sobre_despachado_no_duplica_encolado) ... ok
+
+----------------------------------------------------------------------
+Ran 73 tests in 15.583s
+
+OK
+=== lsof DESPUES ===
+(sin escuchas en 8091/8092/8443)
