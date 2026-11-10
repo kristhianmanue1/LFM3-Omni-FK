@@ -1,0 +1,42 @@
+registros F0 de voz — desbloqueo realtime / par 2 (2026-11-10)
+
+metodo: F0 por autocorrelacion (60-350 Hz), mediana de tramas sonoras
+(energia >= 10% del techo), ventanas 40 ms. Umbral de registro:
+<155 Hz masculino, 155-200 ambiguo, >200 femenino.
+
+[1] voces del modelo, render aislado (misma frase instruida)
+voz_male   (sesion realtime, voice male)    118.8 Hz  masculina
+voz_female (sesion realtime, voice female)  237.6 Hz  femenina
+tts_male   (llama-tts 0.8.0 --tts-voice male)  134.1 Hz  masculina
+tts_female (llama-tts 0.8.0 --tts-voice female) 247.4 Hz  femenina
+
+[2] deriva acustica en sesion realtime acumulada (entrada sintetica
+Carlos es_CO 94-97 Hz, 4 turnos, voice male)
+123.1 -> 181.8 -> 202.5 -> 224.3 Hz  (mediana 192.2; deriva a fem)
+
+[3] mitigacion sesion POR TURNO (misma entrada Carlos, voice male)
+121.2 / 134.8 / 127.7 / 133.3 Hz  (mediana 130.5; estable 4/4 masc)
+
+[4] sesion por turno con entrada Angélica es_MX (fem, 184-200 Hz)
+154.8 / 136.8 / 112.2 / 229.7 Hz  (3/4 masc; 1 fem)
+
+[5] microfono real del Operador (voz 144-180 Hz, sesion por turno,
+voice male) — salida INCONSISTENTE en modo eco
+247.4 / 133.8 / 147.8 / 247.4 Hz  (2/4 masc, 2/4 fem = firma 247.4)
+
+[6] via hibrida ADR-007 (ASR motor + llama-tts male) — 6 turnos con
+microfono real del Operador
+138.7 / 155.8 / 131.1 / 130.1 / 138.7 / 142.9 Hz  (6/6 masc estables)
+latencias: ASR 0.4-0.9 s + LLM 0.3-1.1 s + TTS 2.0-4.7 s (3.1-6.3 s
+por turno; TTS domina por recarga de modelo, ADR-007 consecuencias)
+
+[7] hallazgos para la futura tarea de gate de realtime
+a) realtime audio = continuacion de conversacion: sigue el registro
+   del interlocutor y deriva con el historial; NO puede garantizar
+   voz fija con este modelo (contrato v2 exigiria declararlo sin
+   garantia de voz, o sin audio de salida).
+b) masculina de disparo unico: solida (118-134 Hz, tres vias).
+c) eco con instrucciones vacias o entrada sintetica: el prompt de
+   persona lo evita con voz humana real.
+d) la unica voz ofertable como FIJA hoy es la de llama-tts
+   (/v1/audio/speech y subprocess), consistente con issue #2.
