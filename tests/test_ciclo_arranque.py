@@ -302,10 +302,6 @@ class Parada(CicloArranqueBase):
         self.assertEqual(self.fx.denials(), [])
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class EscaleraMotor(CicloArranqueBase):
     """Selección de motor por pierna (ADR-014; ronda adversarial
     2026-11-10): override explícito, binario hermano del repo, legado
@@ -384,3 +380,7 @@ class EscaleraMotor(CicloArranqueBase):
         self.assertIn("AVISO", stderr,
                       "la pierna 3 legada pasó en silencio")
         self.assertEqual(len(self.fx.invocations()), 1)
+
+
+if __name__ == "__main__":
+    unittest.main()

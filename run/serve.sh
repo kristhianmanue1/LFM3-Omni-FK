@@ -5,6 +5,15 @@
 # cerrojo con dueño vivo identificable y readiness de modelo efectivo.
 set -euo pipefail
 
+# PATH del llamador con los directorios de sistema GARANTIZADOS al
+# final (revisión agy 2026-11-10: en un PATH mínimo, dirname/grep/
+# curl fallaban antes de cualquier diagnóstico fail-closed). Se AÑADE
+# al final, jamás se antepone ni se sustituye: el fixture hermético
+# necesita su bin_dir primero para que sus sustitutos ganen (SPEC I0
+# r16, entorno adversario sin perder hermeticidad).
+PATH="$PATH:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH
+
 PORT=8091
 HOST=127.0.0.1
 MODELO_ID="LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M"
@@ -14,12 +23,25 @@ PIDFILE="$DIR/llama-server.pid"
 LOCK="$DIR/serve.lock"
 BUDGET="${LFM3_WAIT_BUDGET:-240}"
 
-if curl -sf -m 2 "http://127.0.0.1:$PORT/health" 2>/dev/null | grep -q '"ok"'; then
+# El curl queda anclado desde el inicio (revisión agy 2026-11-10,
+# hallazgo MED): el atajo idempotente y el readiness usan el mismo
+# binario resuelto del entorno del llamador; en un PATH mínimo, un
+# curl desnudo abortaría con 127 antes del diagnóstico fail-closed.
+CURL_BIN="$(command -v curl 2>/dev/null || true)"
+if [ -z "$CURL_BIN" ] && [ -x /usr/bin/curl ]; then
+  CURL_BIN=/usr/bin/curl
+fi
+if [ -z "$CURL_BIN" ] || [ ! -x "$CURL_BIN" ]; then
+  echo "BLOQ: sin curl para el readiness del motor" >&2
+  exit 1
+fi
+
+if "$CURL_BIN" -sf -m 2 "http://127.0.0.1:$PORT/health" 2>/dev/null | grep -q '"ok"'; then
   # Atajo idempotente: un servicio ya arriba sólo cuenta si sirve el
   # modelo efectivo registrado (SPEC I0 r17/r22).
   INTENTO=0
   while [ "$INTENTO" -lt 2 ]; do
-    if curl -sf -m 2 "http://127.0.0.1:$PORT/v1/models" 2>/dev/null \
+    if "$CURL_BIN" -sf -m 2 "http://127.0.0.1:$PORT/v1/models" 2>/dev/null \
         | grep -q "$MODELO_ID"; then
       echo "arriba: /health y modelo efectivo OK (ya estaba en $PORT)"
       exit 0
@@ -104,20 +126,8 @@ if [ "$LEGADO" -eq 0 ]; then
 fi
 MOTOR_BIN_DIR="$(cd "$(dirname "$MOTOR_BIN")" && pwd)"
 MOTOR_BIN="$MOTOR_BIN_DIR/$(basename "$MOTOR_BIN")"
-# El curl de readiness se ancla ANTES del export de PATH: con la pierna
-# 2 el directorio del motor va al frente y no contiene curl; sin este
-# ancla, la resolución caería al curl real y el readiness podría
-# responderlo un MOTOR AJENO en 8091 (hallazgo de la ronda de
-# corrección, expediente motor-2-31689; en el fixture hermético sería
-# el sustituto, en producción /usr/bin/curl).
-CURL_BIN="$(command -v curl 2>/dev/null || true)"
-if [ -z "$CURL_BIN" ] && [ -x /usr/bin/curl ]; then
-  CURL_BIN=/usr/bin/curl
-fi
-if [ -z "$CURL_BIN" ] || [ ! -x "$CURL_BIN" ]; then
-  echo "BLOQ: sin curl para el readiness del motor" >&2
-  exit 1
-fi
+# CURL_BIN ya quedó anclado al inicio del script (atajo idempotente y
+# readiness usan el mismo binario; hallazgo MED de la revisión agy).
 export PATH="$MOTOR_BIN_DIR:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 nohup "$MOTOR_BIN" \

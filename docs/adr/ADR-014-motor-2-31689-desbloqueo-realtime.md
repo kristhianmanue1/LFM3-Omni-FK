@@ -1,5 +1,4 @@
-# ADR-014: Salto registrado del motor — par 2 (llama.cpp 54cde710) y
-# desbloqueo de realtime
+# ADR-014: Salto registrado del motor — par 2 (llama.cpp 54cde710) y desbloqueo de realtime
 
 ```text
 ADR-014: salto registrado del motor según ADR-001: par 2 = llama.cpp
@@ -32,9 +31,15 @@ igual al registrado (patrón del guard de hash de
 src/gateway_http.py::_resolver_entorno_tts; hook
 LFM3_MOTOR_SHA_REGISTRADO para fixtures); la pierna 3 emite AVISO en
 stderr y nunca pasa en silencio, y la línea arriba nombra el binario
-resuelto. El curl del readiness se ancla antes del export de PATH
-(pierna 2 sin curl propio: sin el ancla, un motor ajeno en 8091
-podría responder el readiness). Añade --tts-lang es (inerte para el
+resuelto. El curl queda anclado al inicio del script (atajo
+idempotente y readiness usan el mismo binario; revisión agy
+2026-11-10) y el PATH heredado recibe los directorios de sistema
+AÑADIDOS al final — jamás antepuestos: en un PATH mínimo los
+herramientas de sistema garantizan dirname/grep/shasum sin romper la
+hermeticidad del fixture, cuyo bin_dir debe seguir primero (hallazgo
+propio de la ronda agy: el readiness tras el export de PATH podía ser
+respondido por un motor ajeno en 8091). Añade --tts-lang es (inerte
+para el
 contrato v1: el 8091 no oferta voz; alinea el default de
 /v1/audio/speech del motor con ADR-007) y /opt/homebrew/bin al PATH
 del runbook para que ffmpeg/ffprobe/llama-tts (ADR-006 §4) sigan
