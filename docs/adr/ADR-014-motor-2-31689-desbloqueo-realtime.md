@@ -23,16 +23,25 @@ RSS del candidato: 2.94 GB. Expediente:
 docs/reviews/evidence/motor-2-31689/.
 Decisión: adoptar el par 2 como pareja congelada. run/serve.sh
 resuelve el motor con escalera de resolución: 1) override explícito
-LFM3_MOTOR_BIN; 2) binario fijado hermano del repo (producción);
-3) legado command -v Homebrew, que conserva la hermeticidad de los
-tests que reubican HOME (RED: 5 fallos de suite en la primera
-edición, capturados en suite-par2.txt del expediente). Añade
---tts-lang es (inerte para el contrato v1: el 8091 no oferta voz;
-alinea el default de /v1/audio/speech del motor con ADR-007) y
-/opt/homebrew/bin al PATH del runbook para que
-ffmpeg/ffprobe/llama-tts (ADR-006 §4) sigan resolviendo (alarma
-r16b atendida con registro, no en silencio). Cambiar de nuevo el
-motor o el modelo sigue siendo operación registrada (ADR-001).
+LFM3_MOTOR_BIN; 2) binario fijado HERMANO del repo (producción);
+3) legado command -v, que conserva la hermeticidad de los tests con
+árbol reubicado en fixture (RED: 5 fallos de suite en la primera
+edición + 4 fallos de la clase EscaleraMotor, capturados en
+red-escalera.txt del expediente). Las piernas 1 y 2 exigen SHA-256
+igual al registrado (patrón del guard de hash de
+src/gateway_http.py::_resolver_entorno_tts; hook
+LFM3_MOTOR_SHA_REGISTRADO para fixtures); la pierna 3 emite AVISO en
+stderr y nunca pasa en silencio, y la línea arriba nombra el binario
+resuelto. El curl del readiness se ancla antes del export de PATH
+(pierna 2 sin curl propio: sin el ancla, un motor ajeno en 8091
+podría responder el readiness). Añade --tts-lang es (inerte para el
+contrato v1: el 8091 no oferta voz; alinea el default de
+/v1/audio/speech del motor con ADR-007) y /opt/homebrew/bin al PATH
+del runbook para que ffmpeg/ffprobe/llama-tts (ADR-006 §4) sigan
+resolviendo (alarma r16b atendida con registro, no en silencio).
+tools/inventario_motor.py comparte la escalera y el PATH. Cambiar de
+nuevo el motor o el modelo sigue siendo operación registrada
+(ADR-001).
 Alternativas descartadas:
   - brew upgrade a 0.9.0: sin el fix (#31689 sigue presente ahí).
   - Permanecer en 0.8.0: deja la cláusula de ADR-007 sin ejecutar y

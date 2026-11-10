@@ -1,0 +1,27 @@
+RED de la ronda de correccion ADR-014 (2026-11-10) — clase EscaleraMotor
+de tests/test_ciclo_arranque.py contra la primera edicion de la escalera.
+Transcripcion fiel de la corrida (unittest -v, 4/4 fallos):
+
+test_guard_hash_bloquea_binario_distinto ... FAIL
+  AssertionError: 0 == 0 : el guard de hash dejo pasar un binario no
+  registrado: arriba: /health y modelo efectivo OK (pid 28521); log: ...
+test_leg1_override_explicito_se_respeta ... FAIL
+  AssertionError: 'motor: .../bin/llama-server' not found in
+  'arriba: /health y modelo efectivo OK (pid 28559); log: ...'
+  (la linea arriba no nombra el binario resuelto)
+test_leg2_hermano_del_repo_se_resuelve ... FAIL
+  AssertionError: 'motor: .../externos/llamacpp-candidate-31689/.../llama-server'
+  not found in 'arriba: ... (pid 28602); log: ...'
+  (no se lanzo el binario hermano fijado — BLOCKER-1: ruta hijo, no hermano)
+test_leg3_legado_arranca_con_aviso ... FAIL
+  AssertionError: 'motor:' not found in
+  'arriba: /health y modelo efectivo OK (pid 28645); log: ...'
+  (falta el binario resuelto; tampoco habia AVISO de pierna legada)
+
+Ran 4 tests in 21.848s — FAILED (failures=4)
+
+Segundo RED parcial de la ronda (post-fix BLOCKER-1/guard, pre-ancla de
+curl): test_leg2 fallaba con "no quedo listener vivo del motor" — el
+readiness tras el export de PATH resolvio curl real y lo contesto el
+motor ajeno de 8091 (falso arriba con el stub sin cargar). Corregido
+anclando CURL_BIN antes del export; GREEN en suite-par2-fix2.txt.

@@ -183,3 +183,5 @@ AssertionError: 1 != 0 : BLOQ: motor ADR-014 no está en /var/folders/q1/k3y040s
 Ran 404 tests in 101.377s
 
 FAILED (failures=5)
+
+[nota de procedencia] suite-par2.txt (RED de 5 fallos) se capturo contra la primera edicion de la escalera (ruta $HOME absoluta); la edicion comprometida paso a ruta relativa y su RED propio quedo en red-escalera.txt (4 fallos EscaleraMotor). GREEN: suite-par2-fix.txt y suite-par2-fix2.txt.

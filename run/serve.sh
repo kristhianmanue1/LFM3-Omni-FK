@@ -64,15 +64,26 @@ done
 
 # Motor fijado por ADR-014 (par 2: llama.cpp master 54cde710 construido
 # de fuente; el fix de realtime #31689 no existe en la bottled 0.9.0).
-# Escalera de resolución: 1) LFM3_MOTOR_BIN (override explícito);
-# 2) binario fijado hermano del repo (producción); 3) command -v
-# (legado Homebrew; conserva la hermeticidad de los tests que reubican
-# HOME — RED en suite-par2.txt del expediente motor-2-31689).
+# Escalera de resolución con guard de identidad (ronda adversarial
+# 2026-11-10, hallazgos BLOCKER-1/HIGH-1 del expediente motor-2-31689):
+#   1) LFM3_MOTOR_BIN (override explícito),
+#   2) binario fijado HERMANO del repo (producción),
+#   3) legado command -v (sólo hermeticidad de tests con árbol
+#      reubicado en fixture; emite AVISO: no es el par declarado).
+# Las piernas 1 y 2 exigen SHA-256 igual al registrado (el par 2 real;
+# LFM3_MOTOR_SHA_REGISTRADO lo ancla en fixtures herméticos). La
+# pierna 3 no exige hash pero nunca pasa en silencio.
 # llama-tts/ffmpeg/ffprobe siguen anclados por ADR-006 §4 y resuelven
 # desde /opt/homebrew/bin (integridad del inventario).
+SHA_REGISTRADO="${LFM3_MOTOR_SHA_REGISTRADO:-352c59e362dee5cf97bbbfbc63c0ab711a7c2c42053b1e33ae4abdb6e1d91564}"
 MOTOR_BIN="${LFM3_MOTOR_BIN:-}"
+LEGADO=0
+if [ -n "$MOTOR_BIN" ] && [ ! -x "$MOTOR_BIN" ]; then
+  echo "BLOQ: LFM3_MOTOR_BIN apunta a un binario no ejecutable: $MOTOR_BIN" >&2
+  exit 1
+fi
 if [ -z "$MOTOR_BIN" ]; then
-  CANDIDATO="$DIR/../llamacpp-candidate-31689/src/build/bin/llama-server"
+  CANDIDATO="$DIR/../../llamacpp-candidate-31689/src/build/bin/llama-server"
   if [ -x "$CANDIDATO" ]; then
     MOTOR_BIN="$CANDIDATO"
   else
@@ -80,14 +91,26 @@ if [ -z "$MOTOR_BIN" ]; then
       echo "BLOQ: sin motor ADR-014 ni llama-server en PATH" >&2
       exit 1
     }
+    LEGADO=1
+    echo "AVISO: motor legacy de PATH ($MOTOR_BIN); no es el par 2 de ADR-014" >&2
   fi
 fi
-if [ ! -x "$MOTOR_BIN" ]; then
-  echo "BLOQ: motor ADR-014 no está en $MOTOR_BIN" >&2
-  exit 1
+if [ "$LEGADO" -eq 0 ]; then
+  HASH_REAL="$(shasum -a 256 "$MOTOR_BIN" | awk '{print $1}')"
+  if [ "$HASH_REAL" != "$SHA_REGISTRADO" ]; then
+    echo "BLOQ: hash del motor difiere del registrado (ADR-014): $MOTOR_BIN" >&2
+    exit 1
+  fi
 fi
 MOTOR_BIN_DIR="$(cd "$(dirname "$MOTOR_BIN")" && pwd)"
 MOTOR_BIN="$MOTOR_BIN_DIR/$(basename "$MOTOR_BIN")"
+# El curl de readiness se ancla ANTES del export de PATH: con la pierna
+# 2 el directorio del motor va al frente y no contiene curl; sin este
+# ancla, la resolución caería al curl real y el readiness podría
+# responderlo un MOTOR AJENO en 8091 (hallazgo de la ronda de
+# corrección, expediente motor-2-31689; en el fixture hermético sería
+# el sustituto, en producción /usr/bin/curl).
+CURL_BIN="$(command -v curl)"
 export PATH="$MOTOR_BIN_DIR:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 nohup "$MOTOR_BIN" \
@@ -107,10 +130,10 @@ while [ "$INTENTO" -lt "$BUDGET" ]; do
     rm -f "$PIDFILE"
     exit 1
   fi
-  if curl -sf -m 2 "http://127.0.0.1:$PORT/health" 2>/dev/null | grep -q '"ok"'; then
-    if curl -sf -m 2 "http://127.0.0.1:$PORT/v1/models" 2>/dev/null \
+  if "$CURL_BIN" -sf -m 2 "http://127.0.0.1:$PORT/health" 2>/dev/null | grep -q '"ok"'; then
+    if "$CURL_BIN" -sf -m 2 "http://127.0.0.1:$PORT/v1/models" 2>/dev/null \
         | grep -q "$MODELO_ID"; then
-      echo "arriba: /health y modelo efectivo OK (pid $PID); log: $LOG"
+      echo "arriba: /health y modelo efectivo OK (pid $PID); motor: $MOTOR_BIN; log: $LOG"
       exit 0
     fi
     echo "aviso: /health OK pero modelo efectivo distinto; sigo esperando" >&2

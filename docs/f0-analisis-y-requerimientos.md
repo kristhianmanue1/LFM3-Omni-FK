@@ -114,6 +114,9 @@ CERRADA-1: Puerto del servidor → 8091. Fuente: instrucción directa del
 humano (recomendación 1 aprobada, 2026-11-02). El 8080 está ocupado por
 Docker (EV-3); no se toca ese contenedor.
 CERRADA-2: Instalación del motor → Homebrew (recomendación 2 aprobada).
+> Par 2 vigente (ADR-014, 2026-11-10): llama.cpp master 54cde710
+> construido de fuente; la instalación Homebrew de esta sección queda
+> como registro histórico de F0.
 CERRADA-3: Método → F0 formal de Skevi con adopción del kit (recomendación
 3 aprobada); adopción verificada plantillas/v18 + gate/v13 + corpus/v8
 contra skevi@74a4714 (EV-8).

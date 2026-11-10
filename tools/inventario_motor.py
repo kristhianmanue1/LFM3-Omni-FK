@@ -28,7 +28,7 @@ HUB = Path.home() / ".cache" / "huggingface" / "hub"
 SNAPS = HUB / "models--LiquidAI--LFM3-Omni-2B-GGUF" / "snapshots"
 MODELO_REV = "LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M (rev. de snapshot en caché)"
 LICENCIA_PESOS = "LFM Open License v1.0 (LiquidAI/LFM3-Omni-2B-GGUF)"
-LICENCIA_MOTOR = "MIT (llama.cpp, Homebrew)"
+LICENCIA_MOTOR = "MIT (llama.cpp)"
 LICENCIA_FFMPEG = "GPL/LGPL según build (FFmpeg, Homebrew)"
 PATH_SISTEMA = "/usr/bin:/bin:/usr/sbin:/sbin"
 
@@ -70,17 +70,36 @@ def _version(ruta, argv_ver):
     return lineas[0] if lineas else "desconocida"
 
 
+def _resolver_motor():
+    """Misma escalera que run/serve.sh (ADR-014; ronda de corrección
+    2026-11-10): 1) LFM3_MOTOR_BIN, 2) binario fijado hermano del repo,
+    3) command -v legado. Así el inventario registra el binario que el
+    runbook lanzaría, no el que el PATH heredado decidiera."""
+    override = os.environ.get("LFM3_MOTOR_BIN")
+    if override:
+        if not Path(override).is_file():
+            _falla(f"LFM3_MOTOR_BIN apunta a un binario inexistente: {override}")
+        return Path(override)
+    hermano = (Path(__file__).resolve().parent.parent.parent /
+               "llamacpp-candidate-31689" / "src" / "build" / "bin" /
+               "llama-server")
+    if hermano.is_file():
+        return hermano
+    logico = shutil.which("llama-server")
+    if not logico:
+        _falla("sin motor ADR-014 ni llama-server en PATH")
+    return Path(logico)
+
+
 def main():
-    binario_logico = shutil.which("llama-server")
-    if not binario_logico:
-        _falla("llama-server no está en PATH")
-    binario = str(Path(binario_logico).resolve())
+    binario = str(_resolver_motor().resolve())
     revision = _version(binario, ["--version"])
 
-    # PATH fijado igual que serve.sh (I1-V0): del directorio lógico donde
-    # command -v/which halló el motor (prefix estable, p. ej.
-    # /opt/homebrew/bin), no del Cellar versionado ni del entorno heredado.
-    path_fijado = str(Path(binario_logico).parent) + os.pathsep + PATH_SISTEMA
+    # PATH fijado igual que serve.sh (I1-V0; ADR-014 añade
+    # /opt/homebrew/bin para ffmpeg/llama-tts junto al motor de fuente):
+    # del directorio del motor resuelto, no del entorno heredado.
+    path_fijado = (str(Path(binario).parent) + os.pathsep +
+                   "/opt/homebrew/bin" + os.pathsep + PATH_SISTEMA)
 
     artefactos = [_entrada(Path(binario), "motor", revision, LICENCIA_MOTOR)]
     for nombre, argv_ver, rol, licencia in HERRAMIENTAS:

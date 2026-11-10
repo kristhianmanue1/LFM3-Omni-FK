@@ -18,3 +18,4 @@
 | [ADR-011](ADR-011-perfiles-consumo-wd-handoff-frontexpert.md) | Perfiles de consumo W y D, clientes SDK de referencia y handoff formal para frontExpert | aceptado, implementado (I4, 2026-11-07) | 2026-11-07 |
 | [ADR-012](ADR-012-trabajos-largos-persistencia-idempotencia.md) | Trabajos largos en segundo plano (Perfil J), persistencia atómica, idempotencia RFC 8785 y recuperación ante fallos | aceptado, implementado (I5, 2026-11-07) | 2026-11-07 |
 | [ADR-013](ADR-013-triaje-evaluacion-promocion-modelos.md) | Triaje formal de candidatos, evaluación comparativa contra Golden Dataset y protocolo gobernado de promoción o rechazo | aceptado (I6, 2026-11-07) | 2026-11-07 |
+| [ADR-014](ADR-014-motor-2-31689-desbloqueo-realtime.md) | Salto registrado del motor: par 2 = llama.cpp master 54cde710 de fuente (fix #31689 realtime) + mismo GGUF; reevaluación de realtime a nivel motor | aceptado (Operador, 2026-11-10) | 2026-11-10 |

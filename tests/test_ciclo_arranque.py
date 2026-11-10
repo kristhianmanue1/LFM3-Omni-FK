@@ -12,6 +12,7 @@ vigilado por registro de PIDs propios con hora de inicio.
 
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
 import subprocess
@@ -303,3 +304,75 @@ class Parada(CicloArranqueBase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EscaleraMotor(CicloArranqueBase):
+    """Selección de motor por pierna (ADR-014; ronda adversarial
+    2026-11-10): override explícito, binario hermano del repo, legado
+    con AVISO y guard de hash en las piernas fijadas. La salida
+    observable es la línea «arriba: ... motor: <ruta>» que serve.sh
+    imprime con el binario resuelto."""
+
+    def _stub_sha(self):
+        stub = self.fx.bin_dir / "llama-server"
+        return hashlib.sha256(stub.read_bytes()).hexdigest()
+
+    def _lanzar(self, script, **extra):
+        process = self.fx.popen_script(script, **extra)
+        self.addCleanup(self.fx.terminate_handle, process)
+        return process
+
+    def test_leg1_override_explicito_se_respeta(self):
+        stub = self.fx.bin_dir / "llama-server"
+        p = self.lanzar_serve(LFM3_MOTOR_BIN=str(stub),
+                              LFM3_MOTOR_SHA_REGISTRADO=self._stub_sha(),
+                              STUB_LOAD_SECS="0.2")
+        out = self.assert_serve_up(p, "override LFM3_MOTOR_BIN ignorado")
+        self.assertIn(f"motor: {stub}", out,
+                      "la línea arriba no nombra el binario resuelto")
+
+    def test_leg2_hermano_del_repo_se_resuelve(self):
+        stub = self.fx.bin_dir / "llama-server"
+        raiz = self.fx.tmp / "externos"
+        (raiz / "LFM3-Omni" / "run").mkdir(parents=True)
+        candidato = (raiz / "llamacpp-candidate-31689" / "src" /
+                     "build" / "bin")
+        candidato.mkdir(parents=True)
+        (candidato / "llama-server").write_bytes(stub.read_bytes())
+        (candidato / "llama-server").chmod(0o755)
+        serve = raiz / "LFM3-Omni" / "run" / "serve.sh"
+        shutil.copy2(RUN / "serve.sh", serve)
+        esperado = candidato / "llama-server"
+        p = self._lanzar(serve,
+                         LFM3_MOTOR_SHA_REGISTRADO=self._stub_sha(),
+                         STUB_LOAD_SECS="0.2")
+        out = self.assert_serve_up(p, "la pierna 2 no resolvió el "
+                                      "hermano del repo")
+        self.assertIn(f"motor: {esperado}", out,
+                      "no se lanzó el binario hermano fijado")
+
+    def test_guard_hash_bloquea_binario_distinto(self):
+        stub = self.fx.bin_dir / "llama-server"
+        p = self.lanzar_serve(LFM3_MOTOR_BIN=str(stub),
+                              STUB_LOAD_SECS="0.2")
+        rc = p.wait(timeout=120)
+        stdout = p.stdout.read()
+        stderr = p.stderr.read()
+        p.stdout.close()
+        p.stderr.close()
+        self.assertNotEqual(rc, 0,
+                            "el guard de hash dejó pasar un binario "
+                            f"no registrado: {stdout}{stderr}")
+        self.assertIn("hash", stderr.lower(),
+                      "el BLOQ no menciona el guard de hash")
+        self.assertLimpio()
+
+    def test_leg3_legado_arranca_con_aviso(self):
+        # Sin override ni candidato hermano: la pierna 3 toma el
+        # llama-server del PATH (sustituto del fixture) y DEBE avisar
+        # en stderr que no es el par declarado.
+        p = self.lanzar_serve(STUB_LOAD_SECS="0.2")
+        out = self.assert_serve_up(p, "pierna 3 legado no arrancó")
+        p.stderr.close()
+        self.assertIn("motor:", out, "falta el binario resuelto")
+        self.assertEqual(len(self.fx.invocations()), 1)
