@@ -39,9 +39,9 @@ contrato v1: el 8091 no oferta voz; alinea el default de
 /v1/audio/speech del motor con ADR-007) y /opt/homebrew/bin al PATH
 del runbook para que ffmpeg/ffprobe/llama-tts (ADR-006 §4) sigan
 resolviendo (alarma r16b atendida con registro, no en silencio).
-tools/inventario_motor.py comparte la escalera y el PATH. Cambiar de
-nuevo el motor o el modelo sigue siendo operación registrada
-(ADR-001).
+tools/inventario_motor.py comparte la escalera, sus predicados y el
+guard. Cambiar de nuevo el motor o el modelo sigue siendo operación
+registrada (ADR-001).
 Alternativas descartadas:
   - brew upgrade a 0.9.0: sin el fix (#31689 sigue presente ahí).
   - Permanecer en 0.8.0: deja la cláusula de ADR-007 sin ejecutar y

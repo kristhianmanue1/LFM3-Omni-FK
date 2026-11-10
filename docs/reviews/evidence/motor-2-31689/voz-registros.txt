@@ -40,7 +40,8 @@ c) eco con instrucciones vacias o entrada sintetica: el prompt de
    persona lo evita con voz humana real.
 d) la unica voz ofertable como FIJA hoy es la de llama-tts
    (/v1/audio/speech y subprocess), consistente con issue #2.
-via hibrida female (examples/conversacion_voz_hibrida.py --voz female) — 6 turnos con microfono real del Operador
+[8] via hibrida female (examples/conversacion_voz_hibrida.py --voz
+female) — 6 turnos con microfono real del Operador
 250.0 / 233.0 / 255.3 / 244.9 / 247.4 / 236.5 Hz  (6/6 fem estables)
-latencias 3.0-6.0 s por turno; ambos generos quedan validados en la
+latencias 3.0-6.0 s por turno. Ambos generos quedan validados en la
 arquitectura ofertable (masc 130-156 Hz, fem 233-255 Hz).

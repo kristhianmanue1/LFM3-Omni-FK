@@ -71,28 +71,42 @@ def _version(ruta, argv_ver):
 
 
 def _resolver_motor():
-    """Misma escalera que run/serve.sh (ADR-014; ronda de corrección
-    2026-11-10): 1) LFM3_MOTOR_BIN, 2) binario fijado hermano del repo,
-    3) command -v legado. Así el inventario registra el binario que el
-    runbook lanzaría, no el que el PATH heredado decidiera."""
+    """Misma escalera, mismos predicados y mismo guard que run/serve.sh
+    (ADR-014; ronda de corrección 2026-11-10, NEW-2 de la ronda 2): 1)
+    LFM3_MOTOR_BIN, 2) binario fijado hermano del repo, 3) command -v
+    legado. Las piernas fijadas exigen ejecutable + SHA-256 registrado
+    (hook LFM3_MOTOR_SHA_REGISTRADO para fixtures); la legado no exige
+    hash. Así el inventario registra el binario que el runbook
+    lanzaría, no el que el PATH heredado decidiera."""
+    registrados = os.environ.get(
+        "LFM3_MOTOR_SHA_REGISTRADO",
+        "352c59e362dee5cf97bbbfbc63c0ab711a7c2c42053b1e33ae4abdb6e1d91564")
     override = os.environ.get("LFM3_MOTOR_BIN")
     if override:
-        if not Path(override).is_file():
-            _falla(f"LFM3_MOTOR_BIN apunta a un binario inexistente: {override}")
-        return Path(override)
-    hermano = (Path(__file__).resolve().parent.parent.parent /
-               "llamacpp-candidate-31689" / "src" / "build" / "bin" /
-               "llama-server")
-    if hermano.is_file():
-        return hermano
-    logico = shutil.which("llama-server")
-    if not logico:
-        _falla("sin motor ADR-014 ni llama-server en PATH")
-    return Path(logico)
+        if not (Path(override).is_file()
+                and os.access(override, os.X_OK)):
+            _falla(f"LFM3_MOTOR_BIN apunta a un binario no ejecutable: "
+                   f"{override}")
+        ruta, pierna = Path(override), "override"
+    else:
+        hermano = (Path(__file__).resolve().parent.parent.parent /
+                   "llamacpp-candidate-31689" / "src" / "build" / "bin" /
+                   "llama-server")
+        if hermano.is_file() and os.access(hermano, os.X_OK):
+            ruta, pierna = hermano, "hermano"
+        else:
+            logico = shutil.which("llama-server")
+            if not logico:
+                _falla("sin motor ADR-014 ni llama-server en PATH")
+            ruta, pierna = Path(logico), "legado"
+    if pierna != "legado" and _sha256(ruta) != registrados:
+        _falla(f"hash del motor difiere del registrado (ADR-014): {ruta}")
+    return ruta, pierna
 
 
 def main():
-    binario = str(_resolver_motor().resolve())
+    binario, pierna = _resolver_motor()
+    binario = str(binario.resolve())
     revision = _version(binario, ["--version"])
 
     # PATH fijado igual que serve.sh (I1-V0; ADR-014 añade
@@ -123,7 +137,8 @@ def main():
 
     print(json.dumps({
         "generado_utc": datetime.now(timezone.utc).isoformat(),
-        "motor": {"binario": binario, "revision_reportada": revision},
+        "motor": {"binario": binario, "revision_reportada": revision,
+                  "pierna": pierna},
         "path_fijado": path_fijado,
         "artefactos": artefactos,
     }, ensure_ascii=False, indent=2))

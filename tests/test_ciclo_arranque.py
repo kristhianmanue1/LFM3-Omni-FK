@@ -370,9 +370,17 @@ class EscaleraMotor(CicloArranqueBase):
     def test_leg3_legado_arranca_con_aviso(self):
         # Sin override ni candidato hermano: la pierna 3 toma el
         # llama-server del PATH (sustituto del fixture) y DEBE avisar
-        # en stderr que no es el par declarado.
+        # en stderr que no es el par declarado (HIGH-1, ronda 1).
         p = self.lanzar_serve(STUB_LOAD_SECS="0.2")
-        out = self.assert_serve_up(p, "pierna 3 legado no arrancó")
+        rc = p.wait(timeout=120)
+        stdout = p.stdout.read()
+        stderr = p.stderr.read()
+        p.stdout.close()
         p.stderr.close()
-        self.assertIn("motor:", out, "falta el binario resuelto")
+        self.assertEqual(rc, 0,
+                         f"pierna 3 legado no arrancó: {stdout}{stderr}")
+        self.assertIn("arriba", stdout)
+        self.assertIn("motor:", stdout, "falta el binario resuelto")
+        self.assertIn("AVISO", stderr,
+                      "la pierna 3 legada pasó en silencio")
         self.assertEqual(len(self.fx.invocations()), 1)

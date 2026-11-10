@@ -110,7 +110,14 @@ MOTOR_BIN="$MOTOR_BIN_DIR/$(basename "$MOTOR_BIN")"
 # responderlo un MOTOR AJENO en 8091 (hallazgo de la ronda de
 # corrección, expediente motor-2-31689; en el fixture hermético sería
 # el sustituto, en producción /usr/bin/curl).
-CURL_BIN="$(command -v curl)"
+CURL_BIN="$(command -v curl 2>/dev/null || true)"
+if [ -z "$CURL_BIN" ] && [ -x /usr/bin/curl ]; then
+  CURL_BIN=/usr/bin/curl
+fi
+if [ -z "$CURL_BIN" ] || [ ! -x "$CURL_BIN" ]; then
+  echo "BLOQ: sin curl para el readiness del motor" >&2
+  exit 1
+fi
 export PATH="$MOTOR_BIN_DIR:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 nohup "$MOTOR_BIN" \
