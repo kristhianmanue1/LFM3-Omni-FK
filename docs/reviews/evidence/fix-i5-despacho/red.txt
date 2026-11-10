@@ -1,0 +1,123 @@
+test_01_forma_es6_de_numeros (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_01_forma_es6_de_numeros) ... ok
+test_02_enteros_fuera_del_rango_doble (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_02_enteros_fuera_del_rango_doble) ... ok
+test_03_orden_de_claves_por_utf16 (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_03_orden_de_claves_por_utf16) ... ok
+test_04_escapes_minimos_de_cadena (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_04_escapes_minimos_de_cadena) ... ok
+test_05_no_finitos_rechazados (tests.test_jobs_boundary_i5.CanonicalRFC8785NumerosTests.test_05_no_finitos_rechazados) ... ok
+test_16_oserror_al_escribir_job_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_16_oserror_al_escribir_job_sin_202) ... ok
+test_17_oserror_al_escribir_registro_sin_202 (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_17_oserror_al_escribir_registro_sin_202) ... ok
+test_18_job_en_cola_sin_registro_jamais_se_ejecuta (tests.test_jobs_boundary_i5.DurabilidadAdmisionTests.test_18_job_en_cola_sin_registro_jamais_se_ejecuta) ... ok
+test_06_scope_de_modalidad_exigido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_06_scope_de_modalidad_exigido) ... ok
+test_07_scope_de_modalidad_de_vision (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_07_scope_de_modalidad_de_vision) ... ok
+test_08_payload_fuera_de_dialecto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_08_payload_fuera_de_dialecto_rechazado) ... ok
+test_09_clave_duplicada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_09_clave_duplicada_rechazada) ... ok
+test_10_clave_duplicada_anidada_rechazada (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_10_clave_duplicada_anidada_rechazada) ... ok
+test_11_control_positivo_flujo_valido (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_11_control_positivo_flujo_valido) ... ok
+test_23_sobre_no_objeto_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_23_sobre_no_objeto_rechazado) ... ok
+test_24_ttl_invalido_rechazado (tests.test_jobs_boundary_i5.FronteraJobsHTTPTests.test_24_ttl_invalido_rechazado) ... ok
+test_19_segunda_instancia_falla_y_no_ejecuta_dos_veces (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_19_segunda_instancia_falla_y_no_ejecuta_dos_veces) ... ok
+test_20_worker_pasa_por_dispatcher_compartido (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_20_worker_pasa_por_dispatcher_compartido) ... ok
+test_26_worker_sobrevive_dispatcher_hostil (tests.test_jobs_boundary_i5.ReclamoEntreInstanciasTests.test_26_worker_sobrevive_dispatcher_hostil) ... jobs-worker: fallo inesperado en job-hostil-1: RuntimeError('config de rate_limit corrupta')
+ok
+test_32_reloj_falso_gobierna_el_barrido (tests.test_jobs_boundary_i5.RelojInyectableTests.test_32_reloj_falso_gobierna_el_barrido) ... ERROR
+test_33_reloj_falso_gobierna_la_purga (tests.test_jobs_boundary_i5.RelojInyectableTests.test_33_reloj_falso_gobierna_la_purga) ... ERROR
+test_34_reloj_falso_gobierna_el_deadline_de_admision (tests.test_jobs_boundary_i5.RelojInyectableTests.test_34_reloj_falso_gobierna_el_deadline_de_admision) ... ERROR
+test_21_purga_y_tombstone_al_expirar (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_21_purga_y_tombstone_al_expirar) ... ok
+test_22_permisos_restringidos (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_22_permisos_restringidos) ... ok
+test_25_410_estable_y_delete_terminal_tras_purga (tests.test_jobs_boundary_i5.RetencionPermisosTests.test_25_410_estable_y_delete_terminal_tras_purga) ... ok
+test_31_rival_queued_sin_despacho_reencola_y_ejecuta (tests.test_jobs_boundary_i5.RivalAlineadoTests.test_31_rival_queued_sin_despacho_reencola_y_ejecuta) ... FAIL
+test_12_finish_reason_no_stop_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_12_finish_reason_no_stop_es_fallo) ... ok
+test_13_salida_fuera_de_esquema_es_fallo (tests.test_jobs_boundary_i5.SalidaBackendTests.test_13_salida_fuera_de_esquema_es_fallo) ... ok
+test_14_control_positivo_salida_valida (tests.test_jobs_boundary_i5.SalidaBackendTests.test_14_control_positivo_salida_valida) ... ok
+test_15_expires_recalculada_tras_terminal (tests.test_jobs_boundary_i5.SalidaBackendTests.test_15_expires_recalculada_tras_terminal) ... ERROR
+test_27_oserror_en_el_claim_el_reintento_reencola (tests.test_jobs_boundary_i5.VentanaDespachoOSErrorTests.test_27_oserror_en_el_claim_el_reintento_reencola) ... FAIL
+test_28_oserror_al_persistir_running_el_reintento_reencola (tests.test_jobs_boundary_i5.VentanaDespachoOSErrorTests.test_28_oserror_al_persistir_running_el_reintento_reencola) ... FAIL
+test_29_oserror_en_admision_el_reintento_reencola (tests.test_jobs_boundary_i5.VentanaDespachoOSErrorTests.test_29_oserror_en_admision_el_reintento_reencola) ... FAIL
+test_30_oserror_al_cerrar_por_deadline_sin_202_eterno (tests.test_jobs_boundary_i5.VentanaDespachoOSErrorTests.test_30_oserror_al_cerrar_por_deadline_sin_202_eterno) ... ERROR
+
+======================================================================
+ERROR: test_32_reloj_falso_gobierna_el_barrido (tests.test_jobs_boundary_i5.RelojInyectableTests.test_32_reloj_falso_gobierna_el_barrido)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 1159, in test_32_reloj_falso_gobierna_el_barrido
+    manager = JobsManager(jobs_dir=temp_dir / "jobs",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'reloj'
+
+======================================================================
+ERROR: test_33_reloj_falso_gobierna_la_purga (tests.test_jobs_boundary_i5.RelojInyectableTests.test_33_reloj_falso_gobierna_la_purga)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 1187, in test_33_reloj_falso_gobierna_la_purga
+    manager = JobsManager(jobs_dir=temp_dir / "jobs",
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'reloj'
+
+======================================================================
+ERROR: test_34_reloj_falso_gobierna_el_deadline_de_admision (tests.test_jobs_boundary_i5.RelojInyectableTests.test_34_reloj_falso_gobierna_el_deadline_de_admision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 1217, in test_34_reloj_falso_gobierna_el_deadline_de_admision
+    manager = JobsManager(
+              ^^^^^^^^^^^^
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'reloj'
+
+======================================================================
+ERROR: test_15_expires_recalculada_tras_terminal (tests.test_jobs_boundary_i5.SalidaBackendTests.test_15_expires_recalculada_tras_terminal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 503, in test_15_expires_recalculada_tras_terminal
+    manager = JobsManager(
+              ^^^^^^^^^^^^
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'reloj'
+
+======================================================================
+ERROR: test_30_oserror_al_cerrar_por_deadline_sin_202_eterno (tests.test_jobs_boundary_i5.VentanaDespachoOSErrorTests.test_30_oserror_al_cerrar_por_deadline_sin_202_eterno)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 1049, in test_30_oserror_al_cerrar_por_deadline_sin_202_eterno
+    manager = JobsManager(
+              ^^^^^^^^^^^^
+TypeError: JobsManager.__init__() got an unexpected keyword argument 'reloj'
+
+======================================================================
+FAIL: test_31_rival_queued_sin_despacho_reencola_y_ejecuta (tests.test_jobs_boundary_i5.RivalAlineadoTests.test_31_rival_queued_sin_despacho_reencola_y_ejecuta)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 1122, in test_31_rival_queued_sin_despacho_reencola_y_ejecuta
+    self.assertIn(
+AssertionError: 'job-rival-1' not found in set() : el rival queued sin despacho no se encoló: 202 sin avance (LOW-1)
+
+======================================================================
+FAIL: test_27_oserror_en_el_claim_el_reintento_reencola (tests.test_jobs_boundary_i5.VentanaDespachoOSErrorTests.test_27_oserror_en_el_claim_el_reintento_reencola)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 974, in test_27_oserror_en_el_claim_el_reintento_reencola
+    self._afirmar_reencolado_y_ejecutado(payload, "med-claim", job_id)
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 929, in _afirmar_reencolado_y_ejecutado
+    self.assertTrue(
+AssertionError: False is not true : el job abandonado sin running sigue en _en_cola: el siguiente reintento respondería 202 sin avance (RESIDUAL-MED)
+
+======================================================================
+FAIL: test_28_oserror_al_persistir_running_el_reintento_reencola (tests.test_jobs_boundary_i5.VentanaDespachoOSErrorTests.test_28_oserror_al_persistir_running_el_reintento_reencola)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 1002, in test_28_oserror_al_persistir_running_el_reintento_reencola
+    self._afirmar_reencolado_y_ejecutado(payload, "med-running",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 929, in _afirmar_reencolado_y_ejecutado
+    self.assertTrue(
+AssertionError: False is not true : el job abandonado sin running sigue en _en_cola: el siguiente reintento respondería 202 sin avance (RESIDUAL-MED)
+
+======================================================================
+FAIL: test_29_oserror_en_admision_el_reintento_reencola (tests.test_jobs_boundary_i5.VentanaDespachoOSErrorTests.test_29_oserror_en_admision_el_reintento_reencola)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 1020, in test_29_oserror_en_admision_el_reintento_reencola
+    self._afirmar_reencolado_y_ejecutado(payload, "med-admision",
+  File "/Users/krisnova/www/AGTexperts/externos/LFM3-Omni-wt-fix-i5-despacho/tests/test_jobs_boundary_i5.py", line 929, in _afirmar_reencolado_y_ejecutado
+    self.assertTrue(
+AssertionError: False is not true : el job abandonado sin running sigue en _en_cola: el siguiente reintento respondería 202 sin avance (RESIDUAL-MED)
+
+----------------------------------------------------------------------
+Ran 34 tests in 22.122s
+
+FAILED (failures=4, errors=5)
