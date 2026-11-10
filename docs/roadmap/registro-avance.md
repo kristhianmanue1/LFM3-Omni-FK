@@ -4,6 +4,11 @@ Estado: vivo; una sección por iteración, transiciones con fecha y
 evidencia. Procedencia: `docs/roadmap/iteraciones-servicio.md`
 (§Registro de avance para ejecutores). Los estados son propuestos por
 el agente con evidencia; la aceptación la decide el Operador.
+`accepted_local` se abrevia en las filas sin repetir «propuesto»:
+sólo cuenta como aceptación lo registrado por escrito. Los encargos
+citados (p. ej. «…y despes aprobada la tarea») autorizan la ejecución
+y anticipan la aprobación posterior del Operador; no son aceptación de
+fase.
 
 ## I0 — Base local reparada
 
@@ -64,8 +69,9 @@ el agente con evidencia; la aceptación la decide el Operador.
 ### I1-V — Modalidades locales del artefacto vigente
 
 - Estado actual: `accepted_local` (propuesto al Operador) para
-  **I1-V0, I1-VT, I1-VA, I1-VS, I1-VR, I1-VV e I1-VX**; I1-VM/VC `not_started`. I0
-  e I1 conservan `accepted_local`.
+  **I1-V0, I1-VT, I1-VA, I1-VS, I1-VR, I1-VV, I1-VX, I1-VM e I1-VC**
+  (I1-VM/VC constan en la tabla desde el 2026-11-06; commit
+  `5a69110`). I0 e I1 conservan `accepted_local`.
 - Owner: agente ejecutor (GLM 5.3, OpenCode; ajuste del plan: Claude
   Opus 5.5, Claude Code). Reviewer: subagente con contexto fresco
   (ronda del ajuste: fix-and-retry -> proceed por relectura,
@@ -113,7 +119,8 @@ el agente con evidencia; la aceptación la decide el Operador.
 
 ## I2 — Servicio web privado por invitación
 
-- Estado actual: `accepted_local` completo (I2-D, I2-P, I2-V, I2-U cerrados).
+- Estado actual: `accepted_local` (propuesto al Operador) para
+  I2-D, I2-P, I2-V e I2-U.
 - Owner: agente ejecutor (OpenCode / Antigravity). Reviewer: subagente
   con contexto fresco (ronda adversarial I2-D).
 - Encargo: Operador, 2026-11-06 — «adelante» (ejecución de TAREA I2-D).
@@ -122,6 +129,77 @@ el agente con evidencia; la aceptación la decide el Operador.
   `docs/roadmap/dossier-operacion-i2.md`, `docs/roadmap/decisiones-servicio.md`,
   `docs/plans/PLAN-2-servicio-compartido.md`, `docs/reviews/`.
 - Bloqueos: ninguno para diseño I2-D. Activación de red/código en I2-P.
+
+## I3 — MCP remoto omnimodal
+
+- Estado actual: `accepted_local` (propuesto al Operador).
+- Procedencia de esta sección: añadida a posteriori (2026-11-09, tarea
+  docs-current-state); las fases I3–I6 no registraron transiciones en
+  su momento en este archivo. Se reconstruyen sólo desde commits y
+  reviews locales, sin atribuir aceptaciones humanas no registradas.
+- Encargo: Operador, 2026-11-07 — «adelante tienes comits, puesh,
+  merges autorizados segun consideres en el abanse y despes aprobada la
+  tarea» (citado en la review de la fase).
+- Evidencia: commits `eb3c5fe` (I3-D), `ccab09e` (I3-M) y `1f3963f`
+  (I3-U); review `../reviews/2026-11-i3-mcp-remote-omnimodal.md`
+  (suite 275 OK, proceed); `docs/specs/SPEC-i3-mcp-remote.md` y
+  ADR-010.
+
+## I4 — Clientes SDK y perfiles W/D
+
+- Estado actual: `accepted_local` (propuesto al Operador).
+- Evidencia: commit `0069f35` (I4-C, I4-UI, I4-U); review
+  `../reviews/2026-11-i4-clientes-perfiles-wd.md` (suite 288 OK,
+  proceed); contrato `docs/contracts/handoff-frontexpert-v2.md`
+  publicado en este repo. Límite: la adopción de la UI ocurre en
+  frontExpert y sigue gateada por D-05 (pendiente) y encargo separado;
+  el handoff no acredita UI ni adopción en ese repo.
+
+## I5 — Trabajos largos en segundo plano (Perfil J)
+
+- Estado actual: `accepted_local` (propuesto al Operador). El residual
+  MED aceptado por escrito el 2026-11-08 quedó corregido en `599564b`;
+  no está vigente.
+- Evidencia: commit `c32f7de` y ola de correcciones (`920ba6a`,
+  `1fa6e45`, `50f9a5b`, `b8ef913`); la review inicial (base `0069f35`)
+  registró suite 299 OK
+  (`../reviews/2026-11-i5-trabajos-largos-perfil-j.md`) y el cierre de
+  la ola de correcciones, 376 tests OK (skipped=1) en dos pasadas
+  (`../reviews/evidence/fix-i5-jobs-frontera/green-intento-4.txt`,
+  2026-11-08, condiciones históricas). El Operador aceptó por escrito
+  el residual MED (respuesta 202 sin despacho tras un OSError del
+  worker) en
+  `../reviews/evidence/fix-i5-jobs-frontera/aceptacion-riesgo.md`
+  (commit `2c83934`). La corrección de atribución (`2c83934`) y
+  `../reviews/evidence/fix-i5-jobs-frontera/disposicion-ronda4.md`
+  registran que el Operador EXIGÍA para esta ola un proceed pre-merge
+  de agy (Gemini, otra familia), que el proceed GLM de la ronda 4 —de
+  la misma familia y sin excepción autorizada— no sustituye; la
+  evidencia local conserva la exigencia, no la ocurrencia de ese
+  proceed.
+  La corrección del residual (`599564b`, PR #6) se integró el
+  2026-11-09 por excepción puntual del Operador, SIN revisor fresco
+  (cuota de agy agotada, 429):
+  `../reviews/evidence/fix-i5-despacho/disposicion-excepcion-revisor.md`.
+
+## I6 — Triaje y evaluación de modelos (condicional)
+
+- Estado actual: `accepted_local` (propuesto al Operador) para la
+  capacidad de triaje y evaluación; el plan la mantiene condicional por
+  candidato o modalidad. Sin candidato evaluado ni promoción: baseline
+  intacta.
+- Evidencia: commit `60c6568` (I6-E, I6-U); review
+  `../reviews/2026-11-i6-evaluacion-modelos.md` (suite 308 OK,
+  proceed); `docs/specs/SPEC-i6-evaluacion-modelos.md` y ADR-013.
+
+Límite común I3–I6: las cifras de suite de cada review se observaron
+en un árbol de trabajo sobre la base de su `head_sha` (commit previo
+al de la fase), no sobre el commit final; los commits acreditan la
+implementación. La aceptación humana plena de cada iteración no consta
+por escrito salvo lo anotado (residual I5, 2026-11-08, corregido en
+`599564b`). El runtime vigente (motor 8091, gateway 8092, piloto 8443)
+no se comprueba en este registro: su activación quedó documentada en su
+fase y su estado actual corresponde al runbook.
 
 ## Salida prevista
 

@@ -1,6 +1,20 @@
 # PLAN LFM3-2 — Servicio compartido incremental
 
-Estado: PROPUESTO para ejecución; documentación autorizada 2026-11-04.
+Estado: adoptado para ejecución por iteración (D-01 ACEPTADA, Operador
+2026-11-04, con alcance I0; encargos sucesivos por fase, citados en
+`docs/roadmap/registro-avance.md`; documentación autorizada 2026-11-04).
+I0–I6 implementadas con evidencia y rondas en `docs/reviews/`; los
+estados `accepted_local` de cada iteración quedan propuestos al
+Operador. El residual MED de I5 fue aceptado por escrito el 2026-11-08
+y corregido en `599564b`; esa corrección se integró por excepción
+puntual del Operador (2026-11-09) sin revisor fresco, registrada en
+`docs/reviews/evidence/fix-i5-despacho/disposicion-excepcion-revisor.md`.
+Las decisiones D-01..D-11 tienen su registro propio en
+`docs/roadmap/decisiones-servicio.md`: D-02..D-04 constan formalizadas
+como propuesta I2-D, sin aceptación registrada; D-05/D-06b/D-07
+pendientes. Sin acreditación de runtime vigente ni de exposición remota
+vigente; la activación histórica del piloto privado (I2-U) consta en su
+fase y no acredita la aceptación de D-02..D-04.
 Este plan no ejecuta implementación ni sustituye CERRADA-6/ADR-001/002.
 Clase: Architectural; nuevo alcance, contratos e identidades externas.
 Base: 4572164270073431a765e53e1353a233b0897dec, rama

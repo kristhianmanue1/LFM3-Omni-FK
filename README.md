@@ -12,10 +12,17 @@ la voz realtime completa sigue aplazada.
 Estado: v0.1.0 — F0–F3 cerrados con evidencia y rondas adversariales;
 motor verificado, contratos v1 publicados y MCP implementado (F3-1).
 
-Evolución propuesta a servicio compartido: ver
+Evolución a servicio compartido: ver
 [PLAN LFM3-2](docs/plans/PLAN-2-servicio-compartido.md), con entregas
-incrementales, contratos de consumo y ciclo de vida del modelo. Es un plan
-para revisión y adopción; no acredita funcionalidades remotas activas.
+incrementales, contratos de consumo y ciclo de vida del modelo. Adoptado
+para ejecución por iteración (D-01, 2026-11-04, y encargos sucesivos):
+iteraciones I0–I6 implementadas y verificadas por fase (I6 como triaje
+condicional, sin candidato evaluado ni promoción; D-06b pendiente),
+con estados y límites en `docs/roadmap/registro-avance.md`. La
+exposición remota vigente exige sus decisiones y dossier de activación;
+el piloto privado de I2-U consta activado en su fase, sin que conste
+aceptación de D-02..D-04 (formalizadas como propuesta I2-D). Nada de
+lo anterior acredita un runtime activo ahora.
 
 ## Requisitos
 
@@ -99,7 +106,8 @@ sigue fuera del contrato v1 (va por `/v1/realtime`, no ofrecido).
   exposición de red viven en F0 (CERRADA-6).
 - **Límites de tamaño:** heredados del estándar (800 líneas por archivo,
   200 para instrucciones de agentes, 300 para README); presupuesto de
-  ruta de lectura en `skevi-gate.json` (1800, adopción de AN-KLA).
+  ruta de lectura en `skevi-gate.json` (2000 desde el 2026-11-09; antes
+  1800, adopción de AN-KLA).
 - **LICENSE:** Apache-2.0 para el contenido del repositorio (código,
   docs, contratos; copyright kristhianmanue1). Los pesos del modelo NO
   se relicencian ni se redistribuyen: siguen bajo LFM Open License v1.0

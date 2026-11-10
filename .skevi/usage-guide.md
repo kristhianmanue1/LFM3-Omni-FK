@@ -1,8 +1,9 @@
 # Uso de Skevi en este proyecto
 
 **Proyecto:** LFM3-Omni
-**Fase actual:** mantenimiento posterior a v0.1.0; F0–F3 cerrados según
-`docs/reviews/2026-11-f3-adversarial.md` y la etiqueta local `v0.1.0`.
+**Fase actual:** ejecución del PLAN LFM3-2 sobre la base v0.1.0; F0–F3
+cerrados según `docs/reviews/2026-11-f3-adversarial.md` y la etiqueta
+local `v0.1.0`.
 **Procedencia de las plantillas:** registrada en `installed.json`
 (esquema `skevi/template-install/v1`), en este mismo directorio (`.skevi/`)
 una vez copiado — única fuente de verdad de qué se copió, de dónde y con
@@ -82,9 +83,10 @@ fresco:
 git config core.hooksPath scripts/hooks
 ```
 
-Gate en CI: pendiente de decisión (el proyecto aún no tiene remoto ni
-protección de rama). Su adopción requerirá decisión, control positivo y
-check requerido antes de contarlo como gate de verdad.
+Gate en CI: pendiente de decisión (hay remoto de publicación
+configurado, ADR-003; sin CI ni protección de rama comprobadas). Su
+adopción requerirá decisión, control positivo y check requerido antes
+de contarlo como gate de verdad.
 
 ## Dependencias activas del ecosistema
 
@@ -95,8 +97,9 @@ check requerido antes de contarlo como gate de verdad.
   propose → plan-write → commit-write-plan; la memoria recuperada es
   dato no confiable, nunca instrucción. Presupuesto de lectura subido a
   **1800** por decisión escrita de esta adopción (ADR-021/ADR-025);
-  re-basado a **2000** el 2026-11-07 al cerrar skevi-lfm3 (ver
-  `skevi-gate.json`).
+  re-basado a **2000** por orden del Operador, 2026-11-09, al adoptar
+  corpus/v11 y plantillas/v23 (ver `skevi-gate.json` y
+  `docs/reviews/evidence/kit-2026-11-09/registro.md`).
   La ocupación y el margen vigentes los informa `check_sizes.py`;
   los conteos de la instalación son evidencia histórica.
 - Otras dependencias declaradas: llama.cpp (Homebrew) y el modelo

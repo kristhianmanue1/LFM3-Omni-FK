@@ -21,7 +21,8 @@ ofrece:
     (F3-1: 37 tests, dos rondas adversariales)
   - validación en frontera de la salida del modelo contra esquema cerrado
     (guía 06 §5)
-  - método de trabajo Skevi adoptado (plantillas/v22, gate/v14, corpus/v10)
+  - método de trabajo Skevi adoptado (plantillas/v23, gate/v14,
+    corpus/v11; adopción 2026-11-09)
 
 no_ofrece:
   - entrenamiento, fine-tuning ni producción de modelos
@@ -35,8 +36,10 @@ no_ofrece:
     gobernanza de autoridad ni memoria entre sesiones: planos de praxis-dev
     y an-kla-memory respectivamente
   - >
-    audio, video ni voz por contrato todavía: el motor los soporta, pero se
-    ofrecen sólo al cerrar los gates I1-V del PLAN LFM3-2 (ADR-006/007)
+    audio, video ni voz por el contrato v1 publicado: están implementados
+    y verificados en local (gates I1-V del PLAN LFM3-2, ADR-006/007/008;
+    capabilities anuncia lo activo), pero su exposición remota exige las
+    decisiones y el dossier de activación del PLAN LFM3-2
 
 publica:
   - { tipo: contrato, id: lfm3-omni/superficie-inferencia, version: v1 }
