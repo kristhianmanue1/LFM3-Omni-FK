@@ -194,12 +194,16 @@ class EntornoAdverso(CicloArranqueBase):
         path_motor = inv[0]["path"].split(os.pathsep)
         # La lista de directorios de sistema se duplica a propósito: si
         # serve.sh cambia el PATH fijado, este test DEBE romper (alarma),
-        # no adaptarse en silencio (I1-V0, ADR-006 §4).
+        # no adaptarse en silencio (I1-V0, ADR-006 §4). La alarma se
+        # atendió con registro en ADR-014: /opt/homebrew/bin entra tras
+        # el dir del motor para que ffmpeg/ffprobe/llama-tts (fijados
+        # por ADR-006 §4) sigan resolviendo junto al binario de fuente.
         self.assertEqual(path_motor[0], str(self.fx.bin_dir),
                          f"el PATH del motor no arranca en el dir del "
                          f"motor: {path_motor}")
         self.assertEqual(path_motor[1:],
-                         ["/usr/bin", "/bin", "/usr/sbin", "/sbin"],
+                         ["/opt/homebrew/bin", "/usr/bin", "/bin",
+                          "/usr/sbin", "/sbin"],
                          f"el PATH del motor no es el fijado: {path_motor}")
         self.assertNotIn(str(veneno), path_motor,
                          "el directorio envenenado llegó al motor")

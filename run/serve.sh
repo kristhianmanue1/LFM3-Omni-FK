@@ -62,23 +62,38 @@ for V in $(env | sed -n 's/^\(LLAMA_ARG_[A-Za-z0-9_]*\)=.*/\1/p'); do
   unset "$V"
 done
 
-# PATH fijado (I1-V0, ADR-006 §4): el motor lanza ffmpeg/ffprobe desde
-# PATH (libmtmd) para audio/video de contenedor; el PATH heredado del
-# entorno no decide qué binario corre. Se ancla al directorio del propio
-# motor (resuelto antes de descartar el PATH heredado) + directorios del
-# sistema. El inventario del artefacto (tools/inventario_motor.py)
-# resuelve con el mismo criterio.
-MOTOR_BIN="$(command -v llama-server)" || {
-  echo "BLOQ: llama-server no está en PATH" >&2
+# Motor fijado por ADR-014 (par 2: llama.cpp master 54cde710 construido
+# de fuente; el fix de realtime #31689 no existe en la bottled 0.9.0).
+# Escalera de resolución: 1) LFM3_MOTOR_BIN (override explícito);
+# 2) binario fijado hermano del repo (producción); 3) command -v
+# (legado Homebrew; conserva la hermeticidad de los tests que reubican
+# HOME — RED en suite-par2.txt del expediente motor-2-31689).
+# llama-tts/ffmpeg/ffprobe siguen anclados por ADR-006 §4 y resuelven
+# desde /opt/homebrew/bin (integridad del inventario).
+MOTOR_BIN="${LFM3_MOTOR_BIN:-}"
+if [ -z "$MOTOR_BIN" ]; then
+  CANDIDATO="$DIR/../llamacpp-candidate-31689/src/build/bin/llama-server"
+  if [ -x "$CANDIDATO" ]; then
+    MOTOR_BIN="$CANDIDATO"
+  else
+    MOTOR_BIN="$(command -v llama-server)" || {
+      echo "BLOQ: sin motor ADR-014 ni llama-server en PATH" >&2
+      exit 1
+    }
+  fi
+fi
+if [ ! -x "$MOTOR_BIN" ]; then
+  echo "BLOQ: motor ADR-014 no está en $MOTOR_BIN" >&2
   exit 1
-}
+fi
 MOTOR_BIN_DIR="$(cd "$(dirname "$MOTOR_BIN")" && pwd)"
 MOTOR_BIN="$MOTOR_BIN_DIR/$(basename "$MOTOR_BIN")"
-export PATH="$MOTOR_BIN_DIR:/usr/bin:/bin:/usr/sbin:/sbin"
+export PATH="$MOTOR_BIN_DIR:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 nohup "$MOTOR_BIN" \
   -hf LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M \
-  --reasoning off --temp 0 --host "$HOST" --port "$PORT" \
+  --reasoning off --temp 0 --tts-lang es \
+  --host "$HOST" --port "$PORT" \
   >>"$LOG" 2>&1 &
 PID=$!
 echo "$PID" >"$PIDFILE"

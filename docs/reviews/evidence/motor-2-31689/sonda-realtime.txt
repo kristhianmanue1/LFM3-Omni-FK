@@ -1,0 +1,16 @@
+sonda diferencial /v1/realtime — puerto aislado 8093 (2026-11-10)
+frase instruida: El paquete llega el martes a las tres de la tarde.
+
+[caso fixed_es] servidor con --tts-lang es (pid 19898, RSS 3086336 KB)
+{"caso": "fixed_es", "sesion": {}, "primer_audio_s": 0.44, "audio_s": 3.28, "texto_canal": "El paquete llega el martes a las tres de la tarde.", "re_asr": "El paquete llega el martes a las tres de la tarde.", "frase_esperada": "El paquete llega el martes a las tres de la tarde.", "error": null}
+veredicto: re-ASR EXACTO al canal de texto — fix #31689 verificado
+
+[caso fixed_es_female] session.update audio.output {voice female, language es}
+{"caso": "fixed_es_female", "sesion": {"audio": {"output": {"voice": "female", "language": "es"}}}, "primer_audio_s": 0.33, "audio_s": 2.96, "texto_canal": "El paquete llega el martes a las tres de la tarde.", "re_asr": "Opaquete llega el martes a las 3 de la tarde.", "frase_esperada": "El paquete llega el martes a las tres de la tarde.", "error": null}
+veredicto: inteligible; ASR normaliza el digito; sin acento ingles reportado
+
+[caso sin_flag] control negativo, mismo binario sin --tts-lang (pid 19952)
+{"caso": "sin_flag", "sesion": {}, "primer_audio_s": 0.3, "audio_s": 1.92, "texto_canal": "Adelante.", "re_asr": "Adelante.", "frase_esperada": "El paquete llega el martes a las tres de la tarde.", "error": null}
+veredicto: control debil — el modelo no siguio la instruccion (no reproduce la frase); el contraste exacto-vs-garbled del defecto original queda en P-10 (2026-11-04)
+
+limpieza: 8093 libre tras la sonda; 8091 jamas tocado por la sonda

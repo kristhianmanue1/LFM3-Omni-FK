@@ -1,0 +1,10 @@
+expediente motor-2-31689 — salto registrado ADR-014 (2026-11-10)
+
+[binario candidato]
+repo: github.com/ggml-org/llama.cpp (clone shallow 2026-11-10)
+HEAD: 54cde7106a6b4013a053f13bb4a5d91683e7338d (contiene merge 203b5f4 / fix daf4b34 de #31689 / PR #31982)
+version: 0.9.0-dev (build 1, commit 54cde710)
+ruta: ~/www/AGTexperts/externos/llamacpp-candidate-31689/src/build/bin/llama-server
+sha256: 352c59e362dee5cf97bbbfbc63c0ab711a7c2c42053b1e33ae4abdb6e1d91564
+build: -DGGML_METAL=ON -DGGML_METAL_EMBED_INLINE=ON (LLAMA_CURL deprecado e ignorado upstream; -hf sigue soportado)
+modelo: snapshot d508b88f08a5b4286f2d2805a6a8d69a0ff44c72 (Q4_K_M + mmproj Q4_0), sin cambio vs par 1

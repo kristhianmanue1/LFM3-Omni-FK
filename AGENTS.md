@@ -31,10 +31,11 @@ No asumas el contenido de un archivo que no leíste.
 
 - **Puerto del servidor: 8091** (el 8080 está ocupado por Docker en esta
   máquina; decisión del humano, 2026-11-02).
-- **Motor congelado por registro**: llama.cpp vía Homebrew y el GGUF de
-  Hugging Face no se editan en sitio; sus versiones se fijan en
-  `docs/f0-analisis-y-requerimientos.md` y cualquier salto es una operación
-  registrada, no una actualización silenciosa.
+- **Motor congelado por registro**: la pareja motor+GGUF no se edita en
+  sitio; la vigente es el par 2 (llama.cpp master 54cde710 de fuente,
+  ADR-014, salto registrado 2026-11-10) y cualquier salto nuevo es una
+  operación registrada, no una actualización silenciosa; el par 1 y su
+  evidencia viven en `docs/f0-analisis-y-requerimientos.md`.
 - El modelo es **no-reasoning**: el servidor arranca con `--reasoning off`
   y muestreo greedy (`--temp 0`) según la ficha oficial del modelo.
 - **Exposición: solo localhost** (humano, 2026-11-02); LAN o público exigen
