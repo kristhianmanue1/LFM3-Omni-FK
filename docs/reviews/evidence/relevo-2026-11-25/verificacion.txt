@@ -1,0 +1,61 @@
+== relevo etapa 2026-11-25 (Orquestador, LFM3-Omni) ==
+2026-11-25T11:23:22Z
+
+--- git (previo al commit):
+## main...origin/main
+ M config/tokens.json
+?? docs/relevo-2026-11-25.md
+?? docs/reviews/evidence/relevo-2026-11-25/
+4949129 chore(auth): registrar credencial tequio en tokens.json (solo hash sha256, scopes infer:text/infer:audio/speech:synthesize)
+
+--- check_sizes.py:
+BLOQ — check_sizes encontró incumplimientos (gate/v14, 2026-11-07)
+- run/gateway.log: 1544 líneas > límite 800
+salida=1
+--- check_plans.py:
+OK — 2 plan(es) verificados (estructura E1-E6)
+salida=0
+--- check_reports.py:
+OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+salida=0
+--- check_templates (scripts):
+OK — al día: versión vigente gate/v14
+salida=0
+--- check_templates (docs):
+OK — al día: versión vigente corpus/v11
+salida=0
+--- sondeo despliegue local:
+{"status":"ok"} <- 8091
+{"status": "ok", "mode": "gateway-i1"} <- 8092
+{"status": "ok", "mode": "gateway-i1"} <- 8443
+--- AN-KLA previo a escrituras:
+{
+  "counts": {
+    "episodes": 0,
+    "events": 18,
+    "facts": 13
+  },
+  "durability_profile": "posix-fsync-dir/v1",
+  "identity_status": "complete",
+  "ok": true,
+  "revision": "sha256:ce36f8faa686a929391788be4c4fae48bf524bd8026c44ab51883e8d97fb8408",
+  "revision_number": 37,
+  "root_relocated": false,
+  "runtime": {
+    "entrypoint": "console_script",
+    "package_version": "0.1.0b43"
+  }
+}
+{
+  "counts": {
+    "episodes": 0,
+    "events": 18,
+    "facts": 13
+  },
+  "durability_profile": "posix-fsync-dir/v1",
+  "identity_status": "complete",
+  "ok": true,
+  "revision": "sha256:ce36f8faa686a929391788be4c4fae48bf524bd8026c44ab51883e8d97fb8408",
+  "revision_number": 37,
+  "root_relocated": false
+}
