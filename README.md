@@ -7,10 +7,18 @@ ofrece texto e imagen de entrada y texto de
 salida para agentes de IA y proyectos consumidores del ecosistema
 (web, apps): contratos versionados, API compatible OpenAI y MCP.
 Audio, video y voz de salida no están ofrecidos por el contrato v1;
-la voz realtime completa sigue aplazada.
+la voz realtime completa sigue aplazada. Nota (2026-11-25): el piloto
+privado I2 ofrece síntesis de voz (TTS WAV, voz fija) detrás de
+credenciales, sin cambiar el contrato v1 — ver
+`docs/specs/SPEC-i2-piloto-privado.md`.
 
 Estado: v0.1.0 — F0–F3 cerrados con evidencia y rondas adversariales;
 motor verificado, contratos v1 publicados y MCP implementado (F3-1).
+Desde el cierre, el servicio evolucionó en mantenimiento: gateway
+común I1 (8092), piloto privado I2 con TLS 8443 y credenciales por
+proyecto, jobs duraderos y síntesis de voz en el piloto (SPEC-i2;
+contratos v2). En el Dell G7 el motor opera bajo demanda desde el
+2026-11-24 — ver [relevo de etapa](docs/relevo-2026-11-25.md).
 
 Evolución propuesta a servicio compartido: ver
 [PLAN LFM3-2](docs/plans/PLAN-2-servicio-compartido.md), con entregas
@@ -21,15 +29,18 @@ para revisión y adopción; no acredita funcionalidades remotas activas.
 
 - macOS arm64 (Apple Silicon), 16 GB RAM recomendado; ruta alternativa
   WSL2/CUDA verificada: [retomar Dell G7](docs/retomar-dell-g7.md).
-- llama.cpp 0.8.0 (build 11960) vía Homebrew: `brew install llama.cpp`
-  (motor congelado por registro — ADR-001; la versión bottled es la que
-  exige la ficha del modelo).
+- llama.cpp, motor congelado por registro. Par vigente: el par 2
+  (master 54cde710, construido de fuente; ADR-014, salto registrado
+  2026-11-10, desbloqueo de realtime). El par 1 (Homebrew 0.8.0
+  b11960, ADR-001) quedó registrado en F0; un salto nuevo de motor es
+  operación registrada, no actualización silenciosa.
 - Los pesos se descargan solos en el primer arranque (GGUF Q4_K_M ~1.1 GB
   + proyector multimodal) a la caché de Hugging Face.
 - Python 3.12 o superior con stdlib para verificaciones y tests
-  (decisión del Operador, 2026-11-04: runtime 3.12+; en esta máquina,
-  python3.12 3.12.12 de Homebrew; sin dependencias externas — ver
-  decisiones de cascarón abajo).
+  (decisión del Operador, 2026-11-04: runtime 3.12+; hoy la pila local
+  del piloto corre con `python3` → 3.15.2 de Homebrew y el gate de
+  push exige 3.12+; sin dependencias externas — ver decisiones de
+  cascarón abajo).
 
 ## Cómo correr
 
@@ -37,6 +48,13 @@ Para la PC con Windows/WSL2 y CUDA, ver
 [instalación local WSL](docs/instalacion-wsl.md). El instalador fija el
 build y los hashes del plan de hardware. El cierre y los resultados
 posteriores están en [retomar Dell G7](docs/retomar-dell-g7.md).
+
+Nota (2026-11-25): en el Dell G7 el servicio ya no arranca con la
+máquina: opera bajo demanda desde el 2026-11-24 19:54Z (unidades
+`lfm3-motor`/`lfm3-gateway` de Malintzin, `disabled` por defecto;
+carga con `malintzin-lfm3 cargar`, ~15 s, apagado automático tras
+600 s sin peticiones; avisar antes de cargar). Estado completo:
+[relevo de etapa](docs/relevo-2026-11-25.md).
 
 ```bash
 bash run/serve.sh    # arranca en 127.0.0.1:8091 (solo localhost) y espera salud
@@ -65,6 +83,14 @@ sigue fuera del contrato v1 (va por `/v1/realtime`, no ofrecido).
 - API compatible OpenAI: `POST http://127.0.0.1:8091/v1/chat/completions`
   con `messages` (texto o imagen base64), `tools`, y `response_format`
   json_schema para salidas validadas en frontera.
+- Piloto con credenciales (I2, nota 2026-11-25): gateway
+  `http://127.0.0.1:8092` y `https://127.0.0.1:8443` con
+  `Authorization: Bearer` + `X-Project-ID`, perfiles y scopes por
+  proyecto, y síntesis de voz (TTS WAV) — dialecto v2 del piloto
+  (`docs/specs/SPEC-i2-piloto-privado.md`; los contratos v2 generales
+  siguen en propuesta: `docs/contracts/servicio-general-v2.md` y
+  `docs/contracts/perfiles-servicio-v2.md`); alta de credenciales en
+  `config/tokens.json` (sólo hash sha256, nunca el token en claro).
 - Contrato completo: `docs/contracts/superficie-inferencia-v1.md` —
   entradas, salidas, errores, invariantes y compatibilidad. Fail-closed
   estructural: JSON malformado, `messages` ausente o partes de contenido
@@ -99,7 +125,8 @@ sigue fuera del contrato v1 (va por `/v1/realtime`, no ofrecido).
   exposición de red viven en F0 (CERRADA-6).
 - **Límites de tamaño:** heredados del estándar (800 líneas por archivo,
   200 para instrucciones de agentes, 300 para README); presupuesto de
-  ruta de lectura en `skevi-gate.json` (1800, adopción de AN-KLA).
+  ruta de lectura en `skevi-gate.json` (2000; re-base del 2026-11-07
+  al cerrar skevi-lfm3).
 - **LICENSE:** Apache-2.0 para el contenido del repositorio (código,
   docs, contratos; copyright kristhianmanue1). Los pesos del modelo NO
   se relicencian ni se redistribuyen: siguen bajo LFM Open License v1.0
@@ -114,7 +141,7 @@ sigue fuera del contrato v1 (va por `/v1/realtime`, no ofrecido).
 ├── AGENTS.md               # entrada para ejecutores automatizados
 ├── project-manifest.yaml   # qué ofrece y qué no, frente al ecosistema
 ├── skevi-gate.json         # config del gate (límites, ruta de lectura, planes)
-├── run/                    # serve.sh / stop.sh (runbook operativo)
+├── run/                    # serve.sh / serve_pilot.sh / stop.sh (runbook)
 ├── scripts/                # gates copiables de Skevi (versionados)
 ├── src/mcp_server.py       # servidor MCP stdio (implementado, F3-1)
 ├── tests/golden/casos.json # conjunto de referencia con procedencia

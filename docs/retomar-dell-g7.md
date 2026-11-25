@@ -52,7 +52,24 @@ personales y no se pueden reconstruir retrospectivamente.
 AN-KLA no está instalado ni se inicializó memoria. Este documento es
 el punto de retoma; no hay una memoria AN-KLA verificada.
 
+Nota (2026-11-25): lo anterior describe el entorno Dell. En el repo de
+desarrollo (macOS) la memoria AN-KLA está instalada y verificada
+(revisión 40, 2026-11-25); en el Dell sigue sin inicializarse según el
+último registro de este documento (2026-11-04).
+
 ## Motor y regresión
+
+Nota (2026-11-25): desde el 2026-11-24 19:54Z el Dell no mantiene el
+motor siempre activo. Las unidades `lfm3-motor` y `lfm3-gateway`
+(implementación y diseño de Malintzin) están `disabled` y paradas por
+defecto; se cargan bajo demanda con
+`ssh dell-g7 ~/malintzin/bin/malintzin-lfm3 cargar` (~15 s) y se
+apagan solas tras 600 s sin peticiones; avisar a Malintzin antes de
+cargar. El arranque manual de esta sección queda como vía alternativa
+para una sesión sin las unidades activas; no duplicar arranque si el
+puerto ya sirve. Qué par del motor sirven hoy las unidades no está
+verificado desde este repo. Estado completo:
+`relevo-2026-11-25.md`.
 
 ```bash
 python3 tools/install_wsl.py --check

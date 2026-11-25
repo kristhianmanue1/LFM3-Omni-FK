@@ -76,6 +76,17 @@ Gateway: 127.0.0.1:8092, `/healthz`, `/v1/capabilities`, `/v1/models` y
 8091); incorporación en `onboarding-consumidor-v1.md`. El instalador no
 registra MCP automáticamente en aplicaciones ni crea un servicio de inicio.
 
+Nota (2026-11-25): en el Dell, el motor y el gateway ya no se arrancan
+a mano en el día a día: desde el 2026-11-24 19:54Z los gestionan las
+unidades `lfm3-motor`/`lfm3-gateway` (Malintzin) en modo bajo demanda
+— `disabled` por defecto, carga con `malintzin-lfm3 cargar` (~15 s),
+apagado automático tras 600 s sin peticiones; avisar antes de cargar.
+Los comandos de esta sección quedan como vía manual para una sesión
+sin las unidades activas. En la Mac de desarrollo, el piloto privado
+I2 añadió además voz de salida (TTS WAV con credenciales) sin cambiar
+el contrato v1 — ver `specs/SPEC-i2-piloto-privado.md`. Estado
+completo: `relevo-2026-11-25.md`.
+
 Para las sondas hardware, añadir al PATH los directorios extraídos que
 contienen llama-server/llama-tts y usar su LD_LIBRARY_PATH correspondiente;
 los GGUF explícitos están en `run/build/wsl/cache/`. La batería se ejecutó;

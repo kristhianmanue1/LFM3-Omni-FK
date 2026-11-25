@@ -6,6 +6,16 @@
 > (HTTP, compatible OpenAI) y `docs/contracts/mcp-tools-v1.md` (MCP
 > stdio para agentes). Este paquete es la guía; el contrato manda.
 
+> **Nota (2026-11-25):** esta guía describe la superficie v1 directa al
+> motor (8091), vigente y sin cambios; sus comandos siguen siendo
+> válidos. Desde su verificación: el motor saltó al par 2 (ADR-014,
+> golden en verde); existe además el gateway del piloto con
+> credenciales (`127.0.0.1:8092` HTTP y `8443` TLS, `Bearer` +
+> `X-Project-ID`, dialecto v2 del piloto — SPEC-i2; los contratos v2
+> generales siguen en propuesta) con síntesis de voz en el piloto; y en
+> el Dell el servicio opera bajo demanda desde el 2026-11-24 (avisar a
+> Malintzin antes de cargarlo). Detalle: `relevo-2026-11-25.md`.
+
 ## Requisitos previos
 
 1. Motor arriba (en la máquina del servicio): `bash run/serve.sh`.
@@ -132,7 +142,7 @@ de inferencia; `health` reporta `down` si no lo está.
 | Sí garantizado (contrato v1) | No garantizado |
 |---|---|
 | Fail-closed estructural: JSON malformado, messages ausente o partes de contenido desconocidas → 400 con cuerpo estructurado | Campos top-level no reconocidos: el motor los **ignora con 2xx** (typos incluidos) — valida tu payload del lado consumidor |
-| Motor y modelo fijados por ADR-001 | Contenido/calidad de las respuestas (se verifica por golden set, no por promesa) |
+| Motor y modelo congelados por registro (ADR-001; par vigente: ADR-014) | Contenido/calidad de las respuestas (se verifica por golden set, no por promesa) |
 | Greedy `--temp 0` (sobrevive a overrides de sampling); JSON conforme al esquema con `response_format` | Determinismo byte a byte entre reinicios del proceso |
 | Umbral ≥ 15 tok/s (mediana n=3; observado 55.9, B-T5) | Disponibilidad: es un servicio local de una máquina, sin alta disponibilidad |
 | Compatibilidad hacia atrás; cambios incompatibles exigen v2 | Voz en tiempo real (fuera de v1 → v2); multi-tenant y cuotas |

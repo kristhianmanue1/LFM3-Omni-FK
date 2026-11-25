@@ -8,8 +8,10 @@ proposito: >
   compatible OpenAI y MCP.
 
 ofrece:
-  - motor local de inferencia omnimodal en hardware Apple Silicon (M2),
-    sin dependencia de créditos de servicios remotos
+  - >
+    motor local de inferencia omnimodal en hardware verificado (Apple
+    Silicon M2 y WSL2/CUDA en Dell G7 7700), sin dependencia de
+    créditos de servicios remotos
   - superficie API compatible OpenAI sobre llama-server (puerto 8091,
     decisión registrada en F0)
   - >
@@ -21,7 +23,8 @@ ofrece:
     (F3-1: 37 tests, dos rondas adversariales)
   - validación en frontera de la salida del modelo contra esquema cerrado
     (guía 06 §5)
-  - método de trabajo Skevi adoptado (plantillas/v22, gate/v14, corpus/v10)
+  - método de trabajo Skevi adoptado (plantillas/v23, gate/v14,
+    corpus/v11; nota 2026-11-25)
 
 no_ofrece:
   - entrenamiento, fine-tuning ni producción de modelos
@@ -36,15 +39,23 @@ no_ofrece:
     y an-kla-memory respectivamente
   - >
     audio, video ni voz por contrato todavía: el motor los soporta, pero se
-    ofrecen sólo al cerrar los gates I1-V del PLAN LFM3-2 (ADR-006/007)
+    ofrecen sólo al cerrar los gates I1-V del PLAN LFM3-2 (ADR-006/007).
+    Nota 2026-11-25: la voz de salida existe ya en el piloto privado I2
+    (TTS WAV con credenciales, SPEC-i2) sin cambiar esta declaración
+    contractual
 
 publica:
+  # nota 2026-11-25: los contratos v2 (servicio-general-v2,
+  # perfiles-servicio-v2, mcp-tools-v2) existen como entregas por
+  # consumidor (handoff glosomata v1, 2026-11-10; handoff frontExpert
+  # v2, fase I4/ADR-011) y siguen en propuesta como superficie general
+  # del ecosistema.
   - { tipo: contrato, id: lfm3-omni/superficie-inferencia, version: v1 }
   - { tipo: contrato, id: lfm3-omni/mcp-tools, version: v1 }
 
 consume:
   - { tipo: proyecto, id: skevi, uso: "corpus normativo adoptado; método F0→F3 y gates", requerido: true }
-  - { tipo: externo, id: llama.cpp, uso: "servidor de inferencia (Homebrew, versión fijada en F0)", requerido: true }
+  - { tipo: externo, id: llama.cpp, uso: "servidor de inferencia; motor congelado por registro, par vigente de fuente (ADR-014; par 1 Homebrew registrado en F0)", requerido: true }
   - { tipo: externo, id: "huggingface:LiquidAI/LFM3-Omni-2B-GGUF:Q4_K_M", uso: "pesos del modelo + mmproj", requerido: true }
   - { tipo: externo, id: git, uso: "estado real del proyecto y evidencia", requerido: true }
   - { tipo: externo, id: ffmpeg, uso: "decodificación de video/audio de contenedor que libmtmd lanza desde PATH; versión a inventariar en I1-V0 (ADR-006)", requerido: false }

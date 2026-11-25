@@ -1,0 +1,37 @@
+== docs/actualiza-estado-2026-11-25 — evidencia de verificación ==
+2026-11-25T15:13:54Z (Orquestador, LFM3-Omni)
+
+--- Gates (árbol de trabajo previo al commit):
+check_plans.py: OK — 2 plan(es) verificados (estructura E1-E6)
+check_reports.py: OK — 25 reporte(s) con capa técnica verificada; 1 exento(s)
+check_sizes.py: BLOQ — sólo run/gateway.log (1544 líneas > límite 800),
+  archivo runtime sin versionar del gateway local vivo (preexistente,
+  ajeno a este cambio; documentado en relevo-2026-11-25 §4)
+check_templates.py (scripts): OK — al día: gate/v14
+check_templates.py (docs): OK — al día: corpus/v11
+ruby -ryaml (project-manifest.yaml): YAML ok
+git diff --check: limpio
+README.md: 150 líneas (límite 300); todos los archivos ≤ 800
+
+--- Ronda adversarial (contexto fresco, subagente de sólo lectura):
+Veredicto: proceed.
+- BLOCKER: ninguno. HIGH: ninguno. Sin sobreafirmaciones de
+  capacidades/versiones (par 2/ADR-014, TLS 8443 + Bearer/X-Project-ID
+  con 401 verificado sin credenciales, TTS WAV voz fija, jobs,
+  cifras del Dell, Python 3.15.2, AN-KLA rev 40 — todo respaldado).
+- [MED] manifest: comentario atribuía los handoffs v2 al «piloto I2»
+  (frontExpert es fase I4/ADR-011; glosomata v1 sin fase) → corregido:
+  procedencia por consumidor con fase y fecha.
+- [LOW] README/onboarding citaban «contratos v2» sin calificar su
+  estado «PROPUESTO» → corregido: dialecto v2 del piloto (SPEC-i2),
+  contratos generales en propuesta.
+- [LOW] manifest: nota del Dell incrustada en no_ofrece de voz →
+  recortada (el dato vive en README/retomar/instalacion/relevo).
+- [LOW] retomar: cláusula «sin habilitación del Operador» sin fuente →
+  atribuida al último registro (2026-11-04).
+- [LOW] README árbol: alineación del comentario de run/ → corregida.
+- [LOW] run/gateway.log bloqueará el push (pre-push ejecuta
+  check_sizes) → aceptado como riesgo preexistente, sin orden de
+  resolverlo.
+Sin cambios fuera de los archivos declarados; sin reescritura de ADRs
+(sólo notas fechadas); sin secretos añadidos; sin rutas rotas.
