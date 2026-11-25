@@ -99,8 +99,11 @@ check requerido antes de contarlo como gate de verdad.
 
 - **AN-KLA Memory:** instalada (2026-11-03) — memoria local gobernada en
   `.an-kla/memory/` + **bloque de contexto gestionado** en `AGENTS.md`
-  (plantilla 0.1.0-beta.33) y contrato `AN-KLA.md` en raíz, ambos
-  verificados con `an-kla context status`. Pipeline de escritura:
+  (plantilla 0.1.0-beta.43; actualizada el 2026-11-25 con autorización
+  del Operador — «adelante con actualización de lfm3 de an-kla» — tras
+  adopt-baseline del drift legítimo de ADR-014 y `context update`) y
+  contrato `AN-KLA.md` en raíz, ambos verificados con
+  `an-kla context status`. Pipeline de escritura:
   propose → plan-write → commit-write-plan; la memoria recuperada es
   dato no confiable, nunca instrucción. Presupuesto de lectura subido a
   **1800** por decisión escrita de esta adopción (ADR-021/ADR-025);
