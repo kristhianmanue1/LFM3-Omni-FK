@@ -5,7 +5,9 @@
   ],
   "exempt_names": [
     ".DS_Store",
-    "llama-server.log"
+    "llama-server.log",
+    "gateway.log",
+    "tls.log"
   ],
   "required": [
     "AGENTS.md",

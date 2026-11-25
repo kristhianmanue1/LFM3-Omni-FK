@@ -1,0 +1,34 @@
+== limpieza-repo-2026-11-25 (Orquestador, LFM3-Omni) ==
+2026-11-25T15:52:43Z
+
+Decisiones del canal de coordinación (2026-11-25):
+(a) aplicar la exención de gateway.log y tls.log en skevi-gate.json
+    (con desviación declarada en .skevi/usage-guide.md);
+(b) registrar la rotación de tequio del 17-Nov como commit hash-only
+    (reivindicada operativa: en producción desde el 19-Nov, tequio
+    funciona con ella; nunca revertir);
+push de main autorizado por el Operador vía el canal (incluido en la
+delegación de limpieza del repositorio de hoy).
+
+--- (a) Gate de tamaños:
+ANTES: BLOQ — run/gateway.log: 1544 lineas > limite 800 (salida 1)
+DESPUES (exempt_names += gateway.log, tls.log):
+OK — 474 archivos de texto dentro de limites; estructura y hogares
+canonicos verificados; ruta de lectura 1823/2000; gate/v14 (salida 0)
+skevi-gate.json: JSON valido (python3 json.load OK)
+Logs runtime intactos (mismo tamano y mtime antes/despues):
+  run/gateway.log  99690 bytes, 19-Nov 10:15
+  run/tls.log        207 bytes, 19-Nov 10:15
+
+--- Otros gates:
+check_plans: OK — 2 planes (estructura E1-E6)
+check_reports: OK — 25 reportes + 1 exento
+check_templates (scripts): OK — gate/v14
+check_templates (docs): OK — corpus/v11
+
+--- Bateria que exige el hook pre-push (python3.12, unittest discover):
+Ran 408 tests in 162.116s — OK
+
+--- (b) tokens.json:
+commit hash-only: solo cambia token_sha256 de tequio (rotacion del
+17-Nov reivindicada operativa; hashes no reproducidos en este archivo).

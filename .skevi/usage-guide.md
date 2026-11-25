@@ -26,6 +26,15 @@ Razón: el gate exige UTF-8 y la evidencia de audio/video es binaria.
 texto versionable puede llamarse `privado` ni `medios-binarios`.
 El presupuesto de la ruta de lectura está en `skevi-gate.json` de la raíz.
 
+Desviación declarada (2026-11-25, decisión del canal de coordinación):
+`exempt_names` añade `gateway.log` y `tls.log` — logs runtime del
+piloto (stderr del gateway y del terminador TLS, sin versionar, nunca
+publicar). Procedencia: la intención ya declarada por `.gitignore`
+(«logs y pids runtime del motor (exentos del gate de tamaños)») y el
+precedente `llama-server.log`, exento desde siempre. Razón: son salida
+runtime regenerable por `serve_pilot.sh`, no entregables de texto; el
+gate acota texto versionable, no artefactos vivos del servicio.
+
 ## Idiomas elegidos
 
 Fuente normativa: estándar §3.1 (ADR-015, precisión ADR-029).
